@@ -34,7 +34,8 @@ export default function RentalContractPage() {
         status: invoice.status,
         content: renderInvoiceForm(invoice),
         // Check payment of refund
-        data: dataContract.invoices.find((v) => v.total === InvoiceType.Reservation)?.total ?? 0
+        // data: dataContract.invoices.find((v) => v.total === InvoiceType.Reservation)?.total ?? 0,
+        invoice: invoice
     }))
 
     return (
