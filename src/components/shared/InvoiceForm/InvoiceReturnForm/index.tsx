@@ -12,14 +12,14 @@ import { InvoiceItemType } from "@/constants/enum"
 export default function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure()
     const clean = formatCurrency(
-        invoice.items.find((item) => item.type === InvoiceItemType.Cleaning)?.subTotal ?? 0
+        invoice.invoiceItems.find((item) => item.type === InvoiceItemType.Cleaning)?.subTotal ?? 0
     )
     const lateReturn = formatCurrency(
-        invoice.items.find((item) => item.type === InvoiceItemType.LateReturn)?.subTotal ?? 0
+        invoice.invoiceItems.find((item) => item.type === InvoiceItemType.LateReturn)?.subTotal ?? 0
     )
-    const totalDamage = invoice.items
+    const totalDamage = invoice.invoiceItems
         .filter((i) => i.type === InvoiceItemType.Damage)
-        .reduce((sum, i) => sum + i.subTotal, 0)
+        .reduce((sum, i) => (sum += i.subTotal), 0)
 
     const total = clean + lateReturn + totalDamage
 

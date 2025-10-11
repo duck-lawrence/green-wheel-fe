@@ -13,23 +13,23 @@ import { DatePicker } from "@heroui/react"
 import { mockContracts } from "@/data/mockContracts"
 import { InvoiceTypeLabels, RentalContractStatusLabels } from "@/constants/labels"
 import { useDay } from "@/hooks"
-import { mockInvoices } from "@/data/mockIvoices"
 import { renderInvoiceForm } from "@/components/shared/InvoiceForm/renderInvoiceForm"
 
 export default function RentalContractPage() {
     const { toCalenderDateTime } = useDay()
 
+    const dataContract = mockContracts.find((v) => v.id === "CON002")!
+
     // render accordion
-    const invoiceAccordion = mockInvoices.map((invoice) => ({
+    const invoiceAccordion = dataContract.invoices.map((invoice) => ({
         key: invoice.id,
         ariaLabel: invoice.id,
         title: `${InvoiceTypeLabels[invoice.type]}`,
         status: invoice.status,
-        content: renderInvoiceForm(invoice.type)
+        content: renderInvoiceForm(invoice)
     }))
 
     // id: "CON001",
-    const dataContract = mockContracts.find((v) => v.id === "CON001")!
 
     // const dataInvoice = mockInvoices.find((v) => v.id === "INV_B001")!
 
@@ -84,7 +84,7 @@ export default function RentalContractPage() {
                         <InputStyled
                             isReadOnly
                             label="Tên xe"
-                            value={dataContract.vehicleId}
+                            value={dataContract.vehicle.model.name}
                             placeholder="VinFast VF8"
                             startContent={
                                 <Car size={22} className="text-primary" weight="duotone" />
@@ -94,7 +94,7 @@ export default function RentalContractPage() {
                         <InputStyled
                             isReadOnly
                             label="Biển số"
-                            placeholder="51H-123.45"
+                            value={dataContract.vehicle.licensePlate}
                             startContent={
                                 <IdentificationBadge
                                     size={22}
@@ -148,7 +148,6 @@ export default function RentalContractPage() {
                             isReadOnly
                             label="Nhân viên bàn giao xe"
                             value={dataContract.handoverStaffId}
-                            placeholder="Nhân viên A"
                             startContent={
                                 <ArrowsLeftRight
                                     size={22}
@@ -162,7 +161,6 @@ export default function RentalContractPage() {
                             isReadOnly
                             label="Nhân viên nhận xe"
                             value={dataContract.returnStaffId}
-                            placeholder="Nhân viên B"
                             startContent={
                                 <ArrowsLeftRight
                                     size={22}

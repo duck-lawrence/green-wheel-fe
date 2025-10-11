@@ -8,7 +8,7 @@ import { formatCurrency } from "@/utils/helpers/currency"
 import { InvoiceItemType } from "@/constants/enum"
 
 export default function InvoiceOtherForm({ invoice }: { invoice: InvoiceViewRes }) {
-    const totalOther = invoice.items
+    const totalOther = invoice.invoiceItems
         .filter((item) => item.type === InvoiceItemType.Other)
         .reduce((sum, item) => sum + item.subTotal, 0)
 

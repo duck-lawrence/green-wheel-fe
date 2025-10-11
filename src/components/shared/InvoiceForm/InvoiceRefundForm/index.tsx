@@ -10,7 +10,7 @@ import { getDamageNotes } from "@/utils/helpers/getDamageNotes"
 export default function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
     const deposit = invoice.deposit?.amount ?? 0
     const penalty =
-        invoice.items.find((item) => item.type === InvoiceItemType.Penalty)?.subTotal ?? 0
+        invoice.invoiceItems.find((item) => item.type === InvoiceItemType.Penalty)?.subTotal ?? 0
 
     const total = deposit - penalty
     return (
