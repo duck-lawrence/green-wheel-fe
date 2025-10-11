@@ -44,7 +44,13 @@ export default async function RootLayout({
                             {children}
                         </div>
                         <Modals />
-                        <Toaster position="bottom-right" reverseOrder={false} />
+                        <Toaster
+                            position="bottom-right"
+                            reverseOrder={false}
+                            toastOptions={{
+                                className: "!max-w-[410px]"
+                            }}
+                        />
                     </ClientHydration>
                 </AppProviders>
                 <Script src="https://accounts.google.com/gsi/client" async defer />

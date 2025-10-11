@@ -4,7 +4,6 @@ import { DepositViewRes } from "@/models/deposit/schema/response"
 
 export type InvoiceViewRes = {
     id: string
-    type: InvoiceType
     subtotal: number
     tax: number
     total: number

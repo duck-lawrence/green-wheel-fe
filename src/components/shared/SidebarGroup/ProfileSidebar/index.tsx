@@ -15,7 +15,7 @@ export function ProfileSidebar({ className }: { className?: string }) {
         { key: "/profile", label: t("user.my_profile"), href: "/profile" },
         {
             key: "/profile/change-password",
-            label: t("auth.change_password"),
+            label: user?.needSetPassword ? t("auth.set_password") : t("auth.change_password"),
             href: "/profile/change-password"
         }
     ]

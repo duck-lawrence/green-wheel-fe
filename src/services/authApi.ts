@@ -1,9 +1,5 @@
-import {
-    UserChangePasswordReq,
-    UserRegisterCompleteReq,
-    UserSetPasswordReq
-} from "@/models/auth/schema/request"
-import { LoginGoogleRes, TokenRes } from "@/models/auth/schema/response"
+import { UserChangePasswordReq, UserRegisterCompleteReq } from "@/models/auth/schema/request"
+import { TokenRes } from "@/models/auth/schema/response"
 import axiosInstance from "@/utils/axios"
 import { requestWrapper } from "@/utils/helpers/axiosHelper"
 
@@ -18,13 +14,8 @@ export const authApi = {
             await axiosInstance.post("/users/logout")
         }),
     loginGoogle: (credential: string) =>
-        requestWrapper<LoginGoogleRes>(async () => {
-            const res = await axiosInstance.post("/users/login-google", { credential })
-            return res.data
-        }),
-    setPassword: (req: UserSetPasswordReq) =>
         requestWrapper<TokenRes>(async () => {
-            const res = await axiosInstance.post("/users/login-google/set-password", req)
+            const res = await axiosInstance.post("/users/login-google", { credential })
             return res.data
         }),
 

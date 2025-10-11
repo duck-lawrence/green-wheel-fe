@@ -54,11 +54,9 @@ export const useLogout = ({ onSuccess }: { onSuccess?: () => void }) => {
 
 export const useLoginGoogle = ({
     rememberMe,
-    onNeedSetPassword,
     onSuccess
 }: {
     rememberMe?: boolean
-    onNeedSetPassword: () => void
     onSuccess?: () => void
 }) => {
     const { t } = useTranslation()
@@ -68,30 +66,7 @@ export const useLoginGoogle = ({
     return useMutation({
         mutationFn: authApi.loginGoogle,
         onSuccess: (data) => {
-            if (!data.needSetPassword) {
-                setAccessToken(data.accessToken!, rememberMe)
-                invalidateAuthQuery()
-                toast.success(t("success.login"))
-            } else {
-                onNeedSetPassword()
-            }
-            onSuccess?.()
-        },
-        onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
-        }
-    })
-}
-
-export const useSetPassword = ({ onSuccess }: { onSuccess?: () => void }) => {
-    const { t } = useTranslation()
-    const setAccessToken = useTokenStore((s) => s.setAccessToken)
-    const invalidateAuthQuery = useInvalidateMeQuery()
-
-    return useMutation({
-        mutationFn: authApi.setPassword,
-        onSuccess: (data) => {
-            setAccessToken(data.accessToken)
+            setAccessToken(data.accessToken, rememberMe)
             invalidateAuthQuery()
             onSuccess?.()
             toast.success(t("success.login"))
