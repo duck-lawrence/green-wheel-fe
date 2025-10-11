@@ -19,12 +19,13 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
     }, [user])
 
     useEffect(() => {
+        if (!user) return
         if (!isCustomer) {
             toast.dismiss()
             toast.error(t("user.unauthorized"))
             router.replace("/")
         }
-    }, [isCustomer, router, t])
+    }, [isCustomer, router, t, user])
 
     if (!isCustomer) return <Spinner />
 

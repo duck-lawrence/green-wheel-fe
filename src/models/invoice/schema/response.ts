@@ -11,6 +11,7 @@ export type InvoiceViewRes = {
     paymentMentod?: PaymentMethod
     notes: string
     status: InvoiceStatus
+    type: InvoiceType
     paidAt?: string
     invoiceItems: InvoiceItemViewRes[]
     deposit?: DepositViewRes
