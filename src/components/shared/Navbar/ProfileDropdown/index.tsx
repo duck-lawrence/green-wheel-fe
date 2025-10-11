@@ -53,18 +53,19 @@ export function ProfileDropdown() {
     const isAdmin = normalizeRole(user?.role, roleDetail) === "admin"
 
     const adminItems: DropdownLinkItem[] = isAdmin
-        ?[
-            {
-                key: "admin_management",
-                href: "/dashboard",
-                label: t("admin.dropdown_management") as string
-            },
-             {
+        ? [
+              {
+                  key: "admin_management",
+                  href: "/dashboard",
+                  label: t("admin.dropdown_management") as string
+              },
+              {
                   key: "staff_profile",
                   href: "/profile",
                   label: t("navbar.staff_profile") as string
               }
-        ]    : [
+          ]
+        : [
               { key: "profile", href: "/profile", label: t("user.profile") as string },
               {
                   key: "rental_contracts",
@@ -98,7 +99,7 @@ export function ProfileDropdown() {
         ...(isAdmin ? adminItems : staffItems),
         { key: "logout", label: t("navbar.logout") as string, color: "danger" }
     ]
-    
+
     const handleLogout = useCallback(async () => {
         await logoutMutation.mutateAsync()
     }, [logoutMutation])

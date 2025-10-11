@@ -1,3 +1,4 @@
+import { CitizenIdentityRes } from "@/models/citizen-identity/schema/response"
 import { UserUpdateReq } from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import axiosInstance from "@/utils/axios"
@@ -26,6 +27,30 @@ export const profileApi = {
     deleteAvatar: () =>
         requestWrapper<{ message: string }>(async () => {
             const res = await axiosInstance.delete("/users/avatar")
+            return res.data
+        }),
+
+    uploadCitizenId: (formData: FormData) =>
+        requestWrapper<CitizenIdentityRes>(async () => {
+            const res = await axiosInstance.post("/users/citizen-identity", formData)
+            return res.data
+        }),
+
+    getMyCitizenId: () =>
+        requestWrapper<CitizenIdentityRes>(async () => {
+            const res = await axiosInstance.get("/users/citizen-identity")
+            return res.data
+        }),
+
+    uploadDriverLicense: (formData: FormData) =>
+        requestWrapper<CitizenIdentityRes>(async () => {
+            const res = await axiosInstance.post("/users/citizen-identity", formData)
+            return res.data
+        }),
+
+    getMyDriverLicense: () =>
+        requestWrapper<CitizenIdentityRes>(async () => {
+            const res = await axiosInstance.get("/users/citizen-identity")
             return res.data
         })
 }

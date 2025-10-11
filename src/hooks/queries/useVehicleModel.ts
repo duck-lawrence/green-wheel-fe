@@ -11,11 +11,29 @@ export const useGetAllVehicleModels = ({
     query: VehicleFilterReq
     enabled?: boolean
 }) => {
-    return useQuery({
-        queryKey: [QUERY_KEYS.VEHICLE_MODELS, query],
+    const queryClient = useQueryClient()
+    const key = [QUERY_KEYS.VEHICLE_MODELS, query]
+
+    const queryResult = useQuery({
+        queryKey: key,
         queryFn: async () => await vehicleModelApi.getAll(query),
         enabled
     })
+
+    const getCachedOrFetch = async () => {
+        const cached = queryClient.getQueryData<VehicleModelViewRes[]>(key)
+        if (cached) return cached
+        const data = await queryClient.fetchQuery({
+            queryKey: key,
+            queryFn: () => vehicleModelApi.getAll(query)
+        })
+        return data
+    }
+
+    return {
+        ...queryResult,
+        getCachedOrFetch
+    }
 }
 
 export const useGetVehicleModelById = ({
