@@ -65,7 +65,7 @@ export const mockContracts: RentalContractViewRes[] = [
         },
         invoices: [
             {
-                id: "INV001-A",
+                id: "INV001-AQA",
                 type: InvoiceType.Reservation,
                 subtotal: 2850000,
                 tax: 285000,
@@ -73,14 +73,117 @@ export const mockContracts: RentalContractViewRes[] = [
                 payAmount: 3135000,
                 paymentMentod: PaymentMethod.MomoWallet,
                 notes: "Thanh toán tiền thuê xe trước 100%",
-                status: InvoiceStatus.Paid,
+                status: InvoiceStatus.Pending,
                 paidAt: "2025-09-30T20:15:00+07:00",
                 invoiceItems: [
                     {
-                        id: "IT001",
-                        quantity: 3,
-                        unitPrice: 950000,
-                        subTotal: 2850000,
+                        id: "IT004",
+                        quantity: 1,
+                        unitPrice: 500000,
+                        subTotal: 50000,
+                        type: InvoiceItemType.Other
+                    }
+                ],
+                deposit: {
+                    id: "DEP001",
+                    amount: 2000000,
+                    // refundedAt: "2025-10-04T09:00:00+07:00",
+                    status: DepositStatus.Pending
+                }
+            },
+            {
+                id: "INV001-B",
+                type: InvoiceType.Handover,
+                subtotal: 300000,
+                tax: 30000,
+                total: 330000,
+                payAmount: 330000,
+                paymentMentod: PaymentMethod.Cash,
+                notes: "Phí vệ sinh xe và thay nước rửa kính",
+                status: InvoiceStatus.Paid,
+                paidAt: "2025-10-04T09:10:00+07:00",
+                invoiceItems: [
+                    {
+                        id: "H002",
+                        quantity: 1,
+                        unitPrice: 2000000,
+                        subTotal: 200000,
+                        type: InvoiceItemType.BaseRental
+                    },
+                    {
+                        id: "H001",
+                        quantity: 1,
+                        unitPrice: 100000,
+                        subTotal: 100000,
+                        type: InvoiceItemType.BaseRental
+                    }
+                ],
+                deposit: {
+                    id: "DEP001",
+                    amount: 2000000,
+                    // refundedAt: "2025-10-04T09:00:00+07:00",
+                    status: DepositStatus.Pending
+                }
+            },
+            {
+                id: "INV001-BA",
+                type: InvoiceType.Return,
+                subtotal: 300000,
+                tax: 0.1,
+                total: 150000,
+                payAmount: 330000,
+                paymentMentod: PaymentMethod.Cash,
+                notes: "tiền rửa xe và phạt trễ",
+                status: InvoiceStatus.Paid,
+                paidAt: "2025-10-04T09:10:00+07:00",
+                invoiceItems: [
+                    {
+                        id: "IT004",
+                        quantity: 1,
+                        unitPrice: 50000,
+                        subTotal: 50000,
+                        type: InvoiceItemType.Cleaning
+                    },
+                    {
+                        id: "IT004",
+                        quantity: 1,
+                        unitPrice: 50000,
+                        subTotal: 50000,
+                        type: InvoiceItemType.LateReturn
+                    },
+                    {
+                        id: "IT004",
+                        quantity: 1,
+                        unitPrice: 50000,
+                        subTotal: 50000,
+                        type: InvoiceItemType.Damage
+                    },
+                    {
+                        id: "IT006",
+                        quantity: 1,
+                        unitPrice: 60000,
+                        subTotal: 60000,
+                        type: InvoiceItemType.Damage
+                    }
+                ]
+            },
+            {
+                id: "INV001-A",
+                type: InvoiceType.Refund,
+                subtotal: 2850000,
+                tax: 285000,
+                total: 3135000,
+                payAmount: 3135000,
+                paymentMentod: PaymentMethod.MomoWallet,
+                notes: "Thanh toán tiền thuê xe trước 100%",
+                status: InvoiceStatus.Pending,
+                paidAt: "2025-09-30T20:15:00+07:00",
+                invoiceItems: [
+                    {
+                        id: "IT004",
+                        quantity: 1,
+                        unitPrice: 500000,
+                        subTotal: 50000,
                         type: InvoiceItemType.BaseRental
                     }
                 ],
@@ -92,29 +195,22 @@ export const mockContracts: RentalContractViewRes[] = [
                 }
             },
             {
-                id: "INV001-B",
-                type: InvoiceType.Return,
-                subtotal: 300000,
-                tax: 30000,
-                total: 330000,
-                payAmount: 330000,
-                paymentMentod: PaymentMethod.Cash,
-                notes: "Phí vệ sinh xe và thay nước rửa kính",
-                status: InvoiceStatus.Paid,
-                paidAt: "2025-10-04T09:10:00+07:00",
+                id: "INV001-AA",
+                type: InvoiceType.Other,
+                subtotal: 2850000,
+                tax: 285000,
+                total: 3135000,
+                payAmount: 3135000,
+                paymentMentod: PaymentMethod.MomoWallet,
+                notes: "Thanh toán tiền thuê xe trước 100%",
+                status: InvoiceStatus.Pending,
+                paidAt: "2025-09-30T20:15:00+07:00",
                 invoiceItems: [
                     {
-                        id: "IT002",
+                        id: "IT004",
                         quantity: 1,
-                        unitPrice: 200000,
-                        subTotal: 200000,
-                        type: InvoiceItemType.Cleaning
-                    },
-                    {
-                        id: "IT003",
-                        quantity: 1,
-                        unitPrice: 100000,
-                        subTotal: 100000,
+                        unitPrice: 500000,
+                        subTotal: 50000,
                         type: InvoiceItemType.Other
                     }
                 ]
@@ -175,7 +271,7 @@ export const mockContracts: RentalContractViewRes[] = [
         invoices: [
             {
                 id: "INV002-A",
-                type: InvoiceType.Reservation,
+                type: InvoiceType.Handover,
                 subtotal: 7500000,
                 tax: 750000,
                 total: 8250000,

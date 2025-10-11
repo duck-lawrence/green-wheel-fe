@@ -14,11 +14,17 @@ import { mockContracts } from "@/data/mockContracts"
 import { InvoiceTypeLabels, RentalContractStatusLabels } from "@/constants/labels"
 import { useDay } from "@/hooks"
 import { renderInvoiceForm } from "@/components/shared/InvoiceForm/renderInvoiceForm"
+import { InvoiceType } from "@/constants/enum"
+import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 
 export default function RentalContractPage() {
     const { toCalenderDateTime } = useDay()
+    const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
 
-    const dataContract = mockContracts.find((v) => v.id === "CON002")!
+    // data mẫu
+    const dataContract = mockContracts.find((v) => v.id === "CON001")!
+    const dateStart = dataContract.invoices.find((item) => item.type === InvoiceType.Handover)
+        ?.paidAt!
 
     // render accordion
     const invoiceAccordion = dataContract.invoices.map((invoice) => ({
@@ -26,12 +32,10 @@ export default function RentalContractPage() {
         ariaLabel: invoice.id,
         title: `${InvoiceTypeLabels[invoice.type]}`,
         status: invoice.status,
-        content: renderInvoiceForm(invoice)
+        content: renderInvoiceForm(invoice),
+        // Check payment of refund
+        data: dataContract.invoices.find((v) => v.total === InvoiceType.Reservation)?.total ?? 0
     }))
-
-    // id: "CON001",
-
-    // const dataInvoice = mockInvoices.find((v) => v.id === "INV_B001")!
 
     return (
         <div className="min-h-screen flex items-center justify-center dark:bg-gray-950 py-16 px-4">
@@ -52,7 +56,7 @@ export default function RentalContractPage() {
                 <SectionStyled title="Thông tin hợp đồng thuê xe">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="sm:col-span-2">
-                            <p>Ngày thuê: 10/10/2025 ???</p>
+                            <p>Ngày thuê:{dateStart && formatDateTime({ date: dateStart })} </p>
                         </div>
 
                         <InputStyled

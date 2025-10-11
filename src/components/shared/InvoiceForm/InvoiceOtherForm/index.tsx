@@ -3,7 +3,6 @@ import React from "react"
 import { InputStyled, TextareaStyled } from "@/components"
 import { Wrench, Money } from "@phosphor-icons/react"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
-import { getOtherNotes } from "@/utils/helpers/getDamageNotes"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { InvoiceItemType } from "@/constants/enum"
 
@@ -16,7 +15,7 @@ export default function InvoiceOtherForm({ invoice }: { invoice: InvoiceViewRes 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <InputStyled
                 label="Nguyên nhân sự cố"
-                value={getOtherNotes(invoice)}
+                value={invoice.notes}
                 placeholder="Hư bánh xe / Lỗi động cơ / Tai nạn nhẹ..."
                 startContent={<Wrench size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"

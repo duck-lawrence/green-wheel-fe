@@ -36,6 +36,7 @@ export function AccordionStyled({
         title: React.ReactNode
         status: InvoiceStatus
         content: React.ReactNode
+        data: number
     }[]
 }) {
     const renderStatusChip = (status: InvoiceStatus) => {
@@ -80,6 +81,7 @@ export function AccordionStyled({
                     <div className="flex justify-end items-center gap-2 p-2">
                         <div className="mt-0 flex justify-center">
                             <ButtonStyled
+                                isDisabled={val.data <= 0 ? false : true}
                                 size="lg"
                                 color="primary"
                                 className="px-12 py-3 font-semibold text-white rounded-xl 
@@ -88,18 +90,6 @@ export function AccordionStyled({
                                            shadow-md transition-all duration-300"
                             >
                                 Payment
-                            </ButtonStyled>
-                        </div>
-                        <div className="mt-0 flex justify-center">
-                            <ButtonStyled
-                                size="lg"
-                                color="primary"
-                                className="px-8 py-3 font-semibold text-gray-400 rounded-xl 
-                                           bg-white border-2 border-gray-400 hover:border-red-700
-                                           hover:bg-red-700 hover:text-black
-                                           shadow-md transition-all duration-300"
-                            >
-                                Cancle
                             </ButtonStyled>
                         </div>
                     </div>

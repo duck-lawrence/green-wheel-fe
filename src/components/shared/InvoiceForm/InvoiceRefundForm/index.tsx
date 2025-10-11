@@ -5,7 +5,6 @@ import { Money, WarningCircle, ArrowUDownLeft } from "@phosphor-icons/react"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { InvoiceItemType } from "@/constants/enum"
-import { getDamageNotes } from "@/utils/helpers/getDamageNotes"
 
 export default function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
     const deposit = invoice.deposit?.amount ?? 0
@@ -13,6 +12,7 @@ export default function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes
         invoice.invoiceItems.find((item) => item.type === InvoiceItemType.Penalty)?.subTotal ?? 0
 
     const total = deposit - penalty
+
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <InputStyled
@@ -34,8 +34,12 @@ export default function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes
                 variant="bordered"
             />
             <InputStyled
-                label="Số tiền hoàn lại khách hàng"
-                value={formatCurrency(total)}
+                label={
+                    invoice.total <= 0
+                        ? "Số tiền khách hàng cần thanh toán"
+                        : "Số tiền hoàn lại khách hàng"
+                }
+                value={formatCurrency(invoice.total)}
                 startContent={
                     <ArrowUDownLeft size={22} className="text-primary" weight="duotone" />
                 }
@@ -44,7 +48,7 @@ export default function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes
             <TextareaStyled
                 label="Ghi chú"
                 placeholder="Hoàn tiền cọc, không có phạt nguội."
-                value={getDamageNotes(invoice)}
+                value={invoice.notes}
                 variant="bordered"
                 className="sm:col-span-2"
             />
