@@ -44,13 +44,15 @@ export const profileApi = {
 
     uploadDriverLicense: (formData: FormData) =>
         requestWrapper<CitizenIdentityRes>(async () => {
-            const res = await axiosInstance.post("/users/citizen-identity", formData)
+            const res = await axiosInstance.post("/users/driver-license", formData)
             return res.data
         }),
 
     getMyDriverLicense: () =>
         requestWrapper<CitizenIdentityRes>(async () => {
-            const res = await axiosInstance.get("/users/citizen-identity")
+            const res = await axiosInstance.get("/users/driver-license")
             return res.data
         })
+
+    // createAnonymous: () => requestWrapper<>
 }
