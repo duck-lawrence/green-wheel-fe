@@ -7,7 +7,6 @@ import { ButtonStyled } from "../ButtonStyled"
 import { usePayInvoice } from "@/hooks/queries/usePayInvoice"
 import { useTranslation } from "react-i18next"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
-import toast from "react-hot-toast"
 
 export function AccordionStyled({
     items
@@ -63,11 +62,7 @@ export function AccordionStyled({
     const payInvoiceMutation = usePayInvoice()
 
     const handlePayment = async (invoiceId: string) => {
-        // await payInvoiceMutation.mutateAsync(invoiceId)
-        toast.success("Redirecting to Momo...")
-        setTimeout(() => {
-            window.location.href = "/payment/success?invoiceId=" + invoiceId + "&resultCode=0"
-        }, 1000)
+        await payInvoiceMutation.mutateAsync(invoiceId)
     }
 
     return (

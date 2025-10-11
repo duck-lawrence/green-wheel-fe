@@ -1,5 +1,8 @@
 "use client"
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { Router } from "next/router"
 import React from "react"
 import { useTranslation } from "react-i18next"
 
@@ -17,7 +20,7 @@ type TableStyledProps = {
 
 export default function TableStyled({ data, loading }: TableStyledProps) {
     const { t } = useTranslation()
-
+    const router = useRouter()
     if (loading) return <div className="text-center">Loading order...</div>
     if (!data || data.length === 0) return <div className="text-center">No order</div>
     return (
@@ -37,7 +40,7 @@ export default function TableStyled({ data, loading }: TableStyledProps) {
 
             <TableBody>
                 {data.map((item) => (
-                    <TableRow key={item.order} className="border-b border-gray-300">
+                    <TableRow key={item.order} className="border-b border-gray-300 cursor-pointer">
                         <TableCell className="text-center">{item.order}</TableCell>
                         <TableCell className="text-center">{item.model}</TableCell>
                         <TableCell className="text-center">{item.pickupTime}</TableCell>
