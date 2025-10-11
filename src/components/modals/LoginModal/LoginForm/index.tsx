@@ -21,6 +21,7 @@ export function LoginForm({ onSuccess }: { onSuccess?: () => void }) {
     const { t } = useTranslation()
     const router = useRouter()
     const pathname = usePathname()
+
     const [isVisible, setIsVisible] = useState(false)
     const [rememberMe, setRememberMe] = useState(true)
     const loginMutation = useLogin({ rememberMe, onSuccess })

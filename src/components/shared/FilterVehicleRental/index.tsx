@@ -77,20 +77,19 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
     }, [endDate, formatDateTime, minEndDate, minStartDate, setEndDate, setStartDate, startDate])
 
     // get models
-    const { refetch: refetchVehicleModels } = useGetAllVehicleModels({
+    const { getCachedOrFetch } = useGetAllVehicleModels({
         query: {
             stationId: stationId || "",
             startDate: startDate || formatDateTime({ date: minStartDate }),
             endDate: endDate || formatDateTime({ date: minEndDate }),
             segmentId
-        },
-        enabled: false
+        }
     })
 
     const handleSubmit = useCallback(async () => {
-        const res = await refetchVehicleModels()
-        setFilteredVehicleModels(res.data || [])
-    }, [refetchVehicleModels, setFilteredVehicleModels])
+        const data = await getCachedOrFetch()
+        setFilteredVehicleModels(data || [])
+    }, [getCachedOrFetch, setFilteredVehicleModels])
 
     //  Validation schema
     const bookingSchema = useMemo(
