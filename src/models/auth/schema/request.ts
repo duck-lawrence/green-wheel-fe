@@ -11,7 +11,7 @@ export type UserRegisterCompleteReq = {
 }
 
 export type UserChangePasswordReq = {
-    oldPassword: string
+    oldPassword?: string
     password: string
     confirmPassword: string
 }

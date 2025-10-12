@@ -1,4 +1,4 @@
-import { Sex, SupportRequestStatus, SupportRequestType } from "@/constants/enum"
+import { Sex } from "@/constants/enum"
 
 export type CreateUserReq = {
     email?: string
@@ -16,13 +16,8 @@ export type UserUpdateReq = {
     dateOfBirth?: string
 }
 
-export type CreateSupportReq = {
-    title: string
-    description: string
-    type: SupportRequestType
-}
-
-export type UpdateSupportReq = {
-    reply: string
-    status: SupportRequestStatus
+export type UserFilterReq = {
+    phone?: string
+    citizenIdNumber?: string
+    driverLicenseNumber?: string
 }

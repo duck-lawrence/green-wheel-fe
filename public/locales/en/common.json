@@ -20,6 +20,7 @@
         "logout": "Logout failed"
     },
     "common": {
+        "upload": "Upload",
         "update": "Update",
         "save_changes": "Save Changes",
         "cancel": "Cancel",
@@ -34,6 +35,8 @@
         "already_have_account": "Already have an account?",
         "send_otp": "Send OTP",
         "email": "Email",
+        "set_password": "Set Password",
+        "set_your_password": "Set a password for your account so you can also sign in with email and password next time.",
         "change_password": "Change Password",
         "old_password": "Old password",
         "password": "Password",
@@ -50,9 +53,11 @@
         "otp_must_have_6_digits": "OTP must have 6 digits",
         "rate_limit_otp": "Resend OTP after 1 minute",
         "attemp_otp": "Too many attemps, please resend to get new OTP",
+
         "email_already_exists": "This email already exists",
         "email_require": "Email is required",
         "invalid_email": "Email is invalid",
+
         "password_too_short": "Password must be at least 8 characters",
         "password_can_not_empty": "Password is required",
         "new_password_can_not_empty": "New password is required",
@@ -61,37 +66,67 @@
         "old_password_is_incorrect": "Old password is incorrect",
         "old_password_require": "Old password is required",
         "invalid_email_or_password": "Invalid email or password",
+        "is_google_linked_not_password": "Looks like your account is linked with Google and doesn’t have a password yet. Try login in with Google, or use Forgot Password to create one.",
+
         "invalid_user_age": "Age must be at least 21",
+
         "phone": "Phone",
         "phone_require": "Phone is required",
         "invalid_phone": "Phone must be 10 digits and start with 0",
         "phone_already_exist": "This phone already exists",
-        "enter_phone_to_booking": "Please enter your phone in profile to continue booking",
+
         "first_name": "First name",
         "first_name_require": "First name is required",
         "invalid_first_name": "First name only contains letters",
+
         "last_name": "Last name",
         "last_name_require": "Last name is required",
         "invalid_last_name": "Last name only contains letters",
+
         "account_name": "Account Name",
         "full_name": "Full name",
         "full_name_require": "Full name is required",
+        "nationality_require": "Nationality is required",
+
         "date_of_birth": "Date of Birth",
         "date_of_birth_require": "Date of birth is required",
+
         "sex": "Sex",
         "sex_require": "Sex is required",
         "choose_sex": "Choose Sex",
+
         "upload_avatar": "Upload avatar",
         "delete_avatar": "Delete avatar",
+
+        "no": "No.",
+        "nationality": "Nationality",
+        "expires_at": "Expires at",
+
+        "citizen_identity": "Cititzen Identity",
+        "upload_citizen_identity": "Upload Cititzen Identity",
+        "please_upload_citizen_identity": "Please upload your Cititzen Identity",
+        "citizen_identity_number_require": "Cititzen Identity number is required",
+        "citizen_identity_expired_time_require": "Cititzen Identity expired time is required",
+
+        "driver_license": "Driver License",
+        "upload_driver_license": "Upload Driver License",
+        "please_upload_driver_license": "Please upload your Driver License",
+        "class": "Class",
+        "driver_license_class_require": "Driver License class is required",
+        "driver_license_number_require": "Driver License number is required",
+        "driver_license_expired_time_require": "Driver License expired time is required",
+
         "unauthorized": "Unauthorized",
         "invalid_token": "Invalid token",
+        "invalid_access_token": "Invalid access token",
         "missing_token": "Missing token in header",
         "user_not_found": "User not found",
         "account_information": "Account information",
         "profile": "Profile",
         "rental_contracts": "Rental Contract",
         "my_profile": "My Profile",
-        "edit_information": "Edit Information"
+        "edit_information": "Edit Information",
+        "enter_required_info": "Please enter required information in profile to continue booking"
     },
     "login": {
         "welcome": "Welcome Back",
@@ -205,7 +240,7 @@
         "cash": "Cash",
         "momo_wallet": "Momo Wallet",
         "in_progress": "In Progress",
-        "resolved": "Resolved",
+        "resolve": "Resolve",
         "technical": "Technical",
         "payment": "Payment",
         "internal": "Internal",
@@ -233,7 +268,10 @@
         "return_payment": "Return payment",
         "refund_payment": "Refund payment",
         "other_payment": "Other payment",
-        "reservation_payment": "Reservation payment"
+        "reservation_payment": "Reservation payment",
+        "customerSupport": "Customer support",
+        "staffReport": "Staff report",
+        "escalatedToAdmin": "Escalated to admin"
     },
     "car_rental": {
         "vehicle": "Vehicle",
@@ -363,7 +401,10 @@
         "send_message": "Send Message",
         "sub": "Our team will get back to you as soon as possible. For urgent matters, please call our hotline."
     },
-    "aboutUs": {
+    "rental_contract": {
+        "back_to_rental_contract": "Back to rental contract"
+    },
+    "about_us": {
         "": ""
     }
 }

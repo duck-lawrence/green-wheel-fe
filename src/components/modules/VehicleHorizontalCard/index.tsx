@@ -5,8 +5,8 @@ import { Button, Chip, Image, cn } from "@heroui/react"
 import { SteeringWheel, UsersThree } from "@phosphor-icons/react"
 import { useTranslation } from "react-i18next"
 import { CardStyled } from "@/components"
-import { formatCurrency } from "@/utils/helpers/currentcy"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
+import { formatCurrency } from "@/utils/helpers/currency"
 
 type VehicleHorizontalCardProps = {
     vehicleModel: VehicleModelViewRes

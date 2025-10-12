@@ -84,7 +84,7 @@ Tips:
 
 | No | Student ID | Name | GitHub URL |ROLE
 | --- | --- | --- | --- |--- |
-| 1 | SE192160 | Trang Thuận Đức | [ducklawrence05](https://github.com/ducklawrence05) |Leader|
+| 1 | SE192160 | Trang Thuận Đức | [duck-lawrence](https://github.com/duck-lawrence) |Leader|
 | 2 | SE183274 | Ngô Gia Huy | [devgiahuy](https://github.com/devgiahuy) |Front-end|
 | 3 | SE192427 | Lê Hoàng Duy | [MavilH](https://github.com/MavilH) |Back-end|
 | 4 | SE194177 | Nguyễn Quang Huy | [WuagHy](https://github.com/WuagHy) |Back-end|

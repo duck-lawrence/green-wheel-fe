@@ -2,6 +2,7 @@
 import {
     AvaterStyled,
     ButtonStyled,
+    CitizenIdentityProfile,
     DatePickerStyled,
     DropdownStyled,
     EnumPicker,
@@ -9,7 +10,6 @@ import {
     ImageUploaderModal,
     InputStyled
 } from "@/components"
-import { parseDate } from "@internationalized/date"
 import {
     useDay,
     useDeleteAvatar,
@@ -29,14 +29,17 @@ import { SexLabels } from "@/constants/labels"
 import { DEFAULT_AVATAR_URL } from "@/constants/constants"
 import { DropdownItem, DropdownMenu, DropdownTrigger, useDisclosure } from "@heroui/react"
 import { NAME_REGEX, PHONE_REGEX } from "@/constants/regex"
+import { DriverLicenseProfile } from "@/components/shared/Profile/DriverLicenseProfile"
 
 export default function ProfilePage() {
     const { t } = useTranslation()
-    const { formatDateTime } = useDay({})
+    const [editable, setEditable] = useState(false)
+    const { toDate, formatDateTime } = useDay({ defaultFormat: "YYYY-MM-DD" })
     const { data: user } = useGetMe()
     const updateMeMutation = useUpdateMe({ onSuccess: undefined })
+    // avatar
+    const uploadAvatar = useUploadAvatar({ onSuccess: undefined })
     const deleteAvatarMutation = useDeleteAvatar({ onSuccess: undefined })
-    const [showChange, setShowChange] = useState(true)
 
     const {
         isOpen: isDropdownOpen,
@@ -47,9 +50,8 @@ export default function ProfilePage() {
     const { imgSrc, setImgSrc, isOpen, onOpenChange, onClose, onFileSelect } = useImageUploadModal({
         onBeforeOpenModal: onDropdownClose
     })
-    const uploadAvatar = useUploadAvatar({ onSuccess: undefined })
 
-    // ===== Delete avatar =====
+    // ===== Avatar =====
     const handleDeleteAvatar = useCallback(async () => {
         await deleteAvatarMutation.mutateAsync()
     }, [deleteAvatarMutation])
@@ -58,9 +60,9 @@ export default function ProfilePage() {
     const handleUpdateMe = useCallback(
         async (values: UserUpdateReq) => {
             await updateMeMutation.mutateAsync(values)
-            setShowChange(!showChange)
+            setEditable(!editable)
         },
-        [updateMeMutation, showChange, setShowChange]
+        [updateMeMutation, editable, setEditable]
     )
 
     const updateMeFormik = useFormik({
@@ -80,7 +82,7 @@ export default function ProfilePage() {
                 .required(t("user.last_name_require"))
                 .matches(NAME_REGEX, t("user.invalid_last_name")),
             phone: Yup.string()
-                // .required(t("user.phone_require"))
+                .required(t("user.phone_require"))
                 .matches(PHONE_REGEX, t("user.invalid_phone")),
             sex: Yup.number().required(t("user.sex_require")),
             dateOfBirth: Yup.string().required(t("user.date_of_birth_require"))
@@ -89,9 +91,9 @@ export default function ProfilePage() {
     })
 
     return (
-        <div>
+        <div className="px-4">
             {/* Title */}
-            <div className="text-3xl mb-4 px-4 pb-4 font-bold">{t("user.account_information")}</div>
+            <div className="text-3xl mb-8 font-bold">{t("user.account_information")}</div>
 
             {/* Avatar Upload Modal */}
             <ImageUploaderModal
@@ -107,7 +109,7 @@ export default function ProfilePage() {
                 label={t("user.upload_avatar")}
             />
 
-            <div className="flex justify-center gap-20 items-center">
+            <div className="flex justify-between mb-8 items-center">
                 {/* Avatar */}
                 <DropdownStyled
                     placement="right-end"
@@ -141,23 +143,21 @@ export default function ProfilePage() {
                 <div>
                     {/* Top container */}
                     <div className="flex justify-between items-center">
-                        {/* logo and user full name */}
-                        <div className="flex gap-4 items-center w-fit">
-                            <div
-                                className="text-3xl" //
-                            >{`${user?.lastName.trim() || ""} ${
-                                user?.firstName.trim() || ""
-                            }`}</div>
-                        </div>
+                        {/* user full name */}
+                        <div
+                            className="text-3xl" //
+                        >{
+                            `${user?.lastName.trim() || ""} ${user?.firstName.trim() || ""}` //
+                        }</div>
 
                         {/* Button enable show change */}
                         <div>
-                            {showChange ? (
+                            {!editable ? (
                                 <ButtonStyled
                                     className="border-primary
-                                bg-white border text-primary   
-                                hover:text-white hover:bg-primary"
-                                    onPress={() => setShowChange(!showChange)}
+                                    bg-white border text-primary   
+                                    hover:text-white hover:bg-primary"
+                                    onPress={() => setEditable(!editable)}
                                 >
                                     <div>
                                         <NotePencilIcon />
@@ -167,7 +167,9 @@ export default function ProfilePage() {
                             ) : (
                                 <div className="flex gap-2">
                                     <ButtonStyled
-                                        className="border-primary bg-white border text-primary hover:text-white hover:bg-primary"
+                                        className="border-primary 
+                                            bg-white border text-primary 
+                                            hover:text-white hover:bg-primary"
                                         isLoading={updateMeFormik.isSubmitting}
                                         isDisabled={
                                             !updateMeFormik.isValid || !updateMeFormik.dirty
@@ -179,7 +181,7 @@ export default function ProfilePage() {
                                     <ButtonStyled
                                         isDisabled={updateMeFormik.isSubmitting}
                                         onPress={() => {
-                                            setShowChange(!showChange)
+                                            setEditable(!editable)
                                             updateMeFormik.resetForm()
                                         }}
                                     >
@@ -191,12 +193,13 @@ export default function ProfilePage() {
                     </div>
 
                     {/* Form for update */}
-                    <div className="flex flex-col mt-5 gap-2">
+                    <form
+                        onSubmit={updateMeFormik.submitForm}
+                        className="flex flex-col mt-5 gap-2 min-w-xl max-w-xl"
+                    >
                         <div className="flex justify-center gap-2">
                             <InputStyled
-                                {...(showChange === false
-                                    ? { isReadOnly: false }
-                                    : { isReadOnly: true })}
+                                isReadOnly={!editable}
                                 label={t("user.last_name")}
                                 variant="bordered"
                                 value={updateMeFormik.values.lastName}
@@ -204,7 +207,7 @@ export default function ProfilePage() {
                                     updateMeFormik.setFieldValue("lastName", value)
                                 }
                                 isInvalid={
-                                    !showChange &&
+                                    editable &&
                                     !!(
                                         updateMeFormik.touched.lastName &&
                                         updateMeFormik.errors.lastName
@@ -217,9 +220,7 @@ export default function ProfilePage() {
                             />
 
                             <InputStyled
-                                {...(showChange === false
-                                    ? { isReadOnly: false }
-                                    : { isReadOnly: true })}
+                                isReadOnly={!editable}
                                 label={t("user.first_name")}
                                 variant="bordered"
                                 value={updateMeFormik.values.firstName}
@@ -227,7 +228,7 @@ export default function ProfilePage() {
                                     updateMeFormik.setFieldValue("firstName", value)
                                 }
                                 isInvalid={
-                                    !showChange &&
+                                    editable &&
                                     !!(
                                         updateMeFormik.touched.firstName &&
                                         updateMeFormik.errors.firstName
@@ -243,25 +244,17 @@ export default function ProfilePage() {
                         <div className="flex justify-center gap-2">
                             {/* Phone */}
                             <InputStyled
-                                {...(showChange === false
-                                    ? { isReadOnly: false }
-                                    : { isReadOnly: true })}
+                                isRequired
+                                isReadOnly={!editable}
                                 variant="bordered"
                                 label={t("user.phone")}
                                 maxLength={10}
-                                pattern="[0-9]*"
-                                onInput={(e) => {
-                                    e.currentTarget.value = e.currentTarget.value.replace(
-                                        /[^0-9]/g,
-                                        ""
-                                    )
-                                }}
                                 value={updateMeFormik.values.phone}
                                 onValueChange={(value) =>
                                     updateMeFormik.setFieldValue("phone", value)
                                 }
                                 isInvalid={
-                                    !showChange &&
+                                    editable &&
                                     !!(updateMeFormik.touched.phone && updateMeFormik.errors.phone)
                                 }
                                 errorMessage={updateMeFormik.errors.phone}
@@ -271,9 +264,7 @@ export default function ProfilePage() {
                             />
 
                             <EnumPicker
-                                {...(showChange === false
-                                    ? { isReadOnly: false }
-                                    : { isReadOnly: true })}
+                                isReadOnly={!editable}
                                 label={t("user.sex")}
                                 labels={SexLabels}
                                 value={updateMeFormik.values.sex}
@@ -281,12 +272,11 @@ export default function ProfilePage() {
                             />
 
                             <DatePickerStyled
-                                {...(showChange === false
-                                    ? { isReadOnly: false }
-                                    : { isReadOnly: true })}
+                                isRequired
+                                isReadOnly={!editable}
                                 label={t("user.date_of_birth")}
                                 isInvalid={
-                                    !showChange &&
+                                    editable &&
                                     !!(
                                         updateMeFormik.touched.dateOfBirth &&
                                         updateMeFormik.errors.dateOfBirth
@@ -295,7 +285,7 @@ export default function ProfilePage() {
                                 errorMessage={updateMeFormik.errors.dateOfBirth}
                                 value={
                                     updateMeFormik.values.dateOfBirth
-                                        ? parseDate(updateMeFormik.values.dateOfBirth.split("T")[0]) // ✅ convert string → DateValue
+                                        ? toDate(updateMeFormik.values.dateOfBirth)
                                         : null
                                 }
                                 onChange={(value) => {
@@ -310,9 +300,12 @@ export default function ProfilePage() {
                                 }}
                             />
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
+
+            <CitizenIdentityProfile />
+            <DriverLicenseProfile />
         </div>
     )
 }

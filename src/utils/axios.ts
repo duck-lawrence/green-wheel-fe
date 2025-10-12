@@ -35,7 +35,7 @@ axiosInstance.interceptors.response.use(
 
         if (
             error.response?.status === 401 &&
-            error.response?.data.detail === "user.invalid_token" &&
+            error.response?.data.detail === "user.invalid_access_token" &&
             // (error.response?.data.detail === "user.invalid_token" ||
             //     error.response?.data.detail === "user.missing_token" ||
             //     hasToken) &&

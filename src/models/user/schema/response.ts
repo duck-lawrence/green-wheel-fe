@@ -11,6 +11,7 @@ export type UserProfileViewRes = {
     phone?: string
     licenseUrl?: string
     citizenUrl?: string
+    needSetPassword: boolean
     role?: RoleViewRes
     station?: StationViewRes
 }
