@@ -1,5 +1,7 @@
 export const QUERY_KEYS = {
     ME: ["me"] as const,
+    CITIZEN_IDENTITY: ["citizenIdentity"] as const,
+    DRIVER_LICENSE: ["driverLicense"] as const,
     STATIONS: ["stations"] as const,
     VEHICLE_SEGMENTS: ["vehicleSegments"] as const,
     VEHICLE_MODELS: ["vehicleModels"] as const,

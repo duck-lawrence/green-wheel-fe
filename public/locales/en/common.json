@@ -74,7 +74,6 @@
         "phone_require": "Phone is required",
         "invalid_phone": "Phone must be 10 digits and start with 0",
         "phone_already_exist": "This phone already exists",
-        "enter_phone_to_booking": "Please enter your phone in profile to continue booking",
 
         "first_name": "First name",
         "first_name_require": "First name is required",
@@ -87,6 +86,7 @@
         "account_name": "Account Name",
         "full_name": "Full name",
         "full_name_require": "Full name is required",
+        "nationality_require": "Nationality is required",
 
         "date_of_birth": "Date of Birth",
         "date_of_birth_require": "Date of birth is required",
@@ -98,6 +98,24 @@
         "upload_avatar": "Upload avatar",
         "delete_avatar": "Delete avatar",
 
+        "no": "No.",
+        "nationality": "Nationality",
+        "expires_at": "Expires at",
+
+        "citizen_identity": "Cititzen Identity",
+        "upload_citizen_identity": "Upload Cititzen Identity",
+        "please_upload_citizen_identity": "Please upload your Cititzen Identity",
+        "citizen_identity_number_require": "Cititzen Identity number is required",
+        "citizen_identity_expired_time_require": "Cititzen Identity expired time is required",
+
+        "driver_license": "Driver License",
+        "upload_driver_license": "Upload Driver License",
+        "please_upload_driver_license": "Please upload your Driver License",
+        "class": "Class",
+        "driver_license_class_require": "Driver License class is required",
+        "driver_license_number_require": "Driver License number is required",
+        "driver_license_expired_time_require": "Driver License expired time is required",
+
         "unauthorized": "Unauthorized",
         "invalid_token": "Invalid token",
         "invalid_access_token": "Invalid access token",
@@ -107,7 +125,8 @@
         "profile": "Profile",
         "rental_contracts": "Rental Contract",
         "my_profile": "My Profile",
-        "edit_information": "Edit Information"
+        "edit_information": "Edit Information",
+        "enter_required_info": "Please enter required information in profile to continue booking"
     },
     "login": {
         "welcome": "Welcome Back",

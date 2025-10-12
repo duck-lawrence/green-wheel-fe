@@ -1,6 +1,6 @@
 import { Sex } from "@/constants/enum"
 
-export type CitizenIdentityRes = {
+export type CitizenIdentityViewRes = {
     id: string
     number: string
     fullName: string

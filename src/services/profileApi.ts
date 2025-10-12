@@ -1,5 +1,5 @@
-import { CitizenIdentityRes } from "@/models/citizen-identity/schema/response"
-import { DriverLicenseRes } from "@/models/driver-license/schema/response"
+import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
+import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
 import { UserUpdateReq } from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import axiosInstance from "@/utils/axios"
@@ -35,29 +35,31 @@ export const profileApi = {
 
     // citizen identity
     uploadCitizenId: (formData: FormData) =>
-        requestWrapper<CitizenIdentityRes>(async () => {
-            const res = await axiosInstance.post("/users/citizen-identity", formData)
+        requestWrapper<CitizenIdentityViewRes>(async () => {
+            const res = await axiosInstance.post("/users/citizen-identity", formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            })
             return res.data
         }),
 
     getMyCitizenId: () =>
-        requestWrapper<CitizenIdentityRes>(async () => {
+        requestWrapper<CitizenIdentityViewRes>(async () => {
             const res = await axiosInstance.get("/users/citizen-identity")
             return res.data
         }),
 
     // driver license
     uploadDriverLicense: (formData: FormData) =>
-        requestWrapper<CitizenIdentityRes>(async () => {
-            const res = await axiosInstance.post("/users/driver-license", formData)
+        requestWrapper<DriverLicenseViewRes>(async () => {
+            const res = await axiosInstance.post("/users/driver-license", formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            })
             return res.data
         }),
 
     getMyDriverLicense: () =>
-        requestWrapper<CitizenIdentityRes>(async () => {
+        requestWrapper<DriverLicenseViewRes>(async () => {
             const res = await axiosInstance.get("/users/driver-license")
             return res.data
         })
-
-    // createAnonymous: () => requestWrapper<>
 }

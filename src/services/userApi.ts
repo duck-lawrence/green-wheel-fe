@@ -1,5 +1,5 @@
-import { CitizenIdentityRes } from "@/models/citizen-identity/schema/response"
-import { DriverLicenseRes } from "@/models/driver-license/schema/response"
+import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
+import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
 import { CreateUserReq, UserFilterReq } from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import axiosInstance from "@/utils/axios"
@@ -20,7 +20,7 @@ export const userApi = {
         }),
 
     uploadCitizenIdForAnonymous: ({ userId, formData }: { userId: string; formData: FormData }) =>
-        requestWrapper<CitizenIdentityRes>(async () => {
+        requestWrapper<CitizenIdentityViewRes>(async () => {
             const res = await axiosInstance.post(`/users/${userId}/citizen-identity`, formData)
             return res.data
         }),
@@ -32,7 +32,7 @@ export const userApi = {
         userId: string
         formData: FormData
     }) =>
-        requestWrapper<DriverLicenseRes>(async () => {
+        requestWrapper<DriverLicenseViewRes>(async () => {
             const res = await axiosInstance.post(`/users/${userId}/driver-license`, formData)
             return res.data
         })

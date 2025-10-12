@@ -8,19 +8,25 @@ type ImageUploadButtonProps = {
     label: string
     accept?: string
     className?: string
+    btnClassName?: string
 }
 
 export function ImageUploadButton({
     onFileSelect,
     label,
     accept = "image/*",
-    className = ""
+    className = "",
+    btnClassName = ""
 }: ImageUploadButtonProps) {
     const fileRef = useRef<HTMLInputElement>(null)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
-        if (file) onFileSelect(file)
+        if (file) {
+            onFileSelect(file)
+            // reset input để có thể chọn lại cùng ảnh
+            e.target.value = ""
+        }
     }
 
     return (
@@ -33,7 +39,7 @@ export function ImageUploadButton({
                 className="hidden"
             />
             <ButtonStyled
-                className="block w-fit bg-transparent"
+                className={cn("block w-fit bg-transparent", btnClassName)}
                 onPress={() => fileRef.current?.click()}
             >
                 {label}
