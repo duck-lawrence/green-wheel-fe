@@ -221,7 +221,7 @@
         "cash": "Cash",
         "momo_wallet": "Momo Wallet",
         "in_progress": "In Progress",
-        "resolved": "Resolved",
+        "resolve": "Resolve",
         "technical": "Technical",
         "payment": "Payment",
         "internal": "Internal",
@@ -249,7 +249,10 @@
         "return_payment": "Return payment",
         "refund_payment": "Refund payment",
         "other_payment": "Other payment",
-        "reservation_payment": "Reservation payment"
+        "reservation_payment": "Reservation payment",
+        "customerSupport": "Customer support",
+        "staffReport": "Staff report",
+        "escalatedToAdmin": "Escalated to admin"
     },
     "car_rental": {
         "vehicle": "Vehicle",

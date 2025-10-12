@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { FillterBarOrder } from "@/components/shared/User/FilterBarOrder"
-import TableStyled from "@/components/styled/TableStyled"
 import { orders } from "@/data/order"
+import { TableContractStaff } from "@/components"
 
 export default function StaffContractsPage() {
     const { t } = useTranslation()
@@ -28,7 +28,7 @@ export default function StaffContractsPage() {
                 <FillterBarOrder onFilterChange={() => setFilter(filters)} />
             </div>
 
-            <TableStyled data={order} loading={loading} />
+            <TableContractStaff data={order} loading={loading} />
         </div>
     )
 }

@@ -11,7 +11,9 @@ import {
     PaymentMethod,
     LicenseClass,
     OrderStatus,
-    InvoiceType
+    InvoiceType,
+    TicketType,
+    TicketStatus
 } from "./enum"
 
 export const SexLabels: Record<Sex, string> = {
@@ -104,6 +106,17 @@ export const PaymentMethodLabels: Record<PaymentMethod, string> = {
 //     [StaffReportType.RelatedToSupport]: i18n.t("enum.related_to_support"),
 //     [StaffReportType.Other]: i18n.t("enum.other")
 // }
+
+export const TicketTypeLabels: Record<TicketType, string> = {
+    [TicketType.CustomerSupport]: i18n.t("enum.customerSupport"),
+    [TicketType.StaffReport]: i18n.t("enum.staffReport")
+}
+
+export const TicketStatusLabels: Record<TicketStatus, string> = {
+    [TicketStatus.Pending]: i18n.t("enum.pending"),
+    [TicketStatus.Resolve]: i18n.t("enum.resolve"),
+    [TicketStatus.EscalatedToAdmin]: i18n.t("enum.escalatedToAdmin")
+}
 
 export const LicenseClassLabels: Record<LicenseClass, string> = {
     [LicenseClass.B1]: i18n.t("enum.b1"),
