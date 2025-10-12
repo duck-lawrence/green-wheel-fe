@@ -1,4 +1,4 @@
-import { RentalContractStatus } from "@/constants/enum"
+import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 import { CreateRentalContractReq } from "@/models/rental-contract/schema/request"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import axiosInstance from "@/utils/axios"
@@ -17,12 +17,12 @@ export const rentalContractApi = {
             const res = await axiosInstance.get("/rental-contracts", { params })
             return res.data
         }),
-    updateStatus: (query: { id: string; status: RentalContractStatus }) =>
-        requestWrapper<RentalContractViewRes>(async () => {
-            const params = buildQueryParams({ status: query.status })
-            const res = await axiosInstance.patch(`/rental-contracts/${query.id}/status`, {
-                params
-            })
-            return res.data
+    acceptContract: ({ id }: { id: string }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/rental-contracts/${id}/accept`)
+        }),
+    rejectContract: ({ id, vehicalStatus }: { id: string; vehicalStatus: VehicleStatus }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/rental-contracts/${id}/reject`, { vehicalStatus })
         })
 }

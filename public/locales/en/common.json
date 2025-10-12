@@ -145,7 +145,8 @@
         "pickup_time": "Pickup Time",
         "return_time": "Return Time",
         "pickup_address": "Pickup Address",
-        "status": "Status"
+        "status": "Status",
+        "id": "Id"
     },
     "contral_form": {
         "payment_method_require": "Please select a payment method",

@@ -1,4 +1,4 @@
-import { RentalContractStatus } from "@/constants/enum"
+import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { CitizenIdentityRes } from "@/models/citizen-identity/schema/response"
 import { BackendError } from "@/models/common/response"
@@ -49,23 +49,18 @@ export const useCreateRentalContract = ({ onSuccess }: { onSuccess?: () => void 
     })
 }
 
-export const useUpdateSatusRentalContract = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useConfirmContract = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
 
-    return useMutation({
-        // mutationFn: async ({ id, status }: { id: string; status: RentalContractStatus }) => {
-        //     await rentalContractApi.updateStatus({ id, status })
-        // },
-
-        // demo
-        mutationFn: async ({ id, status }: { id: string; status: RentalContractStatus }) => {
-            console.log("Fake mutate:", id, status)
+    const acceptContract = useMutation({
+        mutationFn: async ({ id }: { id: string }) => {
+            await rentalContractApi.acceptContract({ id })
         },
 
         onSuccess: () => {
             onSuccess?.()
-            toast.success(t("contract.update_success") || "Status updated successfully!")
+            toast.success(t("contract.update_success"))
             queryClient.invalidateQueries({ queryKey: ["rental-contracts"] })
             if (onSuccess) onSuccess()
         },
@@ -78,6 +73,29 @@ export const useUpdateSatusRentalContract = ({ onSuccess }: { onSuccess?: () => 
             )
         }
     })
+
+    const rejectContract = useMutation({
+        mutationFn: async ({ id, vehicalStatus }: { id: string; vehicalStatus: VehicleStatus }) => {
+            await rentalContractApi.rejectContract({ id, vehicalStatus })
+        },
+
+        onSuccess: () => {
+            onSuccess?.()
+            toast.success(t("contract.update_success"))
+            queryClient.invalidateQueries({ queryKey: ["rental-contracts"] })
+            if (onSuccess) onSuccess()
+        },
+
+        onError: (error: BackendError) => {
+            toast.error(
+                translateWithFallback(t, error.detail) ||
+                    t("contract.update_failed") ||
+                    "Failed to update contract status!"
+            )
+        }
+    })
+
+    return { acceptContract, rejectContract }
 }
 
 export const useSearchRentalContracts = ({

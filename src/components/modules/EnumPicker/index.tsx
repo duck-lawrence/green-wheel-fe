@@ -40,6 +40,7 @@ export function EnumPicker<T extends number>({
                 }
             }}
             isClearable
+            hidden
         >
             {(item) => (
                 <AutocompleteItem key={item.key}>{item.label as React.ReactNode}</AutocompleteItem>

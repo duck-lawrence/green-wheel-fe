@@ -14,15 +14,15 @@ export default function StaffContractsPage() {
     const [contracts, setContracts] = useState<RentalContractViewRes[]>([])
     const [filters, setFilter] = useState({})
 
-    const searchContractsMutation = useSearchRentalContracts({
+    const search = useSearchRentalContracts({
         onSuccess: (data) => setContracts(data)
     })
 
     const handleFilterChange = useCallback(
         async (filters: any) => {
-            await searchContractsMutation.mutateAsync(filters)
+            await search.mutateAsync(filters)
         },
-        [searchContractsMutation]
+        [search]
     )
 
     useEffect(() => {
