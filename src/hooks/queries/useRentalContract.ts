@@ -1,5 +1,6 @@
 import { RentalContractStatus } from "@/constants/enum"
 import { QUERY_KEYS } from "@/constants/queryKey"
+import { CitizenIdentityRes } from "@/models/citizen-identity/schema/response"
 import { BackendError } from "@/models/common/response"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { rentalContractApi } from "@/services/rentalContractApi"
@@ -36,14 +37,73 @@ export const useCreateRentalContract = ({ onSuccess }: { onSuccess?: () => void 
     return useMutation({
         mutationFn: rentalContractApi.create,
         onSuccess: () => {
-            onSuccess?.()
             toast.success(t("contral_form.wait_for_confirm"), {
                 position: "top-center",
                 duration: 5000
             })
+            onSuccess?.()
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useUpdateSatusRentalContract = ({ onSuccess }: { onSuccess?: () => void }) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        // mutationFn: async ({ id, status }: { id: string; status: RentalContractStatus }) => {
+        //     await rentalContractApi.updateStatus({ id, status })
+        // },
+
+        // demo
+        mutationFn: async ({ id, status }: { id: string; status: RentalContractStatus }) => {
+            console.log("Fake mutate:", id, status)
+        },
+
+        onSuccess: () => {
+            onSuccess?.()
+            toast.success(t("contract.update_success") || "Status updated successfully!")
+            queryClient.invalidateQueries({ queryKey: ["rental-contracts"] })
+            if (onSuccess) onSuccess()
+        },
+
+        onError: (error: BackendError) => {
+            toast.error(
+                translateWithFallback(t, error.detail) ||
+                    t("contract.update_failed") ||
+                    "Failed to update contract status!"
+            )
+        }
+    })
+}
+
+export const useSearchRentalContracts = ({
+    onSuccess
+}: {
+    onSuccess?: (data: RentalContractViewRes[]) => void
+}) => {
+    const { t } = useTranslation()
+
+    return useMutation({
+        mutationFn: async (filters: {
+            status?: RentalContractStatus
+            phone?: string
+            citizenIdentity?: CitizenIdentityRes
+            driverLicense?: string
+        }) => {
+            const res = await rentalContractApi.getAll(filters)
+            return res
+        },
+
+        onSuccess: (data) => {
+            onSuccess?.(data)
+            toast.success(t("staff.search_success"))
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail) || t("staff.search_failed"))
         }
     })
 }

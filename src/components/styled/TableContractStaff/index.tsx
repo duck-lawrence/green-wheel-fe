@@ -1,26 +1,23 @@
 "use client"
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react"
-import React from "react"
+import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { ButtonStyled } from "../ButtonStyled"
+import { RentalContractStatus } from "@/constants/enum"
+import { useUpdateSatusRentalContract } from "@/hooks"
+import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 
-type TableStyledProps = {
-    data: {
-        order: string
-        model: string
-        pickupTime: string
-        returnTime: string
-        pickupAddress: string
-        status: string
-    }[]
-    loading: boolean
-}
-
-export function TableContractStaff({ data, loading }: TableStyledProps) {
+export function TableContractStaff({ contracts }: { contracts: RentalContractViewRes[] }) {
     const { t } = useTranslation()
+    const updateStatusMutation = useUpdateSatusRentalContract({})
 
-    if (loading) return <div className="text-center">Loading order...</div>
-    if (!data || data.length === 0) return <div className="text-center">No order</div>
+    const handleUpdateStatus = useCallback(
+        (id: string, status: RentalContractStatus) => {
+            updateStatusMutation.mutateAsync({ id, status })
+        },
+        [updateStatusMutation]
+    )
+
     return (
         <Table aria-label="Example static collection table" className="w-full">
             <TableHeader>
@@ -38,19 +35,32 @@ export function TableContractStaff({ data, loading }: TableStyledProps) {
             </TableHeader>
 
             <TableBody>
-                {data.map((item) => (
-                    <TableRow key={item.order} className="border-b border-gray-300">
-                        <TableCell className="text-center">{item.order}</TableCell>
-                        <TableCell className="text-center">{item.model}</TableCell>
-                        <TableCell className="text-center">{item.pickupTime}</TableCell>
-                        <TableCell className="text-center">{item.returnTime}</TableCell>
-                        <TableCell className="text-center">{item.pickupAddress}</TableCell>
+                {contracts.map((item) => (
+                    <TableRow key={item.id} className="border-b border-gray-300">
+                        <TableCell className="text-center">{item.id}</TableCell>
+                        <TableCell className="text-center">{item.customerId}</TableCell>
+                        <TableCell className="text-center">{item.startDate}</TableCell>
+                        <TableCell className="text-center">{item.endDate}</TableCell>
+                        <TableCell className="text-center">{item.station.name}</TableCell>
                         <TableCell className="text-center">{item.status}</TableCell>
                         <TableCell className="flex gap-2">
-                            <ButtonStyled color="primary" onPress={() => item.status}>
+                            <ButtonStyled
+                                color="primary"
+                                isDisabled={item.status === RentalContractStatus.RequestPending}
+                                onPress={() =>
+                                    handleUpdateStatus(item.id, RentalContractStatus.PaymentPending)
+                                }
+                            >
                                 Accept
                             </ButtonStyled>
-                            <ButtonStyled color="danger">Reject</ButtonStyled>
+                            <ButtonStyled
+                                color="danger"
+                                onPress={() =>
+                                    handleUpdateStatus(item.id, RentalContractStatus.Cancelled)
+                                }
+                            >
+                                Reject
+                            </ButtonStyled>
                         </TableCell>
                     </TableRow>
                 ))}

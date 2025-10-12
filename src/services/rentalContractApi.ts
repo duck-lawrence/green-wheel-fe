@@ -16,5 +16,13 @@ export const rentalContractApi = {
 
             const res = await axiosInstance.get("/rental-contracts", { params })
             return res.data
+        }),
+    updateStatus: (query: { id: string; status: RentalContractStatus }) =>
+        requestWrapper<RentalContractViewRes>(async () => {
+            const params = buildQueryParams({ status: query.status })
+            const res = await axiosInstance.patch(`/rental-contracts/${query.id}/status`, {
+                params
+            })
+            return res.data
         })
 }

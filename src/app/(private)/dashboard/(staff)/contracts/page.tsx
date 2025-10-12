@@ -1,22 +1,35 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { FillterBarOrder } from "@/components/shared/User/FilterBarOrder"
-import { orders } from "@/data/order"
 import { TableContractStaff } from "@/components"
+import FilterContractStaff from "@/components/shared/FilterContractStaff"
+import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
+import { useSearchRentalContracts } from "@/hooks"
+// import { mockContracts } from "@/data/mockContracts"
 
 export default function StaffContractsPage() {
     const { t } = useTranslation()
-    const [order] = useState(orders)
-    const [loading] = useState(false)
+    // const [contracts] = useState(mockContracts)
+    const [contracts, setContracts] = useState<RentalContractViewRes[]>([])
     const [filters, setFilter] = useState({})
 
+    const searchContractsMutation = useSearchRentalContracts({
+        onSuccess: (data) => setContracts(data)
+    })
+
+    const handleFilterChange = useCallback(
+        async (filters: any) => {
+            await searchContractsMutation.mutateAsync(filters)
+        },
+        [searchContractsMutation]
+    )
+
     useEffect(() => {
-        if (filters) {
-            console.log("[staff/contracts] filters sent to BE:", filters)
+        if (contracts.length === 0) {
+            handleFilterChange({})
         }
-    }, [filters])
+    }, [])
 
     return (
         <div className="rounded-2xl bg-white shadow-sm px-6 py-6">
@@ -25,10 +38,17 @@ export default function StaffContractsPage() {
             </div>
 
             <div className="mb-4">
-                <FillterBarOrder onFilterChange={() => setFilter(filters)} />
+                <FilterContractStaff onFilterChange={() => setFilter(filters)} />
             </div>
 
-            <TableContractStaff data={order} loading={loading} />
+            <TableContractStaff contracts={contracts} />
         </div>
     )
 }
+
+// useEffect(() => {
+//     if (filters) {
+//         console.log("[staff/contracts] filters sent to BE:", filters)
+//     }
+// }, [filters])
+//loading={searchContractsMutation.isPending}

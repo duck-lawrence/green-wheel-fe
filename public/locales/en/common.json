@@ -342,7 +342,10 @@
         "report_form_validation_title_required": "Title is required.",
         "report_form_validation_title_max": "Title must be 100 characters or less.",
         "report_form_validation_description_required": "Description is required.",
-        "report_form_validation_description_max": "Description must be 1000 characters or less."
+        "report_form_validation_description_max": "Description must be 1000 characters or less.",
+        "search_success": "Search success",
+        "search_failed": "Search failed",
+        "handovers_filters_title": "Handovers filter title"
     },
     "admin": {
         "dashboard_title": "Admin Dashboard",
@@ -375,5 +378,9 @@
     },
     "aboutUs": {
         "": ""
+    },
+    "contract": {
+        "update_success": "Update success",
+        "update_failed": "Update failed"
     }
 }

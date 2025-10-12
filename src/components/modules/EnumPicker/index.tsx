@@ -30,7 +30,6 @@ export function EnumPicker<T extends number>({
             items={items}
             isReadOnly={isReadOnly}
             variant="bordered"
-            isClearable
             className={className}
             // className="max-w-55 h-14"
             label={label}
@@ -40,6 +39,7 @@ export function EnumPicker<T extends number>({
                     onChange(Number(key) as T)
                 }
             }}
+            isClearable
         >
             {(item) => (
                 <AutocompleteItem key={item.key}>{item.label as React.ReactNode}</AutocompleteItem>
