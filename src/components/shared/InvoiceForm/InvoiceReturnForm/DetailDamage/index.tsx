@@ -1,34 +1,60 @@
+"use client"
+
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { InvoiceItemType } from "@/constants/enum"
 import React from "react"
 import { formatCurrency } from "@/utils/helpers/currency"
+import { Wrench, Note, CurrencyCircleDollar, HashStraight } from "@phosphor-icons/react"
 
 export default function DetailDamage({ invoice }: { invoice: InvoiceViewRes }) {
     // Lọc ra các item có type = Damage
-    const damageItems = invoice.items?.filter((item) => item.type === InvoiceItemType.Damage) ?? [] // dùng nullish coalescing thay vì ||
+    const itemDamage =
+        invoice.invoiceItems?.filter((item) => item.type === InvoiceItemType.Damage) ?? []
 
     return (
-        <div className="space-y-3">
-            {damageItems.length > 0 ? (
-                damageItems.map((value) => (
+        <div className="space-y-4">
+            {itemDamage.length > 0 ? (
+                itemDamage.map((value, index) => (
                     <div
-                        key={value.id}
-                        className="p-3 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800"
+                        key={value.id || index}
+                        className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl 
+                       bg-white dark:bg-gray-900 shadow-sm hover:shadow-md 
+                       transition-shadow duration-300"
                     >
-                        <p className="font-semibold text-gray-800 dark:text-gray-100">
-                            {/* Nếu có checkListItem.component.name thì show */}
-                            {value.checkListItem?.component?.name || "Hạng mục hư hỏng"}
-                        </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-300">
-                            Mô tả: {value.checkListItem?.notes || "Không có mô tả"}
-                        </p>
-                        <p className="text-sm text-primary font-medium">
-                            Chi phí: {formatCurrency(value.subTotal ?? 0)}
+                        {/* Tên hạng mục */}
+                        <div className="flex items-center justify-between mb-2">
+                            <p className="font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+                                <Wrench size={20} className="text-primary" />
+                                {value.checkListItem?.component?.name || "Hạng mục hư hỏng"}
+                            </p>
+                            {/* Thông tin số lượng + chi phí */}
+                            <div className="flex items-center gap-6 sm:gap-8">
+                                {/* Số lượng */}
+                                <p className="flex items-center text-sm sm:text-base text-gray-700 dark:text-gray-300 gap-1">
+                                    <HashStraight size={18} className="text-teal-500" />
+                                    <span className="font-medium">SL:</span> {value.quantity ?? 0}
+                                </p>
+
+                                {/* Chi phí */}
+                                <p className="text-primary font-semibold flex items-center gap-1">
+                                    <CurrencyCircleDollar size={18} weight="duotone" />
+                                    {formatCurrency(value.subTotal ?? 0)}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Mô tả */}
+                        <p className="text-sm text-gray-600 dark:text-gray-300 flex items-start gap-2">
+                            <Note size={16} className="text-teal-500 mt-[2px]" />
+                            {value.checkListItem?.notes || "Không có mô tả chi tiết."}
                         </p>
                     </div>
                 ))
             ) : (
-                <p className="text-gray-500 text-center italic">Không có hạng mục hư hỏng nào</p>
+                <div className="flex flex-col items-center justify-center py-6 text-gray-500 dark:text-gray-400">
+                    <Wrench size={28} className="mb-2 text-gray-400" />
+                    <p className="italic">Không có hạng mục hư hỏng nào.</p>
+                </div>
             )}
         </div>
     )

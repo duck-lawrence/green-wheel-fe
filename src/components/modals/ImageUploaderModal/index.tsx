@@ -1,11 +1,11 @@
 "use client"
 
 import React, { useCallback, useState } from "react"
-import { ModalStyled, ButtonStyled } from "@/components/styled"
+import { ModalStyled, ButtonStyled } from "@/components/"
 import { ModalContent, ModalBody, ModalHeader, Spinner } from "@heroui/react"
 import { getCroppedImage } from "@/utils/helpers/image"
-import { ImageCropper } from "@/components/shared"
 import { useTranslation } from "react-i18next"
+import { ImageCropper } from "./ImageCropper"
 
 type ImageUploaderModalProps = {
     isOpen: boolean
@@ -79,7 +79,7 @@ export function ImageUploaderModal({
                                     onPress={handleUpload}
                                     isDisabled={isUploading}
                                 >
-                                    {isUploading ? <Spinner /> : label}
+                                    {isUploading ? <Spinner /> : t("common.upload")}
                                 </ButtonStyled>
                                 <ButtonStyled onPress={onClose} isDisabled={isUploading}>
                                     {t("common.cancel")}

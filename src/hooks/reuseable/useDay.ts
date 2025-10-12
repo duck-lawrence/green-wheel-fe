@@ -23,7 +23,6 @@ export const useDay = ({
         timeZone?: string
     }) => {
         if (!date) return ""
-
         if (typeof date === "string") {
             return dayjs(date).format(defaultFormat)
         }

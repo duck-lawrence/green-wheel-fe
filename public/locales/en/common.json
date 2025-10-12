@@ -20,6 +20,7 @@
         "logout": "Logout failed"
     },
     "common": {
+        "upload": "Upload",
         "update": "Update",
         "save_changes": "Save Changes",
         "cancel": "Cancel",
@@ -370,7 +371,10 @@
         "send_message": "Send Message",
         "sub": "Our team will get back to you as soon as possible. For urgent matters, please call our hotline."
     },
-    "aboutUs": {
+    "rental_contract": {
+        "back_to_rental_contract": "Back to rental contract"
+    },
+    "about_us": {
         "": ""
     }
 }

@@ -33,7 +33,6 @@ export const useUpdateMe = ({ onSuccess }: { onSuccess?: () => void }) => {
             return req
         },
         onSuccess: (data) => {
-            // update cache
             queryClient.setQueryData<UserProfileViewRes>(QUERY_KEYS.ME, (prev) => {
                 if (!prev) return prev
                 return {
@@ -58,7 +57,6 @@ export const useUploadAvatar = ({ onSuccess }: { onSuccess?: () => void }) => {
     return useMutation({
         mutationFn: profileApi.uploadAvatar,
         onSuccess: (data) => {
-            // update cache & Zustand store
             queryClient.setQueryData<UserProfileViewRes>(QUERY_KEYS.ME, (prev) => {
                 if (!prev) return prev
                 return {
@@ -66,7 +64,6 @@ export const useUploadAvatar = ({ onSuccess }: { onSuccess?: () => void }) => {
                     ...data
                 }
             })
-
             onSuccess?.()
             toast.success(t("success.upload"))
         },
@@ -83,17 +80,39 @@ export const useDeleteAvatar = ({ onSuccess }: { onSuccess?: () => void }) => {
     return useMutation({
         mutationFn: profileApi.deleteAvatar,
         onSuccess: (data) => {
-            // update cache & Zustand store
             queryClient.setQueryData<UserProfileViewRes>(QUERY_KEYS.ME, (prev) => {
                 if (!prev) return prev
                 return {
                     ...prev,
-                    avatarUrl: undefined
+                    ...data
                 }
             })
-
             onSuccess?.()
             toast.success(translateWithFallback(t, data.message))
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+// citizen identity
+export const useUploadCitizenId = ({ onSuccess }: { onSuccess?: () => void }) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: profileApi.uploadCitizenId,
+        onSuccess: (data) => {
+            queryClient.setQueryData<UserProfileViewRes>(QUERY_KEYS.ME, (prev) => {
+                if (!prev) return prev
+                return {
+                    ...prev,
+                    citizenUrl: data.imageUrl
+                }
+            })
+            onSuccess?.()
+            toast.success(t("success.upload"))
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))

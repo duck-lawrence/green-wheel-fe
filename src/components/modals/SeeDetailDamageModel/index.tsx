@@ -14,17 +14,11 @@ export default function SeeDetailDamageModal({
     itemDamage: InvoiceViewRes
 }) {
     return (
-        <ModalStyled
-            isOpen={isOpen}
-            onOpenChange={onOpenChange}
-            // isKeyboardDismissDisabled
-            // placement="center"
-            // backdrop="blur"
-        >
+        <ModalStyled isOpen={isOpen} onOpenChange={onOpenChange}>
             <ModalContent>
                 <ModalHeader className="flex flex-col gap-1">Chi tiết hư hỏng</ModalHeader>
                 <ModalBody>
-                    <DetailDamage data={itemDamage} />
+                    <DetailDamage invoice={itemDamage} />
                 </ModalBody>
             </ModalContent>
         </ModalStyled>

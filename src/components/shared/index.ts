@@ -1,4 +1,3 @@
-export * from "./AvatarUploader"
 export * from "./Carousel"
 export * from "./ClientHydration"
 export * from "./DashBoard"
