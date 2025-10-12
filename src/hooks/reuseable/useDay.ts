@@ -1,6 +1,6 @@
 import { DEFAULT_DATE_TIME_FORMAT, DEFAULT_TIMEZONE } from "@/constants/constants"
 import dayjs from "dayjs"
-import { DateValue, parseDateTime } from "@internationalized/date"
+import { DateValue, parseDate, parseDateTime } from "@internationalized/date"
 
 export const useDay = ({
     defaultFormat = DEFAULT_DATE_TIME_FORMAT
@@ -15,6 +15,14 @@ export const useDay = ({
         return parseDateTime(str)
     }
 
+    const toDate = (date: string | number | Date | dayjs.Dayjs | null | undefined) => {
+        if (!date) return null
+        console.log(date)
+
+        const str = dayjs(date).format(defaultFormat)
+        return parseDate(str)
+    }
+
     const formatDateTime = ({
         date,
         timeZone = DEFAULT_TIMEZONE
@@ -23,7 +31,6 @@ export const useDay = ({
         timeZone?: string
     }) => {
         if (!date) return ""
-
         if (typeof date === "string") {
             return dayjs(date).format(defaultFormat)
         }
@@ -43,5 +50,5 @@ export const useDay = ({
         return Math.ceil(dayjs(endDate).diff(dayjs(startDate), "day", true))
     }
 
-    return { toCalenderDateTime, formatDateTime, getDiffDaysCeil }
+    return { toDate, toCalenderDateTime, formatDateTime, getDiffDaysCeil }
 }

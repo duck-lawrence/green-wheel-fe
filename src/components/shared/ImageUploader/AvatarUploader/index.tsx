@@ -2,8 +2,7 @@
 
 import React from "react"
 import { useImageUploadModal, useUploadAvatar } from "@/hooks"
-import { ImageUploadButton } from "../ImageUploader"
-import { ImageUploaderModal } from "@/components/modals"
+import { ImageUploaderModal, ImageUploadButton } from "@/components"
 import { useTranslation } from "react-i18next"
 
 export function AvatarUploader() {

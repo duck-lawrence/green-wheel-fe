@@ -79,7 +79,7 @@ export default function VehicleDetailPage() {
 
     const handleClickBooking = useCallback(() => {
         if (!user?.phone) {
-            toast.error(t("user.enter_phone_to_booking"))
+            toast.error(t("user.enter_required_info"))
         } else {
             onOpen()
         }

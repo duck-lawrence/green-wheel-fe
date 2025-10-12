@@ -1,7 +1,9 @@
 import { useState } from "react"
 import { useDisclosure } from "@heroui/react"
 
-export const useImageUploadModal = ({ onBeforeOpenModal }: { onBeforeOpenModal?: () => void }) => {
+export const useImageUploadModal = ({
+    onBeforeOpenModal
+}: { onBeforeOpenModal?: () => void } = {}) => {
     const [imgSrc, setImgSrc] = useState<string | null>(null)
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
 

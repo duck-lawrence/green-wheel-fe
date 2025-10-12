@@ -13,34 +13,51 @@ import { DatePicker } from "@heroui/react"
 import { mockContracts } from "@/data/mockContracts"
 import { InvoiceTypeLabels, RentalContractStatusLabels } from "@/constants/labels"
 import { useDay } from "@/hooks"
-import { mockInvoices } from "@/data/mockIvoices"
 import { renderInvoiceForm } from "@/components/shared/InvoiceForm/renderInvoiceForm"
+import { InvoiceType } from "@/constants/enum"
+import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
+import { useTranslation } from "react-i18next"
+import Link from "next/link"
 
 export default function RentalContractPage() {
+    // const { id } = useParams()
+    // const modelId = id?.toString()
+
+    const { t } = useTranslation()
     const { toCalenderDateTime } = useDay()
+    const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
+
+    // data mẫu
+    const dataContract = mockContracts.find((v) => v.id === "CON001")!
+    const dateStart = dataContract.invoices.find((item) => item.type === InvoiceType.Handover)
+        ?.paidAt!
 
     // render accordion
-    const invoiceAccordion = mockInvoices.map((invoice) => ({
+    const invoiceAccordion = dataContract.invoices.map((invoice) => ({
         key: invoice.id,
         ariaLabel: invoice.id,
         title: `${InvoiceTypeLabels[invoice.type]}`,
         status: invoice.status,
-        content: renderInvoiceForm(invoice.type)
+        content: renderInvoiceForm(invoice),
+        // Check payment of refund
+        // data: dataContract.invoices.find((v) => v.total === InvoiceType.Reservation)?.total ?? 0,
+        invoice: invoice
     }))
 
-    // id: "CON001",
-    const dataContract = mockContracts.find((v) => v.id === "CON001")!
-
-    // const dataInvoice = mockInvoices.find((v) => v.id === "INV_B001")!
-
     return (
-        <div className="min-h-screen flex items-center justify-center dark:bg-gray-950 py-16 px-4">
+        <div className="relative min-h-screen flex items-center justify-center dark:bg-gray-950 px-4">
             <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="w-full max-w-6xl bg-white dark:bg-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-800 p-8 md:p-12"
+                className="relative w-full max-w-6xl bg-white dark:bg-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-800 p-8 md:p-12"
             >
+                <Link
+                    className="absolute top-3 left-5 hover:cursor-pointer text-gray-500 italic"
+                    href={"/rental-contracts"}
+                >
+                    {t("rental_contract.back_to_rental_contract")}
+                </Link>
                 {/* Header */}
                 <div className="text-center space-y-3 mb-12">
                     <h1 className="text-4xl font-bold text-primary">Hợp đồng thuê xe</h1>
@@ -52,7 +69,7 @@ export default function RentalContractPage() {
                 <SectionStyled title="Thông tin hợp đồng thuê xe">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="sm:col-span-2">
-                            <p>Ngày thuê: 10/10/2025 ???</p>
+                            <p>Ngày thuê:{dateStart && formatDateTime({ date: dateStart })} </p>
                         </div>
 
                         <InputStyled
@@ -84,7 +101,7 @@ export default function RentalContractPage() {
                         <InputStyled
                             isReadOnly
                             label="Tên xe"
-                            value={dataContract.vehicleId}
+                            value={dataContract.vehicle.model.name}
                             placeholder="VinFast VF8"
                             startContent={
                                 <Car size={22} className="text-primary" weight="duotone" />
@@ -94,7 +111,7 @@ export default function RentalContractPage() {
                         <InputStyled
                             isReadOnly
                             label="Biển số"
-                            placeholder="51H-123.45"
+                            value={dataContract.vehicle.licensePlate}
                             startContent={
                                 <IdentificationBadge
                                     size={22}
@@ -148,7 +165,6 @@ export default function RentalContractPage() {
                             isReadOnly
                             label="Nhân viên bàn giao xe"
                             value={dataContract.handoverStaffId}
-                            placeholder="Nhân viên A"
                             startContent={
                                 <ArrowsLeftRight
                                     size={22}
@@ -162,7 +178,6 @@ export default function RentalContractPage() {
                             isReadOnly
                             label="Nhân viên nhận xe"
                             value={dataContract.returnStaffId}
-                            placeholder="Nhân viên B"
                             startContent={
                                 <ArrowsLeftRight
                                     size={22}

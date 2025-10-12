@@ -48,6 +48,11 @@ const nextConfig: NextConfig = {
                 protocol: "https",
                 hostname: "sohanews.sohacdn.com",
                 pathname: "/**"
+            },
+            {
+                protocol: "http",
+                hostname: "res.cloudinary.com",
+                pathname: "/**"
             }
         ]
     }
