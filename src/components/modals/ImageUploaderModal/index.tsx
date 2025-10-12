@@ -79,7 +79,7 @@ export function ImageUploaderModal({
                                     onPress={handleUpload}
                                     isDisabled={isUploading}
                                 >
-                                    {isUploading ? <Spinner /> : t("common.upload")}
+                                    {isUploading ? <Spinner color="white" /> : t("common.upload")}
                                 </ButtonStyled>
                                 <ButtonStyled onPress={onClose} isDisabled={isUploading}>
                                     {t("common.cancel")}

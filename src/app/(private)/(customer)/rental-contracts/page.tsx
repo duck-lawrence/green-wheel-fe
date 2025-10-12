@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next"
 import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { useRouter } from "next/navigation"
 
-export default function Page() {
+export default function RentalContractPage() {
     const { t } = useTranslation()
     const router = useRouter()
     const [order] = useState(orders)
