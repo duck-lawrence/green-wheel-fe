@@ -10,7 +10,7 @@ export function AdminUserManagementContent() {
     return (
         <div className="rounded-2xl bg-white shadow-sm px-6 py-8 space-y-6">
             <div className="flex items-center gap-3 px-4">
-                <UserSwitch
+                <UserSwitchfeat: add shared dashboard user-management page with admin/staff stubs
                     size={36}
                     weight="duotone"
                     className="text-primary"
