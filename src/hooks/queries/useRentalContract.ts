@@ -1,7 +1,7 @@
-import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
+import { VehicleStatus } from "@/constants/enum"
 import { QUERY_KEYS } from "@/constants/queryKey"
-import { CitizenIdentityRes } from "@/models/citizen-identity/schema/response"
 import { BackendError } from "@/models/common/response"
+import { ContractQueryParams } from "@/models/rental-contract/schema/request"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { rentalContractApi } from "@/services/rentalContractApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
@@ -13,7 +13,7 @@ export const useGetAllRentalContract = ({
     params,
     enabled = true
 }: {
-    params: { phone?: string; status?: RentalContractStatus }
+    params: ContractQueryParams
     enabled?: boolean
 }) => {
     const queryClient = useQueryClient()
@@ -106,19 +106,14 @@ export const useSearchRentalContracts = ({
     const { t } = useTranslation()
 
     return useMutation({
-        mutationFn: async (filters: {
-            status?: RentalContractStatus
-            phone?: string
-            citizenIdentity?: CitizenIdentityRes
-            driverLicense?: string
-        }) => {
+        mutationFn: async (filters: ContractQueryParams) => {
             const res = await rentalContractApi.getAll(filters)
             return res
         },
 
         onSuccess: (data) => {
             onSuccess?.(data)
-            toast.success(t("staff.search_success"))
+            // toast.success(t("staff.search_success"))
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail) || t("staff.search_failed"))

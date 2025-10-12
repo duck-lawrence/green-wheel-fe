@@ -166,7 +166,12 @@
         "return_time": "Return Time",
         "pickup_address": "Pickup Address",
         "status": "Status",
-        "id": "Id"
+        "id": "Id",
+        "name": "Name",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "action": "Action",
+        "no_action": "No action"
     },
     "contral_form": {
         "payment_method_require": "Please select a payment method",
