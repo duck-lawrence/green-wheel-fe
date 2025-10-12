@@ -1,2 +1,2 @@
-export * from "./ImageCropper"
+export * from "./AvatarUploader"
 export * from "./ImageUploadButton"

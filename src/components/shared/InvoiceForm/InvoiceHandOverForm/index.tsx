@@ -11,9 +11,7 @@ export default function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceView
                 label="Tiền cọc"
                 placeholder="2.000.000 VND"
                 value={
-                    invoice.deposit?.amount != null
-                        ? formatCurrency(invoice.deposit.amount)
-                        : undefined
+                    invoice.deposit?.amount != null ? formatCurrency(invoice.deposit.amount) : ""
                 }
                 startContent={<Money size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"

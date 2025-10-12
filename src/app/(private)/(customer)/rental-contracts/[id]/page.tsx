@@ -16,8 +16,14 @@ import { useDay } from "@/hooks"
 import { renderInvoiceForm } from "@/components/shared/InvoiceForm/renderInvoiceForm"
 import { InvoiceType } from "@/constants/enum"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
+import { useTranslation } from "react-i18next"
+import Link from "next/link"
 
 export default function RentalContractPage() {
+    // const { id } = useParams()
+    // const modelId = id?.toString()
+
+    const { t } = useTranslation()
     const { toCalenderDateTime } = useDay()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
 
@@ -39,13 +45,19 @@ export default function RentalContractPage() {
     }))
 
     return (
-        <div className="min-h-screen flex items-center justify-center dark:bg-gray-950 py-16 px-4">
+        <div className="relative min-h-screen flex items-center justify-center dark:bg-gray-950 px-4">
             <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="w-full max-w-6xl bg-white dark:bg-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-800 p-8 md:p-12"
+                className="relative w-full max-w-6xl bg-white dark:bg-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-800 p-8 md:p-12"
             >
+                <Link
+                    className="absolute top-3 left-5 hover:cursor-pointer text-gray-500 italic"
+                    href={"/rental-contracts"}
+                >
+                    {t("rental_contract.back_to_rental_contract")}
+                </Link>
                 {/* Header */}
                 <div className="text-center space-y-3 mb-12">
                     <h1 className="text-4xl font-bold text-primary">Hợp đồng thuê xe</h1>

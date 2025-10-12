@@ -49,7 +49,7 @@ export default function ProfilePage() {
     })
     const uploadAvatar = useUploadAvatar({ onSuccess: undefined })
 
-    // ===== Delete avatar =====
+    // ===== Avatar =====
     const handleDeleteAvatar = useCallback(async () => {
         await deleteAvatarMutation.mutateAsync()
     }, [deleteAvatarMutation])

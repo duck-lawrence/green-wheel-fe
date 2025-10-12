@@ -2,11 +2,10 @@
 
 import React from "react"
 import { useImageUploadModal, useUploadAvatar } from "@/hooks"
-import { ImageUploadButton } from "../ImageUploader"
-import { ImageUploaderModal } from "@/components/modals"
+import { ImageUploadButton, ImageUploaderModal } from "@/components/"
 import { useTranslation } from "react-i18next"
 
-export function AvatarUploader() {
+export function CitizenIdentityUploader() {
     const { t } = useTranslation()
     const { imgSrc, setImgSrc, isOpen, onOpenChange, onClose, onFileSelect } = useImageUploadModal({
         onBeforeOpenModal: undefined
