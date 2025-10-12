@@ -1,10 +1,12 @@
 import { CitizenIdentityRes } from "@/models/citizen-identity/schema/response"
+import { DriverLicenseRes } from "@/models/driver-license/schema/response"
 import { UserUpdateReq } from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import axiosInstance from "@/utils/axios"
 import { requestWrapper } from "@/utils/helpers/axiosHelper"
 
 export const profileApi = {
+    // me
     getMe: () =>
         requestWrapper<UserProfileViewRes>(async () => {
             const res = await axiosInstance.get("/users/me")
@@ -16,6 +18,7 @@ export const profileApi = {
             await axiosInstance.patch("/users/me", req)
         }),
 
+    // avatar
     uploadAvatar: (formData: FormData) =>
         requestWrapper<{ avatarUrl: string }>(async () => {
             const res = await axiosInstance.put("/users/avatar", formData, {
@@ -30,6 +33,7 @@ export const profileApi = {
             return res.data
         }),
 
+    // citizen identity
     uploadCitizenId: (formData: FormData) =>
         requestWrapper<CitizenIdentityRes>(async () => {
             const res = await axiosInstance.post("/users/citizen-identity", formData)
@@ -42,14 +46,15 @@ export const profileApi = {
             return res.data
         }),
 
+    // driver license
     uploadDriverLicense: (formData: FormData) =>
-        requestWrapper<CitizenIdentityRes>(async () => {
+        requestWrapper<DriverLicenseRes>(async () => {
             const res = await axiosInstance.post("/users/citizen-identity", formData)
             return res.data
         }),
 
     getMyDriverLicense: () =>
-        requestWrapper<CitizenIdentityRes>(async () => {
+        requestWrapper<DriverLicenseRes>(async () => {
             const res = await axiosInstance.get("/users/citizen-identity")
             return res.data
         })
