@@ -28,6 +28,11 @@ export function DashboardSidebar({ className }: { className?: string }) {
             href: "/dashboard/reports"
         },
         {
+            key: "/dashboard/user-management",
+            label: t("staff.sidebar_user_management"),
+            href: "/dashboard/user-management"
+        },
+        {
             key: "/dashboard/test",
             label: t("staff.sidebar_test"),
             href: "/dashboard/test"
@@ -44,6 +49,11 @@ export function DashboardSidebar({ className }: { className?: string }) {
             key: "/dashboard/fleet",
             label: t("admin.sidebar_fleet", "Fleet"),
             href: "/dashboard/fleet"
+        },
+        {
+            key: "/dashboard/user-management",
+            label: t("admin.sidebar_user_management"),
+            href: "/dashboard/user-management"
         }
     ]
 

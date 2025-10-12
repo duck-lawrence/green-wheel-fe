@@ -285,6 +285,7 @@
         "sidebar_fleet": "Fleet",
         "sidebar_notifications": "Notifications",
         "sidebar_reports": "Reports",
+        "sidebar_user_management": "User Management",
         "sidebar_profile": "Profile",
         "sidebar_logout": "Sign out",
         "sidebar_panel_title": "Staff Panel",
@@ -306,6 +307,9 @@
         "handovers_table_range_separator": "to",
         "dashboard_title": "Staff dashboard",
         "dashboard_subtitle": "Select a module from the sidebar to get started.",
+        "user_management_title": "User Management",
+        "user_management_description": "Manage customer records and adjust their permissions when needed.",
+        "user_management_placeholder": "This module is ready for integration with account management APIs.",
         "report_page_title": "Report",
         "report_page_description": "Share operational issues or feedback with the management team.",
         "report_form_staff_name_label": "Staff name",
@@ -330,7 +334,11 @@
         "dashboard_title": "Admin Dashboard",
         "dashboard_subtitle": "Select a module from the sidebar to get started.",
         "dropdown_management": "Admin Management",
-        "sidebar_fleet": "Fleet"
+        "sidebar_fleet": "Fleet",
+        "sidebar_user_management": "User Management",
+        "user_management_title": "User Management",
+        "user_management_description": "View and manage all platform accounts across locations.",
+        "user_management_placeholder": "Connect this area to admin account services to manage users centrally."
     },
     "footer": {
         "green_wheel_company_name": "GREEN WHEEL Trading and Service Joint Stock Company",
