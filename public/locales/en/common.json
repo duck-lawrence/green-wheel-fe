@@ -164,8 +164,16 @@
         "vehicle_model": "Vehicle Model",
         "pickup_time": "Pickup Time",
         "return_time": "Return Time",
-        "pickup_address": "Pickup Address",
-        "status": "Status"
+        "station": "Station",
+        "status": "Status",
+        "id": "Id",
+        "name": "Name",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "action": "Action",
+        "phone": "Phone",
+        "citizen_id": "Citizen ID",
+        "driver_license": "Driver License"
     },
     "contral_form": {
         "payment_method_require": "Please select a payment method",
@@ -370,7 +378,10 @@
         "report_form_validation_title_required": "Title is required.",
         "report_form_validation_title_max": "Title must be 100 characters or less.",
         "report_form_validation_description_required": "Description is required.",
-        "report_form_validation_description_max": "Description must be 1000 characters or less."
+        "report_form_validation_description_max": "Description must be 1000 characters or less.",
+        "search_success": "Search success",
+        "search_failed": "Search failed",
+        "contract_filter": "Contract Filters"
     },
     "admin": {
         "dashboard_title": "Admin Dashboard",
@@ -410,5 +421,12 @@
     },
     "about_us": {
         "": ""
+    },
+    "contract": {
+        "update_success": "Update success",
+        "update_failed": "Update failed",
+        "no_action": "No action",
+        "accept": "Accept",
+        "reject": "Reject"
     }
 }

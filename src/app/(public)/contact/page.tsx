@@ -67,6 +67,7 @@ export default function Contact() {
                     >
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <InputStyled
+                                isClearable
                                 variant="bordered"
                                 label={t("user.last_name")}
                                 value={formik.values.lastName}
@@ -76,6 +77,7 @@ export default function Contact() {
                                 errorMessage={formik.errors.lastName}
                             />
                             <InputStyled
+                                isClearable
                                 variant="bordered"
                                 label={t("user.first_name")}
                                 value={formik.values.firstName}
@@ -86,6 +88,7 @@ export default function Contact() {
                             />
                         </div>
                         <InputStyled
+                            isClearable
                             variant="bordered"
                             label={t("auth.email")}
                             value={formik.values.email}
