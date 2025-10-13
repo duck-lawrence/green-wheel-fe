@@ -2,45 +2,48 @@
 import { useFormik } from "formik"
 import React from "react"
 import * as Yup from "yup"
-import { OrderStatus } from "@/constants/enum"
+import { RentalContractStatus } from "@/constants/enum"
 import { ButtonStyled, DateRangePickerStyled } from "@/components/styled"
 import dayjs from "dayjs"
 import { VehicalModelPicker } from "../VehicalModelPicker"
 import { EnumPicker } from "@/components/modules/EnumPicker"
-import { OrderStatusLabels } from "@/constants/labels"
+import { RentalContractStatusLabels } from "@/constants/labels"
 import { DEFAULT_TIMEZONE } from "@/constants/constants"
 
-export function FillterBarOrder({ onFilterChange }: { onFilterChange: () => void }) {
+export function FillterBarOrder({
+    onFilterChange
+}: {
+    onFilterChange: ({ status }: { status?: RentalContractStatus }) => void
+}) {
     const formik = useFormik({
         initialValues: {
-            vehicalModel: "",
-            status: OrderStatus.All,
+            vehicalModelId: "",
+            status: undefined,
             start: "",
             end: ""
         },
         validationSchema: Yup.object().shape({
-            vehicalModel: Yup.string().required("Please pick vehicle model"),
-            status: Yup.number().required("Please choose status"),
-            start: Yup.string().required("Choose start date"),
-            end: Yup.string().required("Choose end date")
+            vehicalModelId: Yup.string(),
+            status: Yup.number(),
+            start: Yup.string(),
+            end: Yup.string()
         }),
         onSubmit: (values) => {
-            console.log("Payload gửi API:", values)
-            onFilterChange()
+            onFilterChange({ status: values.status })
         }
     })
 
     return (
         <form onSubmit={formik.handleSubmit} className="flex gap-4">
             <VehicalModelPicker
-                value={formik.values.vehicalModel}
-                onChange={(val) => formik.setFieldValue("vehicalModel", val)}
+                value={formik.values.vehicalModelId}
+                onChange={(val) => formik.setFieldValue("vehicalModelId", val)}
             />
 
             <EnumPicker
-                value={formik.values.status}
+                value={formik.values.status || null}
                 onChange={(val) => formik.setFieldValue("status", val)}
-                labels={OrderStatusLabels}
+                labels={RentalContractStatusLabels}
                 label="Status"
                 className="max-w-55 h-14"
             />

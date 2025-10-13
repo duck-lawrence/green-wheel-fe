@@ -78,12 +78,12 @@ export default function VehicleDetailPage() {
     //     .slice(0, 3)
 
     const handleClickBooking = useCallback(() => {
-        if (!user?.phone) {
+        if (!user?.phone || !user.citizenUrl || user.licenseUrl) {
             toast.error(t("user.enter_required_info"))
         } else {
             onOpen()
         }
-    }, [onOpen, t, user?.phone])
+    }, [onOpen, t, user])
 
     function mapSpecs(vehicle: VehicleModelViewRes) {
         return [

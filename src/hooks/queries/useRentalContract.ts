@@ -30,6 +30,21 @@ export const useGetAllRentalContract = ({
     return query
 }
 
+export const useGetMyContract = ({
+    status,
+    enabled = true
+}: {
+    status?: RentalContractStatus
+    enabled?: boolean
+}) => {
+    const query = useQuery({
+        queryKey: [...QUERY_KEYS.VEHICLE_SEGMENTS, ...QUERY_KEYS.ME, status],
+        queryFn: () => rentalContractApi.getMyContract({ status }),
+        enabled
+    })
+    return query
+}
+
 export const useCreateRentalContract = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
 
