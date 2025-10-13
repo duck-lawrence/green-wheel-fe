@@ -1,15 +1,18 @@
 "use client"
-
-import { Dropdown, DropdownProps } from "@heroui/react"
+import { cn, Dropdown, DropdownProps } from "@heroui/react"
 import React from "react"
 
 type DropdownStyleProps = DropdownProps & {
     children: React.ReactNode
 }
 
-export function DropdownStyled({ children, ...props }: DropdownStyleProps) {
+export function DropdownStyled({ children, className, ...props }: DropdownStyleProps) {
     return (
-        <Dropdown placement="bottom-start" {...props}>
+        <Dropdown
+            placement="bottom-start"
+            {...props}
+            className={cn("font-medium text-base", className)}
+        >
             {children}
         </Dropdown>
     )
