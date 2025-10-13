@@ -19,6 +19,7 @@ export default function RentalContractPage() {
             //fetch api
         }
     }, [filters])
+
     return (
         <div className="py-8 px-12 shadow-2xs rounded-2xl bg-white">
             <div className="text-3xl pb-6 font-bold text-center text-primary">
