@@ -1,7 +1,7 @@
 "use client"
 import React from "react"
 import { Accordion, AccordionItem, Chip } from "@heroui/react"
-import { InvoiceStatus } from "@/constants/enum"
+import { InvoiceStatus, PaymentMethod } from "@/constants/enum"
 import { InvoiceStatusLabels } from "@/constants/labels"
 import { ButtonStyled } from "../ButtonStyled"
 import { usePayInvoice } from "@/hooks/queries/usePayInvoice"
@@ -49,7 +49,10 @@ export function AccordionStyled({
     const payInvoiceMutation = usePayInvoice()
 
     const handlePayment = async (invoiceId: string) => {
-        await payInvoiceMutation.mutateAsync(invoiceId)
+        await payInvoiceMutation.mutateAsync({
+            invoiceId: invoiceId,
+            paymentMethod: PaymentMethod.MomoWallet
+        })
     }
 
     const renderStatusChip = (status: InvoiceStatus) => {

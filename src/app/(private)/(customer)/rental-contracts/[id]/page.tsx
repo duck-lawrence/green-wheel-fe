@@ -119,7 +119,7 @@ export default function RentalContractPage() {
                         <InputStyled
                             isReadOnly
                             label={t("rental_contract.vehicle_name")}
-                            value={dataContract.vehicle.model.name}
+                            value={dataContract.vehicle.model.name || ""}
                             placeholder="VinFast VF8"
                             startContent={
                                 <Car size={22} className="text-primary" weight="duotone" />
@@ -129,7 +129,7 @@ export default function RentalContractPage() {
                         <InputStyled
                             isReadOnly
                             label={t("rental_contract.license_plate")}
-                            value={dataContract.vehicle.licensePlate}
+                            value={dataContract.vehicle.licensePlate || ""}
                             startContent={
                                 <IdentificationBadge
                                     size={22}
@@ -182,7 +182,7 @@ export default function RentalContractPage() {
                         <InputStyled
                             isReadOnly
                             label={t("rental_contract.vehicle_handover_staff")}
-                            value={dataContract.handoverStaffId}
+                            value={dataContract.handoverStaffId || ""}
                             startContent={
                                 <ArrowsLeftRight
                                     size={22}
@@ -195,7 +195,7 @@ export default function RentalContractPage() {
                         <InputStyled
                             isReadOnly
                             label={t("rental_contract.vehicle_return_staff")}
-                            value={dataContract.returnStaffId}
+                            value={dataContract.returnStaffId || ""}
                             startContent={
                                 <ArrowsLeftRight
                                     size={22}

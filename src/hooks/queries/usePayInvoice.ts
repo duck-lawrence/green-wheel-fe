@@ -11,15 +11,16 @@ export const usePayInvoice = () => {
     // const QueryClient = useQueryClient()
     const router = useRouter()
     return useMutation({
-        // mutationFn: async (invoiceId: string) => {
-        //     const res = await invoiceApi.createPayment(invoiceId)
+        // mutationFn: async (invoiceId: string, paymentMethod: PaymentMethod) => {
+        //     const res = await invoiceApi.createPayment(invoiceId, paymentMethod)
         //     return res
         // },
         mutationFn: invoiceApi.createPayment,
+
         onSuccess: (data) => {
-            if (data?.paymentUrl) {
+            if (data?.link) {
                 toast.success("chuyen sang momo")
-                router.push(data.paymentUrl)
+                router.push(data.link)
             } else {
                 toast.error("ko tạo đc liên kết momo")
             }
