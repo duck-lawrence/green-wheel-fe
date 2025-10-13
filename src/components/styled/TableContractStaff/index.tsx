@@ -73,7 +73,7 @@ export function TableContractStaff({
                         {t("table.return_time")}
                     </TableColumn>
                     <TableColumn className="text-center text-gray-700 font-semibold">
-                        {t("table.pickup_address")}
+                        {t("table.station")}
                     </TableColumn>
                     <TableColumn className="text-center text-gray-700 font-semibold">
                         {t("table.status")}
