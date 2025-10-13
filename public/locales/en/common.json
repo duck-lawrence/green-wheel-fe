@@ -373,10 +373,10 @@
         "dashboard_subtitle": "Select a module from the sidebar to get started.",
         "dropdown_management": "Admin Management",
         "sidebar_fleet": "Fleet",
-        "sidebar_user_management": "User Management",
-        "user_management_title": "User Management",
-        "user_management_description": "View and manage all platform accounts across locations.",
-        "user_management_placeholder": "Connect this area to admin account services to manage users centrally."
+        "sidebar_staff_management": "Staff Management",
+        "staff_management_title": "Staff Management",
+        "staff_management_description": "View and manage staff profiles and access levels across branches.",
+        "staff_management_placeholder": "Connect this area with HR services to onboard, update, or offboard team members."
     },
     "footer": {
         "green_wheel_company_name": "GREEN WHEEL Trading and Service Joint Stock Company",
