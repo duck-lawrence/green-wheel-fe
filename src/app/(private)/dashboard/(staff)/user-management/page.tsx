@@ -4,7 +4,7 @@ import React from "react"
 import { useTranslation } from "react-i18next"
 import { UsersThree } from "@phosphor-icons/react"
 
-export function StaffUserManagementContent() {
+function UserManagement() {
     const { t } = useTranslation()
 
     return (
@@ -30,4 +30,8 @@ export function StaffUserManagementContent() {
             </div>
         </div>
     )
+}
+
+export default function UserManagementPage() {
+    return <UserManagement />
 }
