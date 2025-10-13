@@ -43,9 +43,9 @@ export const InvoiceStatusLabels: Record<InvoiceStatus, string> = {
 
 export const RentalContractStatusLabels: Record<RentalContractStatus, string> = {
     [RentalContractStatus.RequestPending]: i18n.t("enum.request_pending"),
-    [RentalContractStatus.ConfirmChangeStationPending]: i18n.t(
-        "enum.confirm_change_station_pending"
-    ),
+    // [RentalContractStatus.ConfirmChangeStationPending]: i18n.t(
+    //     "enum.confirm_change_station_pending"
+    // ),
     [RentalContractStatus.PaymentPending]: i18n.t("enum.payment_pending"),
     [RentalContractStatus.Active]: i18n.t("enum.active"),
     [RentalContractStatus.Completed]: i18n.t("enum.completed"),
@@ -119,19 +119,23 @@ export const TicketStatusLabels: Record<TicketStatus, string> = {
 }
 
 export const LicenseClassLabels: Record<LicenseClass, string> = {
-    [LicenseClass.B1]: i18n.t("enum.b1"),
     [LicenseClass.B]: i18n.t("enum.b"),
-    [LicenseClass.C1]: i18n.t("enum.c1"),
+    [LicenseClass.B1]: i18n.t("enum.b1"),
+    [LicenseClass.B2]: i18n.t("enum.b2"),
+    [LicenseClass.B3]: i18n.t("enum.b3"),
     [LicenseClass.C]: i18n.t("enum.c"),
-    [LicenseClass.D1]: i18n.t("enum.d1"),
-    [LicenseClass.D2]: i18n.t("enum.d2"),
-    [LicenseClass.D]: i18n.t("enum.d"),
-    [LicenseClass.BE]: i18n.t("enum.be"),
+    [LicenseClass.C1]: i18n.t("enum.c1"),
     [LicenseClass.C1E]: i18n.t("enum.c1e"),
     [LicenseClass.CE]: i18n.t("enum.ce"),
+    [LicenseClass.D]: i18n.t("enum.d"),
+    [LicenseClass.D1]: i18n.t("enum.d1"),
     [LicenseClass.D1E]: i18n.t("enum.d1e"),
+    [LicenseClass.D2]: i18n.t("enum.d2"),
     [LicenseClass.D2E]: i18n.t("enum.d2e"),
-    [LicenseClass.DE]: i18n.t("enum.de")
+    [LicenseClass.DE]: i18n.t("enum.de"),
+    [LicenseClass.E]: i18n.t("enum.e"),
+    [LicenseClass.F]: i18n.t("enum.f"),
+    [LicenseClass.BE]: i18n.t("enum.be")
 }
 
 export const OrderStatusLabels: Record<OrderStatus, string> = {

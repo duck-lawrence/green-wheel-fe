@@ -1,4 +1,4 @@
-import { VehicleStatus } from "@/constants/enum"
+import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 import {
     ContractQueryParams,
     CreateRentalContractReq
@@ -20,6 +20,13 @@ export const rentalContractApi = {
             const res = await axiosInstance.get("/rental-contracts", { params })
             return res.data
         }),
+
+    getMyContract: ({ status }: { status?: RentalContractStatus }) =>
+        requestWrapper<RentalContractViewRes[]>(async () => {
+            const res = await axiosInstance.get("/rental-contracts/me", { params: { status } })
+            return res.data
+        }),
+
     acceptContract: ({ id }: { id: string }) =>
         requestWrapper<void>(async () => {
             await axiosInstance.put(`/rental-contracts/${id}/accept`)
