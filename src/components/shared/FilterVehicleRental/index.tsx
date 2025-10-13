@@ -206,8 +206,8 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                         onSelectionChange={(id) => {
                             formik.setFieldValue("stationId", id)
                             setStationId(id as string | undefined)
-                            formik.handleSubmit()
                         }}
+                        onKeyDown={() => formik.handleSubmit()}
                         className="max-w-60 h-20 mr-0"
                         isClearable={false}
                     >
@@ -237,8 +237,8 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                         onSelectionChange={(id) => {
                             formik.setFieldValue("segmentId", id)
                             setSegmentId(id as string | undefined)
-                            formik.handleSubmit()
                         }}
+                        onKeyDown={() => formik.handleSubmit()}
                         className="max-w-40 h-20 mr-0"
                     >
                         {(vehicleSegments ?? []).map((item) => (
@@ -263,13 +263,11 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                                 formik.setFieldValue("startDate", null)
                                 return
                             }
-
                             const date = formatDateTime({ date: value })
-
                             formik.setFieldValue("startDate", date)
                             setStartDate(date)
-                            formik.handleSubmit()
                         }}
+                        onKeyDown={() => formik.handleSubmit()}
                         onBlur={() => {
                             formik.setFieldTouched("startDate")
                         }}
@@ -292,13 +290,11 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                                 formik.setFieldValue("endDate", null)
                                 return
                             }
-
                             const date = formatDateTime({ date: value })
-
                             formik.setFieldValue("endDate", date)
                             setEndDate(date)
-                            formik.handleSubmit()
                         }}
+                        onKeyDown={() => formik.handleSubmit()}
                         onBlur={() => {
                             formik.setFieldTouched("endDate")
                         }}

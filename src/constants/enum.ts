@@ -36,8 +36,8 @@ export enum RentalContractStatus {
     PaymentPending = 1,
     Active = 2,
     Completed = 3,
-    Cancelled = 4,
-    ConfirmChangeStationPending = 5
+    Cancelled = 4
+    // ConfirmChangeStationPending = 5
 }
 
 export enum DamageStatus {
@@ -83,19 +83,23 @@ export enum TicketStatus {
 }
 
 export enum LicenseClass {
-    B1 = 0,
-    B = 1,
-    C1 = 2,
-    C = 3,
-    D1 = 4,
-    D2 = 5,
-    D = 6,
-    BE = 7,
-    C1E = 8,
-    CE = 9,
+    B = 0,
+    B1 = 1,
+    B2 = 2,
+    B3 = 3,
+    C = 4,
+    C1 = 5,
+    C1E = 6,
+    CE = 7,
+    D = 8,
+    D1 = 9,
     D1E = 10,
-    D2E = 11,
-    DE = 12
+    D2 = 11,
+    D2E = 12,
+    DE = 13,
+    E = 14,
+    F = 15,
+    BE = 16
 }
 
 export enum OrderStatus {

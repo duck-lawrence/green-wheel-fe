@@ -91,10 +91,10 @@ export function Sidebar({ tabs, selectedKey, className = "w-50" }: SidebarProps)
 
     return (
         <LayoutGroup id="account-sidebar">
-            <div className="flex flex-col pr-4">
+            <div className="flex w-full flex-col pr-4 md:w-auto md:flex-shrink-0">
                 <div
                     className={cn(
-                        "relative flex flex-col gap-2 rounded-2xl bg-white p-3 shadow-lg shadow-slate-200/70",
+                        "relative flex w-full flex-col gap-2 rounded-2xl bg-white p-3 shadow-lg shadow-slate-200/70 md:min-w-[16rem]",
                         className
                     )}
                 >

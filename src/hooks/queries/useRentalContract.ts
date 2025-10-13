@@ -1,4 +1,4 @@
-import { VehicleStatus } from "@/constants/enum"
+import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { BackendError } from "@/models/common/response"
 import { ContractQueryParams } from "@/models/rental-contract/schema/request"
@@ -26,6 +26,21 @@ export const useGetAllRentalContract = ({
                 params
             ])
         },
+        enabled
+    })
+    return query
+}
+
+export const useGetMyContract = ({
+    status,
+    enabled = true
+}: {
+    status?: RentalContractStatus
+    enabled?: boolean
+}) => {
+    const query = useQuery({
+        queryKey: [...QUERY_KEYS.VEHICLE_SEGMENTS, ...QUERY_KEYS.ME, status],
+        queryFn: () => rentalContractApi.getMyContract({ status }),
         enabled
     })
     return query
