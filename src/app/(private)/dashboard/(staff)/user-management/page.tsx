@@ -162,6 +162,12 @@ export default function StaffUserManagementPage() {
                             value={formik.values.name}
                             onChange={(value) => formik.setFieldValue("name", value.target.value)}
                             onClear={() => formik.setFieldValue("name", "")}
+                            classNames={{
+                                inputWrapper:
+                                    "border-2 border-gray-200 data-[hover=true]:border-primary data-[focus=true]:border-primary",
+                                label: "text-gray-700",
+                                input: "text-gray-900"
+                            }}
                         />
                         <InputStyled
                             label={t("user.phone")}
@@ -169,6 +175,12 @@ export default function StaffUserManagementPage() {
                             value={formik.values.phone}
                             onChange={(value) => formik.setFieldValue("phone", value.target.value)}
                             onClear={() => formik.setFieldValue("phone", "")}
+                            classNames={{
+                                inputWrapper:
+                                    "border-2 border-gray-200 data-[hover=true]:border-primary data-[focus=true]:border-primary",
+                                label: "text-gray-700",
+                                input: "text-gray-900"
+                            }}
                         />
                         <FilterTypeStyle
                             label={t("staff.user_filter_has_document_label")}

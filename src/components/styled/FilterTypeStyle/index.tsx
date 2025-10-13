@@ -14,7 +14,7 @@
  */
 
 import React from "react"
-import { Select, cn } from "@heroui/react"
+import { Select, SelectItem, cn } from "@heroui/react"
 import type { SelectProps } from "@heroui/react"
 import { Funnel } from "lucide-react"
 
@@ -86,3 +86,4 @@ export function FilterTypeStyle<T = object>({
         />
     )
 }
+export const FilterTypeOption = SelectItem
