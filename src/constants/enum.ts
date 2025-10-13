@@ -36,8 +36,8 @@ export enum RentalContractStatus {
     PaymentPending = 1,
     Active = 2,
     Completed = 3,
-    Cancelled = 4,
-    ConfirmChangeStationPending = 5
+    Cancelled = 4
+    // ConfirmChangeStationPending = 5
 }
 
 export enum DamageStatus {

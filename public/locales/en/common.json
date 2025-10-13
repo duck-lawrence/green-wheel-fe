@@ -25,7 +25,8 @@
         "save_changes": "Save Changes",
         "cancel": "Cancel",
         "too_many_request": "Too many request. Try again later",
-        "unexpected_error": "An unexpected error occurred. Please try again later."
+        "unexpected_error": "An unexpected error occurred. Please try again later.",
+        "search": "Search"
     },
     "auth": {
         "otp": "OTP",
@@ -164,6 +165,7 @@
         "vehicle_model": "Vehicle Model",
         "pickup_time": "Pickup Time",
         "return_time": "Return Time",
+        "pickup_return_time": "Pickup and return time",
         "station": "Station",
         "status": "Status",
         "id": "Id",

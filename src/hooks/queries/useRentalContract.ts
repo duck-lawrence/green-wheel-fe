@@ -1,4 +1,4 @@
-import { VehicleStatus } from "@/constants/enum"
+import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { BackendError } from "@/models/common/response"
 import { ContractQueryParams } from "@/models/rental-contract/schema/request"

@@ -17,6 +17,6 @@ export type HandoverContractReq = {
 export type ContractQueryParams = {
     status?: RentalContractStatus
     phone?: string
-    citizenIdentity?: string
-    driverLicense?: string
+    citizenIdentityNumber?: string
+    driverLicenseNumber?: string
 }

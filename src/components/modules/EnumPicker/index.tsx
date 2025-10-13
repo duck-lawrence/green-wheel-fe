@@ -1,25 +1,25 @@
 "use client"
 import { Autocomplete, AutocompleteItem } from "@heroui/react"
-import React from "react"
+import React, { Key } from "react"
 
 type EnumPickerProps<T extends number> = {
-    value: T | null
-    onChange: (value: T) => void
+    // value: T | null
+    onChange: (value: Key | null) => void
+    onKeyDown?: () => void
     labels: Record<T, string> // map enum → label (ví dụ OrderStatusLabels)
     label?: string // nhãn hiển thị cho Autocomplete
     className?: string
     isReadOnly?: boolean
-    isLoading?: boolean
 }
 
 export function EnumPicker<T extends number>({
-    value,
+    // value,
     onChange,
+    onKeyDown = undefined,
     labels,
     label,
     className,
-    isReadOnly = false,
-    isLoading
+    isReadOnly = false
 }: EnumPickerProps<T>) {
     // Lấy items từ labels
     const items = Object.entries(labels).map(([key, label]) => ({
@@ -29,20 +29,19 @@ export function EnumPicker<T extends number>({
 
     return (
         <Autocomplete
+            label={label}
             items={items}
             isReadOnly={isReadOnly}
+            isClearable
             variant="bordered"
             className={className}
             // className="max-w-55 h-14"
-            label={label}
-            selectedKey={value !== null ? String(value) : undefined}
-            onSelectionChange={(key) => {
-                if (key !== null) {
-                    onChange(Number(key) as T)
-                }
+            // selectedKey={value !== null ? String(value) : undefined}
+            onSelectionChange={onChange}
+            onKeyDown={onKeyDown}
+            classNames={{
+                popoverContent: "min-w-fit"
             }}
-            isClearable
-            isLoading={isLoading}
         >
             {(item) => (
                 <AutocompleteItem key={item.key}>{item.label as React.ReactNode}</AutocompleteItem>
