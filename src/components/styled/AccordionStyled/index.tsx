@@ -44,6 +44,14 @@ export function AccordionStyled({
     //             return null
     //     }
     // }
+
+    const { t } = useTranslation()
+    const payInvoiceMutation = usePayInvoice()
+
+    const handlePayment = async (invoiceId: string) => {
+        await payInvoiceMutation.mutateAsync(invoiceId)
+    }
+
     const renderStatusChip = (status: InvoiceStatus) => {
         const colorMap = {
             [InvoiceStatus.Paid]: "success",
@@ -57,14 +65,6 @@ export function AccordionStyled({
             </Chip>
         )
     }
-
-    const { t } = useTranslation()
-    const payInvoiceMutation = usePayInvoice()
-
-    const handlePayment = async (invoiceId: string) => {
-        await payInvoiceMutation.mutateAsync(invoiceId)
-    }
-
     return (
         <Accordion variant="splitted" className="w-full">
             {items.map((val) => (
@@ -83,7 +83,7 @@ export function AccordionStyled({
                         <div className="mt-0 flex justify-center">
                             <ButtonStyled
                                 isDisabled={
-                                    val.invoice.total <= 0 || val.status !== InvoiceStatus.Pending
+                                    val.invoice.total <= 0 || val.status === InvoiceStatus.Pending
                                         ? false
                                         : true
                                 }
@@ -95,7 +95,7 @@ export function AccordionStyled({
                                            hover:from-teal-500 hover:to-green-400 
                                            shadow-md transition-all duration-300"
                             >
-                                Payment
+                                {t("enum.payment")}
                             </ButtonStyled>
                         </div>
                     </div>

@@ -1,7 +1,14 @@
 "use client"
 import React from "react"
 import { motion } from "framer-motion"
-import { AccordionStyled, InputStyled, SectionStyled, TextareaStyled } from "@/components"
+import {
+    AccordionStyled,
+    InputStyled,
+    renderInvoiceForm,
+    SectionStyled,
+    SpinnerStyled,
+    TextareaStyled
+} from "@/components"
 import {
     Car,
     IdentificationBadge,
@@ -10,39 +17,47 @@ import {
     Invoice
 } from "@phosphor-icons/react"
 import { DatePicker } from "@heroui/react"
-import { mockContracts } from "@/data/mockContracts"
 import { InvoiceTypeLabels, RentalContractStatusLabels } from "@/constants/labels"
-import { useDay } from "@/hooks"
-import { renderInvoiceForm } from "@/components/shared/InvoiceForm/renderInvoiceForm"
+import { useDay, useGetByIdRentalContract } from "@/hooks"
 import { InvoiceType } from "@/constants/enum"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { useTranslation } from "react-i18next"
 import Link from "next/link"
+import { useParams } from "next/navigation"
 
 export default function RentalContractPage() {
-    // const { id } = useParams()
-    // const modelId = id?.toString()
+    const { id } = useParams()
+    const modelId = id?.toString()
 
     const { t } = useTranslation()
     const { toCalenderDateTime } = useDay()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
+    const { data: dataContract, isLoading } = useGetByIdRentalContract({
+        id: modelId ?? "",
+        enabled: true
+    })
 
     // data mẫu
-    const dataContract = mockContracts.find((v) => v.id === "CON001")!
-    const dateStart = dataContract.invoices.find((item) => item.type === InvoiceType.Handover)
+    // const dataContract = mockContracts.find((v) => v.id === "CON001")!
+    const dateStart = dataContract?.invoices.find((item) => item.type === InvoiceType.Handover)
         ?.paidAt!
 
     // render accordion
-    const invoiceAccordion = dataContract.invoices.map((invoice) => ({
+    const invoiceAccordion = (dataContract?.invoices || []).map((invoice) => ({
         key: invoice.id,
         ariaLabel: invoice.id,
         title: `${InvoiceTypeLabels[invoice.type]}`,
         status: invoice.status,
         content: renderInvoiceForm(invoice),
-        // Check payment of refund
-        // data: dataContract.invoices.find((v) => v.total === InvoiceType.Reservation)?.total ?? 0,
         invoice: invoice
     }))
+
+    if (isLoading || !dataContract)
+        return (
+            <div className="flex justify-center mt-65">
+                <SpinnerStyled />
+            </div>
+        )
 
     return (
         <div className="relative min-h-screen flex items-center justify-center dark:bg-gray-950 px-4">
@@ -60,23 +75,27 @@ export default function RentalContractPage() {
                 </Link>
                 {/* Header */}
                 <div className="text-center space-y-3 mb-12">
-                    <h1 className="text-4xl font-bold text-primary">Hợp đồng thuê xe</h1>
+                    <h1 className="text-4xl font-bold text-primary">
+                        {t("rental_contract.rental_contract")}
+                    </h1>
                     <p className="text-gray-600 dark:text-gray-400 text-lg">
-                        Thông tin chi tiết về hợp đồng thuê xe điện của khách hàng.
+                        {t("rental_contract.rental_contract_details_description")}
                     </p>
                 </div>
-                {/* Group 1 - Vehicle Info */}
-                <SectionStyled title="Thông tin hợp đồng thuê xe">
+                {/* Vehicle Info */}
+                <SectionStyled title={t("rental_contract.rental_contract_information")}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="sm:col-span-2">
-                            <p>Ngày thuê:{dateStart && formatDateTime({ date: dateStart })} </p>
+                            <p>
+                                {t("rental_contract.rental_date")}:
+                                {dateStart && formatDateTime({ date: dateStart })}{" "}
+                            </p>
                         </div>
 
                         <InputStyled
                             isReadOnly
-                            label="Mã hợp đồng"
+                            label={t("rental_contract.contract_code")}
                             value={dataContract.id}
-                            placeholder="INV-2025-0012"
                             startContent={
                                 <Invoice size={22} className="text-primary" weight="duotone" />
                             }
@@ -85,9 +104,8 @@ export default function RentalContractPage() {
                         />
                         <InputStyled
                             isReadOnly
-                            label="Trạng thái hợp đồng"
+                            label={t("rental_contract.contract_status")}
                             value={RentalContractStatusLabels[dataContract.status]}
-                            placeholder="Đang hoạt động / Hoàn thành / Hủy"
                             startContent={
                                 <ClipboardText
                                     size={22}
@@ -100,7 +118,7 @@ export default function RentalContractPage() {
 
                         <InputStyled
                             isReadOnly
-                            label="Tên xe"
+                            label={t("rental_contract.vehicle_name")}
                             value={dataContract.vehicle.model.name}
                             placeholder="VinFast VF8"
                             startContent={
@@ -110,7 +128,7 @@ export default function RentalContractPage() {
                         />
                         <InputStyled
                             isReadOnly
-                            label="Biển số"
+                            label={t("rental_contract.license_plate")}
                             value={dataContract.vehicle.licensePlate}
                             startContent={
                                 <IdentificationBadge
@@ -123,7 +141,7 @@ export default function RentalContractPage() {
                         />
                         <TextareaStyled
                             isReadOnly
-                            label="Mô tả hợp đồng"
+                            label={t("rental_contract.contract_description")}
                             value={dataContract.description}
                             placeholder=". . . "
                             variant="bordered"
@@ -132,38 +150,38 @@ export default function RentalContractPage() {
                     </div>
                 </SectionStyled>
 
-                {/* Group 3 - Rental Dates */}
-                <SectionStyled title="Thời gian thuê">
+                {/*Rental Dates */}
+                <SectionStyled title={t("rental_contract.rental_duration")}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         <DatePicker
                             value={toCalenderDateTime(dataContract.startDate)}
-                            label="Ngày bắt đầu"
+                            label={t("rental_contract.start_date")}
                             isReadOnly
                         />
                         <DatePicker
                             value={toCalenderDateTime(dataContract.actualStartDate)}
-                            label="Ngày thực tế bắt đầu"
+                            label={t("rental_contract.actual_start_date")}
                             isReadOnly
                         />
                         <DatePicker
                             value={toCalenderDateTime(dataContract.endDate)}
-                            label="Ngày kết thúc"
+                            label={t("rental_contract.end_date")}
                             isReadOnly
                         />
                         <DatePicker
                             value={toCalenderDateTime(dataContract.actualEndDate)}
-                            label="Ngày thực tế kết thúc"
+                            label={t("rental_contract.actual_end_date")}
                             isReadOnly
                         />
                     </div>
                 </SectionStyled>
 
-                {/* Group 4 - Staff Info */}
-                <SectionStyled title="Nhân viên xử lý & Hóa đơn">
+                {/*Staff Info */}
+                <SectionStyled title={t("rental_contract.staff_and_invoice")}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <InputStyled
                             isReadOnly
-                            label="Nhân viên bàn giao xe"
+                            label={t("rental_contract.vehicle_handover_staff")}
                             value={dataContract.handoverStaffId}
                             startContent={
                                 <ArrowsLeftRight
@@ -176,7 +194,7 @@ export default function RentalContractPage() {
                         />
                         <InputStyled
                             isReadOnly
-                            label="Nhân viên nhận xe"
+                            label={t("rental_contract.vehicle_return_staff")}
                             value={dataContract.returnStaffId}
                             startContent={
                                 <ArrowsLeftRight
@@ -191,7 +209,7 @@ export default function RentalContractPage() {
                 </SectionStyled>
 
                 {/* Invoice Accordion */}
-                <SectionStyled title="Danh sách hóa đơn thanh toán">
+                <SectionStyled title={t("rental_contract.payment_invoice_list")}>
                     <AccordionStyled items={invoiceAccordion} />
                 </SectionStyled>
             </motion.div>

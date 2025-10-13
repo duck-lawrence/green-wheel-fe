@@ -20,6 +20,11 @@ export const rentalContractApi = {
             const res = await axiosInstance.get("/rental-contracts", { params })
             return res.data
         }),
+    getById: (id: string) =>
+        requestWrapper<RentalContractViewRes>(async () => {
+            const res = await axiosInstance.get(`/rental-contract/${id}`)
+            return res.data
+        }),
     acceptContract: ({ id }: { id: string }) =>
         requestWrapper<void>(async () => {
             await axiosInstance.put(`/rental-contracts/${id}/accept`)

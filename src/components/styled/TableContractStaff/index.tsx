@@ -128,7 +128,7 @@ export function TableContractStaff({
                                                 }
                                                 hidden={isLoading(item.id)}
                                             >
-                                                {t("contract.accept")}
+                                                {t("rental_contract.accept")}
                                             </ButtonStyled>
 
                                             {/* Reject */}
@@ -145,7 +145,7 @@ export function TableContractStaff({
                                                         }
                                                         hidden={isLoading(item.id)}
                                                     >
-                                                        {t("contract.reject")}
+                                                        {t("rental_contract.reject")}
                                                     </ButtonStyled>
                                                 </DropdownTrigger>
 
@@ -167,7 +167,7 @@ export function TableContractStaff({
                                         </div>
                                     ) : (
                                         <span className="text-gray-400 text-sm">
-                                            {t("contract.no_action")}
+                                            {t("rental_contract.no_action")}
                                         </span>
                                     )}
                                 </TableCell>

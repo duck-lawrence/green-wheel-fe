@@ -60,12 +60,14 @@ export const useConfirmContract = ({ onSuccess }: { onSuccess?: () => void }) =>
 
         onSuccess: () => {
             onSuccess?.()
-            toast.success(t("contract.update_success"))
+            toast.success(t("rental_contract.update_success"))
             queryClient.invalidateQueries({ queryKey: ["rental-contracts"] })
         },
 
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail) || t("contract.update_failed"))
+            toast.error(
+                translateWithFallback(t, error.detail) || t("rental_contract.update_failed")
+            )
         }
     })
 
@@ -76,12 +78,14 @@ export const useConfirmContract = ({ onSuccess }: { onSuccess?: () => void }) =>
 
         onSuccess: () => {
             onSuccess?.()
-            toast.success(t("contract.update_success"))
+            toast.success(t("rental_contract.update_success"))
             queryClient.invalidateQueries({ queryKey: ["rental-contracts"] })
         },
 
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail) || t("contract.update_failed"))
+            toast.error(
+                translateWithFallback(t, error.detail) || t("rental_contract.update_failed")
+            )
         }
     })
 
@@ -103,6 +107,29 @@ export const useSearchRentalContracts = ({
             return queryClient.getQueryData<RentalContractViewRes[]>([
                 ...QUERY_KEYS.RENTAL_CONTRACTS,
                 params
+            ])
+        },
+        enabled
+    })
+    return query
+}
+
+export const useGetByIdRentalContract = ({
+    id,
+    enabled = true
+}: {
+    id: string
+    enabled?: boolean
+}) => {
+    const queryClient = useQueryClient()
+
+    const query = useQuery({
+        queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id],
+        queryFn: () => rentalContractApi.getById(id),
+        initialData: () => {
+            return queryClient.getQueryData<RentalContractViewRes>([
+                ...QUERY_KEYS.RENTAL_CONTRACTS,
+                id
             ])
         },
         enabled
