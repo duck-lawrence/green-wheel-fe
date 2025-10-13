@@ -171,7 +171,9 @@
         "start_date": "Start date",
         "end_date": "End date",
         "action": "Action",
-        "no_action": "No action"
+        "phone": "Phone",
+        "citizen_id": "Citizen ID",
+        "driver_license": "Driver License"
     },
     "contral_form": {
         "payment_method_require": "Please select a payment method",
@@ -371,7 +373,7 @@
         "report_form_validation_description_max": "Description must be 1000 characters or less.",
         "search_success": "Search success",
         "search_failed": "Search failed",
-        "handovers_filters_title": "Handovers filter title"
+        "contract_filter": "Contract Filters"
     },
     "admin": {
         "dashboard_title": "Admin Dashboard",
@@ -410,6 +412,9 @@
     },
     "contract": {
         "update_success": "Update success",
-        "update_failed": "Update failed"
+        "update_failed": "Update failed",
+        "no_action": "No action",
+        "accept": "Accept",
+        "reject": "Reject"
     }
 }

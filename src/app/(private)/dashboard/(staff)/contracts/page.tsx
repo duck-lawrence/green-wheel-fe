@@ -10,7 +10,6 @@ import { RentalContractStatus } from "@/constants/enum"
 import { FunnelSimple } from "@phosphor-icons/react"
 import { RentalContractStatusLabels } from "@/constants/labels"
 import { ContractQueryParams } from "@/models/rental-contract/schema/request"
-// import { mockContracts } from "@/data/mockContracts"
 
 export default function StaffContractsPage() {
     const { t } = useTranslation()
@@ -74,7 +73,7 @@ export default function StaffContractsPage() {
                     <div className="flex items-center justify-between">
                         <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
                             <FunnelSimple size={22} className="text-primary" />
-                            {t("staff.handovers_filters_title") || "Contract Filters"}
+                            {t("staff.contract_filter")}
                         </h3>
                         <ButtonStyled
                             type="submit"
@@ -83,27 +82,27 @@ export default function StaffContractsPage() {
                                      hover:from-teal-500 hover:to-green-400 text-white 
                                      px-6 py-2 rounded-lg font-semibold transition-all"
                         >
-                            {t("staff.handovers_filters_search") || "Search"}
+                            {t("staff.handovers_filters_search")}
                         </ButtonStyled>
                     </div>
 
                     {/* Filter inputs */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <EnumPicker
-                            label="Status"
+                            label={t("table.status")}
                             labels={RentalContractStatusLabels}
                             value={formik.values.status ?? null}
                             onChange={(val) => formik.setFieldValue("status", val)}
                         />
                         <InputStyled
-                            label="Phone"
+                            label={t("table.phone")}
                             placeholder="e.g. 0901234567"
                             value={formik.values.phone}
                             onChange={(value) => formik.setFieldValue("phone", value.target.value)}
                             onClear={() => formik.setFieldValue("phone", "")}
                         />
                         <InputStyled
-                            label="Citizen ID"
+                            label={t("table.citizen_id")}
                             placeholder="e.g. 079123456789"
                             value={formik.values.citizenIdentity}
                             onChange={(value) =>
@@ -112,7 +111,7 @@ export default function StaffContractsPage() {
                             onClear={() => formik.setFieldValue("citizenIdentity", "")}
                         />
                         <InputStyled
-                            label="Driver License"
+                            label={t("table.driver_license")}
                             placeholder="e.g. 60K-99999"
                             value={formik.values.driverLicense}
                             onChange={(value) =>

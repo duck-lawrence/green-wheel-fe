@@ -65,11 +65,7 @@ export const useConfirmContract = ({ onSuccess }: { onSuccess?: () => void }) =>
         },
 
         onError: (error: BackendError) => {
-            toast.error(
-                translateWithFallback(t, error.detail) ||
-                    t("contract.update_failed") ||
-                    "Failed to update contract status!"
-            )
+            toast.error(translateWithFallback(t, error.detail) || t("contract.update_failed"))
         }
     })
 
@@ -85,11 +81,7 @@ export const useConfirmContract = ({ onSuccess }: { onSuccess?: () => void }) =>
         },
 
         onError: (error: BackendError) => {
-            toast.error(
-                translateWithFallback(t, error.detail) ||
-                    t("contract.update_failed") ||
-                    "Failed to update contract status!"
-            )
+            toast.error(translateWithFallback(t, error.detail) || t("contract.update_failed"))
         }
     })
 
@@ -117,25 +109,3 @@ export const useSearchRentalContracts = ({
     })
     return query
 }
-
-// export const useGetAllRentalContract = ({
-//     params,
-//     enabled = true
-// }: {
-//     params: ContractQueryParams
-//     enabled?: boolean
-// }) => {
-//     const queryClient = useQueryClient()
-//     const query = useQuery({
-//         queryKey: [...QUERY_KEYS.VEHICLE_SEGMENTS, params],
-//         queryFn: () => rentalContractApi.getAll(params),
-//         initialData: () => {
-//             return queryClient.getQueryData<RentalContractViewRes[]>([
-//                 ...QUERY_KEYS.VEHICLE_SEGMENTS,
-//                 params
-//             ])
-//         },
-//         enabled
-//     })
-//     return query
-// }
