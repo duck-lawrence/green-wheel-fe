@@ -1,37 +1,37 @@
 "use client"
-
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { ButtonStyled, EnumPicker, InputStyled, TableContractStaff } from "@/components"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { useSearchRentalContracts } from "@/hooks"
-import { ContractQueryParams } from "@/models/rental-contract/schema/request"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { RentalContractStatus } from "@/constants/enum"
 import { FunnelSimple } from "@phosphor-icons/react"
 import { RentalContractStatusLabels } from "@/constants/labels"
+import { ContractQueryParams } from "@/models/rental-contract/schema/request"
 // import { mockContracts } from "@/data/mockContracts"
 
 export default function StaffContractsPage() {
     const { t } = useTranslation()
+    const [filters, setFilter] = useState<ContractQueryParams>({})
     const [contracts, setContracts] = useState<RentalContractViewRes[]>([])
-    const search = useSearchRentalContracts({
-        onSuccess: (data) => setContracts(data)
+    const { data, isFetching, refetch } = useSearchRentalContracts({
+        params: filters,
+        enabled: true
     })
 
-    const handleFilterChange = useCallback(
-        async (filters: ContractQueryParams) => {
-            await search.mutateAsync(filters)
-        },
-        [search]
-    )
-
     useEffect(() => {
-        if (contracts.length === 0) {
-            handleFilterChange({})
-        }
-    }, [contracts.length, handleFilterChange])
+        if (data) setContracts(data)
+    }, [data])
+
+    const handleFilterChange = useCallback(
+        async (val: ContractQueryParams) => {
+            setFilter(val)
+            await refetch()
+        },
+        [refetch]
+    )
 
     const initialValues = useMemo(
         () => ({
@@ -78,6 +78,7 @@ export default function StaffContractsPage() {
                         </h3>
                         <ButtonStyled
                             type="submit"
+                            isLoading={isFetching}
                             className="bg-gradient-to-r from-primary to-teal-400 
                                      hover:from-teal-500 hover:to-green-400 text-white 
                                      px-6 py-2 rounded-lg font-semibold transition-all"
@@ -122,15 +123,8 @@ export default function StaffContractsPage() {
                     </div>
                 </form>
             </div>
-
-            <TableContractStaff contracts={contracts} />
+            {/* Table */}
+            <TableContractStaff contracts={contracts} onStatusChange={() => refetch()} />
         </div>
     )
 }
-
-// useEffect(() => {
-//     if (filters) {
-//         console.log("[staff/contracts] filters sent to BE:", filters)
-//     }
-// }, [filters])
-//loading={searchContractsMutation.isPending}

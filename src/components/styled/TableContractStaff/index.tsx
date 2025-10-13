@@ -10,10 +10,16 @@ import { useConfirmContract } from "@/hooks"
 import { EnumPicker } from "@/components/modules"
 import { VehicleStatusLabels } from "@/constants/labels"
 
-export function TableContractStaff({ contracts }: { contracts: RentalContractViewRes[] }) {
+export function TableContractStaff({
+    contracts,
+    onStatusChange
+}: {
+    contracts: RentalContractViewRes[]
+    onStatusChange?: () => void
+}) {
     const { t } = useTranslation()
     const [vehicalStatus, setVehicalStatus] = useState<VehicleStatus | null>(null)
-    const { acceptContract, rejectContract } = useConfirmContract({})
+    const { acceptContract, rejectContract } = useConfirmContract({ onSuccess: onStatusChange })
 
     const handleAccept = useCallback(
         (id: string) => {
@@ -104,6 +110,10 @@ export function TableContractStaff({ contracts }: { contracts: RentalContractVie
                                             border border-primary text-primary
                                             font-semibold px-4 py-7"
                                             onPress={() => handleAccept(item.id)}
+                                            isLoading={
+                                                acceptContract.isPending &&
+                                                acceptContract.variables.id === item.id
+                                            }
                                         >
                                             Accept
                                         </ButtonStyled>
@@ -118,6 +128,10 @@ export function TableContractStaff({ contracts }: { contracts: RentalContractVie
                                                     handleReject(item.id)
                                                 }}
                                                 className="w-36 overflow-hidden"
+                                                isLoading={
+                                                    rejectContract.isPending &&
+                                                    rejectContract.variables.id === item.id
+                                                }
                                             />
                                         </div>
                                     </div>
