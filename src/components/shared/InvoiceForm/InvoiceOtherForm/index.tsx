@@ -5,8 +5,11 @@ import { Wrench, Money } from "@phosphor-icons/react"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { InvoiceItemType } from "@/constants/enum"
+import { useTranslation } from "react-i18next"
 
 export default function InvoiceOtherForm({ invoice }: { invoice: InvoiceViewRes }) {
+    const { t } = useTranslation()
+
     const totalOther = invoice.invoiceItems
         .filter((item) => item.type === InvoiceItemType.Other)
         .reduce((sum, item) => sum + item.subTotal, 0)
@@ -14,23 +17,21 @@ export default function InvoiceOtherForm({ invoice }: { invoice: InvoiceViewRes 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <InputStyled
-                label="Nguyên nhân sự cố"
+                label={t("rental_contract.incident_cause")}
                 value={invoice.notes}
-                placeholder="Hư bánh xe / Lỗi động cơ / Tai nạn nhẹ..."
                 startContent={<Wrench size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
                 className="sm:col-span-2"
             />
             <InputStyled
-                label="Chi phí sửa chữa / cứu hộ"
-                placeholder="1.500.000 VND"
+                label={t("rental_contract.repair_rescue_cost")}
                 value={formatCurrency(totalOther)}
                 startContent={<Money size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
                 className="sm:col-span-2"
             />
             <TextareaStyled
-                label="Ghi chú"
+                label={t("rental_contract.note")}
                 placeholder="Chi phí do khách hàng chịu (ngoài hợp đồng)."
                 variant="bordered"
                 className="sm:col-span-2"

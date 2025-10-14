@@ -91,7 +91,7 @@ export default function StaffContractsPage() {
                         <EnumPicker
                             label={t("table.status")}
                             labels={RentalContractStatusLabels}
-                            value={formik.values.status ?? null}
+                            // value={formik.values.status ?? null}
                             onChange={(val) => formik.setFieldValue("status", val)}
                         />
                         <InputStyled

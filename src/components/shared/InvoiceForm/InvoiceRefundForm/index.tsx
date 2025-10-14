@@ -5,8 +5,10 @@ import { Money, WarningCircle, ArrowUDownLeft } from "@phosphor-icons/react"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { InvoiceItemType } from "@/constants/enum"
+import { useTranslation } from "react-i18next"
 
 export default function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
+    const { t } = useTranslation()
     const deposit = invoice.deposit?.amount ?? 0
     const penalty =
         invoice.invoiceItems.find((item) => item.type === InvoiceItemType.Penalty)?.subTotal ?? 0
@@ -16,19 +18,19 @@ export default function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <InputStyled
-                label="Số tiền cọc ban đầu"
+                label={t("rental_contract.initial_deposit_amount")}
                 value={formatCurrency(invoice.deposit?.amount ?? 0)}
                 startContent={<Money size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
             />
             <InputStyled
-                label="Phạt nguội (nếu có)"
+                label={t("rental_contract.traffic_fine_if_any")}
                 value={formatCurrency(penalty)}
                 startContent={<WarningCircle size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
             />
             <InputStyled
-                label="Tổng sau khi trừ phạt"
+                label={t("rental_contract.total_after_deduction")}
                 value={formatCurrency(total)}
                 startContent={<Money size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
@@ -36,8 +38,8 @@ export default function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes
             <InputStyled
                 label={
                     invoice.total <= 0
-                        ? "Số tiền khách hàng cần thanh toán"
-                        : "Số tiền hoàn lại khách hàng"
+                        ? t("rental_contract.amount_customer_must_pay")
+                        : t("rental_contract.amount_refunded_to_customer")
                 }
                 value={formatCurrency(invoice.total)}
                 startContent={
@@ -46,8 +48,7 @@ export default function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes
                 variant="bordered"
             />
             <TextareaStyled
-                label="Ghi chú"
-                placeholder="Hoàn tiền cọc, không có phạt nguội."
+                label={t("rental_contract.note")}
                 value={invoice.notes}
                 variant="bordered"
                 className="sm:col-span-2"

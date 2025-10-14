@@ -13,11 +13,18 @@ export const rentalContractApi = {
             const res = await axiosInstance.post("/rental-contracts", req)
             return res.data
         }),
+
     getAll: (query: ContractQueryParams) =>
         requestWrapper<RentalContractViewRes[]>(async () => {
             const params = buildQueryParams(query)
 
             const res = await axiosInstance.get("/rental-contracts", { params })
+            return res.data
+        }),
+
+    getById: (id: string) =>
+        requestWrapper<RentalContractViewRes>(async () => {
+            const res = await axiosInstance.get(`/rental-contracts/${id}`)
             return res.data
         }),
 
@@ -31,8 +38,14 @@ export const rentalContractApi = {
         requestWrapper<void>(async () => {
             await axiosInstance.put(`/rental-contracts/${id}/accept`)
         }),
+
     rejectContract: ({ id, vehicalStatus }: { id: string; vehicalStatus: VehicleStatus }) =>
         requestWrapper<void>(async () => {
             await axiosInstance.put(`/rental-contracts/${id}/reject`, { vehicalStatus })
+        }),
+
+    updateContractStatus: ({ id }: { id: string }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/rental-contracts/${id}`)
         })
 }

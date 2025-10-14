@@ -1,10 +1,11 @@
 "use client"
 
-import React, { useMemo, useCallback } from "react"
+import React, { useMemo, useCallback, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { LayoutGroup, motion } from "framer-motion"
 import { cn } from "@heroui/react"
 import { ROLE_ADMIN, ROLE_CUSTOMER, ROLE_STAFF } from "@/constants/constants"
+import { useSideBarItemStore } from "@/hooks"
 
 export type SidebarItem = {
     key: string
@@ -55,21 +56,41 @@ export const buildTabs = ({
         seenKeys.add(tab.key)
         uniqueTabs.push(tab)
     }
-    
+
     return uniqueTabs
 }
-    
+
 export function Sidebar({ tabs, selectedKey, className = "w-50" }: SidebarProps) {
     const pathname = usePathname()
     const router = useRouter()
+    const activeMenuKey = useSideBarItemStore((s) => s.activeMenuKey)
+    const setActiveMenuKey = useSideBarItemStore((s) => s.setActiveMenuKey)
+
+    useEffect(() => {
+        // Lấy tab có href hợp lệ và khớp chính xác hoặc prefix
+        const matchedTab = tabs
+            .filter((t) => t.href)
+            .sort((a, b) => b.href!.length - a.href!.length)
+            .find(
+                (t) =>
+                    pathname === t.href ||
+                    pathname.startsWith(t.href!.endsWith("/") ? t.href! : `${t.href}/`)
+            )
+
+        // Nếu tìm thấy tab phù hợp và khác với activeMenuKey thì cập nhật
+        if (matchedTab && matchedTab.key !== activeMenuKey) {
+            setActiveMenuKey(matchedTab.key)
+        }
+    }, [pathname, tabs, activeMenuKey, setActiveMenuKey])
 
     const activeKey = useMemo(() => {
+        if (activeMenuKey) return activeMenuKey
         const candidate = selectedKey ?? pathname
         if (candidate && tabs.some((tab) => tab.key === candidate)) {
             return candidate
         }
         return tabs[0]?.key
-    }, [selectedKey, pathname, tabs])
+    }, [activeMenuKey, selectedKey, pathname, tabs])
 
     const handleSelection = useCallback(
         async (key: string | number) => {
