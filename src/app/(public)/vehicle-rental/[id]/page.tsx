@@ -78,12 +78,12 @@ export default function VehicleDetailPage() {
     //     .slice(0, 3)
 
     const handleClickBooking = useCallback(() => {
-        if (!user?.phone) {
+        if (!user?.phone || !user.citizenUrl || !user.licenseUrl) {
             toast.error(t("user.enter_required_info"))
         } else {
             onOpen()
         }
-    }, [onOpen, t, user?.phone])
+    }, [onOpen, t, user])
 
     function mapSpecs(vehicle: VehicleModelViewRes) {
         return [
@@ -232,7 +232,7 @@ export default function VehicleDetailPage() {
                 {/* ========================================================= */}
                 {/* Booking Card (sticky on desktop) */}
                 {/* lỗi nên chưa làm en chỗ này */}
-                <aside className="self-start lg:col-span-4 lg:sticky lg:top-32 space-y-6">
+                <aside className="self-start lg:col-span-4 lg:sticky lg:top-20 space-y-6">
                     <div className="rounded-2xl bg-white p-5 shadow-sm border border-neutral-100">
                         <h2 className="text-lg font-semibold">
                             {t("vehicle_model.vehicle_information")}
