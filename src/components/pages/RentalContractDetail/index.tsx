@@ -23,13 +23,17 @@ import { InvoiceType } from "@/constants/enum"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { useTranslation } from "react-i18next"
 import Link from "next/link"
-import { useSearchParams } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
 import toast from "react-hot-toast"
 
 export function RentalContractDetail({ contractId }: { contractId: string }) {
     // const { id } = useParams()
     // const contractId = id?.toString()
     const searchParams = useSearchParams()
+    const pathname = usePathname()
+    const returnPath = pathname.startsWith("/dashboard")
+        ? "/dashboard/rental-contracts"
+        : "/rental-contracts"
 
     const { t } = useTranslation()
     const { toCalenderDateTime } = useDay()
@@ -78,7 +82,7 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
         )
 
     return (
-        <div className="relative min-h-screen flex items-center justify-center dark:bg-gray-950 px-4">
+        <div className="relative min-h-screen flex items-center justify-center dark:bg-gray-950 px-0">
             <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -87,7 +91,7 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
             >
                 <Link
                     className="absolute top-3 left-5 hover:cursor-pointer text-gray-500 italic"
-                    href={"/rental-contracts"}
+                    href={returnPath}
                 >
                     {t("rental_contract.back_to_rental_contract")}
                 </Link>

@@ -19,6 +19,7 @@ import { useConfirmContract, useDay } from "@/hooks"
 import { VehicleStatusLabels } from "@/constants/labels"
 import { DropdownStyled } from "../../styled/DropdownStyled"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
+import { useRouter } from "next/navigation"
 
 export function TableContractStaff({
     contracts,
@@ -28,6 +29,7 @@ export function TableContractStaff({
     onStatusChange?: () => void
 }) {
     const { t } = useTranslation()
+    const router = useRouter()
     const { acceptContract, rejectContract } = useConfirmContract({ onSuccess: onStatusChange })
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
 
@@ -88,7 +90,10 @@ export function TableContractStaff({
                         return (
                             <TableRow
                                 key={item.id}
-                                className="hover:bg-gray-50 transition-colors border-b border-gray-100"
+                                className="hover:bg-gray-50 transition-colors border-b border-gray-100 cursor-pointer"
+                                onClick={() =>
+                                    router.push(`/dashboard/rental-contracts/${item.id}`)
+                                }
                             >
                                 <TableCell className="text-center text-gray-700">
                                     {index + 1}
