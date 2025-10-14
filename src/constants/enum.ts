@@ -27,8 +27,8 @@ export enum InvoiceType {
     Handover = 0,
     Return = 1,
     Refund = 2,
-    Other = 3,
-    Reservation = 4
+    Reservation = 3,
+    Other = 4
 }
 
 export enum RentalContractStatus {
@@ -112,4 +112,10 @@ export enum OrderStatus {
     Overdue = 6,
     Completed = 7,
     Cancelled = 8
+}
+
+export enum VehicleChecklistType {
+    OutOfContract = 0,
+    Handover = 1,
+    Return = 2
 }

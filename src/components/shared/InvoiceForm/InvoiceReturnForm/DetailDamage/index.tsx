@@ -5,8 +5,11 @@ import { InvoiceItemType } from "@/constants/enum"
 import React from "react"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { Wrench, Note, CurrencyCircleDollar, HashStraight } from "@phosphor-icons/react"
+import { useTranslation } from "react-i18next"
 
 export default function DetailDamage({ invoice }: { invoice: InvoiceViewRes }) {
+    const { t } = useTranslation()
+
     // Lọc ra các item có type = Damage
     const itemDamage =
         invoice.invoiceItems?.filter((item) => item.type === InvoiceItemType.Damage) ?? []
@@ -46,14 +49,15 @@ export default function DetailDamage({ invoice }: { invoice: InvoiceViewRes }) {
                         {/* Mô tả */}
                         <p className="text-sm text-gray-600 dark:text-gray-300 flex items-start gap-2">
                             <Note size={16} className="text-teal-500 mt-[2px]" />
-                            {value.checkListItem?.notes || "Không có mô tả chi tiết."}
+                            {value.checkListItem?.notes ||
+                                t("rental_contract.no_detailed_description")}
                         </p>
                     </div>
                 ))
             ) : (
                 <div className="flex flex-col items-center justify-center py-6 text-gray-500 dark:text-gray-400">
                     <Wrench size={28} className="mb-2 text-gray-400" />
-                    <p className="italic">Không có hạng mục hư hỏng nào.</p>
+                    <p className="italic">{t("rental_contract.no_damage_items")}</p>
                 </div>
             )}
         </div>

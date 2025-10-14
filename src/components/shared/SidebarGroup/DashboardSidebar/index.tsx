@@ -18,9 +18,9 @@ export function DashboardSidebar({ className }: { className?: string }) {
             href: "/dashboard/handovers"
         },
         {
-            key: "/dashboard/contracts",
+            key: "/dashboard/rental-contracts",
             label: t("staff.sidebar_contracts"),
-            href: "/dashboard/contracts"
+            href: "/dashboard/rental-contracts"
         },
         {
             key: "/dashboard/reports",

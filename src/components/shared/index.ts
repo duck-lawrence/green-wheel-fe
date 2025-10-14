@@ -10,5 +10,6 @@ export * from "./Footer"
 export * from "./Navbar"
 export * from "./SidebarGroup"
 export * from "./LanguageSwitcher"
+export * from "./InvoiceForm"
 
 // export * from "./Detail"

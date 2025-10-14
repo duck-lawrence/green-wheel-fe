@@ -7,8 +7,10 @@ import SeeDetailDamageModal from "@/components/modals/SeeDetailDamageModel"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { InvoiceItemType } from "@/constants/enum"
+import { useTranslation } from "react-i18next"
 
 export default function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes }) {
+    const { t } = useTranslation()
     const { isOpen, onOpen, onOpenChange } = useDisclosure()
     const clean = formatCurrency(
         invoice.invoiceItems.find((item) => item.type === InvoiceItemType.Cleaning)?.subTotal ?? 0
@@ -24,19 +26,19 @@ export default function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <InputStyled
-                label="Phí vệ sinh"
+                label={t("rental_contract.cleaning_fee")}
                 value={clean}
                 startContent={<Broom size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
             />
             <InputStyled
-                label="Phí trễ giờ"
+                label={t("rental_contract.late_return_fee")}
                 value={lateReturn}
                 startContent={<Clock size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
             />
             <InputStyled
-                label="Phí hư hỏng"
+                label={t("rental_contract.damage_fee")}
                 value={formatCurrency(totalDamage)}
                 startContent={<Wrench size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
@@ -51,7 +53,7 @@ export default function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes
               hover:from-teal-500 hover:to-green-400 
               shadow-md transition-all duration-300"
                 >
-                    Xem chi tiết hư hỏng
+                    {t("rental_contract.view_damage_details")}
                 </ButtonStyled>
             </div>
 
@@ -62,13 +64,17 @@ export default function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes
             />
 
             <InputStyled
-                label="Tổng cộng"
+                label={t("rental_contract.total")}
                 value={formatCurrency(invoice.total)}
                 startContent={<Money size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
                 className="sm:col-span-2"
             />
-            <TextareaStyled label="Ghi chú" variant="bordered" className="sm:col-span-2" />
+            <TextareaStyled
+                label={t("rental_contract.note")}
+                variant="bordered"
+                className="sm:col-span-2"
+            />
         </div>
     )
 }
