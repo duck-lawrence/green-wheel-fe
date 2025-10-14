@@ -4,7 +4,7 @@ import { Accordion, AccordionItem, Chip } from "@heroui/react"
 import { InvoiceStatus, InvoiceType, PaymentMethod, RentalContractStatus } from "@/constants/enum"
 import { InvoiceStatusLabels } from "@/constants/labels"
 import { ButtonStyled } from "../../styled/ButtonStyled"
-import { useGetMe, useInvoice } from "@/hooks"
+import { useGetMe, usePayInvoice } from "@/hooks"
 import { useTranslation } from "react-i18next"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { FRONTEND_API_URL } from "@/constants/env"
@@ -52,7 +52,7 @@ export function InvoiceAccordion({
 
     const { t } = useTranslation()
     const pathName = usePathname()
-    const payInvoiceMutation = useInvoice()
+    const payInvoiceMutation = usePayInvoice()
 
     const { data: user } = useGetMe()
     const isCustomer = useMemo(() => {

@@ -8,3 +8,12 @@ export type CreateCitizenIdentityReq = {
     dateOfBirth: string
     expireAt: string
 }
+
+export type UpdateCitizenIdentityReq = {
+    number?: string
+    fullName?: string
+    nationality?: string
+    sex?: Sex
+    dateOfBirth?: string
+    expireAt?: string
+}

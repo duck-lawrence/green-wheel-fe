@@ -9,7 +9,13 @@ import {
     CitizenIdentityUploader
 } from "@/components/"
 import { Sex } from "@/constants/enum"
-import { useDay, useGetMe, useGetMyCitizenId } from "@/hooks"
+import {
+    useDay,
+    // useDeleteCitizenId,
+    useGetMe,
+    useGetMyCitizenId,
+    useUpdateCitizenId
+} from "@/hooks"
 import { Spinner } from "@heroui/react"
 import { NotePencilIcon } from "@phosphor-icons/react"
 import { useFormik } from "formik"
@@ -17,18 +23,32 @@ import React, { useCallback, useState } from "react"
 import { useTranslation } from "react-i18next"
 import * as Yup from "yup"
 import { SexLabels } from "@/constants/labels"
+import { UpdateCitizenIdentityReq } from "@/models/citizen-identity/schema/request"
 
 export function CitizenIdentityProfile() {
     const { t } = useTranslation()
     const { toDate, formatDateTime } = useDay({ defaultFormat: "YYYY-MM-DD" })
-    const { data: user } = useGetMe()
     const [editable, setEditable] = useState(false)
+    const { data: user } = useGetMe()
+    const updateMutation = useUpdateCitizenId()
+    // const deleteMutation = useDeleteCitizenId()
 
     const { data: citizenId, isLoading } = useGetMyCitizenId({
         enabled: !!user?.citizenUrl
     })
 
-    const handleUpdateCitizenId = useCallback(() => console.log("hehe"), [])
+    const handleUpdateCitizenId = useCallback(
+        async (req: UpdateCitizenIdentityReq) => {
+            await updateMutation.mutateAsync(req)
+            setEditable((prev) => !prev)
+        },
+        [updateMutation]
+    )
+
+    // const handleDelete = useCallback(async () => {
+    //     await deleteMutation.mutateAsync()
+    //     setEditable((prev) => !prev)
+    // }, [deleteMutation])
 
     const formik = useFormik({
         enableReinitialize: true,
@@ -219,30 +239,46 @@ export function CitizenIdentityProfile() {
                                             <div>
                                                 <NotePencilIcon />
                                             </div>
-                                            {t("user.edit_information")}
+                                            {t("common.edit")}
                                         </ButtonStyled>
+                                    ) : formik.isSubmitting ? (
+                                        <Spinner />
                                     ) : (
-                                        <div className="flex gap-2">
-                                            <ButtonStyled
-                                                className="border-primary 
-                                                bg-white border text-primary 
-                                                hover:text-white hover:bg-primary"
-                                                isLoading={formik.isSubmitting}
-                                                isDisabled={!formik.isValid || !formik.dirty}
-                                                onPress={formik.submitForm}
-                                            >
-                                                {t("common.update")}
-                                            </ButtonStyled>
+                                        <div className="flex flex-col items-end gap-2">
+                                            <div className="flex gap-2">
+                                                <ButtonStyled
+                                                    className="border-primary 
+                                                                                    bg-white border text-primary 
+                                                                                    hover:text-white hover:bg-primary"
+                                                    isLoading={formik.isSubmitting}
+                                                    isDisabled={!formik.isValid || !formik.dirty}
+                                                    onPress={formik.submitForm}
+                                                >
+                                                    {t("common.save")}
+                                                </ButtonStyled>
+                                                {/* <ButtonStyled
+                                                    // className="border-primary
+                                                    //     bg-white border text-primary
+                                                    //     hover:text-white hover:bg-primary"
+                                                    isLoading={deleteMutation.isPending}
+                                                    onPress={handleDelete}
+                                                >
+                                                    {t("common.delete")}
+                                                </ButtonStyled> */}
+                                                <ButtonStyled
+                                                    isDisabled={
+                                                        formik.isSubmitting
+                                                        // deleteMutation.isPending
+                                                    }
+                                                    onPress={() => {
+                                                        setEditable(!editable)
+                                                        formik.resetForm()
+                                                    }}
+                                                >
+                                                    {t("common.cancel")}
+                                                </ButtonStyled>
+                                            </div>
                                             <CitizenIdentityUploader btnClassName="bg-secondary" />
-                                            <ButtonStyled
-                                                isDisabled={formik.isSubmitting}
-                                                onPress={() => {
-                                                    setEditable(!editable)
-                                                    formik.resetForm()
-                                                }}
-                                            >
-                                                {t("common.cancel")}
-                                            </ButtonStyled>
                                         </div>
                                     )}
                                 </div>

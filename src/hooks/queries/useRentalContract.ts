@@ -157,12 +157,15 @@ export const useUpdateContractStatus = ({ onSuccess }: { onSuccess?: () => void 
     const { t } = useTranslation()
     const router = useRouter()
     const pathName = usePathname()
+    const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: rentalContractApi.updateContractStatus,
+        mutationFn: async ({ id }: { id: string }) => {
+            await rentalContractApi.updateContractStatus({ id })
+            queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
+        },
         onSuccess: () => {
             router.replace(pathName)
-            toast.success(t("success.payment"))
             onSuccess?.()
         },
         onError: (error: BackendError) => {

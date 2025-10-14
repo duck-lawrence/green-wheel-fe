@@ -29,7 +29,9 @@
         "cancel": "Cancel",
         "too_many_request": "Too many request. Try again later",
         "unexpected_error": "An unexpected error occurred. Please try again later.",
-        "search": "Search"
+        "search": "Search",
+        "save": "Save",
+        "delete": "Delete"
     },
     "auth": {
         "otp": "OTP",
