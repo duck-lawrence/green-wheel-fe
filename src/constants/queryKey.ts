@@ -5,7 +5,8 @@ export const QUERY_KEYS = {
     STATIONS: ["stations"] as const,
     VEHICLE_SEGMENTS: ["vehicleSegments"] as const,
     VEHICLE_MODELS: ["vehicleModels"] as const,
-    RENTAL_CONTRACTS: ["rentalContracts"] as const
+    RENTAL_CONTRACTS: ["rentalContracts"] as const,
+    USERS: ["users"] as const
     // VEHICLE: {
     //     ALL: ["vehicles"] as const,
     //     BY_ID: (id: string) => ["vehicles", id] as const

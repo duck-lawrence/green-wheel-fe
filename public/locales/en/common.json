@@ -22,6 +22,7 @@
     "common": {
         "upload": "Upload",
         "update": "Update",
+        "edit": "Edit",
         "save_changes": "Save Changes",
         "cancel": "Cancel",
         "too_many_request": "Too many request. Try again later",
@@ -170,12 +171,14 @@
         "status": "Status",
         "id": "Id",
         "name": "Name",
+        "email": "Email",
         "start_date": "Start date",
         "end_date": "End date",
         "action": "Action",
         "phone": "Phone",
         "citizen_id": "Citizen ID",
-        "driver_license": "Driver License"
+        "driver_license": "Driver License",
+        "documents": "Documents"
     },
     "contral_form": {
         "payment_method_require": "Please select a payment method",
@@ -362,6 +365,7 @@
         "user_management_title": "User Management",
         "user_management_description": "Manage customer records and adjust their permissions when needed.",
         "user_management_placeholder": "This module is ready for integration with account management APIs.",
+        "user_management_empty": "No users found",
         "report_page_title": "Report",
         "report_page_description": "Share operational issues or feedback with the management team.",
         "report_form_staff_name_label": "Staff name",
@@ -383,7 +387,16 @@
         "report_form_validation_description_max": "Description must be 1000 characters or less.",
         "search_success": "Search success",
         "search_failed": "Search failed",
-        "contract_filter": "Contract Filters"
+        "contract_filter": "Contract Filters",
+        "user_filter_title": "User Filter",
+        "user_filter_name_placeholder": "Enter full name",
+        "user_filter_phone_placeholder": "Enter phone number",
+        "user_filter_has_document_label": "Has Document",
+        "user_filter_has_document_placeholder": "Select",
+        "user_filter_has_document_both": "Both Documents",
+        "user_filter_has_document_license": "Driving License",
+        "user_filter_has_document_citizen": "Citizen ID",
+        "user_filter_has_document_none": "No document"
     },
     "admin": {
         "dashboard_title": "Admin Dashboard",
