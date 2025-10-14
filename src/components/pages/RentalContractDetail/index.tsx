@@ -7,7 +7,8 @@ import {
     renderInvoiceForm,
     SectionStyled,
     SpinnerStyled,
-    TextareaStyled
+    TextareaStyled,
+    DateTimeStyled
 } from "@/components"
 import {
     Car,
@@ -16,7 +17,6 @@ import {
     ArrowsLeftRight,
     Invoice
 } from "@phosphor-icons/react"
-import { DatePicker } from "@heroui/react"
 import { InvoiceTypeLabels, RentalContractStatusLabels } from "@/constants/labels"
 import { useDay, useGetByIdRentalContract, useNumber, useUpdateContractStatus } from "@/hooks"
 import { InvoiceType } from "@/constants/enum"
@@ -175,25 +175,29 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
                 {/*Rental Dates */}
                 <SectionStyled title={t("rental_contract.rental_duration")}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <DatePicker
+                        <DateTimeStyled
                             value={toCalenderDateTime(dataContract.startDate)}
                             label={t("rental_contract.start_date")}
                             isReadOnly
+                            endContent
                         />
-                        <DatePicker
+                        <DateTimeStyled
                             value={toCalenderDateTime(dataContract.actualStartDate)}
                             label={t("rental_contract.actual_start_date")}
                             isReadOnly
+                            endContent
                         />
-                        <DatePicker
+                        <DateTimeStyled
                             value={toCalenderDateTime(dataContract.endDate)}
                             label={t("rental_contract.end_date")}
                             isReadOnly
+                            endContent
                         />
-                        <DatePicker
+                        <DateTimeStyled
                             value={toCalenderDateTime(dataContract.actualEndDate)}
                             label={t("rental_contract.actual_end_date")}
                             isReadOnly
+                            endContent
                         />
                     </div>
                 </SectionStyled>

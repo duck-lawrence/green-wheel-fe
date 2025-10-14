@@ -113,3 +113,9 @@ export enum OrderStatus {
     Completed = 7,
     Cancelled = 8
 }
+
+export enum VehicleChecklistType {
+    OutOfContract = 0,
+    Handover = 1,
+    Return = 2
+}
