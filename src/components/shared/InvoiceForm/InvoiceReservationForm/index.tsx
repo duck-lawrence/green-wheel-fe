@@ -12,7 +12,7 @@ export function InvoiceReservation({ invoice }: { invoice: InvoiceViewRes }) {
         <div>
             <InputStyled
                 label={t("rental_contract.reservation_fee")}
-                value={formatCurrency(invoice.deposit?.amount ?? 0)}
+                value={formatCurrency(invoice.total ?? 0)}
                 startContent={<Money size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
             />

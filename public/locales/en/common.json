@@ -9,7 +9,8 @@
         "register": "Register successful",
         "reset_password": "Reset password successful",
         "change_password": "Change password successful",
-        "upload": "Upload successful"
+        "upload": "Upload successful",
+        "payment": "Payment success"
     },
     "failed": {
         "create": "Failed to create",
@@ -17,7 +18,8 @@
         "delete": "Failed to delete",
         "refresh": "Failed to refresh",
         "login": "Login failed",
-        "logout": "Logout failed"
+        "logout": "Logout failed",
+        "payment": "Payment failed"
     },
     "common": {
         "upload": "Upload",

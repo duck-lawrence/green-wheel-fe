@@ -6,6 +6,8 @@ import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { rentalContractApi } from "@/services/rentalContractApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { usePathname, useRouter } from "next/navigation"
+
 import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 
@@ -53,7 +55,6 @@ export const useCreateRentalContract = ({ onSuccess }: { onSuccess?: () => void 
         mutationFn: rentalContractApi.create,
         onSuccess: () => {
             toast.success(t("contral_form.wait_for_confirm"), {
-                position: "top-center",
                 duration: 5000
             })
             onSuccess?.()
@@ -150,4 +151,22 @@ export const useGetByIdRentalContract = ({
         enabled
     })
     return query
+}
+
+export const useUpdateContractStatus = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
+    const { t } = useTranslation()
+    const router = useRouter()
+    const pathName = usePathname()
+
+    return useMutation({
+        mutationFn: rentalContractApi.updateContractStatus,
+        onSuccess: () => {
+            router.replace(pathName)
+            toast.success(t("success.payment"))
+            onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
 }

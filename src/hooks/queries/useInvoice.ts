@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 
-export const usePayInvoice = () => {
+export const useInvoice = () => {
     const { t } = useTranslation()
     // const QueryClient = useQueryClient()
     const router = useRouter()
@@ -19,10 +19,7 @@ export const usePayInvoice = () => {
 
         onSuccess: (data) => {
             if (data?.link) {
-                toast.success("chuyen sang momo")
                 router.push(data.link)
-            } else {
-                toast.error("ko tạo đc liên kết momo")
             }
         },
         onError: (error: BackendError) => {

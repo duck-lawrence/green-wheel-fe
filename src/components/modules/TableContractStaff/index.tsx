@@ -12,12 +12,12 @@ import {
 } from "@heroui/react"
 import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
-import { ButtonStyled } from "../ButtonStyled"
+import { ButtonStyled } from "../../styled/ButtonStyled"
 import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { useConfirmContract, useDay } from "@/hooks"
 import { VehicleStatusLabels } from "@/constants/labels"
-import { DropdownStyled } from "../DropdownStyled"
+import { DropdownStyled } from "../../styled/DropdownStyled"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 
 export function TableContractStaff({

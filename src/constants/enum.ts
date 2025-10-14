@@ -27,8 +27,8 @@ export enum InvoiceType {
     Handover = 0,
     Return = 1,
     Refund = 2,
-    Other = 3,
-    Reservation = 4
+    Reservation = 3,
+    Other = 4
 }
 
 export enum RentalContractStatus {
