@@ -36,7 +36,7 @@ export const profileApi = {
     // citizen identity
     uploadCitizenId: (formData: FormData) =>
         requestWrapper<CitizenIdentityViewRes>(async () => {
-            const res = await axiosInstance.post("/users/citizen-identity", formData, {
+            const res = await axiosInstance.put("/users/citizen-identity", formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             })
             return res.data
@@ -51,7 +51,7 @@ export const profileApi = {
     // driver license
     uploadDriverLicense: (formData: FormData) =>
         requestWrapper<DriverLicenseViewRes>(async () => {
-            const res = await axiosInstance.post("/users/driver-license", formData, {
+            const res = await axiosInstance.put("/users/driver-license", formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             })
             return res.data
