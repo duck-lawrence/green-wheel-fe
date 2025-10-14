@@ -1,14 +1,27 @@
 "use client"
 
 import React from "react"
-import { useImageUploadModal, useUploadCitizenId } from "@/hooks"
+import { useImageUploadModal, useUploadCitizenId, useUploadCitizenIdById } from "@/hooks"
 import { ImageUploadButton, ImageUploaderModal } from "@/components/"
 import { useTranslation } from "react-i18next"
 
-export function CitizenIdentityUploader({ btnClassName = "" }: { btnClassName?: string }) {
+export function CitizenIdentityUploader({
+    btnClassName = "",
+    customerId
+}: {
+    btnClassName?: string
+    customerId?: string
+}) {
     const { t } = useTranslation()
     const { imgSrc, setImgSrc, isOpen, onOpenChange, onClose, onFileSelect } = useImageUploadModal()
+
+    const uploadCitizenIdById = useUploadCitizenIdById({
+        userId: customerId || "",
+        onError: onClose
+    })
     const uploadCitizenId = useUploadCitizenId({ onError: onClose })
+
+    const currentUpload = customerId ? uploadCitizenIdById : uploadCitizenId
 
     return (
         <>
@@ -18,15 +31,16 @@ export function CitizenIdentityUploader({ btnClassName = "" }: { btnClassName?: 
                 btnClassName={btnClassName}
             />
             <ImageUploaderModal
+                label={t("user.upload_citizen_identity")}
                 imgSrc={imgSrc}
                 setImgSrc={setImgSrc}
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
                 onClose={onClose}
-                uploadFn={uploadCitizenId.mutateAsync}
+                uploadFn={currentUpload.mutateAsync}
+                isUploadPending={currentUpload.isPending}
                 cropShape="rect"
                 cropSize={{ width: 700, height: 437.5 }}
-                label={t("user.upload_citizen_identity")}
             />
         </>
     )

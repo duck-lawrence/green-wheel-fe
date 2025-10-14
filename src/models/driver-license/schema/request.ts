@@ -9,3 +9,13 @@ export type CreateDriverLicenseReq = {
     expiresAt: string
     class: LicenseClass
 }
+
+export type UpdateDriverLicenseReq = {
+    number?: string
+    class?: LicenseClass
+    fullName?: string
+    nationality?: string
+    sex?: Sex
+    dateOfBirth?: string
+    expiresAt?: string
+}

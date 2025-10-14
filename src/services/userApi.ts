@@ -1,4 +1,6 @@
+import { UpdateCitizenIdentityReq } from "@/models/citizen-identity/schema/request"
 import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
+import { UpdateDriverLicenseReq } from "@/models/driver-license/schema/request"
 import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
 import { CreateUserReq, UserFilterReq } from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
@@ -13,27 +15,49 @@ export const userApi = {
             return res.data
         }),
 
-    createAnonymousAccount: (req: CreateUserReq) =>
+    create: (req: CreateUserReq) =>
         requestWrapper<{ userId: string }>(async () => {
-            const res = await axiosInstance.post("/users/anonymous", req)
+            const res = await axiosInstance.post("/users", req)
             return res.data
         }),
 
-    uploadCitizenIdForAnonymous: ({ userId, formData }: { userId: string; formData: FormData }) =>
+    uploadCitizenIdById: ({ userId, formData }: { userId: string; formData: FormData }) =>
         requestWrapper<CitizenIdentityViewRes>(async () => {
-            const res = await axiosInstance.post(`/users/${userId}/citizen-identity`, formData)
+            const res = await axiosInstance.put(`/users/${userId}/citizen-identity`, formData)
             return res.data
         }),
 
-    uploadDriverLicenseForAnonymous: ({
+    uploadDriverLicenseById: ({ userId, formData }: { userId: string; formData: FormData }) =>
+        requestWrapper<DriverLicenseViewRes>(async () => {
+            const res = await axiosInstance.put(`/users/${userId}/driver-license`, formData)
+            return res.data
+        }),
+
+    updateCitizenIdentityById: ({
         userId,
-        formData
+        req
     }: {
         userId: string
-        formData: FormData
+        req: UpdateCitizenIdentityReq
     }) =>
-        requestWrapper<DriverLicenseViewRes>(async () => {
-            const res = await axiosInstance.post(`/users/${userId}/driver-license`, formData)
+        requestWrapper<CitizenIdentityViewRes>(async () => {
+            const res = await axiosInstance.patch(`/users/${userId}/citizen-identity`, req)
             return res.data
+        }),
+
+    updateDriverLicenseById: ({ userId, req }: { userId: string; req: UpdateDriverLicenseReq }) =>
+        requestWrapper<DriverLicenseViewRes>(async () => {
+            const res = await axiosInstance.patch(`/users/${userId}/driver-license`, req)
+            return res.data
+        }),
+
+    deleteCitizenIdentityById: (userId: string) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.delete(`/users/${userId}/citizen-identity`)
+        }),
+
+    deleteDriverLicenseById: (userId: string) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.delete(`/users/${userId}/driver-license`)
         })
 }

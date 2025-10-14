@@ -1,9 +1,10 @@
 "use client"
 import { Autocomplete, AutocompleteItem } from "@heroui/react"
-import React, { Key } from "react"
+import React from "react"
+import type { Key } from "@react-types/shared"
 
 type EnumPickerProps<T extends number> = {
-    // value: T | null
+    value?: Key | null
     onChange: (value: Key | null) => void
     onKeyDown?: () => void
     labels: Record<T, string> // map enum → label (ví dụ OrderStatusLabels)
@@ -13,7 +14,7 @@ type EnumPickerProps<T extends number> = {
 }
 
 export function EnumPicker<T extends number>({
-    // value,
+    value,
     onChange,
     onKeyDown = undefined,
     labels,
@@ -36,7 +37,7 @@ export function EnumPicker<T extends number>({
             variant="bordered"
             className={className}
             // className="max-w-55 h-14"
-            // selectedKey={value !== null ? String(value) : undefined}
+            selectedKey={value !== null ? String(value) : null}
             onSelectionChange={onChange}
             onKeyDown={onKeyDown}
             classNames={{

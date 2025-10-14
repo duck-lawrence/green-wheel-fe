@@ -1,4 +1,6 @@
+import { UpdateCitizenIdentityReq } from "@/models/citizen-identity/schema/request"
 import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
+import { UpdateDriverLicenseReq } from "@/models/driver-license/schema/request"
 import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
 import { UserUpdateReq } from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
@@ -48,6 +50,17 @@ export const profileApi = {
             return res.data
         }),
 
+    updateCitizenId: (req: UpdateCitizenIdentityReq) =>
+        requestWrapper<CitizenIdentityViewRes>(async () => {
+            const res = await axiosInstance.patch("/users/citizen-identity", req)
+            return res.data
+        }),
+
+    deleteCitizenId: () =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.delete("/users/citizen-identity")
+        }),
+
     // driver license
     uploadDriverLicense: (formData: FormData) =>
         requestWrapper<DriverLicenseViewRes>(async () => {
@@ -61,5 +74,16 @@ export const profileApi = {
         requestWrapper<DriverLicenseViewRes>(async () => {
             const res = await axiosInstance.get("/users/driver-license")
             return res.data
+        }),
+
+    updateDriverLicense: (req: UpdateDriverLicenseReq) =>
+        requestWrapper<DriverLicenseViewRes>(async () => {
+            const res = await axiosInstance.patch("/users/driver-license", req)
+            return res.data
+        }),
+
+    deleteDriverLicense: () =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.delete("/users/driver-license")
         })
 }
