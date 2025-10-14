@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next"
 import { FunnelSimple } from "@phosphor-icons/react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
+import type { Selection } from "@heroui/react"
 
 import {
     ButtonStyled,
@@ -20,13 +21,14 @@ import {
     TableUserManagement,
     useModalDisclosure
 } from "@/components"
+import { ROLE_ADMIN, ROLE_STAFF } from "@/constants/constants"
 import { useSearchUsers } from "@/hooks"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 
 type UserFilterFormValues = {
     name: string
     phone: string
-    hasDocument: "all" | "license" | "citizen" | "none"
+    hasDocument: "both" | "license" | "citizen" | "none" | undefined
 }
 
 export default function StaffUserManagementPage() {
@@ -39,7 +41,7 @@ export default function StaffUserManagementPage() {
     }>({
         name: "",
         phone: "",
-        hasDocument: "all"
+        hasDocument: undefined
     })
     const [preview, setPreview] = useState<{ url: string; label: string } | null>(null)
     const { isOpen, onOpen, onOpenChange, onClose } = useModalDisclosure()
@@ -59,7 +61,7 @@ export default function StaffUserManagementPage() {
         () => ({
             name: "",
             phone: "",
-            hasDocument: "all"
+            hasDocument: undefined
         }),
         []
     )
@@ -69,10 +71,11 @@ export default function StaffUserManagementPage() {
             name: Yup.string().trim(),
             phone: Yup.string().trim(),
             hasDocument: Yup.mixed<UserFilterFormValues["hasDocument"]>().oneOf([
-                "all",
+                "both",
                 "license",
                 "citizen",
-                "none"
+                "none",
+                undefined
             ])
         })
     }, [])
@@ -91,8 +94,36 @@ export default function StaffUserManagementPage() {
         onSubmit: handleSubmit
     })
 
+    const handleDocumentFilterChange = useCallback(
+        (keys: Selection) => {
+            if (keys === "all") {
+                formik.setFieldValue("hasDocument", undefined)
+                return
+            }
+
+            const values = Array.from(keys)
+
+            if (values.length === 0) {
+                formik.setFieldValue("hasDocument", undefined)
+                return
+            }
+
+            const key = values[0]
+            const value =
+                typeof key === "string" ? key : key != null ? key.toString() : undefined
+
+            formik.setFieldValue("hasDocument", value as UserFilterFormValues["hasDocument"])
+        },
+        [formik]
+    )
+
     const filteredUsers = useMemo(() => {
         return users.filter((user) => {
+            const roleName = (user.role?.name ?? "").toLowerCase()
+            if ([ROLE_STAFF.toLowerCase(), ROLE_ADMIN.toLowerCase()].includes(roleName)) {
+                return false
+            }
+
             const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ").trim()
             const fullNameLower = fullName.toLowerCase()
 
@@ -104,14 +135,20 @@ export default function StaffUserManagementPage() {
                 ? (user.phone ?? "").includes(clientFilters.phone)
                 : true
 
-            const matchesDocument =
-                clientFilters.hasDocument === "all"
-                    ? true
-                    : clientFilters.hasDocument === "license"
-                      ? Boolean(user.licenseUrl)
-                      : clientFilters.hasDocument === "citizen"
-                        ? Boolean(user.citizenUrl)
-                        : !user.licenseUrl && !user.citizenUrl
+            const matchesDocument = (() => {
+                switch (clientFilters.hasDocument) {
+                    case "both":
+                        return Boolean(user.licenseUrl && user.citizenUrl)
+                    case "license":
+                        return Boolean(user.licenseUrl)
+                    case "citizen":
+                        return Boolean(user.citizenUrl)
+                    case "none":
+                        return !user.licenseUrl && !user.citizenUrl
+                    default:
+                        return true
+                }
+            })()
 
             return matchesName && matchesPhone && matchesDocument
         })
@@ -184,31 +221,19 @@ export default function StaffUserManagementPage() {
                         />
                         <FilterTypeStyle
                             label={t("staff.user_filter_has_document_label")}
+                            placeholder={t("staff.user_filter_has_document_placeholder")}
                             className="sm:w-52"
-                            selectedKeys={new Set([formik.values.hasDocument])}
-                            disallowEmptySelection
-                            onSelectionChange={(keys) => {
-                                if (keys === "all") {
-                                    formik.setFieldValue("hasDocument", "all")
-                                    return
-                                }
-
-                                const key = Array.from(keys)[0]
-                                const value =
-                                    typeof key === "string"
-                                        ? key
-                                        : key != null
-                                          ? key.toString()
-                                          : "all"
-
-                                formik.setFieldValue(
-                                    "hasDocument",
-                                    value as UserFilterFormValues["hasDocument"]
-                                )
-                            }}
+                            selectedKeys={
+                                formik.values.hasDocument
+                                    ? new Set([formik.values.hasDocument])
+                                    : new Set([])
+                            }
+                            disallowEmptySelection={false}
+                            isClearable
+                            onSelectionChange={handleDocumentFilterChange}
                         >
-                            <FilterTypeOption key="all">
-                                {t("staff.user_filter_has_document_all")}
+                            <FilterTypeOption key="both">
+                                {t("staff.user_filter_has_document_both")}
                             </FilterTypeOption>
                             <FilterTypeOption key="license">
                                 {t("staff.user_filter_has_document_license")}
