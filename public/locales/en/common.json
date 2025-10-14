@@ -290,7 +290,10 @@
         "reservation_payment": "Reservation payment",
         "customerSupport": "Customer support",
         "staffReport": "Staff report",
-        "escalatedToAdmin": "Escalated to admin"
+        "escalatedToAdmin": "Escalated to admin",
+        "out_of_contract": "Out Of Contract",
+        "return": "Return",
+        "handover": "Handover"
     },
     "car_rental": {
         "vehicle": "Vehicle",
