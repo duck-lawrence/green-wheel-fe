@@ -4,7 +4,12 @@ import * as Yup from "yup"
 import React, { useCallback } from "react"
 import { ButtonStyled, InputStyled } from "@/components/styled"
 import { useTranslation } from "react-i18next"
-import { useForgotPassword } from "@/hooks"
+import {
+    useForgotPassword,
+    useForgotPasswordDiscloresureSingleton,
+    useLoginDiscloresureSingleton
+} from "@/hooks"
+import { Link } from "@heroui/react"
 
 interface FortgotEmailProps {
     email: string
@@ -15,6 +20,8 @@ interface FortgotEmailProps {
 export function FortgotEmail({ email, setEmail, onSuccess }: FortgotEmailProps) {
     const { t } = useTranslation()
     const forgotMutation = useForgotPassword({ onSuccess })
+    const { onClose: onCloseForgot } = useForgotPasswordDiscloresureSingleton()
+    const { onOpen: onOpenLogin } = useLoginDiscloresureSingleton()
 
     const handleForgot = useCallback(
         async (values: { email: string }) => {
@@ -23,6 +30,11 @@ export function FortgotEmail({ email, setEmail, onSuccess }: FortgotEmailProps) 
         },
         [forgotMutation, setEmail]
     )
+
+    const handleOpenLogin = useCallback(() => {
+        onCloseForgot()
+        onOpenLogin()
+    }, [onCloseForgot, onOpenLogin])
 
     const formik = useFormik({
         initialValues: {
@@ -70,6 +82,13 @@ export function FortgotEmail({ email, setEmail, onSuccess }: FortgotEmailProps) 
             >
                 {t("auth.send_otp")}
             </ButtonStyled>
+
+            <p className="text-small text-center">
+                {t("auth.back_to")}&nbsp;
+                <Link isBlock onPress={handleOpenLogin} className="cursor-pointer">
+                    {t("login.login")}
+                </Link>
+            </p>
         </form>
     )
 }

@@ -287,6 +287,9 @@ export default function VehicleDetailPage() {
                                         {formatCurrency(totalPrice)}
                                     </span>
                                 </div>
+                                <div className="flex justify-end italic text-sm text-gray-400">
+                                    <span>{t("vehicle_model.not_include_tax")}</span>
+                                </div>
                             </div>
 
                             <ButtonStyled
