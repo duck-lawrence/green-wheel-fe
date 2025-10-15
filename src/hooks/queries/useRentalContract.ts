@@ -173,3 +173,62 @@ export const useUpdateContractStatus = ({ onSuccess }: { onSuccess?: () => void 
         }
     })
 }
+
+export const useCreateContractManual = ({ onSuccess }: { onSuccess?: () => void }) => {
+    const { t } = useTranslation()
+
+    return useMutation({
+        mutationFn: rentalContractApi.createManual,
+        onSuccess: () => {
+            toast.success(t("success.create"))
+            onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useHandoverContract = ({ onSuccess }: { onSuccess?: () => void }) => {
+    const { t } = useTranslation()
+
+    return useMutation({
+        mutationFn: rentalContractApi.handover,
+        onSuccess: () => {
+            onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useReturnContract = ({ onSuccess }: { onSuccess?: () => void }) => {
+    const { t } = useTranslation()
+
+    return useMutation({
+        mutationFn: rentalContractApi.return,
+        onSuccess: (data) => {
+            console.log("Invoice id: " + data.returnInvoiceId)
+            onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useCancelContract = ({ onSuccess }: { onSuccess?: () => void }) => {
+    const { t } = useTranslation()
+
+    return useMutation({
+        mutationFn: rentalContractApi.cancel,
+        onSuccess: () => {
+            toast.success(t("success.cancel"))
+            onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
