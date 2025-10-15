@@ -141,6 +141,65 @@ export const useUploadCitizenId = ({
     })
 }
 
+export const useUpdateCitizenId = ({
+    onSuccess,
+    onError
+}: {
+    onSuccess?: () => void
+    onError?: () => void
+} = {}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: profileApi.updateCitizenId,
+        onSuccess: (data) => {
+            queryClient.setQueryData<CitizenIdentityViewRes>(
+                [...QUERY_KEYS.ME, ...QUERY_KEYS.CITIZEN_IDENTITY],
+                (prev) => {
+                    if (!prev) return data
+                    return {
+                        ...prev,
+                        ...data
+                    }
+                }
+            )
+            onSuccess?.()
+            toast.success(t("success.update"))
+        },
+        onError: (error: BackendError) => {
+            onError?.()
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useDeleteCitizenId = ({
+    onSuccess,
+    onError
+}: {
+    onSuccess?: () => void
+    onError?: () => void
+} = {}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: profileApi.deleteCitizenId,
+        onSuccess: () => {
+            queryClient.removeQueries({
+                queryKey: [...QUERY_KEYS.ME, ...QUERY_KEYS.CITIZEN_IDENTITY]
+            })
+            onSuccess?.()
+            toast.success(t("success.delete"))
+        },
+        onError: (error: BackendError) => {
+            onError?.()
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
 // driver license
 export const useGetMyDriverLicense = ({ enabled = true }: { enabled?: boolean } = {}) => {
     const query = useQuery({
@@ -176,6 +235,65 @@ export const useUploadDriverLicense = ({
             )
             onSuccess?.()
             toast.success(t("success.upload"))
+        },
+        onError: (error: BackendError) => {
+            onError?.()
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useUpdateDriverLicense = ({
+    onSuccess,
+    onError
+}: {
+    onSuccess?: () => void
+    onError?: () => void
+} = {}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: profileApi.updateDriverLicense,
+        onSuccess: (data) => {
+            queryClient.setQueryData<DriverLicenseViewRes>(
+                [...QUERY_KEYS.ME, ...QUERY_KEYS.DRIVER_LICENSE],
+                (prev) => {
+                    if (!prev) return data
+                    return {
+                        ...prev,
+                        ...data
+                    }
+                }
+            )
+            onSuccess?.()
+            toast.success(t("success.update"))
+        },
+        onError: (error: BackendError) => {
+            onError?.()
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useDeleteDriverLicense = ({
+    onSuccess,
+    onError
+}: {
+    onSuccess?: () => void
+    onError?: () => void
+} = {}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: profileApi.deleteDriverLicense,
+        onSuccess: () => {
+            queryClient.removeQueries({
+                queryKey: [...QUERY_KEYS.ME, ...QUERY_KEYS.DRIVER_LICENSE]
+            })
+            onSuccess?.()
+            toast.success(t("success.delete"))
         },
         onError: (error: BackendError) => {
             onError?.()

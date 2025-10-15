@@ -17,8 +17,6 @@ export const useDay = ({
 
     const toDate = (date: string | number | Date | dayjs.Dayjs | null | undefined) => {
         if (!date) return null
-        console.log(date)
-
         const str = dayjs(date).format(defaultFormat)
         return parseDate(str)
     }

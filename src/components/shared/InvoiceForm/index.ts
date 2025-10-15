@@ -1,3 +1,4 @@
+export * from "./InvoiceAccordion"
 export * from "./InvoiceHandOverForm"
 export * from "./InvoiceReturnForm"
 export * from "./InvoiceRefundForm"

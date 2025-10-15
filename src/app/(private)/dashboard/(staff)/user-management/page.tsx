@@ -22,7 +22,7 @@ import {
     useModalDisclosure
 } from "@/components"
 import { ROLE_ADMIN, ROLE_STAFF } from "@/constants/constants"
-import { useSearchUsers } from "@/hooks"
+import { useGetAllUsers } from "@/hooks"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 
 type UserFilterFormValues = {
@@ -46,7 +46,7 @@ export default function StaffUserManagementPage() {
     const [preview, setPreview] = useState<{ url: string; label: string } | null>(null)
     const { isOpen, onOpen, onOpenChange, onClose } = useModalDisclosure()
 
-    const { data, isFetching } = useSearchUsers({
+    const { data, isFetching } = useGetAllUsers({
         params: {},
         enabled: true
     })
@@ -109,8 +109,7 @@ export default function StaffUserManagementPage() {
             }
 
             const key = values[0]
-            const value =
-                typeof key === "string" ? key : key != null ? key.toString() : undefined
+            const value = typeof key === "string" ? key : key != null ? key.toString() : undefined
 
             formik.setFieldValue("hasDocument", value as UserFilterFormValues["hasDocument"])
         },

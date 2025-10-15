@@ -19,6 +19,7 @@
         "refresh": "Failed to refresh",
         "login": "Login failed",
         "logout": "Logout failed",
+        "upload": "Upload failed",
         "payment": "Payment failed"
     },
     "common": {
@@ -29,7 +30,12 @@
         "cancel": "Cancel",
         "too_many_request": "Too many request. Try again later",
         "unexpected_error": "An unexpected error occurred. Please try again later.",
-        "search": "Search"
+        "search": "Search",
+        "save": "Save",
+        "delete": "Delete"
+    },
+    "json": {
+        "parsing_failed": "Failed to parse json"
     },
     "auth": {
         "otp": "OTP",
@@ -37,6 +43,7 @@
         "verify_identity": "Please enter the email verification code to verify your identity",
         "complete_register": "Please enter the information below to complete your account registration",
         "already_have_account": "Already have an account?",
+        "back_to": "Back to",
         "send_otp": "Send OTP",
         "email": "Email",
         "set_password": "Set Password",
@@ -58,14 +65,16 @@
         "rate_limit_otp": "Resend OTP after 1 minute",
         "attemp_otp": "Too many attemps, please resend to get new OTP",
 
+        "user_id_is_required": "User ID is required",
+
         "email_already_exists": "This email already exists",
         "email_require": "Email is required",
         "invalid_email": "Email is invalid",
 
         "password_too_short": "Password must be at least 8 characters",
+        "confirm_password_is_incorrect": "Confirm password must be the same as the new password",
         "password_can_not_empty": "Password is required",
         "new_password_can_not_empty": "New password is required",
-        "confirm_password_equal": "Confirm password must be the same as the new password",
         "password_strength": "Password must contain at least 1 uppercase letter, 1 number, and 1 special character",
         "old_password_is_incorrect": "Old password is incorrect",
         "old_password_require": "Old password is required",
@@ -99,6 +108,7 @@
         "sex_require": "Sex is required",
         "choose_sex": "Choose Sex",
 
+        "avatar_not_found": "Avatar not found",
         "upload_avatar": "Upload avatar",
         "delete_avatar": "Delete avatar",
 
@@ -111,6 +121,8 @@
         "please_upload_citizen_identity": "Please upload your Cititzen Identity",
         "citizen_identity_number_require": "Cititzen Identity number is required",
         "citizen_identity_expired_time_require": "Cititzen Identity expired time is required",
+        "citizen_identity_not_found": "Citizen identity not found",
+        "citizen_identity_duplicate": "This citizen identity already exists",
 
         "driver_license": "Driver License",
         "upload_driver_license": "Upload Driver License",
@@ -119,10 +131,15 @@
         "driver_license_class_require": "Driver License class is required",
         "driver_license_number_require": "Driver License number is required",
         "driver_license_expired_time_require": "Driver License expired time is required",
+        "invalid_driver_license_data": "Invalid driver license data",
+        "driver_license_not_found": "Driver license not found",
+        "driver_license_duplicate": "This driver license already exists",
 
         "unauthorized": "Unauthorized",
+        "do_not_have_permission": "Permission denied",
         "invalid_token": "Invalid token",
         "invalid_access_token": "Invalid access token",
+        "invalid_refresh_token": "Invalid refresh token",
         "missing_token": "Missing token in header",
         "user_not_found": "User not found",
         "account_information": "Account information",
@@ -189,6 +206,13 @@
         "agree_data_policy_require": "You must agree to the data sharing terms",
         "wait_for_confirm": "Your order is being processed. Please wait for the confirmation email before making a payment."
     },
+    "vehicle": {
+        "not_found": "Vehicle not found",
+        "license_plate_is_exist": "This license plate already exists"
+    },
+    "vehicle_segment": {
+        "not_found": "Vehicle segment not found"
+    },
     "vehicle_model": {
         "station": "Station",
         "segment": "Segment",
@@ -209,7 +233,37 @@
         "out_of_stock": "Out of stock",
         "seats": "Seats",
         "battery_capacity": "Battery capacity",
-        "airbag": "Airbag"
+        "airbag": "Airbag",
+        "not_include_tax": "Not include tax",
+        "not_found": "Vehicle model not found",
+        "rent_time_is_not_available": "Rent time is not available",
+        "name_require": "Name is required",
+        "seating_capacity_require": "Seating capacity is required",
+        "seating_capacity_can_not_negative": "Seating capacity can not be negative",
+        "airbag_require": "Ari bag is required",
+        "airbag_can_not_negative": "Air bag can not be negative",
+        "motor_power_require": "Motor power is required",
+        "motor_power_can_not_negative": "Motor power can not be negative",
+        "battery_capacity_require": "Battery capacity is required",
+        "battery_capacity_can_not_negative": "Battery capacity can not be negative",
+        "eco_range_km_require": "Eco range km is required",
+        "eco_range_km_can_not_negative": "Eco range km can not be negative",
+        "sport_rang_km_require": "Sport range km is required",
+        "sport_rang_km_can_not_negative": "Sport range km can not be negative",
+        "brand_id_require": "Brand id is required",
+        "segment_id_require": "Segment id is required"
+    },
+    "vehicle_model_image": {
+        "main_image_not_found": "Main image not found"
+    },
+    "vehicle_component": {
+        "not_found": "Vehicke component not found"
+    },
+    "vehicle_checklist": {
+        "not_found": "Vehicle checklist not found"
+    },
+    "staion": {
+        "not_found": "Station not found"
     },
     "vehicle_filter": {
         "require": "Please complete the filter form before continuing",
@@ -481,7 +535,29 @@
         "total": "Total",
         "no_damage_items": "No damage items.",
         "no_detailed_description": "No detailed description.",
-        "create_at": "Created at"
+        "create_at": "Created at",
+        "user_already_have_contract": "You can only have one pending or active contract at a time",
+        "not_found": "Rental contract not found",
+        "already_process": "This rental contract already processes",
+        "can_not_cancle": "This rental contract can not be cancelled"
+    },
+    "invoice": {
+        "not_found": "Invoice not found",
+        "this_invoice_was_paid_or_cancel": "This invoice was paid or cancelled"
+    },
+    "momo": {
+        "invalid_signature": "Invalid signature",
+        "missing_access_key_partner_code_secret_key": "Missing required keys",
+        "not_have_permission": "Permission denied",
+        "invalid_end_point": "Invalid end point",
+        "failed_to_create_momo_payment": "Failed to create momo payment"
+    },
+    "ticket": {
+        "not_found": "Ticket not found",
+        "already_escalated": "This ticket already escalated to admin"
+    },
+    "station_feedback": {
+        "not_found": "Station feedback not found"
     },
     "about_us": {
         "": ""

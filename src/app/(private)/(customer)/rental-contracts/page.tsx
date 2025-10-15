@@ -62,6 +62,7 @@ export default function RentalContractPage() {
                 <EnumPicker
                     label={t("table.status")}
                     labels={RentalContractStatusLabels}
+                    value={filters.status}
                     onChange={async (key) => {
                         setFilter({
                             status: key == null ? undefined : (key as RentalContractStatus)

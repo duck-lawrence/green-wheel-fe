@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 
-export const useInvoice = () => {
+export const usePayInvoice = () => {
     const { t } = useTranslation()
     // const QueryClient = useQueryClient()
     const router = useRouter()

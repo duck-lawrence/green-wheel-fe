@@ -103,6 +103,7 @@ export default function ProfilePage() {
                 imgSrc={imgSrc}
                 setImgSrc={setImgSrc}
                 uploadFn={uploadAvatar.mutateAsync}
+                isUploadPending={uploadAvatar.isPending}
                 aspect={1}
                 cropShape="round"
                 cropSize={{ width: 300, height: 300 }}
@@ -162,7 +163,7 @@ export default function ProfilePage() {
                                     <div>
                                         <NotePencilIcon />
                                     </div>
-                                    {t("user.edit_information")}
+                                    {t("common.edit")}
                                 </ButtonStyled>
                             ) : (
                                 <div className="flex gap-2">
@@ -176,7 +177,7 @@ export default function ProfilePage() {
                                         }
                                         onPress={updateMeFormik.submitForm}
                                     >
-                                        {t("common.update")}
+                                        {t("common.save")}
                                     </ButtonStyled>
                                     <ButtonStyled
                                         isDisabled={updateMeFormik.isSubmitting}
