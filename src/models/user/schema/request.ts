@@ -5,7 +5,9 @@ export type CreateUserReq = {
     phone: string
     firstName: string
     lastName: string
+    sex: Sex
     dateOfBirth: string
+    roleId: string
 }
 
 export type UserUpdateReq = {

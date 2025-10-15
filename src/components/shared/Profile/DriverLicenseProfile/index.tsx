@@ -8,8 +8,14 @@ import {
     InputStyled,
     DriverLicenseUploader
 } from "@/components/"
-import { Sex } from "@/constants/enum"
-import { useDay, useGetMe, useGetMyDriverLicense } from "@/hooks"
+import { LicenseClass, Sex } from "@/constants/enum"
+import {
+    useDay,
+    // useDeleteDriverLicense,
+    useGetMe,
+    useGetMyDriverLicense,
+    useUpdateDriverLicense
+} from "@/hooks"
 import { Spinner } from "@heroui/react"
 import { NotePencilIcon } from "@phosphor-icons/react"
 import { useFormik } from "formik"
@@ -17,25 +23,39 @@ import React, { useCallback, useState } from "react"
 import { useTranslation } from "react-i18next"
 import * as Yup from "yup"
 import { LicenseClassLabels, SexLabels } from "@/constants/labels"
+import { UpdateDriverLicenseReq } from "@/models/driver-license/schema/request"
 
 export function DriverLicenseProfile() {
     const { t } = useTranslation()
     const { toDate, formatDateTime } = useDay({ defaultFormat: "YYYY-MM-DD" })
-    const { data: user } = useGetMe()
     const [editable, setEditable] = useState(false)
+    const { data: user } = useGetMe()
+    const updateMutation = useUpdateDriverLicense()
+    // const deleteMutation = useDeleteDriverLicense()
 
     const { data: driverLicense, isLoading } = useGetMyDriverLicense({
         enabled: !!user?.licenseUrl
     })
 
-    const handleUpdateCitizenId = useCallback(() => console.log("hehe"), [])
+    const handleUpdate = useCallback(
+        async (req: UpdateDriverLicenseReq) => {
+            await updateMutation.mutateAsync(req)
+            setEditable((prev) => !prev)
+        },
+        [updateMutation]
+    )
+
+    // const handleDelete = useCallback(async () => {
+    //     await deleteMutation.mutateAsync()
+    //     setEditable((prev) => !prev)
+    // }, [deleteMutation])
 
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
             number: driverLicense?.number || "",
             fullName: driverLicense?.fullName || "",
-            class: driverLicense?.class || null,
+            class: driverLicense?.class || LicenseClass.B,
             nationality: driverLicense?.nationality || "",
             sex: driverLicense?.sex || Sex.Male,
             dateOfBirth: driverLicense?.dateOfBirth || "",
@@ -50,7 +70,7 @@ export function DriverLicenseProfile() {
             dateOfBirth: Yup.string().required(t("user.date_of_birth_require")),
             expiresAt: Yup.string().required(t("user.driver_license_expired_time_require"))
         }),
-        onSubmit: handleUpdateCitizenId
+        onSubmit: handleUpdate
     })
     return (
         <>
@@ -228,30 +248,46 @@ export function DriverLicenseProfile() {
                                             <div>
                                                 <NotePencilIcon />
                                             </div>
-                                            {t("user.edit_information")}
+                                            {t("common.edit")}
                                         </ButtonStyled>
+                                    ) : formik.isSubmitting ? (
+                                        <Spinner />
                                     ) : (
-                                        <div className="flex gap-2">
-                                            <ButtonStyled
-                                                className="border-primary 
-                                                bg-white border text-primary 
-                                                hover:text-white hover:bg-primary"
-                                                isLoading={formik.isSubmitting}
-                                                isDisabled={!formik.isValid || !formik.dirty}
-                                                onPress={formik.submitForm}
-                                            >
-                                                {t("common.update")}
-                                            </ButtonStyled>
+                                        <div className="flex flex-col items-end gap-2">
+                                            <div className="flex gap-2">
+                                                <ButtonStyled
+                                                    className="border-primary 
+                                                        bg-white border text-primary 
+                                                        hover:text-white hover:bg-primary"
+                                                    isLoading={formik.isSubmitting}
+                                                    isDisabled={!formik.isValid || !formik.dirty}
+                                                    onPress={formik.submitForm}
+                                                >
+                                                    {t("common.save")}
+                                                </ButtonStyled>
+                                                {/* <ButtonStyled
+                                                    // className="border-primary
+                                                    //     bg-white border text-primary
+                                                    //     hover:text-white hover:bg-primary"
+                                                    isLoading={deleteMutation.isPending}
+                                                    onPress={handleDelete}
+                                                >
+                                                    {t("common.delete")}
+                                                </ButtonStyled> */}
+                                                <ButtonStyled
+                                                    isDisabled={
+                                                        formik.isSubmitting
+                                                        // deleteMutation.isPending
+                                                    }
+                                                    onPress={() => {
+                                                        setEditable(!editable)
+                                                        formik.resetForm()
+                                                    }}
+                                                >
+                                                    {t("common.cancel")}
+                                                </ButtonStyled>
+                                            </div>
                                             <DriverLicenseUploader btnClassName="bg-secondary" />
-                                            <ButtonStyled
-                                                isDisabled={formik.isSubmitting}
-                                                onPress={() => {
-                                                    setEditable(!editable)
-                                                    formik.resetForm()
-                                                }}
-                                            >
-                                                {t("common.cancel")}
-                                            </ButtonStyled>
                                         </div>
                                     )}
                                 </div>

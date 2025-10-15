@@ -18,6 +18,7 @@ type ImageUploaderModalProps = {
     cropSize: { width: number; height: number }
     label?: string
     uploadFn: (formData: FormData) => Promise<any>
+    isUploadPending: boolean
 }
 
 export function ImageUploaderModal({
@@ -27,6 +28,7 @@ export function ImageUploaderModal({
     imgSrc,
     setImgSrc,
     uploadFn,
+    isUploadPending,
     aspect = 1,
     cropShape = "rect",
     cropSize,
@@ -34,11 +36,9 @@ export function ImageUploaderModal({
 }: ImageUploaderModalProps) {
     const { t } = useTranslation()
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null)
-    const [isUploading, setIsUploading] = useState(false)
 
     const handleUpload = useCallback(async () => {
         if (!imgSrc || !croppedAreaPixels) return
-        setIsUploading(true)
 
         const blob = await getCroppedImage(imgSrc, croppedAreaPixels)
         const formData = new FormData()
@@ -46,7 +46,6 @@ export function ImageUploaderModal({
 
         await uploadFn(formData)
 
-        setIsUploading(false)
         setImgSrc(null)
         onClose()
     }, [croppedAreaPixels, imgSrc, onClose, setImgSrc, uploadFn])
@@ -55,11 +54,11 @@ export function ImageUploaderModal({
         <ModalStyled
             isOpen={isOpen}
             onOpenChange={() => {
-                if (!isUploading) {
+                if (!isUploadPending) {
                     onOpenChange()
                 }
             }}
-            isDismissable={!isUploading}
+            isDismissable={!isUploadPending}
         >
             <ModalContent className="w-full min-w-fit p-4">
                 <ModalHeader className="px-3 py-2 self-center">{label}</ModalHeader>
@@ -77,11 +76,15 @@ export function ImageUploaderModal({
                                 <ButtonStyled
                                     color="primary"
                                     onPress={handleUpload}
-                                    isDisabled={isUploading}
+                                    isDisabled={isUploadPending}
                                 >
-                                    {isUploading ? <Spinner color="white" /> : t("common.upload")}
+                                    {isUploadPending ? (
+                                        <Spinner color="white" />
+                                    ) : (
+                                        t("common.upload")
+                                    )}
                                 </ButtonStyled>
-                                <ButtonStyled onPress={onClose} isDisabled={isUploading}>
+                                <ButtonStyled onPress={onClose} isDisabled={isUploadPending}>
                                     {t("common.cancel")}
                                 </ButtonStyled>
                             </div>

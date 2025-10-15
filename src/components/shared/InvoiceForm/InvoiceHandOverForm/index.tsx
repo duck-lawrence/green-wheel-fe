@@ -4,12 +4,13 @@ import { InputStyled, TextareaStyled } from "@/components"
 import { Money, ClipboardText, Receipt, Percent } from "@phosphor-icons/react"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { formatCurrency } from "@/utils/helpers/currency"
+import { useTranslation } from "react-i18next"
 export default function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceViewRes }) {
+    const { t } = useTranslation()
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <InputStyled
-                label="Tiền cọc"
-                placeholder="2.000.000 VND"
+                label={t("rental_contract.deposit_amount")}
                 value={
                     invoice.deposit?.amount != null ? formatCurrency(invoice.deposit.amount) : ""
                 }
@@ -17,29 +18,25 @@ export default function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceView
                 variant="bordered"
             />
             <InputStyled
-                label="Tiền thuê xe"
-                placeholder="8.000.000 VND"
+                label={t("rental_contract.rental_fee")}
                 value={formatCurrency(invoice.subtotal)}
                 startContent={<Receipt size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
             />
             <InputStyled
-                label="Thuế VAT (10%)"
-                placeholder="800.000 VND"
+                label={t("rental_contract.vat_tax")}
                 value={formatCurrency(invoice.tax)}
                 startContent={<Percent size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
             />
             <InputStyled
-                label="Tổng cộng"
-                placeholder="10.800.000 VND"
+                label={t("rental_contract.total_amount")}
                 value={formatCurrency(invoice.total)}
                 startContent={<ClipboardText size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
             />
             <TextareaStyled
-                label="Ghi chú"
-                placeholder="Thanh toán khi nhận xe (cọc + tiền thuê + thuế)."
+                label={t("rental_contract.note")}
                 value={invoice.notes}
                 variant="bordered"
                 className="sm:col-span-2"

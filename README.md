@@ -6,7 +6,7 @@
 
 Green Wheel is a self-drive vehicle rental platform that connects customers with a managed vehicle fleet. This repository contains the Next.js 15 front end that serves the public marketing pages, the authenticated customer portal, and the internal staff/admin workspace.
 
-## [Documentation](https://docs.google.com/document/d/1YYFCutl6D6C-bexIc14sZuamJwadSp8Y/edit?usp=sharing&ouid=102744078799902508261&rtpof=true&sd=true)
+## [Documentation](https://docs.google.com/document/d/1vadzXZlofquS5D_SdUOJpZ52lwX3Cb7O/edit?usp=sharing&ouid=102744078799902508261&rtpof=true&sd=true)
 
 ## [BACK-END](https://github.com/duck-lawrence/green-wheel-be)
 

@@ -36,8 +36,8 @@ export default function StaffContractsPage() {
         () => ({
             status: undefined,
             phone: "",
-            citizenIdentity: "",
-            driverLicense: ""
+            citizenIdentityNumber: "",
+            driverLicenseNumber: ""
         }),
         []
     )
@@ -91,7 +91,7 @@ export default function StaffContractsPage() {
                         <EnumPicker
                             label={t("table.status")}
                             labels={RentalContractStatusLabels}
-                            value={formik.values.status ?? null}
+                            // value={formik.values.status ?? null}
                             onChange={(val) => formik.setFieldValue("status", val)}
                         />
                         <InputStyled
@@ -104,20 +104,20 @@ export default function StaffContractsPage() {
                         <InputStyled
                             label={t("table.citizen_id")}
                             placeholder="e.g. 079123456789"
-                            value={formik.values.citizenIdentity}
+                            value={formik.values.citizenIdentityNumber}
                             onChange={(value) =>
-                                formik.setFieldValue("citizenIdentity", value.target.value)
+                                formik.setFieldValue("citizenIdentityNumber", value.target.value)
                             }
-                            onClear={() => formik.setFieldValue("citizenIdentity", "")}
+                            onClear={() => formik.setFieldValue("citizenIdentityNumber", "")}
                         />
                         <InputStyled
                             label={t("table.driver_license")}
                             placeholder="e.g. 60K-99999"
-                            value={formik.values.driverLicense}
+                            value={formik.values.driverLicenseNumber}
                             onChange={(value) =>
-                                formik.setFieldValue("driverLicense", value.target.value)
+                                formik.setFieldValue("driverLicenseNumber", value.target.value)
                             }
-                            onClear={() => formik.setFieldValue("driverLicense", "")}
+                            onClear={() => formik.setFieldValue("driverLicenseNumber", "")}
                         />
                     </div>
                 </form>
