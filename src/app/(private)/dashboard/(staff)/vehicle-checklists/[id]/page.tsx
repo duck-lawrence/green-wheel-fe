@@ -1,11 +1,14 @@
 "use client"
-import { InputStyled, SpinnerStyled } from "@/components"
+import { ButtonStyled, InputStyled, SpinnerStyled } from "@/components"
 import { TableCheckList } from "@/components/modules/TableCheckList"
+import { CheckboxStyled } from "@/components/styled/CheckboxStyled"
 import { VehicleChecklistTypeLabels } from "@/constants/labels"
-import { useGetByIdVehicleChecklist } from "@/hooks"
+import { useGetByIdVehicleChecklist, useUpdateVehicleChecklist } from "@/hooks"
+import { UpdateVehicleChecklistReq } from "@/models/checklist/schema/request"
+import { useFormik } from "formik"
 import { useParams } from "next/navigation"
 
-import React from "react"
+import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
 
 export default function VehicleChecklistDetailge() {
@@ -17,13 +20,40 @@ export default function VehicleChecklistDetailge() {
         enabled: true
     })
 
+    const updateChecklist = useUpdateVehicleChecklist({})
+    const handleUpdate = useCallback(
+        async (value: UpdateVehicleChecklistReq) => {
+            await updateChecklist.mutateAsync({
+                id: checklistItem!.id,
+                req: {
+                    checklistItems: value.checklistItems,
+                    isSignedByCustomer: value.isSignedByCustomer,
+                    isSignedByStaff: value.isSignedByStaff
+                }
+            })
+        },
+        [checklistItem, updateChecklist]
+    )
+
+    const formik = useFormik({
+        initialValues: {
+            isSignedByStaff: checklistItem?.isSignedByStaff ?? false,
+            isSignedByCustomer: checklistItem?.isSignedByCustomer ?? false,
+            checklistItems: checklistItem?.vehicleChecklistItems || []
+        },
+        enableReinitialize: true,
+        onSubmit: handleUpdate
+    })
+
     if (isLoading) {
         return <SpinnerStyled />
     }
 
-    // const checklistItem = mockVehicleChecklists.find((v) => v.id === "CHK001")
     return (
-        <div className="rounded-2xl bg-white shadow-md px-8 py-10 border border-gray-100 max-w-6xl mx-auto">
+        <form
+            onSubmit={formik.handleSubmit}
+            className="rounded-2xl bg-white shadow-md px-8 py-10 border border-gray-100 max-w-6xl mx-auto"
+        >
             {/* Header */}
             <div className="flex flex-col md:flex-row items-center justify-between mb-8">
                 <h2 className="text-3xl font-bold text-gray-800">
@@ -34,7 +64,7 @@ export default function VehicleChecklistDetailge() {
                 </h2>
             </div>
 
-            {/* Information Grid */}
+            {/* Information */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5 mb-10">
                 <div className="flex flex-col gap-4">
                     <InputStyled
@@ -80,9 +110,31 @@ export default function VehicleChecklistDetailge() {
 
             {/* Table */}
             <TableCheckList
-                vehicleCheckListItem={checklistItem?.vehicleChecklistItems}
-                onStatusChange={() => console.log("Checklist updated")}
+                vehicleCheckListItem={formik.values.checklistItems}
+                setFieldValue={formik.setFieldValue}
             />
-        </div>
+
+            {/* Signature */}
+            <div className="flex justify-between px-16 pt-10 gap-2 ">
+                <CheckboxStyled
+                    isSelected={formik.values.isSignedByStaff}
+                    onValueChange={(value) => formik.setFieldValue("isSignedByStaff", value)}
+                >
+                    Staff signature
+                </CheckboxStyled>
+                <CheckboxStyled
+                    isSelected={formik.values.isSignedByCustomer}
+                    onValueChange={(value) => formik.setFieldValue("isSignedByCustomer", value)}
+                >
+                    Customer signature
+                </CheckboxStyled>
+            </div>
+
+            <div className="flex justify-center">
+                <ButtonStyled type="submit" color="primary" className="mt-10 p-6">
+                    Update
+                </ButtonStyled>
+            </div>
+        </form>
     )
 }

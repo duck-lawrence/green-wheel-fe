@@ -130,7 +130,7 @@ export const useSearchRentalContracts = ({
     return query
 }
 
-export const useGetByIdRentalContract = ({
+export const useGetRentalContractById = ({
     id,
     enabled = true
 }: {

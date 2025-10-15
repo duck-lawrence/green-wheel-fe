@@ -22,15 +22,16 @@ import { InvoiceTypeLabels, RentalContractStatusLabels } from "@/constants/label
 import {
     useCreateVehicleChecklist,
     useDay,
-    useGetByIdRentalContract,
+    useGetAllVehicleChecklists,
     useGetMe,
+    useGetRentalContractById,
     useNumber,
     useUpdateContractStatus
 } from "@/hooks"
 import { DATE_TIME_VIEW_FORMAT, ROLE_STAFF } from "@/constants/constants"
 import { useTranslation } from "react-i18next"
 import Link from "next/link"
-import { usePathname, useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import toast from "react-hot-toast"
 import { VehicleChecklistType } from "@/constants/enum"
 import { Spinner } from "@heroui/react"
@@ -43,6 +44,7 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
     const returnPath = pathName.startsWith("/dashboard")
         ? "/dashboard/rental-contracts"
         : "/rental-contracts"
+    const router = useRouter()
 
     const { t } = useTranslation()
     const { toCalenderDateTime } = useDay()
@@ -55,11 +57,16 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
         return user?.role?.name === ROLE_STAFF
     }, [user])
 
-    const { data: dataContract, isLoading } = useGetByIdRentalContract({
+    const { data: dataContract, isLoading } = useGetRentalContractById({
         id: contractId,
         enabled: true
     })
     const updateContractStatus = useUpdateContractStatus()
+    const { data: checklists } = useGetAllVehicleChecklists({
+        query: {
+            contractId
+        }
+    })
 
     const createAt = dataContract?.createdAt
 
@@ -104,6 +111,15 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
             type: VehicleChecklistType.Handover
         })
     }, [createVehicleChecklist, dataContract])
+
+    const hanoverChecklist = useMemo(() => {
+        return checklists?.find((item) => item.type === VehicleChecklistType.Handover)
+    }, [checklists])
+
+    const handleOpenHanoverChecklist = useCallback(() => {
+        if (!hanoverChecklist) return
+        router.push(`/dashboard/vehicle-checklists/${hanoverChecklist.id}`)
+    }, [hanoverChecklist, router])
 
     //=======================================//
     if (isLoading || !dataContract)
@@ -268,9 +284,25 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
 
                 {isStaff && (
                     <SectionStyled title="Create vehicle checklist">
-                        <ButtonStyled onPress={handleCreateVehicleChecklist}>
-                            {createVehicleChecklist.isPending ? <Spinner /> : <div>create</div>}
-                        </ButtonStyled>
+                        <div className="flex gap-4">
+                            {!hanoverChecklist ? (
+                                <ButtonStyled onPress={handleCreateVehicleChecklist}>
+                                    {createVehicleChecklist.isPending ? (
+                                        <Spinner />
+                                    ) : (
+                                        <div>Create</div>
+                                    )}
+                                </ButtonStyled>
+                            ) : (
+                                <ButtonStyled onPress={handleOpenHanoverChecklist}>
+                                    {createVehicleChecklist.isPending ? (
+                                        <Spinner />
+                                    ) : (
+                                        <div>View</div>
+                                    )}
+                                </ButtonStyled>
+                            )}
+                        </div>
                     </SectionStyled>
                 )}
                 {/* Invoice Accordion  isLoading={isFetching}*/}

@@ -1,5 +1,8 @@
 import { QUERY_KEYS } from "@/constants/queryKey"
-import { GetAllVehicleChecklistParams } from "@/models/checklist/schema/request"
+import {
+    GetAllVehicleChecklistParams,
+    UpdateVehicleChecklistReq
+} from "@/models/checklist/schema/request"
 import { VehicleChecklistViewRes } from "@/models/checklist/schema/response"
 import { BackendError } from "@/models/common/response"
 import { vehicleChecklistsApi } from "@/services/vehicleChecklistsApi"
@@ -63,6 +66,26 @@ export const useCreateVehicleChecklist = ({ onSuccess }: { onSuccess?: () => voi
             })
             router.push(`/dashboard/vehicle-checklists/${id}`)
             onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useUpdateVehicleChecklist = ({ onSuccess }: { onSuccess?: () => void }) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async ({ id, req }: { id: string; req: UpdateVehicleChecklistReq }) => {
+            await vehicleChecklistsApi.update({ id, req })
+        },
+        onSuccess: (id) => {
+            toast.success(t("success.update"))
+            onSuccess?.()
+            queryClient.invalidateQueries({
+                queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, id]
+            })
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))
