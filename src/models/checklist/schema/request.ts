@@ -1,8 +1,9 @@
-import { DamageStatus } from "@/constants/enum"
+import { DamageStatus, VehicleChecklistType } from "@/constants/enum"
 
 export type CreateVehicleChecklistReq = {
     contractId?: string
     vehicleId?: string
+    type: VehicleChecklistType
 }
 
 export type UpdateVehicleChecklistReq = {

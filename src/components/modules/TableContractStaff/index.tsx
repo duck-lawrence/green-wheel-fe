@@ -16,7 +16,7 @@ import { ButtonStyled } from "../../styled/ButtonStyled"
 import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { useConfirmContract, useDay } from "@/hooks"
-import { VehicleStatusLabels } from "@/constants/labels"
+import { RentalContractStatusLabels, VehicleStatusLabels } from "@/constants/labels"
 import { DropdownStyled } from "../../styled/DropdownStyled"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { useRouter } from "next/navigation"
@@ -114,7 +114,7 @@ export function TableContractStaff({
                                 {/* status */}
                                 <TableCell className="text-center">
                                     <span className="px-3 py-1 rounded-full text-xs">
-                                        {VehicleStatusLabels[item.status]}
+                                        {RentalContractStatusLabels[item.status]}
                                     </span>
                                 </TableCell>
 

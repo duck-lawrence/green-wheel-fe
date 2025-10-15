@@ -13,7 +13,8 @@ import {
     OrderStatus,
     InvoiceType,
     TicketType,
-    TicketStatus
+    TicketStatus,
+    VehicleChecklistType
 } from "./enum"
 
 export const SexLabels: Record<Sex, string> = {
@@ -156,4 +157,10 @@ export const InvoiceTypeLabels: Record<InvoiceType, string> = {
     [InvoiceType.Refund]: i18n.t("enum.refund_payment"),
     [InvoiceType.Other]: i18n.t("enum.other_payment"),
     [InvoiceType.Reservation]: i18n.t("enum.reservation_payment")
+}
+
+export const VehicleChecklistTypeLabels: Record<VehicleChecklistType, string> = {
+    [VehicleChecklistType.OutOfContract]: i18n.t("enum.out_of_contract"),
+    [VehicleChecklistType.Handover]: i18n.t("enum.handover"),
+    [VehicleChecklistType.Return]: i18n.t("enum.return")
 }

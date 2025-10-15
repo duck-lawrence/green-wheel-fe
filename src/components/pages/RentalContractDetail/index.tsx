@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useRef } from "react"
+import React, { useCallback, useEffect, useMemo, useRef } from "react"
 import { motion } from "framer-motion"
 import {
     InvoiceAccordion,
@@ -8,7 +8,8 @@ import {
     SectionStyled,
     SpinnerStyled,
     TextareaStyled,
-    DateTimeStyled
+    DateTimeStyled,
+    ButtonStyled
 } from "@/components"
 import {
     Car,
@@ -18,13 +19,21 @@ import {
     Invoice
 } from "@phosphor-icons/react"
 import { InvoiceTypeLabels, RentalContractStatusLabels } from "@/constants/labels"
-import { useDay, useGetByIdRentalContract, useNumber, useUpdateContractStatus } from "@/hooks"
-import { InvoiceType } from "@/constants/enum"
-import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
+import {
+    useCreateVehicleChecklist,
+    useDay,
+    useGetByIdRentalContract,
+    useGetMe,
+    useNumber,
+    useUpdateContractStatus
+} from "@/hooks"
+import { DATE_TIME_VIEW_FORMAT, ROLE_STAFF } from "@/constants/constants"
 import { useTranslation } from "react-i18next"
 import Link from "next/link"
 import { usePathname, useSearchParams } from "next/navigation"
 import toast from "react-hot-toast"
+import { VehicleChecklistType } from "@/constants/enum"
+import { Spinner } from "@heroui/react"
 
 export function RentalContractDetail({ contractId }: { contractId: string }) {
     // const { id } = useParams()
@@ -39,16 +48,20 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
     const { toCalenderDateTime } = useDay()
     const { parseNumber } = useNumber()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
+
+    const { data: user } = useGetMe({ enabled: true })
+
+    const isStaff = useMemo(() => {
+        return user?.role?.name === ROLE_STAFF
+    }, [user])
+
     const { data: dataContract, isLoading } = useGetByIdRentalContract({
         id: contractId,
         enabled: true
     })
     const updateContractStatus = useUpdateContractStatus()
 
-    // data mẫu
-    // const dataContract = mockContracts.find((v) => v.id === "CON001")!
-    const dateStart = dataContract?.invoices.find((item) => item.type === InvoiceType.Handover)
-        ?.paidAt!
+    const createAt = dataContract?.createdAt
 
     // render accordion
     const invoiceAccordion = (dataContract?.invoices || []).map((invoice) => ({
@@ -80,6 +93,19 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
         fn()
     }, [contractId, parseNumber, pathName, searchParams, t, updateContractStatus])
 
+    //=======================================//
+
+    const createVehicleChecklist = useCreateVehicleChecklist({})
+
+    const handleCreateVehicleChecklist = useCallback(async () => {
+        await createVehicleChecklist.mutateAsync({
+            vehicleId: dataContract?.vehicle.id,
+            contractId: dataContract?.id,
+            type: VehicleChecklistType.Handover
+        })
+    }, [createVehicleChecklist, dataContract])
+
+    //=======================================//
     if (isLoading || !dataContract)
         return (
             <div className="flex justify-center mt-65">
@@ -115,8 +141,8 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="sm:col-span-2">
                             <p>
-                                {t("rental_contract.rental_date")}:
-                                {dateStart && formatDateTime({ date: dateStart })}{" "}
+                                {t("rental_contract.create_at")}:
+                                {createAt && formatDateTime({ date: createAt })}{" "}
                             </p>
                         </div>
 
@@ -240,7 +266,14 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
                     </div>
                 </SectionStyled>
 
-                {/* Invoice Accordion */}
+                {isStaff && (
+                    <SectionStyled title="Create vehicle checklist">
+                        <ButtonStyled onPress={handleCreateVehicleChecklist}>
+                            {createVehicleChecklist.isPending ? <Spinner /> : <div>create</div>}
+                        </ButtonStyled>
+                    </SectionStyled>
+                )}
+                {/* Invoice Accordion  isLoading={isFetching}*/}
                 <SectionStyled title={t("rental_contract.payment_invoice_list")}>
                     <InvoiceAccordion
                         items={invoiceAccordion}

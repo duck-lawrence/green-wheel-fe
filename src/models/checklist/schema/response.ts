@@ -1,14 +1,15 @@
 import { DamageStatus, VehicleChecklistType } from "@/constants/enum"
-import { VehicleComponentViewRes } from "@/models/vehicle/schema/response"
+import { UserProfileViewRes } from "@/models/user/schema/response"
+import { VehicleComponentViewRes, VehicleViewRes } from "@/models/vehicle/schema/response"
 
 export type VehicleChecklistViewRes = {
     id: string
     type: VehicleChecklistType
     isSignedByStaff: boolean
     isSignedByCustomer: boolean
-    staffId: string
-    customerId?: string
-    vehicleId: string
+    staff: UserProfileViewRes
+    customer?: UserProfileViewRes
+    vehicle: VehicleViewRes
     contractId?: string
     vehicleChecklistItems?: VehicleChecklistItemViewRes[]
 }
