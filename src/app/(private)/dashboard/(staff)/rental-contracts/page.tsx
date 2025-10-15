@@ -96,14 +96,12 @@ export default function StaffContractsPage() {
                         />
                         <InputStyled
                             label={t("table.phone")}
-                            placeholder="e.g. 0901234567"
                             value={formik.values.phone}
                             onChange={(value) => formik.setFieldValue("phone", value.target.value)}
                             onClear={() => formik.setFieldValue("phone", "")}
                         />
                         <InputStyled
                             label={t("table.citizen_id")}
-                            placeholder="e.g. 079123456789"
                             value={formik.values.citizenIdentityNumber}
                             onChange={(value) =>
                                 formik.setFieldValue("citizenIdentityNumber", value.target.value)
@@ -112,7 +110,6 @@ export default function StaffContractsPage() {
                         />
                         <InputStyled
                             label={t("table.driver_license")}
-                            placeholder="e.g. 60K-99999"
                             value={formik.values.driverLicenseNumber}
                             onChange={(value) =>
                                 formik.setFieldValue("driverLicenseNumber", value.target.value)

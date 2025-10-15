@@ -346,7 +346,10 @@
         "reservation_payment": "Reservation payment",
         "customerSupport": "Customer support",
         "staffReport": "Staff report",
-        "escalatedToAdmin": "Escalated to admin"
+        "escalatedToAdmin": "Escalated to admin",
+        "out_of_contract": "Out Of Contract",
+        "return": "Return",
+        "handover": "Handover"
     },
     "car_rental": {
         "vehicle": "Vehicle",
@@ -390,7 +393,7 @@
     },
     "staff": {
         "sidebar_dashboard": "Dash Board",
-        "sidebar_handovers": "Handovers",
+        "sidebar_vehicle_checklists": "Vehicle checklists",
         "sidebar_contracts": "Contracts",
         "sidebar_test": "Test",
         "sidebar_verify_customer": "Customer Verification",
@@ -534,6 +537,7 @@
         "total": "Total",
         "no_damage_items": "No damage items.",
         "no_detailed_description": "No detailed description.",
+        "create_at": "Created at",
         "user_already_have_contract": "You can only have one pending or active contract at a time",
         "not_found": "Rental contract not found",
         "already_process": "This rental contract already processes",
@@ -559,5 +563,14 @@
     },
     "about_us": {
         "": ""
+    },
+    "vehicle_checklist": {
+        "checklist": "Checklist",
+        "checklist_type": "Checklist type",
+        "staff_name": "Staff name",
+        "customer_name": "Customer name",
+        "vehicle_license_plate": "Vehicle license plate",
+        "status": "Status",
+        "contract_id": "Contract ID"
     }
 }
