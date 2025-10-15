@@ -1,14 +1,16 @@
 "use client"
 
-import React, { useMemo } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { useTranslation } from "react-i18next"
 
 import {
     ButtonStyled,
+    ButtonToggleVisibility,
     DatePickerStyled,
-    EnumPicker,
+    FilterTypeOption,
+    FilterTypeStyle,
     InputStyled,
     ModalBodyStyled,
     ModalContentStyled,
@@ -18,7 +20,7 @@ import {
 } from "@/components"
 import { Sex } from "@/constants/enum"
 import { SexLabels } from "@/constants/labels"
-import { NAME_REGEX, PHONE_REGEX } from "@/constants/regex"
+import { NAME_REGEX, PASSWORD_REGEX, PHONE_REGEX } from "@/constants/regex"
 import { useDay, useUpdateUser } from "@/hooks"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { UserUpdateReq } from "@/models/user/schema/request"
@@ -35,6 +37,15 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
     const updateUserMutation = useUpdateUser({
         onSuccess: onClose
     })
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false)
+    const [isConfirmVisible, setIsConfirmVisible] = useState(false)
+
+    useEffect(() => {
+        if (!isOpen) {
+            setIsPasswordVisible(false)
+            setIsConfirmVisible(false)
+        }
+    }, [isOpen])
 
     const initialValues = useMemo(
         () => ({
@@ -42,10 +53,14 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
             lastName: user?.lastName ?? "",
             phone: user?.phone ?? "",
             sex: user?.sex ?? Sex.Male,
-            dateOfBirth: user?.dateOfBirth ?? ""
+            dateOfBirth: user?.dateOfBirth ?? "",
+            password: "",
+            confirmPassword: ""
         }),
         [user]
     )
+
+    type UpdateUserPayload = UserUpdateReq & { password?: string }
 
     const formik = useFormik({
         enableReinitialize: true,
@@ -60,6 +75,30 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
             phone: Yup.string()
                 .required(t("user.phone_require"))
                 .matches(PHONE_REGEX, t("user.invalid_phone")),
+            password: Yup.string()
+                .notRequired()
+                .test("password-length", t("user.password_too_short"), (value) => {
+                    if (!value) return true
+                    return value.length >= 8
+                })
+                .test("password-strength", t("user.password_strength"), (value) => {
+                    if (!value) return true
+                    return PASSWORD_REGEX.test(value)
+                }),
+            confirmPassword: Yup.string()
+                .notRequired()
+                .when("password", {
+                    is: (password: string | undefined) => Boolean(password && password.length),
+                    then: (schema) =>
+                        schema
+                            .required(t("user.password_can_not_empty"))
+                            .oneOf([Yup.ref("password")], t("user.confirm_password_is_incorrect")),
+                    otherwise: (schema) =>
+                        schema.oneOf(
+                            [Yup.ref("password")],
+                            t("user.confirm_password_is_incorrect")
+                        )
+                }),
             sex: Yup.number().required(t("user.sex_require")),
             dateOfBirth: Yup.string().required(t("user.date_of_birth_require"))
         }),
@@ -72,7 +111,12 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
                 sex: values.sex,
                 dateOfBirth: values.dateOfBirth
             }
-            await updateUserMutation.mutateAsync({ userId: user.id, data: payload })
+
+            const requestData: UpdateUserPayload = values.password
+                ? { ...payload, password: values.password }
+                : payload
+
+            await updateUserMutation.mutateAsync({ userId: user.id, data: requestData })
         }
     })
 
@@ -89,8 +133,8 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
             <ModalContentStyled>
                 <ModalHeaderStyled>{t("common.edit_user")}</ModalHeaderStyled>
                 <ModalBodyStyled>
-                    <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-5 md:flex-row">
+                    <form onSubmit={formik.handleSubmit} className="flex flex-col gap-6">
+                        <div className="grid gap-4 md:grid-cols-2">
                             <InputStyled
                                 label={t("user.last_name")}
                                 variant="bordered"
@@ -112,24 +156,99 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
                             />
                         </div>
 
-                        <InputStyled
-                            label={t("user.phone")}
-                            variant="bordered"
-                            maxLength={10}
-                            value={formik.values.phone ?? ""}
-                            onValueChange={(value) => formik.setFieldValue("phone", value)}
-                            isInvalid={!!(formik.touched.phone && formik.errors.phone)}
-                            errorMessage={formik.errors.phone}
-                            onBlur={() => formik.setFieldTouched("phone")}
-                        />
-
-                        <div className="flex flex-col gap-5 md:flex-row">
-                            <EnumPicker
-                                label={t("user.sex")}
-                                labels={SexLabels}
-                                value={formik.values.sex}
-                                onChange={(val) => formik.setFieldValue("sex", val)}
+                        <div className="flex flex-col gap-4">
+                            <InputStyled
+                                label={t("auth.password")}
+                                variant="bordered"
+                                type={isPasswordVisible ? "text" : "password"}
+                                value={formik.values.password}
+                                onValueChange={(value) => formik.setFieldValue("password", value)}
+                                isInvalid={!!(formik.touched.password && formik.errors.password)}
+                                errorMessage={formik.errors.password}
+                                onBlur={() => formik.setFieldTouched("password")}
+                                endContent={
+                                    <ButtonToggleVisibility
+                                        isVisible={isPasswordVisible}
+                                        toggleVisibility={() =>
+                                            setIsPasswordVisible((prev) => !prev)
+                                        }
+                                    />
+                                }
                             />
+
+                            <InputStyled
+                                label={t("auth.confirm_password")}
+                                variant="bordered"
+                                type={isConfirmVisible ? "text" : "password"}
+                                value={formik.values.confirmPassword}
+                                onValueChange={(value) =>
+                                    formik.setFieldValue("confirmPassword", value)
+                                }
+                                isInvalid={
+                                    !!(formik.touched.confirmPassword &&
+                                    formik.errors.confirmPassword)
+                                }
+                                errorMessage={formik.errors.confirmPassword}
+                                onBlur={() => formik.setFieldTouched("confirmPassword")}
+                                endContent={
+                                    <ButtonToggleVisibility
+                                        isVisible={isConfirmVisible}
+                                        toggleVisibility={() =>
+                                            setIsConfirmVisible((prev) => !prev)
+                                        }
+                                    />
+                                }
+                            />
+
+                            <InputStyled
+                                label={t("user.phone")}
+                                variant="bordered"
+                                maxLength={10}
+                                value={formik.values.phone ?? ""}
+                                onValueChange={(value) => formik.setFieldValue("phone", value)}
+                                isInvalid={!!(formik.touched.phone && formik.errors.phone)}
+                                errorMessage={formik.errors.phone}
+                                onBlur={() => formik.setFieldTouched("phone")}
+                                pattern="[0-9]*"
+                                inputMode="numeric"
+                                onInput={(event) => {
+                                    event.currentTarget.value = event.currentTarget.value.replace(
+                                        /[^0-9]/g,
+                                        ""
+                                    )
+                                }}
+                            />
+                        </div>
+
+                        <div className="grid gap-4 md:grid-cols-2">
+                            <FilterTypeStyle
+                                label={t("user.sex")}
+                                selectedKeys={
+                                    formik.values.sex === undefined || formik.values.sex === null
+                                        ? new Set([])
+                                        : new Set([String(formik.values.sex)])
+                                }
+                                onSelectionChange={(keys) => {
+                                    if (keys === "all") return
+                                    const [selected] = Array.from(keys)
+                                    if (selected === undefined || selected === null) return
+                                    const nextValue =
+                                        typeof selected === "string"
+                                            ? Number(selected)
+                                            : Number(selected.toString())
+                                    if (!Number.isNaN(nextValue)) {
+                                        formik.setFieldValue("sex", nextValue)
+                                        formik.setFieldTouched("sex", true)
+                                    }
+                                }}
+                                isInvalid={!!(formik.touched.sex && formik.errors.sex)}
+                                errorMessage={formik.errors.sex}
+                                disallowEmptySelection
+                            >
+                                {Object.entries(SexLabels).map(([key, label]) => (
+                                    <FilterTypeOption key={key}>{label}</FilterTypeOption>
+                                ))}
+                            </FilterTypeStyle>
 
                             <DatePickerStyled
                                 label={t("user.date_of_birth")}
@@ -167,7 +286,7 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
                         className="bg-emerald-500 text-white px-6"
                         onPress={formik.submitForm}
                         isLoading={updateUserMutation.isPending}
-                        isDisabled={!formik.isValid}
+                        isDisabled={updateUserMutation.isPending || !formik.isValid}
                     >
                         {t("common.save_changes")}
                     </ButtonStyled>

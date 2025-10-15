@@ -8,6 +8,8 @@ import { useTranslation } from "react-i18next"
 import toast from "react-hot-toast"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { BackendError } from "@/models/common/response"
+import axiosInstance from "@/utils/axios"
+import { requestWrapper } from "@/utils/helpers/axiosHelper"
 
 export const useCreateNewUser = ({
     onSuccess,
@@ -22,6 +24,34 @@ export const useCreateNewUser = ({
         onSuccess: () => {
             onSuccess?.()
             toast.success(t("success.create"))
+        },
+        onError: (error: BackendError) => {
+            onError?.()
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useUpdateUser = ({
+    onSuccess,
+    onError
+}: {
+    onSuccess?: () => void
+    onError?: () => void
+} = {}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+    type UpdateUserPayload = UserUpdateReq & { password?: string }
+
+    return useMutation({
+        mutationFn: ({ userId, data }: { userId: string; data: UpdateUserPayload }) =>
+            requestWrapper(async () => {
+                await axiosInstance.patch(`/users/${userId}`, data)
+            }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
+            onSuccess?.()
+            toast.success(t("success.update"))
         },
         onError: (error: BackendError) => {
             onError?.()

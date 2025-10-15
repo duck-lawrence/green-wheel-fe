@@ -77,13 +77,9 @@ export default function StaffUserManagementPage() {
         return Yup.object({
             name: Yup.string().trim(),
             phone: Yup.string().trim(),
-            hasDocument: Yup.mixed<UserFilterFormValues["hasDocument"]>().oneOf([
-                "both",
-                "license",
-                "citizen",
-                "none",
-                undefined
-            ])
+            hasDocument: Yup.mixed<UserFilterFormValues["hasDocument"]>()
+            .oneOf(["both", "license", "citizen", "none"] as const)
+            .optional()
         })
     }, [])
 
