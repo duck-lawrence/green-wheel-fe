@@ -1,4 +1,5 @@
 import { QUERY_KEYS } from "@/constants/queryKey"
+import { GetAllVehicleChecklistParams } from "@/models/checklist/schema/request"
 import { VehicleChecklistViewRes } from "@/models/checklist/schema/response"
 import { BackendError } from "@/models/common/response"
 import { vehicleChecklistsApi } from "@/services/vehicleChecklistsApi"
@@ -7,6 +8,27 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
+
+export const useGetAllVehicleChecklists = ({
+    query,
+    enabled = true
+}: {
+    query: GetAllVehicleChecklistParams
+    enabled?: boolean
+}) => {
+    const queryClient = useQueryClient()
+    return useQuery({
+        queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, query],
+        queryFn: () => vehicleChecklistsApi.getAll(query),
+        initialData: () => {
+            return queryClient.getQueryData<VehicleChecklistViewRes[]>([
+                ...QUERY_KEYS.VEHICLE_CHECKLISTS,
+                query
+            ])
+        },
+        enabled
+    })
+}
 
 export const useGetByIdVehicleChecklist = ({
     id,
