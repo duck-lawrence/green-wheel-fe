@@ -51,6 +51,7 @@ axiosInstance.interceptors.response.use(
 
                 return axiosInstance(originalRequest)
             } catch (refreshError) {
+                useTokenStore.getState().removeAccessToken()
                 return Promise.reject(refreshError)
             }
         }

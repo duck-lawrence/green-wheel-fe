@@ -39,6 +39,7 @@
         "verify_identity": "Please enter the email verification code to verify your identity",
         "complete_register": "Please enter the information below to complete your account registration",
         "already_have_account": "Already have an account?",
+        "back_to": "Back to",
         "send_otp": "Send OTP",
         "email": "Email",
         "set_password": "Set Password",
@@ -211,7 +212,8 @@
         "out_of_stock": "Out of stock",
         "seats": "Seats",
         "battery_capacity": "Battery capacity",
-        "airbag": "Airbag"
+        "airbag": "Airbag",
+        "not_include_tax": "Not include tax"
     },
     "vehicle_filter": {
         "require": "Please complete the filter form before continuing",
