@@ -337,7 +337,7 @@
     },
     "staff": {
         "sidebar_dashboard": "Dash Board",
-        "sidebar_handovers": "Handovers",
+        "sidebar_vehicle_checklists": "Vehicle checklists",
         "sidebar_contracts": "Contracts",
         "sidebar_test": "Test",
         "sidebar_verify_customer": "Customer Verification",
@@ -480,9 +480,19 @@
         "view_damage_details": "View damage details",
         "total": "Total",
         "no_damage_items": "No damage items.",
-        "no_detailed_description": "No detailed description."
+        "no_detailed_description": "No detailed description.",
+        "create_at": "Created at"
     },
     "about_us": {
         "": ""
+    },
+    "vehicle_checklist": {
+        "checklist": "Checklist",
+        "checklist_type": "Checklist type",
+        "staff_name": "Staff name",
+        "customer_name": "Customer name",
+        "vehicle_license_plate": "Vehicle license plate",
+        "status": "Status",
+        "contract_id": "Contract ID"
     }
 }

@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import {
     InvoiceAccordion,
@@ -8,7 +8,8 @@ import {
     SectionStyled,
     SpinnerStyled,
     TextareaStyled,
-    DateTimeStyled
+    DateTimeStyled,
+    ButtonStyled
 } from "@/components"
 import {
     Car,
@@ -18,12 +19,17 @@ import {
     Invoice
 } from "@phosphor-icons/react"
 import { InvoiceTypeLabels, RentalContractStatusLabels } from "@/constants/labels"
-import { useDay, useGetByIdRentalContract, useNumber, useUpdateContractStatus } from "@/hooks"
-import { InvoiceType } from "@/constants/enum"
+import {
+    useCreateVehicleChecklist,
+    useDay,
+    useGetByIdRentalContract,
+    useNumber,
+    useUpdateContractStatus
+} from "@/hooks"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { useTranslation } from "react-i18next"
 import Link from "next/link"
-import { usePathname, useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import toast from "react-hot-toast"
 
 export function RentalContractDetail({ contractId }: { contractId: string }) {
@@ -31,6 +37,7 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
     // const contractId = id?.toString()
     const searchParams = useSearchParams()
     const pathname = usePathname()
+    const router = useRouter()
     const returnPath = pathname.startsWith("/dashboard")
         ? "/dashboard/rental-contracts"
         : "/rental-contracts"
@@ -45,10 +52,7 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
     })
     const updateContractStatus = useUpdateContractStatus()
 
-    // data mẫu
-    // const dataContract = mockContracts.find((v) => v.id === "CON001")!
-    const dateStart = dataContract?.invoices.find((item) => item.type === InvoiceType.Handover)
-        ?.paidAt!
+    const createAt = dataContract?.createdAt
 
     // render accordion
     const invoiceAccordion = (dataContract?.invoices || []).map((invoice) => ({
@@ -73,6 +77,22 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
         }
         fn()
     }, [contractId, parseNumber, searchParams, t, updateContractStatus])
+
+    const [isEnable, setIsEnable] = useState(false)
+    const { data: checklist, isFetching } = useCreateVehicleChecklist({
+        id: dataContract?.vehicle.id!,
+        enabled: isEnable
+    })
+
+    useEffect(() => {
+        if (checklist) {
+            router.push(`/dashboard/vehicle-checklists/${checklist.id}`)
+        }
+    })
+
+    const handleCreate = () => {
+        setIsEnable(true)
+    }
 
     if (isLoading || !dataContract)
         return (
@@ -109,8 +129,8 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="sm:col-span-2">
                             <p>
-                                {t("rental_contract.rental_date")}:
-                                {dateStart && formatDateTime({ date: dateStart })}{" "}
+                                {t("rental_contract.create_at")}:
+                                {createAt && formatDateTime({ date: createAt })}{" "}
                             </p>
                         </div>
 
@@ -232,6 +252,11 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
                             variant="bordered"
                         />
                     </div>
+                </SectionStyled>
+                <SectionStyled title="Create vehicle checklist">
+                    <ButtonStyled onPress={handleCreate} isLoading={isFetching}>
+                        Create
+                    </ButtonStyled>
                 </SectionStyled>
 
                 {/* Invoice Accordion */}

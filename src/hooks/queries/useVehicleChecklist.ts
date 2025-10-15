@@ -24,3 +24,25 @@ export const useGetByIdVehicleChecklist = ({
     })
     return query
 }
+
+export const useCreateVehicleChecklist = ({
+    id,
+    enabled = true
+}: {
+    id: string
+    enabled?: boolean
+}) => {
+    const queryClient = useQueryClient()
+    const query = useQuery({
+        queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, id],
+        queryFn: () => VehicleChecklistsApi.create(id),
+        initialData: () => {
+            return queryClient.getQueryData<VehicleChecklistViewRes>([
+                ...QUERY_KEYS.VEHICLE_CHECKLISTS,
+                id
+            ])
+        },
+        enabled
+    })
+    return query
+}
