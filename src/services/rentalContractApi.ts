@@ -1,7 +1,8 @@
 import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 import {
     ContractQueryParams,
-    CreateRentalContractReq
+    CreateRentalContractReq,
+    HandoverContractReq
 } from "@/models/rental-contract/schema/request"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import axiosInstance from "@/utils/axios"
@@ -47,5 +48,26 @@ export const rentalContractApi = {
     rejectContract: ({ id, vehicalStatus }: { id: string; vehicalStatus: VehicleStatus }) =>
         requestWrapper<void>(async () => {
             await axiosInstance.put(`/rental-contracts/${id}/reject`, { vehicalStatus })
+        }),
+
+    createManual: (req: CreateRentalContractReq) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.post("/rental-contracts/manual", req)
+        }),
+
+    handover: ({ id, req }: { id: string; req: HandoverContractReq }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/rental-contracts/${id}/handover`, req)
+        }),
+
+    return: ({ id }: { id: string }) =>
+        requestWrapper<{ returnInvoiceId: string }>(async () => {
+            const res = await axiosInstance.put(`/rental-contracts/${id}/return`)
+            return res.data
+        }),
+
+    cancel: ({ id }: { id: string }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/rental-contracts/${id}/cancel`)
         })
 }

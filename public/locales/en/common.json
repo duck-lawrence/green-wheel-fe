@@ -10,7 +10,8 @@
         "reset_password": "Reset password successful",
         "change_password": "Change password successful",
         "upload": "Upload successful",
-        "payment": "Payment success"
+        "payment": "Payment success",
+        "cancel": "Cancel success"
     },
     "failed": {
         "create": "Failed to create",
@@ -121,6 +122,7 @@
         "please_upload_citizen_identity": "Please upload your Cititzen Identity",
         "citizen_identity_number_require": "Cititzen Identity number is required",
         "citizen_identity_expired_time_require": "Cititzen Identity expired time is required",
+        "invalid_citizen_identity_data": "Invalid citizen identity data",
         "citizen_identity_not_found": "Citizen identity not found",
         "citizen_identity_duplicate": "This citizen identity already exists",
 
@@ -197,7 +199,12 @@
         "phone": "Phone",
         "citizen_id": "Citizen ID",
         "driver_license": "Driver License",
-        "documents": "Documents"
+        "documents": "Documents",
+        "vehicle": "Vehicle",
+        "type": "Type",
+        "staff": "Staff",
+        "customer": "Customer",
+        "contract_id": "Contract ID"
     },
     "contral_form": {
         "payment_method_require": "Please select a payment method",
@@ -258,9 +265,6 @@
     },
     "vehicle_component": {
         "not_found": "Vehicke component not found"
-    },
-    "vehicle_checklist": {
-        "not_found": "Vehicle checklist not found"
     },
     "staion": {
         "not_found": "Station not found"
@@ -539,7 +543,7 @@
         "user_already_have_contract": "You can only have one pending or active contract at a time",
         "not_found": "Rental contract not found",
         "already_process": "This rental contract already processes",
-        "can_not_cancle": "This rental contract can not be cancelled"
+        "can_not_cancel": "This rental contract can not be cancelled"
     },
     "invoice": {
         "not_found": "Invoice not found",
@@ -563,7 +567,8 @@
         "": ""
     },
     "vehicle_checklist": {
-        "checklist": "Checklist",
+        "not_found": "Vehicle checklist not found",
+        "checklist": "Vehicle Checklist",
         "checklist_type": "Checklist type",
         "staff_name": "Staff name",
         "customer_name": "Customer name",

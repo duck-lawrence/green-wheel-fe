@@ -1,5 +1,6 @@
 import {
     CreateVehicleChecklistReq,
+    GetAllVehicleChecklistParams,
     UpdateVehicleChecklistReq
 } from "@/models/checklist/schema/request"
 import {
@@ -22,8 +23,8 @@ export const vehicleChecklistsApi = {
             return res.data
         }),
 
-    getAll: (query: { contractId: string }) =>
-        requestWrapper<VehicleChecklistViewRes>(async () => {
+    getAll: (query: GetAllVehicleChecklistParams) =>
+        requestWrapper<VehicleChecklistViewRes[]>(async () => {
             const params = buildQueryParams(query)
             const res = await axiosInstance.get("/vehicle-checklists", { params })
             return res.data
