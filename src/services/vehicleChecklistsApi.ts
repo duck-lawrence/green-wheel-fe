@@ -1,4 +1,8 @@
-import { CreateVehicleChecklistReq } from "@/models/checklist/schema/request"
+import {
+    CreateVehicleChecklistReq,
+    GetAllVehicleChecklistParams,
+    UpdateVehicleChecklistReq
+} from "@/models/checklist/schema/request"
 import {
     VehicleChecklistItemViewRes,
     VehicleChecklistViewRes

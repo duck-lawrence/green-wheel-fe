@@ -50,14 +50,9 @@ export const rentalContractApi = {
             await axiosInstance.put(`/rental-contracts/${id}/reject`, { vehicalStatus })
         }),
 
-    updateContractStatus: ({ id }: { id: string }) =>
+    createManual: (req: CreateRentalContractReq) =>
         requestWrapper<void>(async () => {
-            await axiosInstance.put(`/rental-contracts/${id}`)
-        }),
-
-    createOffline: (req: CreateRentalContractReq) =>
-        requestWrapper<void>(async () => {
-            await axiosInstance.post("/rental-contracts/offline", req)
+            await axiosInstance.post("/rental-contracts/manual", req)
         }),
 
     handover: ({ id, req }: { id: string; req: HandoverContractReq }) =>

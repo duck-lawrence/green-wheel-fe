@@ -266,9 +266,6 @@
     "vehicle_component": {
         "not_found": "Vehicke component not found"
     },
-    "vehicle_checklist": {
-        "not_found": "Vehicle checklist not found"
-    },
     "staion": {
         "not_found": "Station not found"
     },
@@ -570,7 +567,8 @@
         "": ""
     },
     "vehicle_checklist": {
-        "checklist": "Checklist",
+        "not_found": "Vehicle checklist not found",
+        "checklist": "Vehicle Checklist",
         "checklist_type": "Checklist type",
         "staff_name": "Staff name",
         "customer_name": "Customer name",

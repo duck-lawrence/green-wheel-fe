@@ -174,11 +174,11 @@ export const useUpdateContractStatus = ({ onSuccess }: { onSuccess?: () => void 
     })
 }
 
-export const useCreateContractOffline = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useCreateContractManual = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
 
     return useMutation({
-        mutationFn: rentalContractApi.createOffline,
+        mutationFn: rentalContractApi.createManual,
         onSuccess: () => {
             toast.success(t("success.create"))
             onSuccess?.()

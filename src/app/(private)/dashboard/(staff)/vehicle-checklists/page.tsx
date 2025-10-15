@@ -33,16 +33,15 @@ export default function VehicleChecklistPage() {
     const {
         data: checklists,
         isLoading: isChecklistsLoading,
-        error: checklistsError,
         refetch: refetchChecklists
     } = useGetAllVehicleChecklists({ query: filters })
 
     useEffect(() => {
-        if (checklistsError || stationsError) {
-            const backendErr = (checklistsError || stationsError) as BackendError
+        if (stationsError) {
+            const backendErr = stationsError as BackendError
             toast.error(translateWithFallback(t, backendErr.detail))
         }
-    }, [checklistsError, stationsError, t])
+    }, [stationsError, t])
 
     // const filterFormik = useFormik({
     //     initialValues: {
@@ -66,7 +65,7 @@ export default function VehicleChecklistPage() {
     return (
         <div className="py-8 px-12 shadow-2xs rounded-2xl bg-white text-center">
             <div className="text-3xl pb-6 font-bold text-center text-primary">
-                <p>{t("user.rental_contracts")}</p>
+                <p>{t("vehicle_checklist.checklist")}</p>
             </div>
 
             <div className="mb-3 flex gap-2">
@@ -108,9 +107,9 @@ export default function VehicleChecklistPage() {
             </div>
 
             {isChecklistsLoading ? (
-                <Spinner className="min-w-[60rem]" />
+                <Spinner className="" />
             ) : (
-                <TableStyled className="w-full min-w-[60rem]">
+                <TableStyled className="w-full ">
                     <TableHeader>
                         <TableColumn className="text-sm text-center">{t("table.id")}</TableColumn>
                         <TableColumn className="text-sm text-center">
@@ -129,7 +128,7 @@ export default function VehicleChecklistPage() {
                     </TableHeader>
 
                     <TableBody>
-                        {checklists!.map((item) => (
+                        {(checklists || []).map((item) => (
                             <TableRow
                                 key={item.id}
                                 className="border-b border-gray-300 cursor-pointer"
