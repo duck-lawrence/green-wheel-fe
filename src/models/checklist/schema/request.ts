@@ -10,8 +10,8 @@ export type UpdateVehicleChecklistReq = {
     isSignedByStaff: boolean
     isSignedByCustomer: boolean
     vehicleChecklistId: string
-    description?: string
     checklistItems: UpdateChecklistItemReq[]
+    returnInvoiceId?: string
 }
 
 export type UpdateChecklistItemReq = {
