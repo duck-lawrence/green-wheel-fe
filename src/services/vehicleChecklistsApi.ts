@@ -1,20 +1,28 @@
+import { CreateVehicleChecklistReq } from "@/models/checklist/schema/request"
 import {
     VehicleChecklistItemViewRes,
     VehicleChecklistViewRes
 } from "@/models/checklist/schema/response"
 import axiosInstance from "@/utils/axios"
-import { requestWrapper } from "@/utils/helpers/axiosHelper"
+import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 
-export const VehicleChecklistsApi = {
-    create: (id: string) =>
-        requestWrapper<VehicleChecklistViewRes>(async () => {
-            const res = await axiosInstance.get(`/vehicle-checklists/${id}`)
+export const vehicleChecklistsApi = {
+    create: (req: CreateVehicleChecklistReq) =>
+        requestWrapper<{ id: string }>(async () => {
+            const res = await axiosInstance.post(`/vehicle-checklists`, req)
             return res.data
         }),
 
-    update: (rep: VehicleChecklistViewRes) =>
+    update: (req: VehicleChecklistViewRes) =>
         requestWrapper<VehicleChecklistViewRes>(async () => {
-            const res = await axiosInstance.put(`/vehicle-checklists`, rep)
+            const res = await axiosInstance.put(`/vehicle-checklists`, req)
+            return res.data
+        }),
+
+    getAll: (query: { contractId: string }) =>
+        requestWrapper<VehicleChecklistViewRes>(async () => {
+            const params = buildQueryParams(query)
+            const res = await axiosInstance.get("vehicle-checklists", { params })
             return res.data
         }),
 

@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo } from "react"
 import { motion } from "framer-motion"
 import {
     InvoiceAccordion,
@@ -23,21 +23,23 @@ import {
     useCreateVehicleChecklist,
     useDay,
     useGetByIdRentalContract,
+    useGetMe,
     useNumber,
     useUpdateContractStatus
 } from "@/hooks"
-import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
+import { DATE_TIME_VIEW_FORMAT, ROLE_STAFF } from "@/constants/constants"
 import { useTranslation } from "react-i18next"
 import Link from "next/link"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
 import toast from "react-hot-toast"
+import { VehicleChecklistType } from "@/constants/enum"
+import { Spinner } from "@heroui/react"
 
 export function RentalContractDetail({ contractId }: { contractId: string }) {
     // const { id } = useParams()
     // const contractId = id?.toString()
     const searchParams = useSearchParams()
     const pathname = usePathname()
-    const router = useRouter()
     const returnPath = pathname.startsWith("/dashboard")
         ? "/dashboard/rental-contracts"
         : "/rental-contracts"
@@ -46,6 +48,13 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
     const { toCalenderDateTime } = useDay()
     const { parseNumber } = useNumber()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
+
+    const { data: user } = useGetMe({ enabled: true })
+
+    const isStaff = useMemo(() => {
+        return user?.role?.name === ROLE_STAFF
+    }, [user])
+
     const { data: dataContract, isLoading } = useGetByIdRentalContract({
         id: contractId,
         enabled: true
@@ -78,22 +87,19 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
         fn()
     }, [contractId, parseNumber, searchParams, t, updateContractStatus])
 
-    const [isEnable, setIsEnable] = useState(false)
-    const { data: checklist, isFetching } = useCreateVehicleChecklist({
-        id: dataContract?.vehicle.id!,
-        enabled: isEnable
-    })
+    //=======================================//
 
-    useEffect(() => {
-        if (checklist) {
-            router.push(`/dashboard/vehicle-checklists/${checklist.id}`)
-        }
-    })
+    const createVehicleChecklist = useCreateVehicleChecklist({})
 
-    const handleCreate = () => {
-        setIsEnable(true)
-    }
+    const handleCreateVehicleChecklist = useCallback(async () => {
+        await createVehicleChecklist.mutateAsync({
+            vehicleId: dataContract?.vehicle.id,
+            contractId: dataContract?.id,
+            type: VehicleChecklistType.Handover
+        })
+    }, [createVehicleChecklist, dataContract])
 
+    //=======================================//
     if (isLoading || !dataContract)
         return (
             <div className="flex justify-center mt-65">
@@ -253,13 +259,15 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
                         />
                     </div>
                 </SectionStyled>
-                <SectionStyled title="Create vehicle checklist">
-                    <ButtonStyled onPress={handleCreate} isLoading={isFetching}>
-                        Create
-                    </ButtonStyled>
-                </SectionStyled>
 
-                {/* Invoice Accordion */}
+                {isStaff && (
+                    <SectionStyled title="Create vehicle checklist">
+                        <ButtonStyled onPress={handleCreateVehicleChecklist}>
+                            {createVehicleChecklist.isPending ? <Spinner /> : <div>create</div>}
+                        </ButtonStyled>
+                    </SectionStyled>
+                )}
+                {/* Invoice Accordion  isLoading={isFetching}*/}
                 <SectionStyled title={t("rental_contract.payment_invoice_list")}>
                     <InvoiceAccordion
                         items={invoiceAccordion}

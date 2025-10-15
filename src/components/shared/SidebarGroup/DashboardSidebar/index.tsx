@@ -15,7 +15,7 @@ export function DashboardSidebar({ className }: { className?: string }) {
         {
             key: "/dashboard/vehicle-checklists",
             label: t("staff.sidebar_vehicle_checklists"),
-            href: "/dashboard/vehicle-checklists/id"
+            href: "/dashboard/vehicle-checklists"
         },
         {
             key: "/dashboard/rental-contracts",

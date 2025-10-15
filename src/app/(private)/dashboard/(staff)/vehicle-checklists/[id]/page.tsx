@@ -2,14 +2,13 @@
 import { InputStyled, SpinnerStyled } from "@/components"
 import { TableCheckList } from "@/components/modules/TableCheckList"
 import { VehicleChecklistTypeLabels } from "@/constants/labels"
-// import { mockVehicleChecklists } from "@/data/mockCheckList"
 import { useGetByIdVehicleChecklist } from "@/hooks"
 import { useParams } from "next/navigation"
 
 import React from "react"
 import { useTranslation } from "react-i18next"
 
-export default function VehicleChecklistPage() {
+export default function VehicleChecklistDetailge() {
     const { t } = useTranslation()
     const { id } = useParams()
 
@@ -21,9 +20,10 @@ export default function VehicleChecklistPage() {
     if (isLoading) {
         return <SpinnerStyled />
     }
+
     // const checklistItem = mockVehicleChecklists.find((v) => v.id === "CHK001")
     return (
-        <div className="rounded-2xl bg-white shadow-md px-8 py-10 border border-gray-100 max-w-6xl mx-auto mt-8">
+        <div className="rounded-2xl bg-white shadow-md px-8 py-10 border border-gray-100 max-w-6xl mx-auto">
             {/* Header */}
             <div className="flex flex-col md:flex-row items-center justify-between mb-8">
                 <h2 className="text-3xl font-bold text-gray-800">
@@ -32,9 +32,6 @@ export default function VehicleChecklistPage() {
                         {VehicleChecklistTypeLabels[checklistItem!.type]}
                     </span>
                 </h2>
-                {/* <p className="text-gray-500 text-sm mt-2 md:mt-0 italic">
-                    #{data?.id} • Vehicle ID: {data?.vehicleId}
-                </p> */}
             </div>
 
             {/* Information Grid */}
