@@ -81,7 +81,7 @@ export function TableUserManagement({
                     </TableCell>
                     <TableCell className="py-3 px-4">
                         <ButtonStyled
-                            className="rounded-lg border border-gray-300 bg-white px-4 py-1 text-gray-700 transition hover:bg-gray-100"
+                            className="rounded-lg border border-emerald-400 bg-emerald-50 px-4 py-1 text-emerald-700 transition hover:border-emerald-500 hover:bg-emerald-100 hover:text-emerald-800 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
                             onPress={() => onEditUser?.(user)}
                         >
                             {t("common.edit")}

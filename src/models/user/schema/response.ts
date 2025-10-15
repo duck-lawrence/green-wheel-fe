@@ -2,6 +2,7 @@ import { RoleViewRes } from "@/models/role/response"
 import { StationViewRes } from "@/models/station/schema/response"
 
 export type UserProfileViewRes = {
+    id?: string
     email?: string
     firstName: string
     lastName: string

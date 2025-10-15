@@ -1,6 +1,6 @@
 import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
 import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
-import { CreateUserReq, UserFilterReq } from "@/models/user/schema/request"
+import { CreateUserReq, UserFilterReq, UserUpdateReq } from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import axiosInstance from "@/utils/axios"
 import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
@@ -16,6 +16,12 @@ export const userApi = {
     createAnonymousAccount: (req: CreateUserReq) =>
         requestWrapper<{ userId: string }>(async () => {
             const res = await axiosInstance.post("/users/anonymous", req)
+            return res.data
+        }),
+
+    update: ({ userId, data }: { userId: string; data: UserUpdateReq }) =>
+        requestWrapper<UserProfileViewRes>(async () => {
+            const res = await axiosInstance.patch(`/users/${userId}`, data)
             return res.data
         }),
 

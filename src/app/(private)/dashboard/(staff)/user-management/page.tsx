@@ -9,6 +9,7 @@ import type { Selection } from "@heroui/react"
 
 import {
     ButtonStyled,
+    EditUserModal,
     FilterTypeStyle,
     FilterTypeOption,
     ImageStyled,
@@ -45,6 +46,12 @@ export default function StaffUserManagementPage() {
     })
     const [preview, setPreview] = useState<{ url: string; label: string } | null>(null)
     const { isOpen, onOpen, onOpenChange, onClose } = useModalDisclosure()
+    const [editingUser, setEditingUser] = useState<UserProfileViewRes | null>(null)
+    const {
+        isOpen: isEditOpen,
+        onOpen: onEditOpen,
+        onClose: onEditClose
+    } = useModalDisclosure()
 
     const { data, isFetching } = useSearchUsers({
         params: {},
@@ -167,6 +174,19 @@ export default function StaffUserManagementPage() {
         onClose()
     }, [onClose])
 
+    const handleOpenEditUser = useCallback(
+        (user: UserProfileViewRes) => {
+            setEditingUser(user)
+            onEditOpen()
+        },
+        [onEditOpen]
+    )
+
+    const handleCloseEditUser = useCallback(() => {
+        setEditingUser(null)
+        onEditClose()
+    }, [onEditClose])
+
     return (
         <div className="rounded-2xl bg-white shadow-sm px-6 py-6">
             <div className="text-3xl mb-3 px-4 font-bold">
@@ -252,6 +272,7 @@ export default function StaffUserManagementPage() {
             <TableUserManagement
                 users={filteredUsers}
                 onPreviewDocument={({ label, url }) => handleOpenPreview(label, url)}
+                onEditUser={handleOpenEditUser}
             />
 
             <ModalStyled isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-3xl">
@@ -276,6 +297,12 @@ export default function StaffUserManagementPage() {
                     </ModalFooterStyled>
                 </ModalContentStyled>
             </ModalStyled>
+
+            <EditUserModal
+                user={editingUser}
+                isOpen={isEditOpen}
+                onClose={handleCloseEditUser}
+            />
         </div>
     )
 }
