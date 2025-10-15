@@ -15,7 +15,7 @@ export const profileApi = {
     getMe: () =>
         requestWrapper<UserProfileViewRes>(async () => {
             try {
-                const res = await axiosInstance.get("/users/me")
+                const res = await axiosInstance.get("/me")
                 return res.data
             } catch (error: unknown) {
                 if (axios.isAxiosError(error)) {
@@ -36,13 +36,13 @@ export const profileApi = {
 
     updateMe: (req: UserUpdateReq) =>
         requestWrapper<void>(async () => {
-            await axiosInstance.patch("/users/me", req)
+            await axiosInstance.patch("/me", req)
         }),
 
     // avatar
     uploadAvatar: (formData: FormData) =>
         requestWrapper<{ avatarUrl: string }>(async () => {
-            const res = await axiosInstance.put("/users/avatar", formData, {
+            const res = await axiosInstance.put("/me/avatar", formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             })
             return res.data
@@ -50,14 +50,14 @@ export const profileApi = {
 
     deleteAvatar: () =>
         requestWrapper<{ message: string }>(async () => {
-            const res = await axiosInstance.delete("/users/avatar")
+            const res = await axiosInstance.delete("/me/avatar")
             return res.data
         }),
 
     // citizen identity
     uploadCitizenId: (formData: FormData) =>
         requestWrapper<CitizenIdentityViewRes>(async () => {
-            const res = await axiosInstance.put("/users/citizen-identity", formData, {
+            const res = await axiosInstance.put("/me/citizen-identity", formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             })
             return res.data
@@ -65,25 +65,25 @@ export const profileApi = {
 
     getMyCitizenId: () =>
         requestWrapper<CitizenIdentityViewRes>(async () => {
-            const res = await axiosInstance.get("/users/citizen-identity")
+            const res = await axiosInstance.get("/me/citizen-identity")
             return res.data
         }),
 
     updateCitizenId: (req: UpdateCitizenIdentityReq) =>
         requestWrapper<CitizenIdentityViewRes>(async () => {
-            const res = await axiosInstance.patch("/users/citizen-identity", req)
+            const res = await axiosInstance.patch("/me/citizen-identity", req)
             return res.data
         }),
 
     deleteCitizenId: () =>
         requestWrapper<void>(async () => {
-            await axiosInstance.delete("/users/citizen-identity")
+            await axiosInstance.delete("/me/citizen-identity")
         }),
 
     // driver license
     uploadDriverLicense: (formData: FormData) =>
         requestWrapper<DriverLicenseViewRes>(async () => {
-            const res = await axiosInstance.put("/users/driver-license", formData, {
+            const res = await axiosInstance.put("/me/driver-license", formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             })
             return res.data
@@ -91,18 +91,18 @@ export const profileApi = {
 
     getMyDriverLicense: () =>
         requestWrapper<DriverLicenseViewRes>(async () => {
-            const res = await axiosInstance.get("/users/driver-license")
+            const res = await axiosInstance.get("/me/driver-license")
             return res.data
         }),
 
     updateDriverLicense: (req: UpdateDriverLicenseReq) =>
         requestWrapper<DriverLicenseViewRes>(async () => {
-            const res = await axiosInstance.patch("/users/driver-license", req)
+            const res = await axiosInstance.patch("/me/driver-license", req)
             return res.data
         }),
 
     deleteDriverLicense: () =>
         requestWrapper<void>(async () => {
-            await axiosInstance.delete("/users/driver-license")
+            await axiosInstance.delete("/me/driver-license")
         })
 }
