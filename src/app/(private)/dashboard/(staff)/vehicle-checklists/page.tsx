@@ -1,37 +1,48 @@
 "use client"
 // import BrandPicker from "@/components/modules/UserItem/BrandPicker"
 import React, { useEffect, useState } from "react"
-import { EnumPicker, TableStyled } from "@/components"
+import { AutocompleteStyle, EnumPicker, TableStyled } from "@/components"
 import { useTranslation } from "react-i18next"
-import { Spinner, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
+import {
+    AutocompleteItem,
+    Spinner,
+    TableBody,
+    TableCell,
+    TableColumn,
+    TableHeader,
+    TableRow
+} from "@heroui/react"
 import { useRouter } from "next/navigation"
-import { useDay, useGetMyContract } from "@/hooks"
-import { RentalContractStatus } from "@/constants/enum"
+import { useGetAllStations, useGetAllVehicleChecklists, useName } from "@/hooks"
+import { VehicleChecklistType } from "@/constants/enum"
 import { BackendError } from "@/models/common/response"
 import toast from "react-hot-toast"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
-import { RentalContractStatusLabels } from "@/constants/labels"
-import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
+import { VehicleChecklistTypeLabels } from "@/constants/labels"
+import { GetAllVehicleChecklistParams } from "@/models/checklist/schema/request"
+import { MapPinAreaIcon } from "@phosphor-icons/react"
 
 export default function VehicleChecklistPage() {
     const { t } = useTranslation()
     const router = useRouter()
-    const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
-    const [filters, setFilter] = useState<{ status?: RentalContractStatus }>({})
+    const { toFullName } = useName()
+    const [filters, setFilter] = useState<GetAllVehicleChecklistParams>({})
+
+    const { data: stations, error: stationsError } = useGetAllStations()
 
     const {
-        data: contracts,
-        isLoading: isContractsLoading,
-        error: contractsError,
-        refetch: refetchContracts
-    } = useGetMyContract(filters)
+        data: checklists,
+        isLoading: isChecklistsLoading,
+        error: checklistsError,
+        refetch: refetchChecklists
+    } = useGetAllVehicleChecklists({ query: filters })
 
     useEffect(() => {
-        if (contractsError) {
-            const backendErr = contractsError as BackendError
+        if (checklistsError || stationsError) {
+            const backendErr = (checklistsError || stationsError) as BackendError
             toast.error(translateWithFallback(t, backendErr.detail))
         }
-    }, [contractsError, t])
+    }, [checklistsError, stationsError, t])
 
     // const filterFormik = useFormik({
     //     initialValues: {
@@ -58,89 +69,94 @@ export default function VehicleChecklistPage() {
                 <p>{t("user.rental_contracts")}</p>
             </div>
 
-            <div className="mb-3 flex">
+            <div className="mb-3 flex gap-2">
+                <AutocompleteStyle
+                    label={t("vehicle_model.station")}
+                    items={stations}
+                    startContent={<MapPinAreaIcon className="text-xl" />}
+                    selectedKey={filters.contractId}
+                    onSelectionChange={async (key) => {
+                        setFilter((prev) => {
+                            return {
+                                ...prev,
+                                contractId: key as string | undefined
+                            }
+                        })
+                        await refetchChecklists()
+                    }}
+                    className="max-w-60 h-20 mr-0"
+                >
+                    {(stations ?? []).map((item) => (
+                        <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
+                    ))}
+                </AutocompleteStyle>
                 <EnumPicker
                     label={t("table.status")}
-                    labels={RentalContractStatusLabels}
-                    value={filters.status}
+                    labels={VehicleChecklistTypeLabels}
+                    value={filters.type}
                     onChange={async (key) => {
-                        setFilter({
-                            status: key == null ? undefined : (key as RentalContractStatus)
+                        setFilter((prev) => {
+                            return {
+                                ...prev,
+                                type: key as VehicleChecklistType | undefined
+                            }
                         })
-                        await refetchContracts()
-                        // filterFormik.handleSubmit()
+                        await refetchChecklists()
                     }}
                     className="max-w-48"
                 />
-
-                {/* <form onSubmit={filterFormik.handleSubmit} className="flex gap-4 max-h-12">
-                    <DateRangePickerStyled
-                        label={t("table.pickup_return_time")}
-                        onChange={(val) => {
-                            if (!val) {
-                                filterFormik.setFieldValue("start", null)
-                                filterFormik.setFieldValue("end", null)
-                                return
-                            }
-
-                            const startStr = val.start
-                                ? dayjs(val.start.toDate(DEFAULT_TIMEZONE)).format("YYYY-MM-DD")
-                                : ""
-                            const endStr = val.end
-                                ? dayjs(val.end.toDate(DEFAULT_TIMEZONE)).format("YYYY-MM-DD")
-                                : ""
-
-                            filterFormik.setFieldValue("start", startStr)
-                            filterFormik.setFieldValue("end", endStr)
-                            filterFormik.handleSubmit()
-                        }}
-                    />
-                </form> */}
             </div>
 
-            {isContractsLoading ? (
+            {isChecklistsLoading ? (
                 <Spinner className="min-w-[60rem]" />
             ) : (
                 <TableStyled className="w-full min-w-[60rem]">
                     <TableHeader>
                         <TableColumn className="text-sm text-center">{t("table.id")}</TableColumn>
                         <TableColumn className="text-sm text-center">
-                            {t("table.vehicle_model")}
+                            {t("table.vehicle")}
                         </TableColumn>
                         <TableColumn className="text-sm text-center">
-                            {t("table.pickup_time")}
+                            {t("table.staff")}
                         </TableColumn>
                         <TableColumn className="text-sm text-center">
-                            {t("table.return_time")}
+                            {t("table.customer")}
                         </TableColumn>
                         <TableColumn className="text-sm text-center">
-                            {t("table.station")}
+                            {t("table.contract_id")}
                         </TableColumn>
-                        <TableColumn className="text-sm text-center">
-                            {t("table.status")}
-                        </TableColumn>
+                        <TableColumn className="text-sm text-center">{t("table.type")}</TableColumn>
                     </TableHeader>
 
                     <TableBody>
-                        {contracts!.map((item) => (
+                        {checklists!.map((item) => (
                             <TableRow
                                 key={item.id}
                                 className="border-b border-gray-300 cursor-pointer"
-                                onClick={() => router.push(`/rental-contracts/${item.id}`)}
+                                onClick={() =>
+                                    router.push(`/dashboard/vehicle-checklists/${item.id}`)
+                                }
                             >
                                 <TableCell className="text-center w-fit">{item.id}</TableCell>
                                 <TableCell className="text-center">
-                                    {item.vehicle.model.name}
+                                    {item.vehicle.licensePlate}
                                 </TableCell>
                                 <TableCell className="text-center">
-                                    {formatDateTime({ date: item.startDate })}
+                                    {toFullName({
+                                        firstName: item.staff.firstName,
+                                        lastName: item.staff.lastName
+                                    })}
                                 </TableCell>
                                 <TableCell className="text-center">
-                                    {formatDateTime({ date: item.endDate })}
+                                    {item.customer &&
+                                        toFullName({
+                                            firstName: item.customer.firstName,
+                                            lastName: item.customer.lastName
+                                        })}
                                 </TableCell>
-                                <TableCell className="text-center">{item.station.name}</TableCell>
+                                <TableCell className="text-center">{item.contractId}</TableCell>
                                 <TableCell className="text-center">
-                                    {RentalContractStatusLabels[item.status]}
+                                    {VehicleChecklistTypeLabels[item.type]}
                                 </TableCell>
                             </TableRow>
                         ))}
