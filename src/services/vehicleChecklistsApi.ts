@@ -1,7 +1,4 @@
-import {
-    CreateVehicleChecklistReq,
-    GetAllVehicleChecklistParams
-} from "@/models/checklist/schema/request"
+import { CreateVehicleChecklistReq } from "@/models/checklist/schema/request"
 import {
     VehicleChecklistItemViewRes,
     VehicleChecklistViewRes
@@ -12,20 +9,20 @@ import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 export const vehicleChecklistsApi = {
     create: (req: CreateVehicleChecklistReq) =>
         requestWrapper<{ id: string }>(async () => {
-            const res = await axiosInstance.post(`/vehicle-checklists`, req)
+            const res = await axiosInstance.post("/vehicle-checklists", req)
             return res.data
         }),
 
-    update: (req: VehicleChecklistViewRes) =>
+    update: ({ id, req }: { id: string; req: UpdateVehicleChecklistReq }) =>
         requestWrapper<VehicleChecklistViewRes>(async () => {
-            const res = await axiosInstance.put(`/vehicle-checklists`, req)
+            const res = await axiosInstance.put(`/vehicle-checklists/${id}`, req)
             return res.data
         }),
 
     getAll: (query: GetAllVehicleChecklistParams) =>
         requestWrapper<VehicleChecklistViewRes[]>(async () => {
             const params = buildQueryParams(query)
-            const res = await axiosInstance.get("vehicle-checklists", { params })
+            const res = await axiosInstance.get("/vehicle-checklists", { params })
             return res.data
         }),
 
@@ -38,7 +35,7 @@ export const vehicleChecklistsApi = {
     uploadImage: ({ itemId, formData }: { itemId: string; formData: FormData }) =>
         requestWrapper<{ result: VehicleChecklistItemViewRes }>(async () => {
             const res = await axiosInstance.post(
-                `/vehicle-checklists/item/${itemId}/image    `,
+                `/vehicle-checklists/items/${itemId}/image`,
                 formData,
                 {
                     headers: { "Content-Type": "multipart/form-data" }
@@ -49,7 +46,7 @@ export const vehicleChecklistsApi = {
 
     deleteImage: (itemId: string) => {
         requestWrapper<{ result: VehicleChecklistItemViewRes }>(async () => {
-            const res = await axiosInstance.delete(`/vehicle-checklists/item/${itemId}/image`)
+            const res = await axiosInstance.delete(`/vehicle-checklists/items/${itemId}/image`)
             return res.data
         })
     }

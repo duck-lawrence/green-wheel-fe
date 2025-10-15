@@ -43,7 +43,7 @@ axiosInstance.interceptors.response.use(
         ) {
             originalRequest.sent = true
             try {
-                const res = await refreshInstance.post("/users/refresh-token")
+                const res = await refreshInstance.post("/auth/refresh-token")
                 useTokenStore.getState().setAccessToken(res.data.accessToken)
 
                 originalRequest.headers = originalRequest.headers || {}

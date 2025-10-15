@@ -23,16 +23,21 @@ export const rentalContractApi = {
             return res.data
         }),
 
+    getMyContract: ({ status }: { status?: RentalContractStatus }) =>
+        requestWrapper<RentalContractViewRes[]>(async () => {
+            const res = await axiosInstance.get("/rental-contracts/me", { params: { status } })
+            return res.data
+        }),
+
     getById: (id: string) =>
         requestWrapper<RentalContractViewRes>(async () => {
             const res = await axiosInstance.get(`/rental-contracts/${id}`)
             return res.data
         }),
 
-    getMyContract: ({ status }: { status?: RentalContractStatus }) =>
-        requestWrapper<RentalContractViewRes[]>(async () => {
-            const res = await axiosInstance.get("/rental-contracts/me", { params: { status } })
-            return res.data
+    updateContractStatus: ({ id }: { id: string }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/rental-contracts/${id}`)
         }),
 
     acceptContract: ({ id }: { id: string }) =>
