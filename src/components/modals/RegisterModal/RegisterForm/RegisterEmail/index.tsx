@@ -4,12 +4,12 @@ import * as Yup from "yup"
 import React, { useCallback } from "react"
 import { ButtonStyled, InputStyled } from "@/components"
 import { useTranslation } from "react-i18next"
-import { Link } from "@heroui/react"
 import {
     useLoginDiscloresureSingleton,
     useRegister,
     useRegisterDiscloresureSingleton
 } from "@/hooks"
+import { Link } from "@heroui/react"
 
 interface RegisterEmailProps {
     email: string

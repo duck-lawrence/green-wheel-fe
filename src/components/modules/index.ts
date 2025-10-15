@@ -1,7 +1,6 @@
 // export * from "./CardListVehicleRental"
 export * from "./CriclesChart"
 export * from "./EnumPicker"
-export * from "./InvoiceAccordion"
 export * from "./KpiStat"
 export * from "./RowSteps"
 export * from "./ScrollToTopButton"

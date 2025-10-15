@@ -24,10 +24,10 @@ export enum InvoiceStatus {
 }
 
 export enum InvoiceType {
-    Handover = 0,
-    Return = 1,
-    Refund = 2,
-    Reservation = 3,
+    Reservation = 0,
+    Handover = 1,
+    Return = 2,
+    Refund = 3,
     Other = 4
 }
 

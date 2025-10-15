@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from "react"
+import React, { useEffect, useRef } from "react"
 import { motion } from "framer-motion"
 import {
     InvoiceAccordion,
@@ -30,8 +30,8 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
     // const { id } = useParams()
     // const contractId = id?.toString()
     const searchParams = useSearchParams()
-    const pathname = usePathname()
-    const returnPath = pathname.startsWith("/dashboard")
+    const pathName = usePathname()
+    const returnPath = pathName.startsWith("/dashboard")
         ? "/dashboard/rental-contracts"
         : "/rental-contracts"
 
@@ -60,19 +60,25 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
         invoice: invoice
     }))
 
+    const hasRunUpdateRef = useRef(false)
     useEffect(() => {
-        const fn = async () => {
-            const resultCodeRaw = searchParams.get("resultCode")
-            const resultCode = parseNumber(resultCodeRaw)
+        const resultCodeRaw = searchParams.get("resultCode")
+        if (!resultCodeRaw || hasRunUpdateRef.current) return
 
+        hasRunUpdateRef.current = true
+
+        const resultCode = parseNumber(resultCodeRaw)
+
+        const fn = async () => {
             if (resultCode === 0) {
                 await updateContractStatus.mutateAsync({ id: contractId })
-            } else if (!!resultCode && resultCode !== 0) {
+            } else {
                 toast.error(t("failed.payment"))
             }
         }
+
         fn()
-    }, [contractId, parseNumber, searchParams, t, updateContractStatus])
+    }, [contractId, parseNumber, pathName, searchParams, t, updateContractStatus])
 
     if (isLoading || !dataContract)
         return (
