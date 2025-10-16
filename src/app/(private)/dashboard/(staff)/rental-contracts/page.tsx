@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { ButtonStyled, EnumPicker, InputStyled, TableContractStaff } from "@/components"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
-import { useSearchRentalContracts } from "@/hooks"
+import { useGetAllRentalContracts } from "@/hooks"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { RentalContractStatus } from "@/constants/enum"
@@ -16,7 +16,7 @@ export default function StaffContractsPage() {
 
     const [filters, setFilter] = useState<ContractQueryParams>({})
     const [contracts, setContracts] = useState<RentalContractViewRes[]>([])
-    const { data, isFetching, refetch } = useSearchRentalContracts({
+    const { data, isFetching, refetch } = useGetAllRentalContracts({
         params: filters,
         enabled: true
     })

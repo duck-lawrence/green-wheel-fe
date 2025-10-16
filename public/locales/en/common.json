@@ -271,6 +271,7 @@
         "component": "Component"
     },
     "staion": {
+        "station": "Station",
         "not_found": "Station not found"
     },
     "vehicle_filter": {
@@ -547,7 +548,9 @@
         "user_already_have_contract": "You can only have one pending or active contract at a time",
         "not_found": "Rental contract not found",
         "already_process": "This rental contract already processes",
-        "can_not_cancel": "This rental contract can not be cancelled"
+        "can_not_cancel": "This rental contract can not be cancelled",
+        "handover": "Handover",
+        "handover_success": "This car is rented now"
     },
     "invoice": {
         "not_found": "Invoice not found",
@@ -582,8 +585,13 @@
         "contract_id": "Contract ID",
         "create_handover": "Create handover checklist",
         "view_handover": "View handover checklist",
+        "item_image": "Vehicle checklist item image"
+    },
+    "signature": {
+        "signature": "Signature",
         "signed_by_staff": "Staff signature",
         "signed_by_customer": "Customer signature",
-        "item_image": "Vehicle checklist item image"
+        "signed_by_staff_require": "Staff must sign",
+        "signed_by_customer_require": "Customer must sign"
     }
 }

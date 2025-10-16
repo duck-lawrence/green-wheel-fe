@@ -108,7 +108,7 @@ export const useConfirmContract = ({ onSuccess }: { onSuccess?: () => void }) =>
     return { acceptContract, rejectContract }
 }
 
-export const useSearchRentalContracts = ({
+export const useGetAllRentalContracts = ({
     params,
     enabled = true
 }: {
@@ -189,13 +189,14 @@ export const useCreateContractManual = ({ onSuccess }: { onSuccess?: () => void 
     })
 }
 
-export const useHandoverContract = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useHandoverContract = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
     const { t } = useTranslation()
 
     return useMutation({
         mutationFn: rentalContractApi.handover,
         onSuccess: () => {
             onSuccess?.()
+            toast.success(t("rental_contract.handover_success"))
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))
