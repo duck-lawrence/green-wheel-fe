@@ -27,6 +27,7 @@
         "upload": "Upload",
         "update": "Update",
         "edit": "Edit",
+        "edit_user": "Edit User",
         "save_changes": "Save Changes",
         "cancel": "Cancel",
         "too_many_request": "Too many request. Try again later",

@@ -9,6 +9,7 @@ import type { Selection } from "@heroui/react"
 
 import {
     ButtonStyled,
+    EditUserModal,
     FilterTypeStyle,
     FilterTypeOption,
     ImageStyled,
@@ -18,6 +19,7 @@ import {
     ModalContentStyled,
     ModalFooterStyled,
     ModalHeaderStyled,
+    PaginationStyled,
     TableUserManagement,
     useModalDisclosure
 } from "@/components"
@@ -34,6 +36,8 @@ type UserFilterFormValues = {
 export default function StaffUserManagementPage() {
     const { t } = useTranslation()
     const [users, setUsers] = useState<UserProfileViewRes[]>([])
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 10
     const [clientFilters, setClientFilters] = useState<{
         name: string
         phone: string
@@ -45,6 +49,12 @@ export default function StaffUserManagementPage() {
     })
     const [preview, setPreview] = useState<{ url: string; label: string } | null>(null)
     const { isOpen, onOpen, onOpenChange, onClose } = useModalDisclosure()
+    const [editingUser, setEditingUser] = useState<UserProfileViewRes | null>(null)
+    const {
+        isOpen: isEditOpen,
+        onOpen: onEditOpen,
+        onClose: onEditClose
+    } = useModalDisclosure()
 
     const { data, isFetching } = useGetAllUsers({
         params: {},
@@ -70,13 +80,9 @@ export default function StaffUserManagementPage() {
         return Yup.object({
             name: Yup.string().trim(),
             phone: Yup.string().trim(),
-            hasDocument: Yup.mixed<UserFilterFormValues["hasDocument"]>().oneOf([
-                "both",
-                "license",
-                "citizen",
-                "none",
-                undefined
-            ])
+            hasDocument: Yup.mixed<UserFilterFormValues["hasDocument"]>()
+            .oneOf(["both", "license", "citizen", "none"] as const)
+            .optional()
         })
     }, [])
 
@@ -86,6 +92,7 @@ export default function StaffUserManagementPage() {
             phone: values.phone.trim(),
             hasDocument: values.hasDocument
         })
+        setPage(1)
     }, [])
 
     const formik = useFormik<UserFilterFormValues>({
@@ -153,6 +160,18 @@ export default function StaffUserManagementPage() {
         })
     }, [clientFilters.name, clientFilters.phone, clientFilters.hasDocument, users])
 
+    const totalItems = filteredUsers.length
+    const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE))
+
+    useEffect(() => {
+        setPage((prev) => Math.min(prev, totalPages))
+    }, [totalPages])
+
+    const paginatedUsers = useMemo(() => {
+        const startIndex = (page - 1) * PAGE_SIZE
+        return filteredUsers.slice(startIndex, startIndex + PAGE_SIZE)
+    }, [filteredUsers, page, PAGE_SIZE])
+
     const handleOpenPreview = useCallback(
         (label: string, url: string) => {
             setPreview({ label, url })
@@ -165,6 +184,19 @@ export default function StaffUserManagementPage() {
         setPreview(null)
         onClose()
     }, [onClose])
+
+    const handleOpenEditUser = useCallback(
+        (user: UserProfileViewRes) => {
+            setEditingUser(user)
+            onEditOpen()
+        },
+        [onEditOpen]
+    )
+
+    const handleCloseEditUser = useCallback(() => {
+        setEditingUser(null)
+        onEditClose()
+    }, [onEditClose])
 
     return (
         <div className="rounded-2xl bg-white shadow-sm px-6 py-6">
@@ -249,9 +281,21 @@ export default function StaffUserManagementPage() {
             </div>
 
             <TableUserManagement
-                users={filteredUsers}
+                users={paginatedUsers}
                 onPreviewDocument={({ label, url }) => handleOpenPreview(label, url)}
+                onEditUser={handleOpenEditUser}
             />
+
+            {totalItems > PAGE_SIZE ? ( //PAGE_SIZE = 10
+                <div className="mt-6 flex justify-center">
+                    <PaginationStyled
+                        pageNumber={page}
+                        totalItems={totalItems}
+                        pageSize={PAGE_SIZE}
+                        onPageChange={setPage}
+                    />
+                </div>
+            ) : null}
 
             <ModalStyled isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-3xl">
                 <ModalContentStyled>
@@ -275,6 +319,12 @@ export default function StaffUserManagementPage() {
                     </ModalFooterStyled>
                 </ModalContentStyled>
             </ModalStyled>
+
+            <EditUserModal
+                user={editingUser}
+                isOpen={isEditOpen}
+                onClose={handleCloseEditUser}
+            />
         </div>
     )
 }
