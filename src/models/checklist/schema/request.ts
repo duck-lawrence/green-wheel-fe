@@ -14,7 +14,6 @@ export type CreateVehicleChecklistReq = {
 export type UpdateVehicleChecklistReq = {
     isSignedByStaff: boolean
     isSignedByCustomer: boolean
-    vehicleChecklistId: string
     checklistItems: UpdateChecklistItemReq[]
     returnInvoiceId?: string
 }

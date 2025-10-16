@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next"
 import { ButtonStyled } from "../../styled/ButtonStyled"
 import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
-import { useConfirmContract, useDay } from "@/hooks"
+import { useConfirmContract, useDay, useName } from "@/hooks"
 import { RentalContractStatusLabels, VehicleStatusLabels } from "@/constants/labels"
 import { DropdownStyled } from "../../styled/DropdownStyled"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
@@ -29,6 +29,7 @@ export function TableContractStaff({
     onStatusChange?: () => void
 }) {
     const { t } = useTranslation()
+    const { toFullName } = useName()
     const router = useRouter()
     const { acceptContract, rejectContract } = useConfirmContract({ onSuccess: onStatusChange })
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
@@ -99,7 +100,10 @@ export function TableContractStaff({
                                     {index + 1}
                                 </TableCell>
                                 <TableCell className="text-center text-gray-700 font-medium">
-                                    {`${item.customer.firstName} ${item.customer.lastName}`}
+                                    {toFullName({
+                                        firstName: item.customer.firstName,
+                                        lastName: item.customer.lastName
+                                    })}
                                 </TableCell>
                                 <TableCell className="text-center text-gray-600">
                                     {item.startDate && formatDateTime({ date: item.startDate })}

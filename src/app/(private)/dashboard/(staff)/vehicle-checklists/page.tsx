@@ -111,17 +111,19 @@ export default function VehicleChecklistPage() {
             ) : (
                 <TableStyled className="w-full ">
                     <TableHeader>
-                        <TableColumn className="text-sm text-center">{t("table.id")}</TableColumn>
-                        <TableColumn className="text-sm text-center">
+                        <TableColumn className="text-sm text-center w-44">
+                            {t("table.id")}
+                        </TableColumn>
+                        <TableColumn className="text-sm text-center w-30">
                             {t("table.vehicle")}
                         </TableColumn>
-                        <TableColumn className="text-sm text-center">
+                        <TableColumn className="text-sm text-center w-34">
                             {t("table.staff")}
                         </TableColumn>
-                        <TableColumn className="text-sm text-center">
+                        <TableColumn className="text-sm text-center w-34">
                             {t("table.customer")}
                         </TableColumn>
-                        <TableColumn className="text-sm text-center">
+                        <TableColumn className="text-sm text-center w-44">
                             {t("table.contract_id")}
                         </TableColumn>
                         <TableColumn className="text-sm text-center">{t("table.type")}</TableColumn>

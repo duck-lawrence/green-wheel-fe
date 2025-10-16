@@ -1,5 +1,8 @@
 import { QUERY_KEYS } from "@/constants/queryKey"
-import { GetAllVehicleChecklistParams } from "@/models/checklist/schema/request"
+import {
+    GetAllVehicleChecklistParams,
+    UpdateVehicleChecklistReq
+} from "@/models/checklist/schema/request"
 import { VehicleChecklistViewRes } from "@/models/checklist/schema/response"
 import { BackendError } from "@/models/common/response"
 import { vehicleChecklistsApi } from "@/services/vehicleChecklistsApi"
@@ -30,7 +33,7 @@ export const useGetAllVehicleChecklists = ({
     })
 }
 
-export const useGetByIdVehicleChecklist = ({
+export const useGetVehicleChecklistById = ({
     id,
     enabled = true
 }: {
@@ -58,13 +61,75 @@ export const useCreateVehicleChecklist = ({ onSuccess }: { onSuccess?: () => voi
     return useMutation({
         mutationFn: vehicleChecklistsApi.create,
         onSuccess: ({ id }) => {
-            toast.success(t("contral_form.wait_for_confirm"), {
-                duration: 5000
-            })
+            toast.success(t("success.create"))
             router.push(`/dashboard/vehicle-checklists/${id}`)
             onSuccess?.()
         },
         onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useUpdateVehicleChecklist = ({ onSuccess }: { onSuccess?: () => void }) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async ({ id, req }: { id: string; req: UpdateVehicleChecklistReq }) => {
+            await vehicleChecklistsApi.update({ id, req })
+        },
+        onSuccess: (id) => {
+            toast.success(t("success.update"))
+            onSuccess?.()
+            queryClient.invalidateQueries({
+                queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, id]
+            })
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useUploadChecklistItem = ({
+    checklistId,
+    itemId,
+    onSuccess,
+    onError
+}: {
+    checklistId: string
+    itemId: string
+    onSuccess?: () => void
+    onError?: () => void
+}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: async (formData: FormData) => {
+            return await vehicleChecklistsApi.uploadItemImage({ itemId, formData })
+        },
+        onSuccess: (data) => {
+            queryClient.setQueryData<VehicleChecklistViewRes>(
+                [...QUERY_KEYS.VEHICLE_CHECKLISTS, checklistId],
+                (prev) => {
+                    if (!prev) return prev
+
+                    return {
+                        ...prev,
+                        vehicleChecklistItems: prev.vehicleChecklistItems
+                            ? prev.vehicleChecklistItems
+                                  .filter((item) => item.id !== data.id)
+                                  .concat(data)
+                            : [data]
+                    }
+                }
+            )
+            onSuccess?.()
+            toast.success(t("success.upload"))
+        },
+        onError: (error: BackendError) => {
+            onError?.()
             toast.error(translateWithFallback(t, error.detail))
         }
     })
