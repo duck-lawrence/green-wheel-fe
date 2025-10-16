@@ -19,6 +19,7 @@ import {
     ModalContentStyled,
     ModalFooterStyled,
     ModalHeaderStyled,
+    PaginationStyled,
     TableUserManagement,
     useModalDisclosure
 } from "@/components"
@@ -35,6 +36,8 @@ type UserFilterFormValues = {
 export default function StaffUserManagementPage() {
     const { t } = useTranslation()
     const [users, setUsers] = useState<UserProfileViewRes[]>([])
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 10
     const [clientFilters, setClientFilters] = useState<{
         name: string
         phone: string
@@ -89,6 +92,7 @@ export default function StaffUserManagementPage() {
             phone: values.phone.trim(),
             hasDocument: values.hasDocument
         })
+        setPage(1)
     }, [])
 
     const formik = useFormik<UserFilterFormValues>({
@@ -155,6 +159,18 @@ export default function StaffUserManagementPage() {
             return matchesName && matchesPhone && matchesDocument
         })
     }, [clientFilters.name, clientFilters.phone, clientFilters.hasDocument, users])
+
+    const totalItems = filteredUsers.length
+    const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE))
+
+    useEffect(() => {
+        setPage((prev) => Math.min(prev, totalPages))
+    }, [totalPages])
+
+    const paginatedUsers = useMemo(() => {
+        const startIndex = (page - 1) * PAGE_SIZE
+        return filteredUsers.slice(startIndex, startIndex + PAGE_SIZE)
+    }, [filteredUsers, page, PAGE_SIZE])
 
     const handleOpenPreview = useCallback(
         (label: string, url: string) => {
@@ -265,10 +281,21 @@ export default function StaffUserManagementPage() {
             </div>
 
             <TableUserManagement
-                users={filteredUsers}
+                users={paginatedUsers}
                 onPreviewDocument={({ label, url }) => handleOpenPreview(label, url)}
                 onEditUser={handleOpenEditUser}
             />
+
+            {totalItems > PAGE_SIZE ? ( //PAGE_SIZE = 10
+                <div className="mt-6 flex justify-center">
+                    <PaginationStyled
+                        pageNumber={page}
+                        totalItems={totalItems}
+                        pageSize={PAGE_SIZE}
+                        onPageChange={setPage}
+                    />
+                </div>
+            ) : null}
 
             <ModalStyled isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-3xl">
                 <ModalContentStyled>

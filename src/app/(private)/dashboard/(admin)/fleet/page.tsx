@@ -7,7 +7,7 @@ import { ButtonStyled, FilterTypeStyle, PaginationStyled, SearchStyle } from "@/
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 
 const DEFAULT_PAGE_SIZE = 10
-const TOTAL_VEHICLES = 105
+const TOTAL_VEHICLES = 11
 
 const BRAND_POOL = [
     {
@@ -219,6 +219,7 @@ export default function AdminFleetPage() {
                         totalItems={totalVehicles}
                         onPageChange={handlePageChange}
                         showControls
+                        
                     />
                 </div>
             </section>

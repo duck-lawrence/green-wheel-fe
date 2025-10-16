@@ -4,19 +4,28 @@ import React from "react"
 import { useImageUploadModal, useUploadDriverLicense, useUploadDriverLicenseById } from "@/hooks"
 import { ImageUploadButton, ImageUploaderModal } from "@/components/"
 import { useTranslation } from "react-i18next"
+import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
 
 export function DriverLicenseUploader({
     btnClassName = "",
-    customerId
+    customerId,
+    onSuccess
 }: {
     btnClassName?: string
     customerId?: string
+    // callback onSuccess để nhận được nguyên dữ liệu trả về từ API (bao gồm imageUrl).
+    //  Nhờ vậy component cha (ví dụ EditUserModal) có thể cập nhật ngay phần preview mà không cần gọi lại server.
+    //  Nếu không thêm kiểu và không truyền dữ liệu, callback chỉ chạy như “đã xong” nhưng không có thông tin nào để cập nhật giao diện..
+    onSuccess?: (data: DriverLicenseViewRes) => void
 }) {
     const { t } = useTranslation()
     const { imgSrc, setImgSrc, isOpen, onOpenChange, onClose, onFileSelect } = useImageUploadModal()
     const uploadDriverLicenseById = useUploadDriverLicenseById({
         userId: customerId || "",
-        onError: onClose
+        onError: onClose,
+        onSuccess: (data) => {
+            onSuccess?.(data)
+        }
     })
     const uploadDriverLicense = useUploadDriverLicense({ onError: onClose })
 

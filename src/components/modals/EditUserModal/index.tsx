@@ -1,29 +1,34 @@
 "use client"
 
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { useTranslation } from "react-i18next"
+import { useQueryClient } from "@tanstack/react-query"
 
 import {
     ButtonStyled,
-    ButtonToggleVisibility,
     DatePickerStyled,
-    FilterTypeOption,
-    FilterTypeStyle,
+    DriverLicenseUploader,
+    EnumPicker,
+    ImageStyled,
     InputStyled,
     ModalBodyStyled,
     ModalContentStyled,
     ModalFooterStyled,
     ModalHeaderStyled,
-    ModalStyled
+    ModalStyled,
+    CitizenIdentityUploader
 } from "@/components"
 import { Sex } from "@/constants/enum"
 import { SexLabels } from "@/constants/labels"
-import { NAME_REGEX, PASSWORD_REGEX, PHONE_REGEX } from "@/constants/regex"
+import { NAME_REGEX, PHONE_REGEX } from "@/constants/regex"
 import { useDay, useUpdateUser } from "@/hooks"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { UserUpdateReq } from "@/models/user/schema/request"
+import { QUERY_KEYS } from "@/constants/queryKey"
+import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
+import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
 
 type EditUserModalProps = {
     user: UserProfileViewRes | null
@@ -34,18 +39,33 @@ type EditUserModalProps = {
 export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
     const { t } = useTranslation()
     const { formatDateTime, toDate } = useDay({ defaultFormat: "YYYY-MM-DD" })
+    const queryClient = useQueryClient()
     const updateUserMutation = useUpdateUser({
         onSuccess: onClose
     })
-    const [isPasswordVisible, setIsPasswordVisible] = useState(false)
-    const [isConfirmVisible, setIsConfirmVisible] = useState(false)
+    const [citizenUrl, setCitizenUrl] = useState<string | null>(user?.citizenUrl ?? null)
+    const [licenseUrl, setLicenseUrl] = useState<string | null>(user?.licenseUrl ?? null)
 
     useEffect(() => {
-        if (!isOpen) {
-            setIsPasswordVisible(false)
-            setIsConfirmVisible(false)
-        }
-    }, [isOpen])
+        setCitizenUrl(user?.citizenUrl ?? null)
+        setLicenseUrl(user?.licenseUrl ?? null)
+    }, [user])
+
+    const handleCitizenUploadSuccess = useCallback(
+        (data: CitizenIdentityViewRes) => {
+            setCitizenUrl(data.imageUrl ?? null)
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
+        },
+        [queryClient]
+    )
+
+    const handleDriverUploadSuccess = useCallback(
+        (data: DriverLicenseViewRes) => {
+            setLicenseUrl(data.imageUrl ?? null)
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
+        },
+        [queryClient]
+    )
 
     const initialValues = useMemo(
         () => ({
@@ -53,14 +73,10 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
             lastName: user?.lastName ?? "",
             phone: user?.phone ?? "",
             sex: user?.sex ?? Sex.Male,
-            dateOfBirth: user?.dateOfBirth ?? "",
-            password: "",
-            confirmPassword: ""
+            dateOfBirth: user?.dateOfBirth ?? ""
         }),
         [user]
     )
-
-    type UpdateUserPayload = UserUpdateReq & { password?: string }
 
     const formik = useFormik({
         enableReinitialize: true,
@@ -75,30 +91,6 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
             phone: Yup.string()
                 .required(t("user.phone_require"))
                 .matches(PHONE_REGEX, t("user.invalid_phone")),
-            password: Yup.string()
-                .notRequired()
-                .test("password-length", t("user.password_too_short"), (value) => {
-                    if (!value) return true
-                    return value.length >= 8
-                })
-                .test("password-strength", t("user.password_strength"), (value) => {
-                    if (!value) return true
-                    return PASSWORD_REGEX.test(value)
-                }),
-            confirmPassword: Yup.string()
-                .notRequired()
-                .when("password", {
-                    is: (password: string | undefined) => Boolean(password && password.length),
-                    then: (schema) =>
-                        schema
-                            .required(t("user.password_can_not_empty"))
-                            .oneOf([Yup.ref("password")], t("user.confirm_password_is_incorrect")),
-                    otherwise: (schema) =>
-                        schema.oneOf(
-                            [Yup.ref("password")],
-                            t("user.confirm_password_is_incorrect")
-                        )
-                }),
             sex: Yup.number().required(t("user.sex_require")),
             dateOfBirth: Yup.string().required(t("user.date_of_birth_require"))
         }),
@@ -112,11 +104,7 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
                 dateOfBirth: values.dateOfBirth
             }
 
-            const requestData: UpdateUserPayload = values.password
-                ? { ...payload, password: values.password }
-                : payload
-
-            await updateUserMutation.mutateAsync({ userId: user.id, data: requestData })
+            await updateUserMutation.mutateAsync({ userId: user.id, data: payload })
         }
     })
 
@@ -132,8 +120,9 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
         >
             <ModalContentStyled>
                 <ModalHeaderStyled>{t("common.edit_user")}</ModalHeaderStyled>
-                <ModalBodyStyled>
+                <ModalBodyStyled className="max-h-[70vh] overflow-y-auto pr-1">
                     <form onSubmit={formik.handleSubmit} className="flex flex-col gap-6">
+                        {/* // === Name === */}
                         <div className="grid gap-4 md:grid-cols-2">
                             <InputStyled
                                 label={t("user.last_name")}
@@ -156,99 +145,54 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
                             />
                         </div>
 
-                        <div className="flex flex-col gap-4">
-                            <InputStyled
-                                label={t("auth.password")}
-                                variant="bordered"
-                                type={isPasswordVisible ? "text" : "password"}
-                                value={formik.values.password}
-                                onValueChange={(value) => formik.setFieldValue("password", value)}
-                                isInvalid={!!(formik.touched.password && formik.errors.password)}
-                                errorMessage={formik.errors.password}
-                                onBlur={() => formik.setFieldTouched("password")}
-                                endContent={
-                                    <ButtonToggleVisibility
-                                        isVisible={isPasswordVisible}
-                                        toggleVisibility={() =>
-                                            setIsPasswordVisible((prev) => !prev)
-                                        }
-                                    />
-                                }
-                            />
+                         {/* ==== Contact ==== */}
+                        <InputStyled
+                            label={t("user.phone")}
+                            variant="bordered"
+                            maxLength={10}
+                            value={formik.values.phone ?? ""}
+                            onValueChange={(value) => formik.setFieldValue("phone", value)}
+                            isInvalid={!!(formik.touched.phone && formik.errors.phone)}
+                            errorMessage={formik.errors.phone}
+                            onBlur={() => formik.setFieldTouched("phone")}
+                            pattern="[0-9]*"
+                            inputMode="numeric"
+                            onInput={(event) => {
+                                event.currentTarget.value = event.currentTarget.value.replace(
+                                    /[^0-9]/g,
+                                    ""
+                                )
+                            }}
+                        />
 
-                            <InputStyled
-                                label={t("auth.confirm_password")}
-                                variant="bordered"
-                                type={isConfirmVisible ? "text" : "password"}
-                                value={formik.values.confirmPassword}
-                                onValueChange={(value) =>
-                                    formik.setFieldValue("confirmPassword", value)
-                                }
-                                isInvalid={
-                                    !!(formik.touched.confirmPassword &&
-                                    formik.errors.confirmPassword)
-                                }
-                                errorMessage={formik.errors.confirmPassword}
-                                onBlur={() => formik.setFieldTouched("confirmPassword")}
-                                endContent={
-                                    <ButtonToggleVisibility
-                                        isVisible={isConfirmVisible}
-                                        toggleVisibility={() =>
-                                            setIsConfirmVisible((prev) => !prev)
-                                        }
-                                    />
-                                }
-                            />
-
-                            <InputStyled
-                                label={t("user.phone")}
-                                variant="bordered"
-                                maxLength={10}
-                                value={formik.values.phone ?? ""}
-                                onValueChange={(value) => formik.setFieldValue("phone", value)}
-                                isInvalid={!!(formik.touched.phone && formik.errors.phone)}
-                                errorMessage={formik.errors.phone}
-                                onBlur={() => formik.setFieldTouched("phone")}
-                                pattern="[0-9]*"
-                                inputMode="numeric"
-                                onInput={(event) => {
-                                    event.currentTarget.value = event.currentTarget.value.replace(
-                                        /[^0-9]/g,
-                                        ""
-                                    )
-                                }}
-                            />
-                        </div>
-
+                        {/* // === Personal Details === */}
                         <div className="grid gap-4 md:grid-cols-2">
-                            <FilterTypeStyle
-                                label={t("user.sex")}
-                                selectedKeys={
-                                    formik.values.sex === undefined || formik.values.sex === null
-                                        ? new Set([])
-                                        : new Set([String(formik.values.sex)])
-                                }
-                                onSelectionChange={(keys) => {
-                                    if (keys === "all") return
-                                    const [selected] = Array.from(keys)
-                                    if (selected === undefined || selected === null) return
-                                    const nextValue =
-                                        typeof selected === "string"
-                                            ? Number(selected)
-                                            : Number(selected.toString())
-                                    if (!Number.isNaN(nextValue)) {
+                            <div className="flex flex-col gap-1">
+                                <EnumPicker
+                                    label={t("user.sex")}
+                                    labels={SexLabels}
+                                    value={formik.values.sex}
+                                    className="w-full"
+                                    onChange={(val) => {
+                                        if (val === null) {
+                                            formik.setFieldValue("sex", null)
+                                            formik.setFieldTouched("sex", true)
+                                            return
+                                        }
+                                        const nextValue = Number(val)
+                                        if (Number.isNaN(nextValue)) {
+                                            formik.setFieldValue("sex", null)
+                                            formik.setFieldTouched("sex", true)
+                                            return
+                                        }
                                         formik.setFieldValue("sex", nextValue)
                                         formik.setFieldTouched("sex", true)
-                                    }
-                                }}
-                                isInvalid={!!(formik.touched.sex && formik.errors.sex)}
-                                errorMessage={formik.errors.sex}
-                                disallowEmptySelection
-                            >
-                                {Object.entries(SexLabels).map(([key, label]) => (
-                                    <FilterTypeOption key={key}>{label}</FilterTypeOption>
-                                ))}
-                            </FilterTypeStyle>
+                                    }}
+                                />
+                                {formik.touched.sex && formik.errors.sex ? (
+                                    <span className="text-sm text-danger">{formik.errors.sex}</span>
+                                ) : null}
+                            </div>
 
                             <DatePickerStyled
                                 label={t("user.date_of_birth")}
@@ -272,6 +216,74 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
                             />
                         </div>
                     </form>
+
+                    {user?.id ? (
+                        <div className="mt-6 space-y-4">
+                            {/* // === Citizen Identity === */}
+                            <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                                <div className="flex flex-col gap-3">
+                                    <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                                        <div>
+                                            <p className="text-lg font-semibold text-gray-900">
+                                                {t("user.citizen_identity")}
+                                            </p>
+                                            {!citizenUrl ? (
+                                                <p className="text-sm italic text-gray-500">
+                                                    {t("user.please_upload_citizen_identity")}
+                                                </p>
+                                            ) : null}
+                                        </div>
+                                        <CitizenIdentityUploader
+                                            customerId={user.id}
+                                            btnClassName="text-primary font-semibold hover:text-primary/80"
+                                            onSuccess={handleCitizenUploadSuccess}
+                                        />
+                                    </div>
+                                    {citizenUrl ? (
+                                        <ImageStyled
+                                            src={citizenUrl}
+                                            alt={t("user.citizen_identity")}
+                                            width={360}
+                                            height={220}
+                                            className="max-h-60 w-full rounded-lg border border-dashed border-gray-200 object-cover"
+                                        />
+                                    ) : null}
+                                </div>
+                            </div>
+
+                            {/* // === Driver License === */}
+                            <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                                <div className="flex flex-col gap-3">
+                                    <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                                        <div>
+                                            <p className="text-lg font-semibold text-gray-900">
+                                                {t("user.driver_license")}
+                                            </p>
+                                            {!licenseUrl ? (
+                                                <p className="text-sm italic text-gray-500">
+                                                    {t("user.please_upload_driver_license")}
+                                                </p>
+                                            ) : null}
+                                        </div>
+                                        <DriverLicenseUploader
+                                            customerId={user.id}
+                                            btnClassName="text-primary font-semibold hover:text-primary/80"
+                                            onSuccess={handleDriverUploadSuccess}
+                                        />
+                                    </div>
+                                    {licenseUrl ? (
+                                        <ImageStyled
+                                            src={licenseUrl}
+                                            alt={t("user.driver_license")}
+                                            width={360}
+                                            height={220}
+                                            className="max-h-60 w-full rounded-lg border border-dashed border-gray-200 object-cover"
+                                        />
+                                    ) : null}
+                                </div>
+                            </div>
+                        </div>
+                    ) : null}
                 </ModalBodyStyled>
                 <ModalFooterStyled>
                     <ButtonStyled
