@@ -17,26 +17,27 @@ export function DashboardSidebar({ className }: { className?: string }) {
             label: t("staff.sidebar_vehicle_checklists"),
             href: "/dashboard/vehicle-checklists"
         },
-        {
-            key: "/dashboard/rental-contracts",
-            label: t("staff.sidebar_contracts"),
-            href: "/dashboard/rental-contracts"
-        },
-        {
-            key: "/dashboard/reports",
-            label: t("staff.sidebar_reports"),
-            href: "/dashboard/reports"
-        },
-        {
+         {
             key: "/dashboard/user-management",
             label: t("staff.sidebar_user_management"),
             href: "/dashboard/user-management"
         },
         {
-            key: "/dashboard/test",
-            label: t("staff.sidebar_test"),
-            href: "/dashboard/test"
-        }
+            key: "/dashboard/rental-contracts",
+            label: t("staff.sidebar_contracts"),
+            href: "/dashboard/rental-contracts"
+        },
+       
+        {
+            key: "/dashboard/reports",
+            label: t("staff.sidebar_reports"),
+            href: "/dashboard/reports"
+        },
+        // {
+        //     key: "/dashboard/test",
+        //     label: t("staff.sidebar_test"),
+        //     href: "/dashboard/test"
+        // }
     ]
 
     const adminTabs: SidebarItem[] = [
@@ -45,16 +46,23 @@ export function DashboardSidebar({ className }: { className?: string }) {
             label: t("staff.sidebar_dashboard"),
             href: "/dashboard"
         },
-        {
-            key: "/dashboard/fleet",
-            label: t("admin.sidebar_fleet", "Fleet"),
-            href: "/dashboard/fleet"
+                {
+            key: "/dashboard/vehicle-management",
+            label: t("admin.sidebar_vehicle_management", "Vehicle management"),
+            href: "/dashboard/vehicle-management"
         },
         {
             key: "/dashboard/staff-management",
             label: t("admin.sidebar_staff_management"),
             href: "/dashboard/staff-management"
+        },
+        {
+            key: "/dashboard/fleet",
+            label: t("admin.sidebar_fleet", "Fleet"),
+            href: "/dashboard/fleet"
         }
+
+        
     ]
 
     const tabs = buildTabs({

@@ -5,6 +5,7 @@ import { ForgotPasswordModal } from "./ForgotPasswordModal"
 
 export * from "./ImageUploaderModal"
 export * from "./EditUserModal"
+export * from "./VehicleModals"
 
 export const Modals = () => {
     return (
