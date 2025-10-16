@@ -13,6 +13,7 @@ import { ContractQueryParams } from "@/models/rental-contract/schema/request"
 
 export default function StaffContractsPage() {
     const { t } = useTranslation()
+
     const [filters, setFilter] = useState<ContractQueryParams>({})
     const [contracts, setContracts] = useState<RentalContractViewRes[]>([])
     const { data, isFetching, refetch } = useSearchRentalContracts({

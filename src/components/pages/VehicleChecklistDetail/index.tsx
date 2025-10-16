@@ -1,0 +1,154 @@
+"use client"
+import { ButtonStyled, InputStyled, SpinnerStyled } from "@/components"
+import { CheckboxStyled } from "@/components/"
+import { VehicleChecklistTypeLabels } from "@/constants/labels"
+import { useGetVehicleChecklistById, useName, useUpdateVehicleChecklist } from "@/hooks"
+import { UpdateVehicleChecklistReq } from "@/models/checklist/schema/request"
+import { useFormik } from "formik"
+
+import React, { useCallback } from "react"
+import { useTranslation } from "react-i18next"
+import { TableCheckListItems } from "./TableCheckListItems"
+import { Spinner } from "@heroui/react"
+
+export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; isStaff?: boolean }) {
+    const { t } = useTranslation()
+    const { toFullName } = useName()
+
+    const { data: checklistItem, isLoading } = useGetVehicleChecklistById({
+        id: id as string,
+        enabled: true
+    })
+
+    const updateChecklist = useUpdateVehicleChecklist({})
+    const handleUpdate = useCallback(
+        async (value: UpdateVehicleChecklistReq) => {
+            await updateChecklist.mutateAsync({
+                id: checklistItem!.id,
+                req: {
+                    checklistItems: value.checklistItems,
+                    isSignedByCustomer: value.isSignedByCustomer,
+                    isSignedByStaff: value.isSignedByStaff
+                }
+            })
+        },
+        [checklistItem, updateChecklist]
+    )
+
+    const formik = useFormik({
+        initialValues: {
+            isSignedByStaff: checklistItem?.isSignedByStaff ?? false,
+            isSignedByCustomer: checklistItem?.isSignedByCustomer ?? false,
+            checklistItems: checklistItem?.vehicleChecklistItems || []
+        },
+        enableReinitialize: true,
+        onSubmit: handleUpdate
+    })
+
+    if (isLoading) {
+        return <SpinnerStyled />
+    }
+
+    return (
+        <form
+            onSubmit={formik.handleSubmit}
+            className="rounded-2xl bg-white shadow-md px-8 py-10 border border-gray-100 max-w-6xl mx-auto"
+        >
+            {/* Header */}
+            <div className="flex flex-col md:flex-row items-center justify-between mb-8">
+                <h2 className="text-3xl font-bold text-gray-800">
+                    {t("vehicle_checklist.checklist")} –{" "}
+                    <span className="text-primary">
+                        {VehicleChecklistTypeLabels[checklistItem!.type]}
+                    </span>
+                </h2>
+            </div>
+
+            {/* Information */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5 mb-10">
+                <div className="flex flex-col gap-4">
+                    <InputStyled
+                        label={t("vehicle_checklist.checklist_type")}
+                        value={VehicleChecklistTypeLabels[checklistItem!.type]}
+                        readOnly
+                    />
+                    <InputStyled
+                        label={t("vehicle_checklist.contract_id")}
+                        value={checklistItem?.contractId}
+                        readOnly
+                    />
+                </div>
+
+                <div className="flex flex-col gap-4">
+                    <InputStyled
+                        label={t("vehicle_checklist.staff_name")}
+                        value={toFullName({
+                            firstName: checklistItem?.staff.firstName,
+                            lastName: checklistItem?.staff.lastName
+                        })}
+                        readOnly
+                    />
+                    <InputStyled
+                        label={t("vehicle_checklist.customer_name")}
+                        value={toFullName({
+                            firstName: checklistItem?.customer?.firstName,
+                            lastName: checklistItem?.customer?.lastName
+                        })}
+                        readOnly
+                    />
+                </div>
+
+                <div className="flex flex-col gap-4">
+                    <InputStyled
+                        label={t("vehicle_checklist.vehicle_license_plate")}
+                        value={checklistItem?.vehicle.licensePlate}
+                        readOnly
+                    />
+                    {/* <InputStyled
+                        label={t("vehicle_checklist.status")}
+                        value="Pending Approval"
+                        readOnly
+                    /> */}
+                </div>
+            </div>
+
+            <hr className="border-gray-200 mb-8" />
+
+            {/* Table */}
+            <TableCheckListItems
+                isStaff={isStaff}
+                checklistId={id as string}
+                vehicleCheckListItem={formik.values.checklistItems}
+                setFieldValue={formik.setFieldValue}
+            />
+
+            {/* Signature */}
+            <div className="flex justify-between px-16 pt-10 gap-2 ">
+                <CheckboxStyled
+                    isSelected={formik.values.isSignedByStaff}
+                    onValueChange={(value) => formik.setFieldValue("isSignedByStaff", value)}
+                >
+                    {t("vehicle_checklist.signed_by_staff")}
+                </CheckboxStyled>
+                <CheckboxStyled
+                    isSelected={formik.values.isSignedByCustomer}
+                    onValueChange={(value) => formik.setFieldValue("isSignedByCustomer", value)}
+                >
+                    {t("vehicle_checklist.signed_by_customer")}
+                </CheckboxStyled>
+            </div>
+
+            <div className="flex justify-center">
+                <ButtonStyled
+                    type="submit"
+                    color="primary"
+                    className="mt-10 p-6"
+                    isDisabled={formik.isSubmitting}
+                    onPress={() => formik.handleSubmit()}
+                >
+                    {formik.isSubmitting ? <Spinner color="secondary" /> : t("common.update")}
+                </ButtonStyled>
+            </div>
+        </form>
+    )
+}

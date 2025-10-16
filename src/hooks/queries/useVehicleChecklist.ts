@@ -33,7 +33,7 @@ export const useGetAllVehicleChecklists = ({
     })
 }
 
-export const useGetByIdVehicleChecklist = ({
+export const useGetVehicleChecklistById = ({
     id,
     enabled = true
 }: {
@@ -61,9 +61,7 @@ export const useCreateVehicleChecklist = ({ onSuccess }: { onSuccess?: () => voi
     return useMutation({
         mutationFn: vehicleChecklistsApi.create,
         onSuccess: ({ id }) => {
-            toast.success(t("contral_form.wait_for_confirm"), {
-                duration: 5000
-            })
+            toast.success(t("success.create"))
             router.push(`/dashboard/vehicle-checklists/${id}`)
             onSuccess?.()
         },
@@ -88,6 +86,50 @@ export const useUpdateVehicleChecklist = ({ onSuccess }: { onSuccess?: () => voi
             })
         },
         onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useUploadChecklistItem = ({
+    checklistId,
+    itemId,
+    onSuccess,
+    onError
+}: {
+    checklistId: string
+    itemId: string
+    onSuccess?: () => void
+    onError?: () => void
+}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: async (formData: FormData) => {
+            return await vehicleChecklistsApi.uploadItemImage({ itemId, formData })
+        },
+        onSuccess: (data) => {
+            queryClient.setQueryData<VehicleChecklistViewRes>(
+                [...QUERY_KEYS.VEHICLE_CHECKLISTS, checklistId],
+                (prev) => {
+                    if (!prev) return prev
+
+                    return {
+                        ...prev,
+                        vehicleChecklistItems: prev.vehicleChecklistItems
+                            ? prev.vehicleChecklistItems
+                                  .filter((item) => item.id !== data.id)
+                                  .concat(data)
+                            : [data]
+                    }
+                }
+            )
+            onSuccess?.()
+            toast.success(t("success.upload"))
+        },
+        onError: (error: BackendError) => {
+            onError?.()
             toast.error(translateWithFallback(t, error.detail))
         }
     })
