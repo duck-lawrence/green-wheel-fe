@@ -34,7 +34,8 @@
         "unexpected_error": "An unexpected error occurred. Please try again later.",
         "search": "Search",
         "save": "Save",
-        "delete": "Delete"
+        "delete": "Delete",
+        "create": "Create"
     },
     "json": {
         "parsing_failed": "Failed to parse json"
@@ -207,6 +208,9 @@
         "staff": "Staff",
         "customer": "Customer",
         "contract_id": "Contract ID",
+        "unknown_station": "Unknown station",
+        "unknown_brand": "Unknown brand",
+        "unknown_model": "Unknown model"
         "notes": "Notes"
     },
     "contral_form": {
@@ -218,7 +222,26 @@
     },
     "vehicle": {
         "not_found": "Vehicle not found",
-        "license_plate_is_exist": "This license plate already exists"
+        "license_plate_is_exist": "This license plate already exists",
+        "license_plate": "License plate",
+        "license_plate_placeholder": "Enter license plate",
+        "model_id": "Model ID",
+        "model_id_placeholder": "Enter model ID",
+        "model_name": "Vehicle model",
+        "model_name_placeholder": "Select model",
+        "station_name": "Station",
+        "station_placeholder": "Select station",
+        "status_label": "Status",
+        "status_placeholder": "Select status",
+        "management_empty": "No vehicles match the filters.",
+
+        "status_value_available": "Available",
+        "status_value_unavailable": "Unavailable",
+        "status_value_rented": "Rented",
+        "status_value_maintenance": "Maintenance",
+        "status_value_missingnoreason": "Missing (no reason)",
+        "status_value_latereturn": "Late return",
+        "status_value_unknown": "Unknown"
     },
     "vehicle_segment": {
         "not_found": "Vehicle segment not found"
@@ -473,7 +496,14 @@
         "sidebar_staff_management": "Staff Management",
         "staff_management_title": "Staff Management",
         "staff_management_description": "View and manage staff profiles and access levels across branches.",
-        "staff_management_placeholder": "Connect this area with HR services to onboard, update, or offboard team members."
+        "staff_management_placeholder": "Connect this area with HR services to onboard, update, or offboard team members.",
+        "vehicle_management_title": "Vehicle Management",
+        "vehicle_filter_title": "Vehicle filters",
+        "vehicle_new_button": "New",
+        "vehicle_create_title": "Create new vehicle",
+        "vehicle_edit_title": "Update vehicle",
+        "vehicle_delete_title": "Delete vehicle",
+        "vehicle_delete_confirm": "Are you sure you want to remove this vehicle from the fleet?"
     },
     "footer": {
         "green_wheel_company_name": "GREEN WHEEL Trading and Service Joint Stock Company",

@@ -39,5 +39,6 @@ export * from "./SpinnerStyled"
 
 export * from "./TableStyled"
 export * from "./TableUserManagement"
+export * from "./TableVehicleManagement"
 export * from "./TextareaStyled"
 export * from "./TrendCardStyled"
