@@ -9,7 +9,8 @@ import {
     SpinnerStyled,
     TextareaStyled,
     DateTimeStyled,
-    ButtonStyled
+    ButtonStyled,
+    HandOverChecklistModal
 } from "@/components"
 import {
     Car,
@@ -22,20 +23,26 @@ import { InvoiceTypeLabels, RentalContractStatusLabels } from "@/constants/label
 import {
     useCreateVehicleChecklist,
     useDay,
-    useGetByIdRentalContract,
-    useGetMe,
+    useGetAllVehicleChecklists,
+    useGetRentalContractById,
     useNumber,
     useUpdateContractStatus
 } from "@/hooks"
-import { DATE_TIME_VIEW_FORMAT, ROLE_STAFF } from "@/constants/constants"
+import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { useTranslation } from "react-i18next"
 import Link from "next/link"
-import { usePathname, useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import toast from "react-hot-toast"
 import { VehicleChecklistType } from "@/constants/enum"
-import { Spinner } from "@heroui/react"
+import { Spinner, useDisclosure } from "@heroui/react"
 
-export function RentalContractDetail({ contractId }: { contractId: string }) {
+export function RentalContractDetail({
+    contractId,
+    isStaff = false
+}: {
+    contractId: string
+    isStaff?: boolean
+}) {
     // const { id } = useParams()
     // const contractId = id?.toString()
     const searchParams = useSearchParams()
@@ -43,23 +50,29 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
     const returnPath = pathName.startsWith("/dashboard")
         ? "/dashboard/rental-contracts"
         : "/rental-contracts"
+    const router = useRouter()
 
     const { t } = useTranslation()
     const { toCalenderDateTime } = useDay()
     const { parseNumber } = useNumber()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
+    const {
+        isOpen: isHandoverChecklistOpen,
+        onOpen: onHandoverChecklistOpen,
+        onOpenChange: onHandoverChecklistOpenChange,
+        onClose: onHandoverChecklistClose
+    } = useDisclosure()
 
-    const { data: user } = useGetMe({ enabled: true })
-
-    const isStaff = useMemo(() => {
-        return user?.role?.name === ROLE_STAFF
-    }, [user])
-
-    const { data: dataContract, isLoading } = useGetByIdRentalContract({
+    const { data: dataContract, isLoading } = useGetRentalContractById({
         id: contractId,
         enabled: true
     })
     const updateContractStatus = useUpdateContractStatus()
+    const { data: checklists } = useGetAllVehicleChecklists({
+        query: {
+            contractId
+        }
+    })
 
     const createAt = dataContract?.createdAt
 
@@ -105,6 +118,21 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
         })
     }, [createVehicleChecklist, dataContract])
 
+    const hanoverChecklist = useMemo(() => {
+        return checklists?.find((item) => item.type === VehicleChecklistType.Handover)
+    }, [checklists])
+
+    console.log(hanoverChecklist)
+
+    const handleOpenHanoverChecklist = useCallback(() => {
+        if (!hanoverChecklist) return
+        if (isStaff) {
+            router.push(`/dashboard/vehicle-checklists/${hanoverChecklist.id}`)
+        } else {
+            onHandoverChecklistOpen()
+        }
+    }, [hanoverChecklist, isStaff, onHandoverChecklistOpen, router])
+
     //=======================================//
     if (isLoading || !dataContract)
         return (
@@ -141,8 +169,9 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="sm:col-span-2">
                             <p>
-                                {t("rental_contract.create_at")}:
-                                {createAt && formatDateTime({ date: createAt })}{" "}
+                                {t("rental_contract.create_at")}
+                                {": "}
+                                {createAt && formatDateTime({ date: createAt })}
                             </p>
                         </div>
 
@@ -235,7 +264,7 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
                 </SectionStyled>
 
                 {/*Staff Info */}
-                <SectionStyled title={t("rental_contract.staff_and_invoice")}>
+                <SectionStyled title={t("rental_contract.staff")}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <InputStyled
                             isReadOnly
@@ -266,13 +295,39 @@ export function RentalContractDetail({ contractId }: { contractId: string }) {
                     </div>
                 </SectionStyled>
 
-                {isStaff && (
-                    <SectionStyled title="Create vehicle checklist">
-                        <ButtonStyled onPress={handleCreateVehicleChecklist}>
-                            {createVehicleChecklist.isPending ? <Spinner /> : <div>create</div>}
-                        </ButtonStyled>
-                    </SectionStyled>
-                )}
+                {/* Vehicle checklists */}
+                <SectionStyled title={t("vehicle_checklist.vehicle_checklist")}>
+                    <div className="flex gap-4">
+                        {!hanoverChecklist ? (
+                            isStaff && (
+                                <ButtonStyled onPress={handleCreateVehicleChecklist}>
+                                    {createVehicleChecklist.isPending ? (
+                                        <Spinner />
+                                    ) : (
+                                        <div>{t("vehicle_checklist.create_handover")}</div>
+                                    )}
+                                </ButtonStyled>
+                            )
+                        ) : (
+                            <>
+                                <ButtonStyled onPress={handleOpenHanoverChecklist}>
+                                    {createVehicleChecklist.isPending ? (
+                                        <Spinner />
+                                    ) : (
+                                        <div>{t("vehicle_checklist.view_handover")}</div>
+                                    )}
+                                </ButtonStyled>
+                                <HandOverChecklistModal
+                                    id={hanoverChecklist.id}
+                                    isOpen={isHandoverChecklistOpen}
+                                    onOpenChange={onHandoverChecklistOpenChange}
+                                    onClose={onHandoverChecklistClose}
+                                />
+                            </>
+                        )}
+                    </div>
+                </SectionStyled>
+
                 {/* Invoice Accordion  isLoading={isFetching}*/}
                 <SectionStyled title={t("rental_contract.payment_invoice_list")}>
                     <InvoiceAccordion

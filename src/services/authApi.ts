@@ -24,7 +24,7 @@ export const authApi = {
     // =======================
     register: ({ email }: { email: string }) =>
         requestWrapper<void>(async () => {
-            await axiosInstance.post("/auth/register/send-otp", { email })
+            await axiosInstance.post("/auth/register", { email })
         }),
     registerVerify: ({ otp, email }: { otp: string; email: string }) =>
         requestWrapper<void>(async () => {
@@ -45,7 +45,7 @@ export const authApi = {
         }),
     forgotPassword: ({ email }: { email: string }) =>
         requestWrapper<void>(async () => {
-            await axiosInstance.post("/auth/forgot-password/send-otp", { email })
+            await axiosInstance.post("/auth/forgot-password", { email })
         }),
     forgotPasswordVerify: ({ otp, email }: { otp: string; email: string }) =>
         requestWrapper<void>(async () => {

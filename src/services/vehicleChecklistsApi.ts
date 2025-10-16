@@ -36,8 +36,8 @@ export const vehicleChecklistsApi = {
             return res.data
         }),
 
-    uploadImage: ({ itemId, formData }: { itemId: string; formData: FormData }) =>
-        requestWrapper<{ result: VehicleChecklistItemViewRes }>(async () => {
+    uploadItemImage: ({ itemId, formData }: { itemId: string; formData: FormData }) =>
+        requestWrapper<VehicleChecklistItemViewRes>(async () => {
             const res = await axiosInstance.post(
                 `/vehicle-checklists/items/${itemId}/image`,
                 formData,
@@ -48,8 +48,8 @@ export const vehicleChecklistsApi = {
             return res.data
         }),
 
-    deleteImage: (itemId: string) => {
-        requestWrapper<{ result: VehicleChecklistItemViewRes }>(async () => {
+    deleteItemImage: (itemId: string) => {
+        requestWrapper<VehicleChecklistItemViewRes>(async () => {
             const res = await axiosInstance.delete(`/vehicle-checklists/items/${itemId}/image`)
             return res.data
         })

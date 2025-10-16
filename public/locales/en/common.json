@@ -191,6 +191,7 @@
         "pickup_return_time": "Pickup and return time",
         "station": "Station",
         "status": "Status",
+        "no": "No.",
         "id": "Id",
         "name": "Name",
         "email": "Email",
@@ -205,7 +206,8 @@
         "type": "Type",
         "staff": "Staff",
         "customer": "Customer",
-        "contract_id": "Contract ID"
+        "contract_id": "Contract ID",
+        "notes": "Notes"
     },
     "contral_form": {
         "payment_method_require": "Please select a payment method",
@@ -265,7 +267,8 @@
         "main_image_not_found": "Main image not found"
     },
     "vehicle_component": {
-        "not_found": "Vehicke component not found"
+        "not_found": "Vehicke component not found",
+        "component": "Component"
     },
     "staion": {
         "not_found": "Station not found"
@@ -347,9 +350,9 @@
         "refund_payment": "Refund payment",
         "other_payment": "Other payment",
         "reservation_payment": "Reservation payment",
-        "customerSupport": "Customer support",
-        "staffReport": "Staff report",
-        "escalatedToAdmin": "Escalated to admin",
+        "customer_support": "Customer support",
+        "staff_report": "Staff report",
+        "escalated_to_admin": "Escalated to admin",
         "out_of_contract": "Out Of Contract",
         "return": "Return",
         "handover": "Handover"
@@ -396,7 +399,7 @@
     },
     "staff": {
         "sidebar_dashboard": "Dash Board",
-        "sidebar_vehicle_checklists": "Vehicle checklists",
+        "sidebar_vehicle_checklists": "Checklists",
         "sidebar_contracts": "Contracts",
         "sidebar_test": "Test",
         "sidebar_verify_customer": "Customer Verification",
@@ -516,7 +519,7 @@
         "actual_start_date": "Actual start date",
         "end_date": "End date",
         "actual_end_date": "Actual end date",
-        "staff_and_invoice": "Processing staff & Invoice",
+        "staff": "Processing staff",
         "vehicle_handover_staff": "Vehicle handover staff",
         "vehicle_return_staff": "Vehicle return staff",
         "payment_invoice_list": "Payment invoice list",
@@ -569,12 +572,18 @@
     },
     "vehicle_checklist": {
         "not_found": "Vehicle checklist not found",
-        "checklist": "Vehicle Checklist",
+        "vehicle_checklist": "Vehicle checklist",
+        "checklist": "Checklist",
         "checklist_type": "Checklist type",
         "staff_name": "Staff name",
         "customer_name": "Customer name",
         "vehicle_license_plate": "Vehicle license plate",
         "status": "Status",
-        "contract_id": "Contract ID"
+        "contract_id": "Contract ID",
+        "create_handover": "Create handover checklist",
+        "view_handover": "View handover checklist",
+        "signed_by_staff": "Staff signature",
+        "signed_by_customer": "Customer signature",
+        "item_image": "Vehicle checklist item image"
     }
 }

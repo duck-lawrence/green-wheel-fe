@@ -60,7 +60,7 @@ export const buildTabs = ({
     return uniqueTabs
 }
 
-export function Sidebar({ tabs, selectedKey, className = "w-50" }: SidebarProps) {
+export function Sidebar({ tabs, selectedKey, className = "" }: SidebarProps) {
     const pathname = usePathname()
     const router = useRouter()
     const activeMenuKey = useSideBarItemStore((s) => s.activeMenuKey)
@@ -115,7 +115,7 @@ export function Sidebar({ tabs, selectedKey, className = "w-50" }: SidebarProps)
             <div className="flex w-full flex-col pr-4 md:w-auto md:flex-shrink-0">
                 <div
                     className={cn(
-                        "relative flex w-full flex-col gap-2 rounded-2xl bg-white p-3 shadow-lg shadow-slate-200/70 md:min-w-[16rem]",
+                        "relative flex w-full flex-col gap-2 rounded-2xl bg-white p-3 shadow-lg shadow-slate-200/70 md:min-w-3xs",
                         className
                     )}
                 >

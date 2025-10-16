@@ -109,14 +109,14 @@ export const PaymentMethodLabels: Record<PaymentMethod, string> = {
 // }
 
 export const TicketTypeLabels: Record<TicketType, string> = {
-    [TicketType.CustomerSupport]: i18n.t("enum.customerSupport"),
-    [TicketType.StaffReport]: i18n.t("enum.staffReport")
+    [TicketType.CustomerSupport]: i18n.t("enum.customer_support"),
+    [TicketType.StaffReport]: i18n.t("enum.staff_report")
 }
 
 export const TicketStatusLabels: Record<TicketStatus, string> = {
     [TicketStatus.Pending]: i18n.t("enum.pending"),
     [TicketStatus.Resolve]: i18n.t("enum.resolve"),
-    [TicketStatus.EscalatedToAdmin]: i18n.t("enum.escalatedToAdmin")
+    [TicketStatus.EscalatedToAdmin]: i18n.t("enum.escalated_to_admin")
 }
 
 export const LicenseClassLabels: Record<LicenseClass, string> = {
