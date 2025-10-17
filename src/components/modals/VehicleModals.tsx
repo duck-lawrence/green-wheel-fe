@@ -1,6 +1,4 @@
 "use client"
-
-// This component group encapsulates the Create and Edit vehicle modals reused by the admin page.
 import React from "react"
 import { useTranslation } from "react-i18next"
 import { FormikProps } from "formik"

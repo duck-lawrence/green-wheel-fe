@@ -1,20 +1,20 @@
 "use client"
-
-// This file renders the admin vehicle management table with actions and readable status badges.
 import React, { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { PencilSimpleLine, XCircle } from "@phosphor-icons/react"
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner } from "@heroui/react"
 
 import { VehicleStatus } from "@/constants/enum"
-import { VehicleViewRes } from "@/models/vehicle/schema/response"
+import { VehicleModelViewRes, VehicleViewRes } from "@/models/vehicle/schema/response"
 
-type VehicleWithStatus = VehicleViewRes & { status?: VehicleStatus }
+type VehicleWithStatus = VehicleViewRes & { status?: VehicleStatus; modelId?: string }
 
 type TableVehicleManagementProps = {
     vehicles: VehicleWithStatus[]
     stationNameById: Record<string, string>
+    vehicleModelsById: Record<string, VehicleModelViewRes>
     isLoading?: boolean
+    isModelsLoading?: boolean
     onEdit?: (vehicle: VehicleWithStatus) => void
     onDelete?: (vehicle: VehicleWithStatus) => void
 }
@@ -32,13 +32,20 @@ export function TableVehicleManagement({
     vehicles,
     stationNameById,
     isLoading,
+    vehicleModelsById,
+    isModelsLoading,
     onEdit,
     onDelete
 }: TableVehicleManagementProps) {
     const { t } = useTranslation()
 
+    const isTableLoading = Boolean(isLoading || isModelsLoading)
+
     const rows = useMemo(() => {
         return vehicles.map((vehicle) => {
+            const rawModel = vehicle.model
+            const modelId = (rawModel?.id ?? vehicle.modelId) ?? undefined
+            const resolvedModel = modelId ? vehicleModelsById[modelId] ?? rawModel : rawModel
             const status = vehicle.status
             const statusKey =
                 typeof status === "number" && status in VehicleStatus
@@ -58,10 +65,12 @@ export function TableVehicleManagement({
 
             const stationName = stationNameById[vehicle.stationId] ?? t("table.unknown_station")
             const brandName =
-                (vehicle.model && "brandName" in vehicle.model && typeof (vehicle.model as any).brandName === "string"
-                    ? (vehicle.model as any).brandName
-                    : vehicle.model?.brand?.name) ?? t("table.unknown_brand")
-            const modelName = vehicle.model?.name ?? t("table.unknown_model")
+                (resolvedModel &&
+                "brandName" in resolvedModel &&
+                typeof (resolvedModel as any).brandName === "string"
+                    ? (resolvedModel as any).brandName
+                    : resolvedModel?.brand?.name) ?? t("table.unknown_brand")
+            const modelName = resolvedModel?.name ?? t("table.unknown_model")
 
             return (
                 <TableRow key={vehicle.id} className="border-b border-slate-100 last:border-0">
@@ -107,7 +116,7 @@ export function TableVehicleManagement({
                 </TableRow>
             )
         })
-    }, [onDelete, onEdit, stationNameById, t, vehicles])
+    }, [onDelete, onEdit, stationNameById, t, vehicles, vehicleModelsById])
 
     return (
         <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
@@ -131,7 +140,7 @@ export function TableVehicleManagement({
                 </TableHeader>
                 <TableBody
                     emptyContent={
-                        isLoading ? (
+                        isTableLoading ? (
                             <div className="flex items-center justify-center py-10">
                                 <Spinner size="sm" />
                             </div>
