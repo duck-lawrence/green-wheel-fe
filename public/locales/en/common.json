@@ -210,7 +210,7 @@
         "contract_id": "Contract ID",
         "unknown_station": "Unknown station",
         "unknown_brand": "Unknown brand",
-        "unknown_model": "Unknown model"
+        "unknown_model": "Unknown model",
         "notes": "Notes"
     },
     "contral_form": {
@@ -233,7 +233,7 @@
         "station_placeholder": "Select station",
         "status_label": "Status",
         "status_placeholder": "Select status",
-        "management_empty": "No vehicles match the filters.",
+        "management_empty": "No found vehicles.",
 
         "status_value_available": "Available",
         "status_value_unavailable": "Unavailable",

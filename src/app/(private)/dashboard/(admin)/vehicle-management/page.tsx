@@ -20,18 +20,19 @@ import {
     useModalDisclosure
 } from "@/components"
 import { VehicleStatus } from "@/constants/enum"
-import { VehicleViewRes } from "@/models/vehicle/schema/response"
+import { VehicleModelViewRes, VehicleViewRes } from "@/models/vehicle/schema/response"
 import {
     useCreateVehicle,
     useDeleteVehicle,
     useGetAllStations,
+    useGetAllVehicleModels,
     useGetAllVehicles,
     useUpdateVehicle
 } from "@/hooks"
 import { VehicleCreateModal, VehicleEditModal } from "@/components/modals/VehicleModals"
 import { VehicleListParams } from "@/services/vehicleApi"
 import { CreateVehicleReq, UpdateVehicleReq } from "@/models/vehicle/schema/request"
-type VehicleWithStatus = VehicleViewRes & { status?: VehicleStatus }
+type VehicleWithStatus = VehicleViewRes & { status?: VehicleStatus; modelId?: string }
 type VehicleFilterFormValues = {
     licensePlate: string
     stationId: string | null
@@ -101,6 +102,24 @@ export default function AdminVehicleManagementPage() {
             }),
         [t]
     )
+    const vehicleModelQuery = useMemo(
+        () => ({
+            stationId: "",
+            startDate: "",
+            endDate: ""
+        }),
+        []
+    )
+    const { data: vehicleModels = [], isFetching: isFetchingVehicleModels } = useGetAllVehicleModels({
+        query: vehicleModelQuery,
+        enabled: true
+    })
+    const vehicleModelsById = useMemo(() => {
+        return vehicleModels.reduce<Record<string, VehicleModelViewRes>>((acc, model) => {
+            acc[model.id] = model
+            return acc
+        }, {})
+    }, [vehicleModels])
     //     () =>
     //             id: model.id,
     //             label: [model.brand?.name, model.name].filter(Boolean).join(" ") || model.name
@@ -111,7 +130,10 @@ export default function AdminVehicleManagementPage() {
         enabled: true
     })
     const vehicles = useMemo<VehicleWithStatus[]>(() => {
-        return vehiclesData as VehicleWithStatus[]
+        return (vehiclesData as VehicleWithStatus[]).map((vehicle) => ({
+            ...vehicle,
+            modelId: vehicle.modelId ?? vehicle.model?.id
+        }))
     }, [vehiclesData])
     const filteredVehicles = useMemo(() => {
         return vehicles.filter((vehicle) => {
@@ -420,7 +442,9 @@ export default function AdminVehicleManagementPage() {
             <TableVehicleManagement
                 vehicles={paginatedVehicles}
                 stationNameById={stationNameById}
+                vehicleModelsById={vehicleModelsById}
                 isLoading={isFetchingVehicles}
+                isModelsLoading={isFetchingVehicleModels}
                 onEdit={handleOpenEditVehicle}
                 onDelete={handleOpenDeleteVehicle}
             />
