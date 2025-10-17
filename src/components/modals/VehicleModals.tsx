@@ -26,6 +26,8 @@ type VehicleCreateModalProps = {
     onOpenChange: (isOpen: boolean) => void
     onClose: () => void
     stationOptions: SelectOption[]
+    vehicleModelOptions: SelectOption[]
+    isModelLoading?: boolean
     formik: FormikProps<CreateVehicleReq>
     isSubmitting?: boolean
 }
@@ -35,6 +37,8 @@ export function VehicleCreateModal({
     onOpenChange,
     onClose,
     stationOptions,
+    vehicleModelOptions,
+    isModelLoading,
     formik,
     isSubmitting
 }: VehicleCreateModalProps) {
@@ -55,15 +59,6 @@ export function VehicleCreateModal({
                             errorMessage={formik.errors.licensePlate}
                             isRequired
                         />
-                        <InputStyled
-                            label={t("vehicle.model_id")}
-                            placeholder={t("vehicle.model_id_placeholder")}
-                            value={formik.values.modelId}
-                            onChange={(event) => formik.setFieldValue("modelId", event.target.value)}
-                            isInvalid={Boolean(formik.touched.modelId && formik.errors.modelId)}
-                            errorMessage={formik.errors.modelId}
-                        />
-                        {/*
                         <FilterTypeStyle
                             label={t("vehicle.model_name")}
                             placeholder={t("vehicle.model_name_placeholder")}
@@ -71,13 +66,15 @@ export function VehicleCreateModal({
                                 formik.values.modelId ? new Set([formik.values.modelId]) : new Set([])
                             }
                             disallowEmptySelection={false}
-                            isClearable
+                            isRequired
+                            isClearable={false}
+                            isDisabled={isModelLoading}
                             onSelectionChange={(keys) => {
                                 if (keys === "all") {
-                                    formik.setFieldValue("modelId", "")
                                     return
                                 }
                                 const [value] = Array.from(keys)
+                                formik.setFieldTouched("modelId", true, false)
                                 formik.setFieldValue("modelId", value != null ? value.toString() : "")
                             }}
                             isInvalid={Boolean(formik.touched.modelId && formik.errors.modelId)}
@@ -87,7 +84,6 @@ export function VehicleCreateModal({
                                 <FilterTypeOption key={option.id}>{option.label}</FilterTypeOption>
                             ))}
                         </FilterTypeStyle>
-                        */}
                         <FilterTypeStyle
                             label={t("vehicle.station_name")}
                             placeholder={t("vehicle.station_placeholder")}
@@ -96,6 +92,7 @@ export function VehicleCreateModal({
                             }
                             disallowEmptySelection={false}
                             isClearable={false}
+                            isRequired
                             onSelectionChange={(keys) => {
                                 const [value] = Array.from(keys)
                                 formik.setFieldValue("stationId", value != null ? value.toString() : "")
@@ -138,6 +135,8 @@ type VehicleEditModalProps = {
     onClose: () => void
     stationOptions: SelectOption[]
     statusOptions: { key: string; label: string }[]
+    vehicleModelOptions: SelectOption[]
+    isModelLoading?: boolean
     formik: FormikProps<{
         licensePlate: string
         stationId: string
@@ -153,6 +152,8 @@ export function VehicleEditModal({
     onClose,
     stationOptions,
     statusOptions,
+    vehicleModelOptions,
+    isModelLoading,
     formik,
     isSubmitting
 }: VehicleEditModalProps) {
@@ -172,18 +173,38 @@ export function VehicleEditModal({
                             errorMessage={formik.errors.licensePlate}
                             isRequired
                         />
-                        <InputStyled
-                            label={t("vehicle.model_id")}
-                            value={formik.values.modelId}
-                            onChange={(event) => formik.setFieldValue("modelId", event.target.value)}
+                        <FilterTypeStyle
+                            label={t("vehicle.model_name")}
+                            placeholder={t("vehicle.model_name_placeholder")}
+                            selectedKeys={
+                                formik.values.modelId ? new Set([formik.values.modelId]) : new Set([])
+                            }
+                            disallowEmptySelection={false}
+                            isRequired
+                            isClearable={false}
+                            isDisabled={isModelLoading}
+                            onSelectionChange={(keys) => {
+                                if (keys === "all") {
+                                    return
+                                }
+                                const [value] = Array.from(keys)
+                                formik.setFieldTouched("modelId", true, false)
+                                formik.setFieldValue("modelId", value != null ? value.toString() : "")
+                            }}
+                            isInvalid={Boolean(formik.touched.modelId && formik.errors.modelId)}
                             errorMessage={formik.errors.modelId}
-                        />
+                        >
+                            {vehicleModelOptions.map((option) => (
+                                <FilterTypeOption key={option.id}>{option.label}</FilterTypeOption>
+                            ))}
+                        </FilterTypeStyle>
                         <FilterTypeStyle
                             label={t("vehicle.station_name")}
                             selectedKeys={
                                 formik.values.stationId ? new Set([formik.values.stationId]) : new Set([])
                             }
                             disallowEmptySelection={false}
+                            isRequired
                             onSelectionChange={(keys) => {
                                 const [value] = Array.from(keys)
                                 formik.setFieldValue("stationId", value != null ? value.toString() : "")

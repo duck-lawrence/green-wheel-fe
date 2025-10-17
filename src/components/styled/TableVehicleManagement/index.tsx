@@ -134,7 +134,7 @@ export function TableVehicleManagement({
                     <TableColumn className="py-3 px-4 text-center text-xs font-semibold uppercase tracking-wide text-slate-600">
                         {t("vehicle.status_label")}
                     </TableColumn>
-                    <TableColumn className="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    <TableColumn className="py-3 px-6 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
                         {t("table.action")}
                     </TableColumn>
                 </TableHeader>
