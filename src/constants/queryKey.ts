@@ -6,7 +6,8 @@ export const QUERY_KEYS = {
     VEHICLE_SEGMENTS: ["vehicleSegments"] as const,
     VEHICLE_MODELS: ["vehicleModels"] as const,
     RENTAL_CONTRACTS: ["rentalContracts"] as const,
-    USERS: ["users"] as const
+    USERS: ["users"] as const,
+    DISPATCH_REQUESTS: ["dispatchRequests"] as const
     // VEHICLE: {
     //     ALL: ["vehicles"] as const,
     //     BY_ID: (id: string) => ["vehicles", id] as const

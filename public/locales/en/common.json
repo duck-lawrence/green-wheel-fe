@@ -485,5 +485,9 @@
     },
     "about_us": {
         "": ""
+    },
+    "dispatch": {
+        "create_success": "Create dispatch successfully",
+        "update_success": "Update dispatch successfully"
     }
 }
