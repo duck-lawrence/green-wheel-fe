@@ -1,11 +1,9 @@
 import TableSelectionStyled from "@/components/styled/TableSelectionStyled"
-import { DispatchViewRes } from "@/models/dispatch/schema/response"
+import { VehicleViewRes } from "@/models/vehicle/schema/response"
 import React from "react"
 
-export default function TableSelectionVehicle() {
-    const dispatch: DispatchViewRes = []
-
-    const rows = dispatch.vehicles.map((item) => ({
+export default function TableSelectionVehicle({ vehicles }: { vehicles: VehicleViewRes[] }) {
+    const rows = vehicles.map((item) => ({
         key: item.id,
         id: item.id,
         modal: item.model.name,

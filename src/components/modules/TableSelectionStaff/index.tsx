@@ -1,11 +1,9 @@
 import TableSelectionStyled from "@/components/styled/TableSelectionStyled"
-import { DispatchViewRes } from "@/models/dispatch/schema/response"
+import { UserProfileViewRes } from "@/models/user/schema/response"
 import React from "react"
 
-export default function TableSelectionStaff() {
-    const dispatch: DispatchViewRes = []
-
-    const rows = dispatch.staffs.map((item) => ({
+export default function TableSelectionStaff({ staffs }: { staffs: UserProfileViewRes[] }) {
+    const rows = staffs.map((item) => ({
         key: item.id,
         id: item.id,
         name: `${item.firstName} ${item.lastName}`
