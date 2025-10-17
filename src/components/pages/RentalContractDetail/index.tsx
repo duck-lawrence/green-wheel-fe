@@ -206,11 +206,19 @@ export function RentalContractDetail({
                 <SectionStyled title={t("rental_contract.rental_contract_information")}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="sm:col-span-2">
-                            <p>
+                            <div>
+                                {t("table.customer")}
+                                {": "}
+                                {toFullName({
+                                    firstName: contract.customer.firstName,
+                                    lastName: contract.customer.lastName
+                                })}
+                            </div>
+                            <div>
                                 {t("rental_contract.create_at")}
                                 {": "}
                                 {createAt && formatDateTime({ date: createAt })}
-                            </p>
+                            </div>
                         </div>
 
                         <InputStyled
@@ -227,7 +235,7 @@ export function RentalContractDetail({
                             <InputStyled
                                 isReadOnly
                                 label={t("rental_contract.contract_status")}
-                                className="w-60"
+                                className="w-68"
                                 value={RentalContractStatusLabels[contract.status]}
                                 startContent={
                                     <ClipboardText
@@ -240,7 +248,7 @@ export function RentalContractDetail({
                             />
                             <InputStyled
                                 isReadOnly
-                                label={t("staion.station")}
+                                label={t("station.station")}
                                 value={`${contract.station.name} - ${contract.station.address}`}
                                 startContent={
                                     <ClipboardText
@@ -323,7 +331,10 @@ export function RentalContractDetail({
                         <InputStyled
                             isReadOnly
                             label={t("rental_contract.vehicle_handover_staff")}
-                            value={contract.handoverStaffId || ""}
+                            value={toFullName({
+                                firstName: contract.handoverStaff?.firstName,
+                                lastName: contract.handoverStaff?.lastName
+                            })}
                             startContent={
                                 <ArrowsLeftRight
                                     size={22}
@@ -336,7 +347,10 @@ export function RentalContractDetail({
                         <InputStyled
                             isReadOnly
                             label={t("rental_contract.vehicle_return_staff")}
-                            value={contract.returnStaffId || ""}
+                            value={toFullName({
+                                firstName: contract.returnStaff?.firstName,
+                                lastName: contract.returnStaff?.lastName
+                            })}
                             startContent={
                                 <ArrowsLeftRight
                                     size={22}
@@ -384,6 +398,9 @@ export function RentalContractDetail({
 
                 {/* Invoice Accordion  isLoading={isFetching}*/}
                 <SectionStyled title={t("rental_contract.payment_invoice_list")}>
+                    <div className="mt-[-1rem] mb-3 px-4 italic text-default-500 text-sm">
+                        {t("rental_contract.fees_include_tax")}
+                    </div>
                     <InvoiceAccordion items={invoiceAccordion} contractStatus={contract.status} />
                 </SectionStyled>
 
@@ -391,20 +408,34 @@ export function RentalContractDetail({
                 <SignatureSection
                     // className="pt-10"
                     isReadOnly={!isStaff || !!contract.actualStartDate}
-                    isStaffSelected={handoverFormik.values.isSignedByStaff}
-                    onStaffValueChange={(value) =>
-                        handoverFormik.setFieldValue("isSignedByStaff", value)
-                    }
-                    isCustomerSelected={handoverFormik.values.isSignedByCustomer}
-                    onCustomerValueChange={(value) =>
-                        handoverFormik.setFieldValue("isSignedByCustomer", value)
-                    }
+                    staffSign={{
+                        isInvalid: !!(
+                            handoverFormik.touched.isSignedByStaff &&
+                            handoverFormik.errors.isSignedByStaff
+                        ),
+                        isSelected: handoverFormik.values.isSignedByStaff,
+                        onValueChange: (value) =>
+                            handoverFormik.setFieldValue("isSignedByStaff", value)
+                    }}
+                    customerSign={{
+                        isInvalid: !!(
+                            handoverFormik.touched.isSignedByCustomer &&
+                            handoverFormik.errors.isSignedByCustomer
+                        ),
+                        isSelected: handoverFormik.values.isSignedByCustomer,
+                        onValueChange: (value) =>
+                            handoverFormik.setFieldValue("isSignedByCustomer", value)
+                    }}
                 />
                 <div className="text-center mb-10">
                     {isStaff && !contract.actualStartDate && (
                         <ButtonStyled
                             // variant="bordered"
-                            isDisabled={!handoverFormik.isValid || handoverFormik.isSubmitting}
+                            isDisabled={
+                                !handoverFormik.isValid ||
+                                handoverFormik.isSubmitting ||
+                                !hanoverChecklist
+                            }
                             onPress={() => handoverFormik.handleSubmit()}
                         >
                             {handoverFormik.isSubmitting ? (

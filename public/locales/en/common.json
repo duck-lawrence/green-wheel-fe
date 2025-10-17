@@ -270,7 +270,7 @@
         "not_found": "Vehicke component not found",
         "component": "Component"
     },
-    "staion": {
+    "station": {
         "station": "Station",
         "not_found": "Station not found"
     },
@@ -550,7 +550,8 @@
         "already_process": "This rental contract already processes",
         "can_not_cancel": "This rental contract can not be cancelled",
         "handover": "Handover",
-        "handover_success": "This car is rented now"
+        "handover_success": "This car is rented now",
+        "fees_include_tax": "Fees marked with * include tax"
     },
     "invoice": {
         "not_found": "Invoice not found",

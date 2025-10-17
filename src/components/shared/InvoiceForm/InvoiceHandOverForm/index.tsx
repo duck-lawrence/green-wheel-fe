@@ -22,6 +22,7 @@ export default function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceView
                 value={formatCurrency(invoice.subtotal)}
                 startContent={<Receipt size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
+                isIncludeTax={true}
             />
             <InputStyled
                 label={t("rental_contract.vat_tax")}

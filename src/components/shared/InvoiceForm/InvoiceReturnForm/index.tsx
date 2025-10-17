@@ -30,6 +30,7 @@ export default function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes
                 value={clean}
                 startContent={<Broom size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
+                isIncludeTax={true}
             />
             <InputStyled
                 label={t("rental_contract.late_return_fee")}
@@ -42,6 +43,7 @@ export default function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes
                 value={formatCurrency(totalDamage)}
                 startContent={<Wrench size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
+                isIncludeTax={true}
             />
             <div className="mt-1 flex justify-center">
                 <ButtonStyled
@@ -49,9 +51,9 @@ export default function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes
                     size="lg"
                     color="primary"
                     className="px-8 py-3 font-semibold text-white rounded-xl 
-              bg-gradient-to-r from-primary to-teal-400 
-              hover:from-teal-500 hover:to-green-400 
-              shadow-md transition-all duration-300"
+                        bg-gradient-to-r from-primary to-teal-400 
+                        hover:from-teal-500 hover:to-green-400 
+                        shadow-md transition-all duration-300"
                 >
                     {t("rental_contract.view_damage_details")}
                 </ButtonStyled>

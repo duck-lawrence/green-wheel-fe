@@ -22,8 +22,8 @@ export type RentalContractViewRes = {
     vehicle: VehicleViewRes
     customer: UserProfileViewRes
     station: StationViewRes
-    handoverStaffId?: string
-    returnStaffId?: string
+    handoverStaff?: UserProfileViewRes
+    returnStaff?: UserProfileViewRes
     invoices: InvoiceViewRes[]
 }
 

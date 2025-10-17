@@ -29,6 +29,7 @@ export default function InvoiceOtherForm({ invoice }: { invoice: InvoiceViewRes 
                 startContent={<Money size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
                 className="sm:col-span-2"
+                isIncludeTax={true}
             />
             <TextareaStyled
                 label={t("rental_contract.note")}

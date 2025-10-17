@@ -1,7 +1,7 @@
 import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { BackendError } from "@/models/common/response"
-import { ContractQueryParams } from "@/models/rental-contract/schema/request"
+import { ContractQueryParams, HandoverContractReq } from "@/models/rental-contract/schema/request"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { rentalContractApi } from "@/services/rentalContractApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
@@ -191,9 +191,13 @@ export const useCreateContractManual = ({ onSuccess }: { onSuccess?: () => void 
 
 export const useHandoverContract = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: rentalContractApi.handover,
+        mutationFn: async ({ id, req }: { id: string; req: HandoverContractReq }) => {
+            await rentalContractApi.handover({ id, req })
+            queryClient.refetchQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
+        },
         onSuccess: () => {
             onSuccess?.()
             toast.success(t("rental_contract.handover_success"))

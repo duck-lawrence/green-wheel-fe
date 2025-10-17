@@ -4,10 +4,12 @@ import { VehicleChecklistTypeLabels } from "@/constants/labels"
 import { useGetVehicleChecklistById, useName, useUpdateVehicleChecklist } from "@/hooks"
 import { UpdateVehicleChecklistReq } from "@/models/checklist/schema/request"
 import { useFormik } from "formik"
+import * as Yup from "yup"
 import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { TableCheckListItems } from "./TableCheckListItems"
 import { Spinner } from "@heroui/react"
+import { VehicleChecklistType } from "@/constants/enum"
 
 export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; isStaff?: boolean }) {
     const { t } = useTranslation()
@@ -40,6 +42,13 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
             checklistItems: checklist?.vehicleChecklistItems || []
         },
         enableReinitialize: true,
+        validationSchema: Yup.object().shape({
+            isSignedByStaff: Yup.boolean().oneOf([true], t("signature.signed_by_staff_require")),
+            isSignedByCustomer:
+                checklist?.type == VehicleChecklistType.OutOfContract
+                    ? Yup.boolean().notRequired()
+                    : Yup.boolean().oneOf([true], t("signature.signed_by_customer_require"))
+        }),
         onSubmit: handleUpdate
     })
 
@@ -140,11 +149,22 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
             {/* Signature */}
             <SignatureSection
                 // className="pt-10"
+                sectionClassName="mt-8"
                 isReadOnly={!isStaff}
-                isStaffSelected={formik.values.isSignedByStaff}
-                onStaffValueChange={(value) => formik.setFieldValue("isSignedByStaff", value)}
-                isCustomerSelected={formik.values.isSignedByCustomer}
-                onCustomerValueChange={(value) => formik.setFieldValue("isSignedByCustomer", value)}
+                staffSign={{
+                    checked: formik.values.isSignedByStaff,
+                    isInvalid: !!(formik.touched.isSignedByStaff && formik.errors.isSignedByStaff),
+                    isSelected: formik.values.isSignedByStaff,
+                    onValueChange: (value) => formik.setFieldValue("isSignedByStaff", value)
+                }}
+                customerSign={{
+                    checked: formik.values.isSignedByCustomer,
+                    isInvalid: !!(
+                        formik.touched.isSignedByCustomer && formik.errors.isSignedByCustomer
+                    ),
+                    isSelected: formik.values.isSignedByCustomer,
+                    onValueChange: (value) => formik.setFieldValue("isSignedByCustomer", value)
+                }}
             />
 
             {isStaff && (
@@ -153,7 +173,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                         type="submit"
                         color="primary"
                         className="mt-10 p-6"
-                        isDisabled={formik.isSubmitting}
+                        isDisabled={formik.isSubmitting || !formik.isValid}
                         onPress={() => formik.handleSubmit()}
                     >
                         {formik.isSubmitting ? <Spinner color="secondary" /> : t("common.update")}

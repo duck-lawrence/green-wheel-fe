@@ -20,6 +20,7 @@ import { RentalContractStatusLabels, VehicleStatusLabels } from "@/constants/lab
 import { DropdownStyled } from "../../styled/DropdownStyled"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { useRouter } from "next/navigation"
+import { TableStyled } from "@/components/styled"
 
 export function TableContractStaff({
     contracts,
@@ -57,11 +58,7 @@ export function TableContractStaff({
 
     return (
         <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
-            <Table
-                aria-label="Staff Contract Table"
-                className="min-w-full text-sm md:text-base"
-                removeWrapper
-            >
+            <TableStyled className="min-w-full text-sm md:text-base" removeWrapper>
                 <TableHeader>
                     <TableColumn className="text-center text-gray-700 font-semibold">
                         {t("table.id")}
@@ -129,7 +126,8 @@ export function TableContractStaff({
                                             {/* Accept */}
                                             <ButtonStyled
                                                 color="primary"
-                                                className="bg-white text-black border-1 border-primary hover:text-white hover:bg-primary font-semibold px-5 py-2 rounded-lg w-28"
+                                                variant="bordered"
+                                                className="h-7 w-20 border-1 border-primary hover:text-white hover:bg-primary font-semibold px-5 py-2 rounded-lg"
                                                 onPress={() => handleAccept(item.id)}
                                                 isLoading={
                                                     acceptContract.isPending &&
@@ -147,7 +145,7 @@ export function TableContractStaff({
                                             >
                                                 <DropdownTrigger>
                                                     <ButtonStyled
-                                                        className="bg-white border-1 border-danger text-danger hover:bg-red-600 hover:text-white font-semibold w-28 rounded-lg"
+                                                        className="h-7 w-20 bg-white border-1 border-danger text-danger hover:bg-red-600 hover:text-white font-semibold rounded-lg"
                                                         isLoading={
                                                             rejectContract.isPending &&
                                                             rejectContract.variables?.id === item.id
@@ -184,7 +182,7 @@ export function TableContractStaff({
                         )
                     })}
                 </TableBody>
-            </Table>
+            </TableStyled>
         </div>
     )
 }
