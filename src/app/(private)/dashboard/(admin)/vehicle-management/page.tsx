@@ -120,6 +120,18 @@ export default function AdminVehicleManagementPage() {
             return acc
         }, {})
     }, [vehicleModels])
+    const vehicleModelOptions = useMemo(
+        () =>
+            vehicleModels.map((model) => {
+                const brandName = model.brand?.name ?? ""
+                const label = [brandName, model.name].filter(Boolean).join(" ").trim() || model.name
+                return {
+                    id: model.id,
+                    label
+                }
+            }),
+        [vehicleModels]
+    )
     //     () =>
     //             id: model.id,
     //             label: [model.brand?.name, model.name].filter(Boolean).join(" ") || model.name
@@ -238,8 +250,7 @@ export default function AdminVehicleManagementPage() {
         return Yup.object({
             licensePlate: Yup.string().trim().required(requiredMsg),
             stationId: Yup.string().trim().required(requiredMsg),
-            // modelId: Yup.string().trim().required(requiredMsg)
-            modelId: Yup.string().trim()
+            modelId: Yup.string().trim().required(requiredMsg)
         })
     }, [t])
     const createFormik = useFormik<CreateVehicleReq>({
@@ -268,7 +279,7 @@ export default function AdminVehicleManagementPage() {
         return Yup.object({
             licensePlate: Yup.string().trim().required(requiredMsg),
             stationId: Yup.string().trim().required(requiredMsg),
-            modelId: Yup.string().trim(),
+            modelId: Yup.string().trim().required(requiredMsg),
             status: Yup.string()
                 .nullable()
                 .oneOf(VEHICLE_STATUS_VALUES.map((status) => status.toString()).concat([null as any]))
@@ -279,7 +290,7 @@ export default function AdminVehicleManagementPage() {
         initialValues: {
             licensePlate: vehicleToEdit?.licensePlate ?? "",
             stationId: vehicleToEdit?.stationId ?? "",
-            modelId: vehicleToEdit?.model?.id ?? "",
+            modelId: vehicleToEdit?.model?.id ?? vehicleToEdit?.modelId ?? "",
             status:
                 vehicleToEdit?.status != null ? vehicleToEdit.status.toString() : null
         },
@@ -464,6 +475,8 @@ export default function AdminVehicleManagementPage() {
                 onOpenChange={onCreateOpenChange}
                 onClose={handleCloseCreate}
                 stationOptions={stationSelectOptions}
+                vehicleModelOptions={vehicleModelOptions}
+                isModelLoading={isFetchingVehicleModels}
                 formik={createFormik}
                 isSubmitting={createVehicleMutation.isPending}
             />
@@ -473,6 +486,8 @@ export default function AdminVehicleManagementPage() {
                 onClose={handleCloseEdit}
                 stationOptions={stationSelectOptions}
                 statusOptions={statusOptions}
+                vehicleModelOptions={vehicleModelOptions}
+                isModelLoading={isFetchingVehicleModels}
                 formik={editFormik}
                 isSubmitting={updateVehicleMutation.isPending}
             />
