@@ -18,19 +18,46 @@ const mergeClassNames = (overrides?: SlotOverrides): SlotOverrides => {
     if (!overrides) return DEFAULT_CLASSNAMES
     const merged: Partial<SlotOverrides> = {}
     for (const key of Object.keys(DEFAULT_CLASSNAMES) as Array<keyof SlotOverrides>) {
-        merged[key] = overrides[key] ? cn(DEFAULT_CLASSNAMES[key], overrides[key]) : DEFAULT_CLASSNAMES[key]
+        merged[key] = overrides[key]
+            ? cn(DEFAULT_CLASSNAMES[key], overrides[key])
+            : DEFAULT_CLASSNAMES[key]
     }
     return merged as SlotOverrides
 }
 
-export function InputStyled({ className, classNames, ...props }: InputProps) {
-    const mergedClassNames = mergeClassNames(classNames)
+// export function InputStyled({ className, classNames, ...props }: InputProps) {
+//     const mergedClassNames = mergeClassNames(classNames)
+//     return (
+//         <Input
+//             variant="bordered"
+//             {...props}
+//             className={cn(className)}
+//             classNames={mergedClassNames}
+//         />
+//     )
+// }
+
+interface InputStyledPropes extends InputProps {
+    isIncludeTax?: boolean
+}
+
+export function InputStyled(props: InputStyledPropes) {
+    // const mergedClassNames = mergeClassNames(props.classNames)
     return (
         <Input
             variant="bordered"
+            endContent={
+                props.isIncludeTax ? (
+                    <div className="pointer-events-none flex items-center">
+                        <span className="text-default-400 text-3xl">*</span>
+                    </div>
+                ) : (
+                    <></>
+                )
+            }
             {...props}
-            className={cn(className)}
-            classNames={mergedClassNames}
+            className={cn(props.className)}
+            // classNames={mergedClassNames}
         />
     )
 }

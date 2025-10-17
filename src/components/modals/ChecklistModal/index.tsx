@@ -10,15 +10,15 @@ interface HandOverChecklistModalProps {
     onClose: () => void
 }
 
-export function HandOverChecklistModal({
-    id,
-    isOpen,
-    onOpenChange,
-    onClose
-}: HandOverChecklistModalProps) {
+export function ChecklistModal({ id, isOpen, onOpenChange, onClose }: HandOverChecklistModalProps) {
     return (
-        <ModalStyled isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose}>
-            <ModalContent className="max-w-150 w-full p-14">
+        <ModalStyled
+            isOpen={isOpen}
+            onOpenChange={onOpenChange}
+            onClose={onClose}
+            isDismissable={true}
+        >
+            <ModalContent className="min-w-fit p-14">
                 {/* <ModalHeader className="flex flex-col gap-1">{t("login.login")}</ModalHeader> */}
                 <ModalBody>
                     <VehicleChecklistDetail id={id} />

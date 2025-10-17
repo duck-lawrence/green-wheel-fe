@@ -5,18 +5,20 @@ import React from "react"
 export function SectionStyled({
     title,
     children,
-    className = ""
+    sectionClassName = "",
+    childrenClassName = ""
 }: {
     title: string
     children: React.ReactNode
-    className?: string
+    sectionClassName?: string
+    childrenClassName?: string
 }) {
     return (
-        <div className={cn("mb-10", className)}>
+        <div className={cn("mb-10", sectionClassName)}>
             <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
                 <FileText size={20} className="text-primary" /> {title}
             </h3>
-            <div>{children}</div>
+            <div className={cn(childrenClassName)}>{children}</div>
         </div>
     )
 }

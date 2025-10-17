@@ -11,7 +11,7 @@ export type CreateRentalContractReq = {
 export type HandoverContractReq = {
     isSignedByStaff: boolean
     isSignedByCustomer: boolean
-    amount?: number
+    // amount?: number
 }
 
 export type ContractQueryParams = {

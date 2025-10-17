@@ -21,6 +21,21 @@ button {
     }
 }
 
+@layer components {
+    .btn-gradient {
+        @apply !text-white rounded-xl font-semibold
+        bg-gradient-to-r 
+        from-primary to-teal-400 
+        shadow-md transition-all duration-300;
+    }
+    .btn-gradient:hover {
+        @apply from-teal-500 to-green-400;
+    }
+    .btn-gradient:active {
+        transform: scale(0.98);
+    }
+}
+
 /* --- UTILITIES --- */
 @utility asfaltBackground {
     background-image: url("/textures/asfalt-dark.png");

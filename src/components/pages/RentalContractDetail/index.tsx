@@ -10,8 +10,19 @@ import {
     TextareaStyled,
     DateTimeStyled,
     ButtonStyled,
-    HandOverChecklistModal
+    SignatureSection
 } from "@/components"
+import {
+    useDay,
+    useGetAllVehicleChecklists,
+    useGetRentalContractById,
+    useHandoverContract,
+    useName,
+    useNumber,
+    useReturnContract,
+    useTokenStore,
+    useUpdateContractStatus
+} from "@/hooks"
 import {
     Car,
     IdentificationBadge,
@@ -20,21 +31,18 @@ import {
     Invoice
 } from "@phosphor-icons/react"
 import { InvoiceTypeLabels, RentalContractStatusLabels } from "@/constants/labels"
-import {
-    useCreateVehicleChecklist,
-    useDay,
-    useGetAllVehicleChecklists,
-    useGetRentalContractById,
-    useNumber,
-    useUpdateContractStatus
-} from "@/hooks"
+
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { useTranslation } from "react-i18next"
 import Link from "next/link"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import toast from "react-hot-toast"
-import { VehicleChecklistType } from "@/constants/enum"
-import { Spinner, useDisclosure } from "@heroui/react"
+import { Spinner } from "@heroui/react"
+import { useFormik } from "formik"
+import * as Yup from "yup"
+import { decodeJwt } from "@/utils/helpers/jwt"
+import { RentalContractStatus, VehicleChecklistType } from "@/constants/enum"
+import { ChecklistSection } from "./ChecklistSection"
 
 export function RentalContractDetail({
     contractId,
@@ -55,29 +63,29 @@ export function RentalContractDetail({
     const { t } = useTranslation()
     const { toCalenderDateTime } = useDay()
     const { parseNumber } = useNumber()
+    const { toFullName } = useName()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
-    const {
-        isOpen: isHandoverChecklistOpen,
-        onOpen: onHandoverChecklistOpen,
-        onOpenChange: onHandoverChecklistOpenChange,
-        onClose: onHandoverChecklistClose
-    } = useDisclosure()
 
-    const { data: dataContract, isLoading } = useGetRentalContractById({
+    const payload = decodeJwt(useTokenStore((s) => s.accessToken!))
+    const { data: contract, isLoading } = useGetRentalContractById({
         id: contractId,
         enabled: true
     })
     const updateContractStatus = useUpdateContractStatus()
-    const { data: checklists } = useGetAllVehicleChecklists({
-        query: {
-            contractId
+
+    // check owner if customer
+    useEffect(() => {
+        if (!contract || !payload.sid) return
+        if (!isStaff && payload.sid != contract?.customer.id) {
+            router.push("/")
+            toast.error(t("user.unauthorized"))
         }
-    })
+    }, [contract, isStaff, payload.sid, router, t])
 
-    const createAt = dataContract?.createdAt
-
-    // render accordion
-    const invoiceAccordion = (dataContract?.invoices || []).map((invoice) => ({
+    //=======================================//
+    // Invoice accordion
+    //=======================================//
+    const invoiceAccordion = (contract?.invoices || []).map((invoice) => ({
         key: invoice.id,
         ariaLabel: invoice.id,
         title: `${InvoiceTypeLabels[invoice.type]}`,
@@ -107,34 +115,62 @@ export function RentalContractDetail({
     }, [contractId, parseNumber, pathName, searchParams, t, updateContractStatus])
 
     //=======================================//
-
-    const createVehicleChecklist = useCreateVehicleChecklist({})
-
-    const handleCreateVehicleChecklist = useCallback(async () => {
-        await createVehicleChecklist.mutateAsync({
-            vehicleId: dataContract?.vehicle.id,
-            contractId: dataContract?.id,
-            type: VehicleChecklistType.Handover
-        })
-    }, [createVehicleChecklist, dataContract])
-
+    // Checklist
+    //=======================================//
+    const { data: checklists } = useGetAllVehicleChecklists({
+        query: {
+            contractId
+        }
+    })
     const hanoverChecklist = useMemo(() => {
         return checklists?.find((item) => item.type === VehicleChecklistType.Handover)
     }, [checklists])
-
-    console.log(hanoverChecklist)
-
-    const handleOpenHanoverChecklist = useCallback(() => {
-        if (!hanoverChecklist) return
-        if (isStaff) {
-            router.push(`/dashboard/vehicle-checklists/${hanoverChecklist.id}`)
-        } else {
-            onHandoverChecklistOpen()
-        }
-    }, [hanoverChecklist, isStaff, onHandoverChecklistOpen, router])
+    const returnChecklist = useMemo(() => {
+        return checklists?.find((item) => item.type === VehicleChecklistType.Return)
+    }, [checklists])
 
     //=======================================//
-    if (isLoading || !dataContract)
+    // Handover
+    //=======================================//
+    const handoverMutation = useHandoverContract({ id: contractId })
+    const handoverInitValue = useMemo(() => {
+        return {
+            isSignedByStaff: contract?.isSignedByStaff ?? false,
+            isSignedByCustomer: contract?.isSignedByCustomer ?? false
+        }
+    }, [contract?.isSignedByCustomer, contract?.isSignedByStaff])
+
+    const handoverFormik = useFormik({
+        initialValues: handoverInitValue,
+        enableReinitialize: true,
+        validationSchema: Yup.object().shape({
+            isSignedByStaff: Yup.boolean().oneOf([true], t("signature.signed_by_staff_require")),
+            isSignedByCustomer: Yup.boolean().oneOf(
+                [true],
+                t("signature.signed_by_customer_require")
+            )
+        }),
+        onSubmit: async (value) => {
+            if (!contract?.id) return
+            await handoverMutation.mutateAsync({
+                req: {
+                    isSignedByStaff: value.isSignedByStaff,
+                    isSignedByCustomer: value.isSignedByCustomer
+                }
+            })
+        }
+    })
+
+    //=======================================//
+    // Return
+    //=======================================//
+    const returnMutation = useReturnContract({ id: contractId })
+    const handleReturn = useCallback(async () => {
+        await returnMutation.mutateAsync()
+    }, [returnMutation])
+
+    //=======================================//
+    if (isLoading || !contract)
         return (
             <div className="flex justify-center mt-65">
                 <SpinnerStyled />
@@ -164,45 +200,70 @@ export function RentalContractDetail({
                         {t("rental_contract.rental_contract_details_description")}
                     </p>
                 </div>
-                {/* Vehicle Info */}
+
+                {/* Contract Info */}
                 <SectionStyled title={t("rental_contract.rental_contract_information")}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="sm:col-span-2">
-                            <p>
+                            <div>
+                                {t("table.customer")}
+                                {": "}
+                                {toFullName({
+                                    firstName: contract.customer.firstName,
+                                    lastName: contract.customer.lastName
+                                })}
+                            </div>
+                            <div>
                                 {t("rental_contract.create_at")}
                                 {": "}
-                                {createAt && formatDateTime({ date: createAt })}
-                            </p>
+                                {contract.createdAt && formatDateTime({ date: contract.createdAt })}
+                            </div>
                         </div>
 
                         <InputStyled
                             isReadOnly
                             label={t("rental_contract.contract_code")}
-                            value={dataContract.id}
+                            value={contract.id}
                             startContent={
                                 <Invoice size={22} className="text-primary" weight="duotone" />
                             }
                             variant="bordered"
                             // className="sm:col-span-2"
                         />
-                        <InputStyled
-                            isReadOnly
-                            label={t("rental_contract.contract_status")}
-                            value={RentalContractStatusLabels[dataContract.status]}
-                            startContent={
-                                <ClipboardText
-                                    size={22}
-                                    className="text-primary"
-                                    weight="duotone"
-                                />
-                            }
-                            variant="bordered"
-                        />
+                        <div className="flex gap-4">
+                            <InputStyled
+                                isReadOnly
+                                label={t("rental_contract.contract_status")}
+                                className="w-68"
+                                value={RentalContractStatusLabels[contract.status]}
+                                startContent={
+                                    <ClipboardText
+                                        size={22}
+                                        className="text-primary"
+                                        weight="duotone"
+                                    />
+                                }
+                                variant="bordered"
+                            />
+                            <InputStyled
+                                isReadOnly
+                                label={t("station.station")}
+                                value={`${contract.station.name} - ${contract.station.address}`}
+                                startContent={
+                                    <ClipboardText
+                                        size={22}
+                                        className="text-primary"
+                                        weight="duotone"
+                                    />
+                                }
+                                variant="bordered"
+                            />
+                        </div>
 
                         <InputStyled
                             isReadOnly
                             label={t("rental_contract.vehicle_name")}
-                            value={dataContract.vehicle.model.name || ""}
+                            value={contract.vehicle.model.name || ""}
                             placeholder="VinFast VF8"
                             startContent={
                                 <Car size={22} className="text-primary" weight="duotone" />
@@ -212,7 +273,7 @@ export function RentalContractDetail({
                         <InputStyled
                             isReadOnly
                             label={t("rental_contract.license_plate")}
-                            value={dataContract.vehicle.licensePlate || ""}
+                            value={contract.vehicle.licensePlate || ""}
                             startContent={
                                 <IdentificationBadge
                                     size={22}
@@ -225,7 +286,7 @@ export function RentalContractDetail({
                         <TextareaStyled
                             isReadOnly
                             label={t("rental_contract.contract_description")}
-                            value={dataContract.description}
+                            value={contract.description}
                             placeholder=". . . "
                             variant="bordered"
                             className="sm:col-span-2"
@@ -237,25 +298,25 @@ export function RentalContractDetail({
                 <SectionStyled title={t("rental_contract.rental_duration")}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         <DateTimeStyled
-                            value={toCalenderDateTime(dataContract.startDate)}
+                            value={toCalenderDateTime(contract.startDate)}
                             label={t("rental_contract.start_date")}
                             isReadOnly
                             endContent
                         />
                         <DateTimeStyled
-                            value={toCalenderDateTime(dataContract.actualStartDate)}
+                            value={toCalenderDateTime(contract.actualStartDate)}
                             label={t("rental_contract.actual_start_date")}
                             isReadOnly
                             endContent
                         />
                         <DateTimeStyled
-                            value={toCalenderDateTime(dataContract.endDate)}
+                            value={toCalenderDateTime(contract.endDate)}
                             label={t("rental_contract.end_date")}
                             isReadOnly
                             endContent
                         />
                         <DateTimeStyled
-                            value={toCalenderDateTime(dataContract.actualEndDate)}
+                            value={toCalenderDateTime(contract.actualEndDate)}
                             label={t("rental_contract.actual_end_date")}
                             isReadOnly
                             endContent
@@ -269,7 +330,10 @@ export function RentalContractDetail({
                         <InputStyled
                             isReadOnly
                             label={t("rental_contract.vehicle_handover_staff")}
-                            value={dataContract.handoverStaffId || ""}
+                            value={toFullName({
+                                firstName: contract.handoverStaff?.firstName,
+                                lastName: contract.handoverStaff?.lastName
+                            })}
                             startContent={
                                 <ArrowsLeftRight
                                     size={22}
@@ -282,7 +346,10 @@ export function RentalContractDetail({
                         <InputStyled
                             isReadOnly
                             label={t("rental_contract.vehicle_return_staff")}
-                            value={dataContract.returnStaffId || ""}
+                            value={toFullName({
+                                firstName: contract.returnStaff?.firstName,
+                                lastName: contract.returnStaff?.lastName
+                            })}
                             startContent={
                                 <ArrowsLeftRight
                                     size={22}
@@ -296,45 +363,109 @@ export function RentalContractDetail({
                 </SectionStyled>
 
                 {/* Vehicle checklists */}
-                <SectionStyled title={t("vehicle_checklist.vehicle_checklist")}>
-                    <div className="flex gap-4">
-                        {!hanoverChecklist ? (
-                            isStaff && (
-                                <ButtonStyled onPress={handleCreateVehicleChecklist}>
-                                    {createVehicleChecklist.isPending ? (
-                                        <Spinner />
-                                    ) : (
-                                        <div>{t("vehicle_checklist.create_handover")}</div>
-                                    )}
-                                </ButtonStyled>
-                            )
-                        ) : (
-                            <>
-                                <ButtonStyled onPress={handleOpenHanoverChecklist}>
-                                    {createVehicleChecklist.isPending ? (
-                                        <Spinner />
-                                    ) : (
-                                        <div>{t("vehicle_checklist.view_handover")}</div>
-                                    )}
-                                </ButtonStyled>
-                                <HandOverChecklistModal
-                                    id={hanoverChecklist.id}
-                                    isOpen={isHandoverChecklistOpen}
-                                    onOpenChange={onHandoverChecklistOpenChange}
-                                    onClose={onHandoverChecklistClose}
-                                />
-                            </>
-                        )}
-                    </div>
+                <SectionStyled
+                    title={t("vehicle_checklist.vehicle_checklist")}
+                    childrenClassName="flex gap-2"
+                >
+                    <ChecklistSection
+                        isStaff={isStaff}
+                        contract={contract}
+                        checklist={hanoverChecklist}
+                        type={VehicleChecklistType.Handover}
+                    />
+                    {contract.status == RentalContractStatus.Returned && (
+                        <ChecklistSection
+                            isStaff={isStaff}
+                            contract={contract}
+                            checklist={returnChecklist}
+                            type={VehicleChecklistType.Return}
+                        />
+                    )}
                 </SectionStyled>
 
                 {/* Invoice Accordion  isLoading={isFetching}*/}
                 <SectionStyled title={t("rental_contract.payment_invoice_list")}>
-                    <InvoiceAccordion
-                        items={invoiceAccordion}
-                        contractStatus={dataContract.status}
-                    />
+                    <div className="mt-[-1rem] mb-3 px-4 italic text-default-500 text-sm">
+                        {t("rental_contract.fees_include_tax")}
+                    </div>
+                    <InvoiceAccordion items={invoiceAccordion} contractStatus={contract.status} />
                 </SectionStyled>
+
+                {/* Signature */}
+                <SignatureSection
+                    // className="pt-10"
+                    sectionClassName="mt-8 mb-8"
+                    isReadOnly={!isStaff || !!contract.actualStartDate}
+                    staffSign={{
+                        id: "isSignedByStaff",
+                        name: "isSignedByStaff",
+                        checked: handoverFormik.values.isSignedByStaff,
+                        isInvalid: !!(
+                            handoverFormik.touched.isSignedByStaff &&
+                            handoverFormik.errors.isSignedByStaff
+                        ),
+                        isSelected: handoverFormik.values.isSignedByStaff,
+                        // onValueChange: (value) => handoverFormik.setFieldValue("isSignedByStaff", value)
+                        onChange: handoverFormik.handleChange,
+                        onBlur: handoverFormik.handleBlur
+                    }}
+                    customerSign={{
+                        id: "isSignedByCustomer",
+                        name: "isSignedByCustomer",
+                        checked: handoverFormik.values.isSignedByCustomer,
+                        isInvalid: !!(
+                            handoverFormik.touched.isSignedByCustomer &&
+                            handoverFormik.errors.isSignedByCustomer
+                        ),
+                        isSelected: handoverFormik.values.isSignedByCustomer,
+                        // onValueChange: (value) => handoverFormik.setFieldValue("isSignedByCustomer", value)
+                        onChange: handoverFormik.handleChange,
+                        onBlur: handoverFormik.handleBlur
+                    }}
+                />
+
+                {/* Contract action button */}
+                <div className="text-center mb-10">
+                    {isStaff && (
+                        <>
+                            {!contract.actualStartDate ? (
+                                <ButtonStyled
+                                    variant="bordered"
+                                    color="primary"
+                                    className="hover:text-white hover:bg-primary"
+                                    isDisabled={
+                                        !handoverFormik.isValid ||
+                                        handoverFormik.isSubmitting ||
+                                        !hanoverChecklist
+                                    }
+                                    onPress={() => handoverFormik.handleSubmit()}
+                                >
+                                    {handoverFormik.isSubmitting ? (
+                                        <Spinner />
+                                    ) : (
+                                        t("rental_contract.handover")
+                                    )}
+                                </ButtonStyled>
+                            ) : (
+                                contract.status == RentalContractStatus.Active && (
+                                    <ButtonStyled
+                                        variant="bordered"
+                                        color="primary"
+                                        className="hover:text-white hover:bg-primary"
+                                        isDisabled={returnMutation.isPending}
+                                        onPress={handleReturn}
+                                    >
+                                        {returnMutation.isPending ? (
+                                            <Spinner />
+                                        ) : (
+                                            t("rental_contract.return")
+                                        )}
+                                    </ButtonStyled>
+                                )
+                            )}
+                        </>
+                    )}
+                </div>
             </motion.div>
         </div>
     )
