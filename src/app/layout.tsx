@@ -5,7 +5,7 @@ import "./globals.css"
 import { AppProviders } from "@/providers"
 import { Toaster } from "react-hot-toast"
 import { cookies } from "next/headers"
-import { ClientHydration, Modals, Navbar } from "@/components/"
+import { ClientHydration, Footer, Modals, Navbar, ScrollToTopButton } from "@/components/"
 import Script from "next/script"
 
 const geistSans = Geist({
@@ -42,6 +42,8 @@ export default async function RootLayout({
                         <div className="min-h-screen flex flex-col items-center pt-25">
                             <Navbar />
                             {children}
+                            <ScrollToTopButton />
+                            <Footer />
                         </div>
                         <Modals />
                         <Toaster

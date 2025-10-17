@@ -1,7 +1,12 @@
 "use client"
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { motion } from "framer-motion"
-import { BreadCrumbsStyled, ButtonStyled, FieldStyled } from "@/components"
+import {
+    BreadCrumbsStyled,
+    ButtonStyled,
+    FieldStyled,
+    CreateRentalContractModal
+} from "@/components"
 import { GasPump, UsersFour, SteeringWheel, RoadHorizon } from "@phosphor-icons/react"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { useParams, useRouter } from "next/navigation"
@@ -13,7 +18,6 @@ import { ROLE_CUSTOMER } from "@/constants/constants"
 import toast from "react-hot-toast"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
-import { CreateRentalContractModal } from "@/components/modals/CreateRentalContractModal"
 
 export default function VehicleDetailPage() {
     const { id } = useParams()

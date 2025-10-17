@@ -1,5 +1,5 @@
 "use client"
-import { Carousel, CriclesChart, Footer, KpiStat, ScrollToTopButton } from "@/components"
+import { Carousel, CriclesChart, KpiStat } from "@/components"
 import React, { useEffect, useRef } from "react"
 import { slides } from "@/../public/cars"
 import { useTranslation } from "react-i18next"
@@ -62,9 +62,7 @@ export default function HomePage() {
             <Carousel slides={slides} />
             <Carousel slides={slides} />
             <CriclesChart />
-            <Footer />
             <KpiStat />
-            <ScrollToTopButton />
         </>
     )
 }
