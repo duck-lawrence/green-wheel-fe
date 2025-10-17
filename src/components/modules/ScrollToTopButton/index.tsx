@@ -41,10 +41,7 @@ export function ScrollToTopButton() {
                     transition={{ duration: 0.3, ease: "easeOut" }}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
-                    className="fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-lg 
-                     bg-gradient-to-r from-primary to-teal-400 
-                     hover:from-teal-500 hover:to-green-400 
-                     text-white transition-all duration-300
+                    className="btn-gradient fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-lg
                      flex items-center justify-center overflow-hidden"
                 >
                     {/* Mũi tên có animation bay lên cao */}

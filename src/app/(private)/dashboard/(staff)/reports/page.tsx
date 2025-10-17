@@ -139,8 +139,7 @@ export default function StaffReportsPage() {
                     </div>
                     <div className="md:col-span-2">
                         <ButtonStyled
-                            className="w-full px-6 text-white font-semibold py-3 rounded-lg bg-gradient-to-r
-                            from-primary to-teal-400 hover:from-teal-500 hover:to-green-400 transition-all duration-300
+                            className="btn-gradient w-full px-6 py-3 rounded-lg
                             flex justify-center items-center gap-2"
                             type="submit"
                             isDisabled={!formik.isValid || formik.isSubmitting}

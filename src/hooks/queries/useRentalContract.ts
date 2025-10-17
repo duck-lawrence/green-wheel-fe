@@ -189,18 +189,18 @@ export const useCreateContractManual = ({ onSuccess }: { onSuccess?: () => void 
     })
 }
 
-export const useHandoverContract = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
+export const useHandoverContract = ({ id, onSuccess }: { id: string; onSuccess?: () => void }) => {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: async ({ id, req }: { id: string; req: HandoverContractReq }) => {
+        mutationFn: async ({ req }: { req: HandoverContractReq }) => {
             await rentalContractApi.handover({ id, req })
-            queryClient.refetchQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
         },
         onSuccess: () => {
+            queryClient.refetchQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
             onSuccess?.()
-            toast.success(t("rental_contract.handover_success"))
+            toast.success(t("success.handover"))
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))
@@ -208,14 +208,19 @@ export const useHandoverContract = ({ onSuccess }: { onSuccess?: () => void } = 
     })
 }
 
-export const useReturnContract = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useReturnContract = ({ id, onSuccess }: { id: string; onSuccess?: () => void }) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: rentalContractApi.return,
-        onSuccess: (data) => {
-            console.log("Invoice id: " + data.returnInvoiceId)
+        // mutationFn: rentalContractApi.return,
+        mutationFn: async () => {
+            await rentalContractApi.return({ id })
+        },
+        onSuccess: () => {
+            queryClient.refetchQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
             onSuccess?.()
+            toast.success(t("success.return"))
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))
@@ -229,8 +234,8 @@ export const useCancelContract = ({ onSuccess }: { onSuccess?: () => void }) => 
     return useMutation({
         mutationFn: rentalContractApi.cancel,
         onSuccess: () => {
-            toast.success(t("success.cancel"))
             onSuccess?.()
+            toast.success(t("success.cancel"))
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))

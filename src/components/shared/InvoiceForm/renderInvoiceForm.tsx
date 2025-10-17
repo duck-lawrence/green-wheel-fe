@@ -1,11 +1,13 @@
-import InvoiceHandOvertForm from "./InvoiceHandOverForm"
-import InvoiceReturnForm from "./InvoiceReturnForm"
-import InvoiceRefundForm from "./InvoiceRefundForm"
-import InvoiceOtherForm from "./InvoiceOtherForm"
 import React from "react"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { InvoiceType } from "@/constants/enum"
-import { InvoiceReservation } from "./InvoiceReservationForm"
+import {
+    InvoiceHandOvertForm,
+    InvoiceOtherForm,
+    InvoiceRefundForm,
+    InvoiceReservation,
+    InvoiceReturnForm
+} from "@/components"
 
 export const renderInvoiceForm = (invoice: InvoiceViewRes) => {
     switch (invoice.type) {

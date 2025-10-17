@@ -152,22 +152,30 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                 sectionClassName="mt-8"
                 isReadOnly={!isStaff}
                 staffSign={{
+                    id: "isSignedByStaff",
+                    name: "isSignedByStaff",
                     checked: formik.values.isSignedByStaff,
                     isInvalid: !!(formik.touched.isSignedByStaff && formik.errors.isSignedByStaff),
                     isSelected: formik.values.isSignedByStaff,
-                    onValueChange: (value) => formik.setFieldValue("isSignedByStaff", value)
+                    // onValueChange: (value) => formik.setFieldValue("isSignedByStaff", value)
+                    onChange: formik.handleChange,
+                    onBlur: formik.handleBlur
                 }}
                 customerSign={{
+                    id: "isSignedByCustomer",
+                    name: "isSignedByCustomer",
                     checked: formik.values.isSignedByCustomer,
                     isInvalid: !!(
                         formik.touched.isSignedByCustomer && formik.errors.isSignedByCustomer
                     ),
                     isSelected: formik.values.isSignedByCustomer,
-                    onValueChange: (value) => formik.setFieldValue("isSignedByCustomer", value)
+                    // onValueChange: (value) => formik.setFieldValue("isSignedByCustomer", value)
+                    onChange: formik.handleChange,
+                    onBlur: formik.handleBlur
                 }}
             />
 
-            {isStaff && (
+            {isStaff && !checklist?.isSignedByStaff && !checklist?.isSignedByCustomer && (
                 <div className="flex justify-center">
                     <ButtonStyled
                         type="submit"

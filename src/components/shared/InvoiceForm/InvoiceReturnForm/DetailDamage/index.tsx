@@ -7,10 +7,9 @@ import { formatCurrency } from "@/utils/helpers/currency"
 import { Wrench, Note, CurrencyCircleDollar, HashStraight } from "@phosphor-icons/react"
 import { useTranslation } from "react-i18next"
 
-export default function DetailDamage({ invoice }: { invoice: InvoiceViewRes }) {
+export function DetailDamage({ invoice }: { invoice: InvoiceViewRes }) {
     const { t } = useTranslation()
 
-    // Lọc ra các item có type = Damage
     const itemDamage =
         invoice.invoiceItems?.filter((item) => item.type === InvoiceItemType.Damage) ?? []
 

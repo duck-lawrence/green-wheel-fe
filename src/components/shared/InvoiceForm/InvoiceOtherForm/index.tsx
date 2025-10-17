@@ -7,7 +7,7 @@ import { formatCurrency } from "@/utils/helpers/currency"
 import { InvoiceItemType } from "@/constants/enum"
 import { useTranslation } from "react-i18next"
 
-export default function InvoiceOtherForm({ invoice }: { invoice: InvoiceViewRes }) {
+export function InvoiceOtherForm({ invoice }: { invoice: InvoiceViewRes }) {
     const { t } = useTranslation()
 
     const totalOther = invoice.invoiceItems

@@ -10,12 +10,7 @@ interface HandOverChecklistModalProps {
     onClose: () => void
 }
 
-export function HandOverChecklistModal({
-    id,
-    isOpen,
-    onOpenChange,
-    onClose
-}: HandOverChecklistModalProps) {
+export function ChecklistModal({ id, isOpen, onOpenChange, onClose }: HandOverChecklistModalProps) {
     return (
         <ModalStyled
             isOpen={isOpen}

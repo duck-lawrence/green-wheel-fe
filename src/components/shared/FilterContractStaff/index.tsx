@@ -57,9 +57,8 @@
 //                 </h3>
 //                 <ButtonStyled
 //                     type="submit"
-//                     className="bg-gradient-to-r from-primary to-teal-400
-//                      hover:from-teal-500 hover:to-green-400 text-white
-//                      px-6 py-2 rounded-lg font-semibold transition-all"
+//                     className="btn-gradient
+//                      px-6 py-2 rounded-lg"
 //                 >
 //                     {t("staff.handovers_filters_search") || "Search"}
 //                 </ButtonStyled>

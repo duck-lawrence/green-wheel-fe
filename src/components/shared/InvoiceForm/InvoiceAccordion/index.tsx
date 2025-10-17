@@ -81,9 +81,15 @@ export function InvoiceAccordion({
                     invoice.type
                 )
 
+            const isReturnType =
+                contractStatus === RentalContractStatus.Returned &&
+                [InvoiceType.Return, InvoiceType.Refund].includes(invoice.type)
+
             const isOtherType = invoice.type === InvoiceType.Other
 
-            return isPending && (isPaymentPendingType || isActiveType || isOtherType)
+            return (
+                isPending && (isPaymentPendingType || isActiveType || isOtherType || isReturnType)
+            )
         },
         [isCustomer]
     )
@@ -138,10 +144,7 @@ export function InvoiceAccordion({
                                             onPress={() => handlePayment(val.invoice.id)}
                                             size="lg"
                                             color="primary"
-                                            className="px-12 py-3 font-semibold text-white rounded-xl 
-                                           bg-gradient-to-r from-primary to-teal-400 
-                                           hover:from-teal-500 hover:to-green-400 
-                                           shadow-md transition-all duration-300"
+                                            className="btn-gradient px-12 py-3"
                                         >
                                             {t("enum.payment")}
                                         </ButtonStyled>

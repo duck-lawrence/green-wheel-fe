@@ -22,7 +22,10 @@ export function SignatureSection({
     const { t } = useTranslation()
 
     return (
-        <SectionStyled title={t("signature.signature")} className={cn("mb-3", sectionClassName)}>
+        <SectionStyled
+            title={t("signature.signature")}
+            sectionClassName={cn("mb-3", sectionClassName)}
+        >
             <div className={cn("flex justify-between gap-2 px-16", childrenClassName)}>
                 <CheckboxStyled
                     isReadOnly={isReadOnly}
