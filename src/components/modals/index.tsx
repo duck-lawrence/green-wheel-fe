@@ -6,6 +6,8 @@ import { ForgotPasswordModal } from "./ForgotPasswordModal"
 export * from "./HandOverChecklistModal"
 export * from "./ImageUploaderModal"
 export * from "./EditUserModal"
+export * from "./DocumentPreview"
+
 
 
 export const Modals = () => {
