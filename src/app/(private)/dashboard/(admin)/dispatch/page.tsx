@@ -2,9 +2,8 @@
 import { ButtonStyled, InputStyled, SectionStyled } from "@/components"
 import TableSelectionStaff from "@/components/modules/TableSelectionStaff"
 import TableSelectionVehicle from "@/components/modules/TableSelectionVehicle/indesx"
-import { useGetAllStaffs, useGetAllStations, useGetMe } from "@/hooks"
+import { useGetAllStaffs, useGetAllStations, useGetAllVehicles, useGetMe } from "@/hooks"
 import { useCreateDispatch } from "@/hooks/queries/useDispatch"
-import { useGetAllVehicle } from "@/hooks/queries/useVehicle"
 import { Textarea } from "@heroui/react"
 import { Car, UserSwitchIcon } from "@phosphor-icons/react"
 import React, { useCallback, useState } from "react"
@@ -14,19 +13,23 @@ export default function DispatchPage() {
     const { t } = useTranslation()
 
     const { data: user } = useGetMe()
-    const stationIdStaff = user?.station?.id
-    const { data: stations = [] } = useGetAllStations()
+    const stationIdNow = user?.station?.id
+    // const stationIdNow = "d565f693-3111-4bf2-80a6-e409e1b48411"
+
+    const { data: stations } = useGetAllStations()
     const { data: staffs } = useGetAllStaffs({
-        params: { stationId: stationIdStaff },
+        params: { stationId: stationIdNow },
         enabled: true
     })
-    const { data: vehicles } = useGetAllVehicle({
-        params: { stationId: stationIdStaff },
+    const { data: vehicles } = useGetAllVehicles({
+        params: { stationId: stationIdNow },
         enabled: true
     })
+
     const createDispatch = useCreateDispatch({})
-    const stationDispatch = stationIdStaff
-        ? stations.find(({ id }) => id !== stationIdStaff) || null
+
+    const stationDispatch = stationIdNow
+        ? (stations || []).find(({ id }) => id !== stationIdNow) || null
         : null
 
     const [textArea, setTextArea] = useState("")
@@ -35,7 +38,7 @@ export default function DispatchPage() {
 
     const handleCreateDispatch = useCallback(async () => {
         await createDispatch.mutateAsync({
-            toStationId: stationDispatch!,
+            fromStationId: stationDispatch?.id!,
             description: textArea,
             staffIds: selectStaffs,
             vehicleIds: selectVehicles
@@ -58,7 +61,7 @@ export default function DispatchPage() {
                     <InputStyled
                         label={t("table.station")}
                         // value={stationDispatch?.name}
-                        value={stationIdStaff}
+                        value={stationIdNow}
                         readOnly
                     />
                 </SectionStyled>

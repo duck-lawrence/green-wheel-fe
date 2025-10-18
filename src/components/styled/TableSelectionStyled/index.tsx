@@ -1,4 +1,5 @@
 import React from "react"
+import type { Key } from "@react-types/shared"
 import {
     Table,
     TableHeader,
@@ -10,19 +11,15 @@ import {
     cn
 } from "@heroui/react"
 
-export type Column = {
-    key: string
-    label: string
-}
-
+export type Column = { key: string; label: string }
 export type Row = Record<string, any>
 
 export type TableSelectionStyledProps = {
     columns: Column[]
     rows: Row[]
     className?: string
-    selectedKeys?: React.Key[] | "all"
-    onSelectionChange?: (keys: React.Key[]) => void
+    selectedKeys?: "all" | Iterable<Key>
+    onSelectionChange?: (keys: Key[]) => void
 }
 
 export default function TableSelectionStyled({
@@ -35,12 +32,19 @@ export default function TableSelectionStyled({
     return (
         <div className={cn("flex flex-col gap-3", className)}>
             <Table
-                aria-label="Selection behavior table example with dynamic content"
+                aria-label="Selection behavior table"
                 selectionBehavior="toggle"
                 selectionMode="multiple"
-                selectedKeys={selectedKeys as any}
+                selectedKeys={selectedKeys}
                 onSelectionChange={(keys) => {
-                    const selected = Array.isArray(keys) ? keys : Array.from(keys as Set<React.Key>)
+                    let selected: Key[]
+
+                    if (keys === "all") {
+                        selected = rows.map((r) => r.key)
+                    } else {
+                        selected = Array.from(keys)
+                    }
+
                     onSelectionChange?.(selected)
                 }}
             >

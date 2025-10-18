@@ -1,6 +1,6 @@
 import TableSelectionStyled from "@/components/styled/TableSelectionStyled"
 import { VehicleViewRes } from "@/models/vehicle/schema/response"
-import React, { useState } from "react"
+import React, { Key, useState } from "react"
 
 export default function TableSelectionVehicle({
     vehicles,
@@ -9,7 +9,7 @@ export default function TableSelectionVehicle({
     vehicles: VehicleViewRes[]
     onChangeSelected?: (selected: string[]) => void
 }) {
-    const [selectedVehicleIds, setSelectedVehicleIds] = useState<string[]>([])
+    const [selectedKeys, setSelectedKeys] = useState<Key[]>([])
     const rows = vehicles.map((item) => ({
         key: item.id,
         id: item.id,
@@ -23,8 +23,8 @@ export default function TableSelectionVehicle({
             label: "ID"
         },
         {
-            key: "modal",
-            label: "MODAL"
+            key: "model",
+            label: "MODeL"
         },
         {
             key: "licensePlate",
@@ -32,10 +32,9 @@ export default function TableSelectionVehicle({
         }
     ]
 
-    const handleSelectionChange = (keys: React.Key[]) => {
-        const ids = keys.map(String) // ép về string[]
-        setSelectedVehicleIds(ids)
-        onChangeSelected?.(ids) // quăng ra ngoài
+    const handleSelectionChange = (keys: Key[]) => {
+        setSelectedKeys(keys)
+        onChangeSelected?.(keys.map(String))
     }
 
     return (
@@ -43,7 +42,7 @@ export default function TableSelectionVehicle({
             <TableSelectionStyled
                 rows={rows}
                 columns={columns}
-                selectedKeys={selectedVehicleIds}
+                selectedKeys={selectedKeys as any}
                 onSelectionChange={handleSelectionChange}
             ></TableSelectionStyled>
         </>

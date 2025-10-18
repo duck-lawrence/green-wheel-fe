@@ -24,7 +24,7 @@ export const userApi = {
     getAllStafff: (query: StaffReq) =>
         requestWrapper<UserProfileViewRes[]>(async () => {
             const params = buildQueryParams(query)
-            const res = await axiosInstance.get("/user/staff", { params })
+            const res = await axiosInstance.get("/users/staffs", { params })
             return res.data
         }),
 

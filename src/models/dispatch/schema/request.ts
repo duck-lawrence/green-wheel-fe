@@ -1,9 +1,8 @@
 import { DispatchRequestStatus } from "@/constants/enum"
-import { StationViewRes } from "@/models/station/schema/response"
 
 export type CreateDispatchReq = {
     description?: string
-    toStationId: StationViewRes
+    fromStationId: string
     staffIds?: string[]
     vehicleIds?: string[]
 }

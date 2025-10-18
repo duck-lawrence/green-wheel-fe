@@ -54,7 +54,7 @@ export type VehicleFilterReq = {
     segmentId?: string
 }
 
-export type VehicleViewReq = {
+export type GetVehicleParams = {
     name?: string
     stationId?: string
     status?: number
