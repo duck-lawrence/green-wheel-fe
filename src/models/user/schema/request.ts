@@ -23,3 +23,8 @@ export type UserFilterReq = {
     citizenIdNumber?: string
     driverLicenseNumber?: string
 }
+
+export type StaffReq = {
+    name?: string
+    stationId?: string
+}

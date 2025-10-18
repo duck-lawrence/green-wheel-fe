@@ -183,7 +183,8 @@
         "phone": "Phone",
         "citizen_id": "Citizen ID",
         "driver_license": "Driver License",
-        "documents": "Documents"
+        "documents": "Documents",
+        "description": "Description"
     },
     "contral_form": {
         "payment_method_require": "Please select a payment method",

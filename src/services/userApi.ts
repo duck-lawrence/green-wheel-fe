@@ -2,7 +2,7 @@ import { UpdateCitizenIdentityReq } from "@/models/citizen-identity/schema/reque
 import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
 import { UpdateDriverLicenseReq } from "@/models/driver-license/schema/request"
 import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
-import { CreateUserReq, UserFilterReq } from "@/models/user/schema/request"
+import { CreateUserReq, StaffReq, UserFilterReq } from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import axiosInstance from "@/utils/axios"
 import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
@@ -12,6 +12,13 @@ export const userApi = {
         requestWrapper<UserProfileViewRes[]>(async () => {
             const params = buildQueryParams(query)
             const res = await axiosInstance.get("/users", { params })
+            return res.data
+        }),
+
+    getAllStafff: (query: StaffReq) =>
+        requestWrapper<UserProfileViewRes[]>(async () => {
+            const params = buildQueryParams(query)
+            const res = await axiosInstance.get("/user/staff", { params })
             return res.data
         }),
 
