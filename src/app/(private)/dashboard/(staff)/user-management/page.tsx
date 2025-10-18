@@ -12,16 +12,12 @@ import {
     EditUserModal,
     FilterTypeStyle,
     FilterTypeOption,
-    ImageStyled,
     InputStyled,
-    ModalStyled,
-    ModalBodyStyled,
-    ModalContentStyled,
-    ModalFooterStyled,
-    ModalHeaderStyled,
     PaginationStyled,
     TableUserManagement,
-    useModalDisclosure
+    useModalDisclosure,
+    CitizenIdentityPreviewModal,
+    DriverLicensePreviewModal
 } from "@/components"
 import { ROLE_ADMIN, ROLE_STAFF } from "@/constants/constants"
 import { useGetAllUsers } from "@/hooks"
@@ -47,8 +43,10 @@ export default function StaffUserManagementPage() {
         phone: "",
         hasDocument: undefined
     })
-    const [preview, setPreview] = useState<{ url: string; label: string } | null>(null)
-    const { isOpen, onOpen, onOpenChange, onClose } = useModalDisclosure()
+    const [previewDocument, setPreviewDocument] = useState<{
+        user: UserProfileViewRes
+        type: "citizen" | "driver"
+    } | null>(null)
     const [editingUser, setEditingUser] = useState<UserProfileViewRes | null>(null)
     const {
         isOpen: isEditOpen,
@@ -172,18 +170,52 @@ export default function StaffUserManagementPage() {
         return filteredUsers.slice(startIndex, startIndex + PAGE_SIZE)
     }, [filteredUsers, page, PAGE_SIZE])
 
-    const handleOpenPreview = useCallback(
-        (label: string, url: string) => {
-            setPreview({ label, url })
-            onOpen()
+    const handleOpenDocumentPreview = useCallback(
+        (payload: {
+            user: UserProfileViewRes
+            type: "citizen" | "driver"
+            url?: string | null
+            label: string
+        }) => {
+            setPreviewDocument({ user: payload.user, type: payload.type })
         },
-        [onOpen]
+        []
     )
 
-    const handleClosePreview = useCallback(() => {
-        setPreview(null)
-        onClose()
-    }, [onClose])
+    const handleCloseDocumentPreview = useCallback(() => {
+        setPreviewDocument(null)
+    }, [])
+
+    const handleDocumentStateUpdate = useCallback(
+        (userId: string, type: "citizen" | "driver", nextUrl: string | null) => {
+            setUsers((prev) =>
+                prev.map((item) => {
+                    if (item.id !== userId) return item
+                    if (type === "citizen") {
+                        return {
+                            ...item,
+                            citizenUrl: nextUrl ?? undefined
+                        }
+                    }
+                    return {
+                        ...item,
+                        licenseUrl: nextUrl ?? undefined
+                    }
+                })
+            )
+
+            setPreviewDocument((prev) => {
+                if (!prev || prev.user.id !== userId) return prev
+                const updatedUser =
+                    type === "citizen"
+                        ? { ...prev.user, citizenUrl: nextUrl ?? undefined }
+                        : { ...prev.user, licenseUrl: nextUrl ?? undefined }
+
+                return { ...prev, user: updatedUser }
+            })
+        },
+        []
+    )
 
     const handleOpenEditUser = useCallback(
         (user: UserProfileViewRes) => {
@@ -282,7 +314,7 @@ export default function StaffUserManagementPage() {
 
             <TableUserManagement
                 users={paginatedUsers}
-                onPreviewDocument={({ label, url }) => handleOpenPreview(label, url)}
+                onPreviewDocument={handleOpenDocumentPreview}
                 onEditUser={handleOpenEditUser}
             />
 
@@ -297,28 +329,29 @@ export default function StaffUserManagementPage() {
                 </div>
             ) : null}
 
-            <ModalStyled isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-3xl">
-                <ModalContentStyled>
-                    <ModalHeaderStyled>{preview?.label}</ModalHeaderStyled>
-                    <ModalBodyStyled>
-                        {preview?.url ? (
-                            <ImageStyled
-                                src={preview.url}
-                                alt={preview.label}
-                                className="w-full h-auto"
-                            />
-                        ) : null}
-                    </ModalBodyStyled>
-                    <ModalFooterStyled>
-                        <ButtonStyled
-                            className="bg-primary text-white px-6"
-                            onPress={handleClosePreview}
-                        >
-                            {t("common.cancel")}
-                        </ButtonStyled>
-                    </ModalFooterStyled>
-                </ModalContentStyled>
-            </ModalStyled>
+            {previewDocument && previewDocument.type === "citizen" ? (
+                <CitizenIdentityPreviewModal
+                    userId={previewDocument.user.id}
+                    isOpen
+                    imageUrl={previewDocument.user.citizenUrl}
+                    onClose={handleCloseDocumentPreview}
+                    onUpdated={(nextUrl) =>
+                        handleDocumentStateUpdate(previewDocument.user.id, "citizen", nextUrl)
+                    }
+                />
+            ) : null}
+
+            {previewDocument && previewDocument.type === "driver" ? (
+                <DriverLicensePreviewModal
+                    userId={previewDocument.user.id}
+                    isOpen
+                    imageUrl={previewDocument.user.licenseUrl}
+                    onClose={handleCloseDocumentPreview}
+                    onUpdated={(nextUrl) =>
+                        handleDocumentStateUpdate(previewDocument.user.id, "driver", nextUrl)
+                    }
+                />
+            ) : null}
 
             <EditUserModal
                 user={editingUser}
