@@ -78,7 +78,10 @@ export default function VehicleDetailPage() {
     //     .slice(0, 3)
 
     const handleClickBooking = useCallback(() => {
-        if (!user?.phone || !user.citizenUrl || !user.licenseUrl) {
+        if (
+            !user?.phone
+            // || !user.citizenUrl || !user.licenseUrl
+        ) {
             toast.error(t("user.enter_required_info"))
         } else {
             onOpen()

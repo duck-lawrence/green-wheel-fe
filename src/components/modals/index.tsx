@@ -3,11 +3,12 @@ import { LoginModal } from "./LoginModal"
 import { RegisterModal } from "./RegisterModal"
 import { ForgotPasswordModal } from "./ForgotPasswordModal"
 
-export * from "./HandOverChecklistModal"
-export * from "./ImageUploaderModal"
+export * from "./ChecklistModal"
+export * from "./DetailDamageModal"
 export * from "./EditUserModal"
 export * from "./DocumentPreview"
 
+export * from "./ImageUploaderModal"
 
 
 export const Modals = () => {

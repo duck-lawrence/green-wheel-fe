@@ -48,11 +48,7 @@ export default function StaffUserManagementPage() {
         type: "citizen" | "driver"
     } | null>(null)
     const [editingUser, setEditingUser] = useState<UserProfileViewRes | null>(null)
-    const {
-        isOpen: isEditOpen,
-        onOpen: onEditOpen,
-        onClose: onEditClose
-    } = useModalDisclosure()
+    const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useModalDisclosure()
 
     const { data, isFetching } = useGetAllUsers({
         params: {},
@@ -79,8 +75,8 @@ export default function StaffUserManagementPage() {
             name: Yup.string().trim(),
             phone: Yup.string().trim(),
             hasDocument: Yup.mixed<UserFilterFormValues["hasDocument"]>()
-            .oneOf(["both", "license", "citizen", "none"] as const)
-            .optional()
+                .oneOf(["both", "license", "citizen", "none"] as const)
+                .optional()
         })
     }, [])
 
@@ -249,7 +245,7 @@ export default function StaffUserManagementPage() {
                         <ButtonStyled
                             type="submit"
                             isLoading={isFetching}
-                            className="bg-gradient-to-r from-primary to-teal-400 hover:from-teal-500 hover:to-green-400 text-white px-6 py-2 rounded-lg font-semibold transition-all"
+                            className="btn-gradient px-6 py-2 rounded-lg"
                         >
                             {t("staff.handovers_filters_search")}
                         </ButtonStyled>
@@ -353,11 +349,7 @@ export default function StaffUserManagementPage() {
                 />
             ) : null}
 
-            <EditUserModal
-                user={editingUser}
-                isOpen={isEditOpen}
-                onClose={handleCloseEditUser}
-            />
+            <EditUserModal user={editingUser} isOpen={isEditOpen} onClose={handleCloseEditUser} />
         </div>
     )
 }

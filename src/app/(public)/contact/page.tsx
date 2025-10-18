@@ -106,10 +106,8 @@ export default function Contact() {
                         />
 
                         <ButtonStyled
-                            className="w-full text-white font-semibold py-3 rounded-lg
-                            bg-gradient-to-r from-primary to-teal-400 
-                             hover:from-teal-500 hover:to-green-400 
-                             transition-all duration-300 flex justify-center items-center gap-2"
+                            className="btn-gradient w-full py-3 rounded-lg
+                            flex justify-center items-center gap-2"
                             type="submit"
                             isDisabled={!formik.isValid}
                             onPress={() => formik.submitForm()}

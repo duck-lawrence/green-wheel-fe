@@ -109,22 +109,10 @@ export const useUploadChecklistItem = ({
         mutationFn: async (formData: FormData) => {
             return await vehicleChecklistsApi.uploadItemImage({ itemId, formData })
         },
-        onSuccess: (data) => {
-            queryClient.setQueryData<VehicleChecklistViewRes>(
-                [...QUERY_KEYS.VEHICLE_CHECKLISTS, checklistId],
-                (prev) => {
-                    if (!prev) return prev
-
-                    return {
-                        ...prev,
-                        vehicleChecklistItems: prev.vehicleChecklistItems
-                            ? prev.vehicleChecklistItems
-                                  .filter((item) => item.id !== data.id)
-                                  .concat(data)
-                            : [data]
-                    }
-                }
-            )
+        onSuccess: () => {
+            queryClient.refetchQueries({
+                queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, checklistId]
+            })
             onSuccess?.()
             toast.success(t("success.upload"))
         },

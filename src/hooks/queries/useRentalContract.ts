@@ -1,7 +1,7 @@
 import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { BackendError } from "@/models/common/response"
-import { ContractQueryParams } from "@/models/rental-contract/schema/request"
+import { ContractQueryParams, HandoverContractReq } from "@/models/rental-contract/schema/request"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { rentalContractApi } from "@/services/rentalContractApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
@@ -108,7 +108,7 @@ export const useConfirmContract = ({ onSuccess }: { onSuccess?: () => void }) =>
     return { acceptContract, rejectContract }
 }
 
-export const useSearchRentalContracts = ({
+export const useGetAllRentalContracts = ({
     params,
     enabled = true
 }: {
@@ -189,13 +189,18 @@ export const useCreateContractManual = ({ onSuccess }: { onSuccess?: () => void 
     })
 }
 
-export const useHandoverContract = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useHandoverContract = ({ id, onSuccess }: { id: string; onSuccess?: () => void }) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: rentalContractApi.handover,
+        mutationFn: async ({ req }: { req: HandoverContractReq }) => {
+            await rentalContractApi.handover({ id, req })
+        },
         onSuccess: () => {
+            queryClient.refetchQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
             onSuccess?.()
+            toast.success(t("success.handover"))
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))
@@ -203,14 +208,19 @@ export const useHandoverContract = ({ onSuccess }: { onSuccess?: () => void }) =
     })
 }
 
-export const useReturnContract = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useReturnContract = ({ id, onSuccess }: { id: string; onSuccess?: () => void }) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: rentalContractApi.return,
-        onSuccess: (data) => {
-            console.log("Invoice id: " + data.returnInvoiceId)
+        // mutationFn: rentalContractApi.return,
+        mutationFn: async () => {
+            await rentalContractApi.return({ id })
+        },
+        onSuccess: () => {
+            queryClient.refetchQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
             onSuccess?.()
+            toast.success(t("success.return"))
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))
@@ -224,8 +234,8 @@ export const useCancelContract = ({ onSuccess }: { onSuccess?: () => void }) => 
     return useMutation({
         mutationFn: rentalContractApi.cancel,
         onSuccess: () => {
-            toast.success(t("success.cancel"))
             onSuccess?.()
+            toast.success(t("success.cancel"))
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))

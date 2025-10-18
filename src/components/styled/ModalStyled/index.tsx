@@ -18,7 +18,7 @@ import { cn } from "@heroui/react"
 export function ModalStyled(props: ModalProps) {
     return (
         <Modal
-            placement="center"
+            placement="top"
             color="secondary"
             isDismissable={false}
             size="lg"

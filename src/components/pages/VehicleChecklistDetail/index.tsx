@@ -1,21 +1,21 @@
 "use client"
-import { ButtonStyled, InputStyled, SpinnerStyled } from "@/components"
-import { CheckboxStyled } from "@/components/"
+import { ButtonStyled, InputStyled, SignatureSection, SpinnerStyled } from "@/components"
 import { VehicleChecklistTypeLabels } from "@/constants/labels"
 import { useGetVehicleChecklistById, useName, useUpdateVehicleChecklist } from "@/hooks"
 import { UpdateVehicleChecklistReq } from "@/models/checklist/schema/request"
 import { useFormik } from "formik"
-
+import * as Yup from "yup"
 import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { TableCheckListItems } from "./TableCheckListItems"
 import { Spinner } from "@heroui/react"
+import { VehicleChecklistType } from "@/constants/enum"
 
 export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; isStaff?: boolean }) {
     const { t } = useTranslation()
     const { toFullName } = useName()
 
-    const { data: checklistItem, isLoading } = useGetVehicleChecklistById({
+    const { data: checklist, isLoading } = useGetVehicleChecklistById({
         id: id as string,
         enabled: true
     })
@@ -24,7 +24,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
     const handleUpdate = useCallback(
         async (value: UpdateVehicleChecklistReq) => {
             await updateChecklist.mutateAsync({
-                id: checklistItem!.id,
+                id: checklist!.id,
                 req: {
                     checklistItems: value.checklistItems,
                     isSignedByCustomer: value.isSignedByCustomer,
@@ -32,16 +32,23 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                 }
             })
         },
-        [checklistItem, updateChecklist]
+        [checklist, updateChecklist]
     )
 
     const formik = useFormik({
         initialValues: {
-            isSignedByStaff: checklistItem?.isSignedByStaff ?? false,
-            isSignedByCustomer: checklistItem?.isSignedByCustomer ?? false,
-            checklistItems: checklistItem?.vehicleChecklistItems || []
+            isSignedByStaff: checklist?.isSignedByStaff ?? false,
+            isSignedByCustomer: checklist?.isSignedByCustomer ?? false,
+            checklistItems: checklist?.vehicleChecklistItems || []
         },
         enableReinitialize: true,
+        validationSchema: Yup.object().shape({
+            isSignedByStaff: Yup.boolean().oneOf([true], t("signature.signed_by_staff_require")),
+            isSignedByCustomer:
+                checklist?.type == VehicleChecklistType.OutOfContract
+                    ? Yup.boolean().notRequired()
+                    : Yup.boolean().oneOf([true], t("signature.signed_by_customer_require"))
+        }),
         onSubmit: handleUpdate
     })
 
@@ -59,7 +66,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                 <h2 className="text-3xl font-bold text-gray-800">
                     {t("vehicle_checklist.checklist")} –{" "}
                     <span className="text-primary">
-                        {VehicleChecklistTypeLabels[checklistItem!.type]}
+                        {VehicleChecklistTypeLabels[checklist!.type]}
                     </span>
                 </h2>
             </div>
@@ -69,12 +76,12 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                 <div className="flex flex-col gap-4">
                     <InputStyled
                         label={t("vehicle_checklist.checklist_type")}
-                        value={VehicleChecklistTypeLabels[checklistItem!.type]}
+                        value={VehicleChecklistTypeLabels[checklist!.type]}
                         readOnly
                     />
                     <InputStyled
                         label={t("vehicle_checklist.contract_id")}
-                        value={checklistItem?.contractId}
+                        value={checklist?.contractId}
                         readOnly
                     />
                 </div>
@@ -83,16 +90,16 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                     <InputStyled
                         label={t("vehicle_checklist.staff_name")}
                         value={toFullName({
-                            firstName: checklistItem?.staff.firstName,
-                            lastName: checklistItem?.staff.lastName
+                            firstName: checklist?.staff.firstName,
+                            lastName: checklist?.staff.lastName
                         })}
                         readOnly
                     />
                     <InputStyled
                         label={t("vehicle_checklist.customer_name")}
                         value={toFullName({
-                            firstName: checklistItem?.customer?.firstName,
-                            lastName: checklistItem?.customer?.lastName
+                            firstName: checklist?.customer?.firstName,
+                            lastName: checklist?.customer?.lastName
                         })}
                         readOnly
                     />
@@ -101,7 +108,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                 <div className="flex flex-col gap-4">
                     <InputStyled
                         label={t("vehicle_checklist.vehicle_license_plate")}
-                        value={checklistItem?.vehicle.licensePlate}
+                        value={checklist?.vehicle.licensePlate}
                         readOnly
                     />
                     {/* <InputStyled
@@ -122,33 +129,65 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                 setFieldValue={formik.setFieldValue}
             />
 
-            {/* Signature */}
-            <div className="flex justify-between px-16 pt-10 gap-2 ">
+            {/* <div className="flex justify-between px-16 pt-10 gap-2 ">
                 <CheckboxStyled
+                    isReadOnly={!isStaff}
                     isSelected={formik.values.isSignedByStaff}
                     onValueChange={(value) => formik.setFieldValue("isSignedByStaff", value)}
                 >
-                    {t("vehicle_checklist.signed_by_staff")}
+                    {t("signature.signed_by_staff")}
                 </CheckboxStyled>
                 <CheckboxStyled
+                    isReadOnly={!isStaff}
                     isSelected={formik.values.isSignedByCustomer}
                     onValueChange={(value) => formik.setFieldValue("isSignedByCustomer", value)}
                 >
-                    {t("vehicle_checklist.signed_by_customer")}
+                    {t("signature.signed_by_customer")}
                 </CheckboxStyled>
-            </div>
+            </div> */}
 
-            <div className="flex justify-center">
-                <ButtonStyled
-                    type="submit"
-                    color="primary"
-                    className="mt-10 p-6"
-                    isDisabled={formik.isSubmitting}
-                    onPress={() => formik.handleSubmit()}
-                >
-                    {formik.isSubmitting ? <Spinner color="secondary" /> : t("common.update")}
-                </ButtonStyled>
-            </div>
+            {/* Signature */}
+            <SignatureSection
+                // className="pt-10"
+                sectionClassName="mt-8"
+                isReadOnly={!isStaff}
+                staffSign={{
+                    id: "isSignedByStaff",
+                    name: "isSignedByStaff",
+                    checked: formik.values.isSignedByStaff,
+                    isInvalid: !!(formik.touched.isSignedByStaff && formik.errors.isSignedByStaff),
+                    isSelected: formik.values.isSignedByStaff,
+                    // onValueChange: (value) => formik.setFieldValue("isSignedByStaff", value)
+                    onChange: formik.handleChange,
+                    onBlur: formik.handleBlur
+                }}
+                customerSign={{
+                    id: "isSignedByCustomer",
+                    name: "isSignedByCustomer",
+                    checked: formik.values.isSignedByCustomer,
+                    isInvalid: !!(
+                        formik.touched.isSignedByCustomer && formik.errors.isSignedByCustomer
+                    ),
+                    isSelected: formik.values.isSignedByCustomer,
+                    // onValueChange: (value) => formik.setFieldValue("isSignedByCustomer", value)
+                    onChange: formik.handleChange,
+                    onBlur: formik.handleBlur
+                }}
+            />
+
+            {isStaff && !checklist?.isSignedByStaff && !checklist?.isSignedByCustomer && (
+                <div className="flex justify-center">
+                    <ButtonStyled
+                        type="submit"
+                        color="primary"
+                        className="mt-10 p-6"
+                        isDisabled={formik.isSubmitting || !formik.isValid}
+                        onPress={() => formik.handleSubmit()}
+                    >
+                        {formik.isSubmitting ? <Spinner color="secondary" /> : t("common.update")}
+                    </ButtonStyled>
+                </div>
+            )}
         </form>
     )
 }

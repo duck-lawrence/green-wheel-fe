@@ -7,7 +7,7 @@ import { formatCurrency } from "@/utils/helpers/currency"
 import { InvoiceItemType } from "@/constants/enum"
 import { useTranslation } from "react-i18next"
 
-export default function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
+export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
     const { t } = useTranslation()
     const deposit = invoice.deposit?.amount ?? 0
     const penalty =
