@@ -6,46 +6,50 @@ import { requestWrapper } from "@/utils/helpers/axiosHelper"
 export const authApi = {
     login: ({ email, password }: { email: string; password: string }) =>
         requestWrapper<TokenRes>(async () => {
-            const res = await axiosInstance.post("/users/login", { email, password })
+            const res = await axiosInstance.post("/auth/login", { email, password })
             return res.data
         }),
     logout: () =>
         requestWrapper<void>(async () => {
-            await axiosInstance.post("/users/logout")
+            await axiosInstance.post("/auth/logout")
         }),
     loginGoogle: (credential: string) =>
         requestWrapper<TokenRes>(async () => {
-            const res = await axiosInstance.post("/users/login-google", { credential })
+            const res = await axiosInstance.post("/auth/google", { credential })
             return res.data
         }),
 
+    // =======================
     // Register
+    // =======================
     register: ({ email }: { email: string }) =>
         requestWrapper<void>(async () => {
-            await axiosInstance.post("/users/register", { email })
+            await axiosInstance.post("/auth/register", { email })
         }),
     registerVerify: ({ otp, email }: { otp: string; email: string }) =>
         requestWrapper<void>(async () => {
-            await axiosInstance.post("/users/register/verify-otp", { otp, email })
+            await axiosInstance.post("/auth/register/verify-otp", { otp, email })
         }),
     regsiterComplete: (req: UserRegisterCompleteReq) =>
         requestWrapper<TokenRes>(async () => {
-            const res = await axiosInstance.post("/users/register/complete", req)
+            const res = await axiosInstance.post("/auth/register/complete", req)
             return res.data
         }),
 
+    // =======================
     // Password
+    // =======================
     changePassword: (req: UserChangePasswordReq) =>
         requestWrapper<void>(async () => {
-            await axiosInstance.put("/users/change-password", req)
+            await axiosInstance.put("/auth/change-password", req)
         }),
     forgotPassword: ({ email }: { email: string }) =>
         requestWrapper<void>(async () => {
-            await axiosInstance.post("/users/forgot-password", { email })
+            await axiosInstance.post("/auth/forgot-password", { email })
         }),
     forgotPasswordVerify: ({ otp, email }: { otp: string; email: string }) =>
         requestWrapper<void>(async () => {
-            await axiosInstance.post("/users/forgot-password/verify-otp", { otp, email })
+            await axiosInstance.post("/auth/forgot-password/verify-otp", { otp, email })
         }),
     resetPassword: ({
         newPassword,
@@ -55,7 +59,7 @@ export const authApi = {
         confirmNewPassword: string
     }) =>
         requestWrapper<void>(async () => {
-            await axiosInstance.put("/users/reset-password", {
+            await axiosInstance.put("/auth/forgot-password/reset", {
                 password: newPassword,
                 confirmPassword: confirmNewPassword
             })

@@ -10,7 +10,10 @@
         "reset_password": "Reset password successful",
         "change_password": "Change password successful",
         "upload": "Upload successful",
-        "payment": "Payment success"
+        "payment": "Payment success",
+        "cancel": "Cancel success",
+        "handover": "Handover success",
+        "return": "Return success"
     },
     "failed": {
         "create": "Failed to create",
@@ -19,19 +22,26 @@
         "refresh": "Failed to refresh",
         "login": "Login failed",
         "logout": "Logout failed",
+        "upload": "Upload failed",
         "payment": "Payment failed"
     },
     "common": {
         "upload": "Upload",
         "update": "Update",
         "edit": "Edit",
+        "edit_user": "Edit User",
         "save_changes": "Save Changes",
         "cancel": "Cancel",
         "too_many_request": "Too many request. Try again later",
         "unexpected_error": "An unexpected error occurred. Please try again later.",
         "search": "Search",
         "save": "Save",
-        "delete": "Delete"
+        "delete": "Delete",
+        "create": "Create",
+        "close": "Close"
+    },
+    "json": {
+        "parsing_failed": "Failed to parse json"
     },
     "auth": {
         "otp": "OTP",
@@ -61,14 +71,16 @@
         "rate_limit_otp": "Resend OTP after 1 minute",
         "attemp_otp": "Too many attemps, please resend to get new OTP",
 
+        "user_id_is_required": "User ID is required",
+
         "email_already_exists": "This email already exists",
         "email_require": "Email is required",
         "invalid_email": "Email is invalid",
 
         "password_too_short": "Password must be at least 8 characters",
+        "confirm_password_is_incorrect": "Confirm password must be the same as the new password",
         "password_can_not_empty": "Password is required",
         "new_password_can_not_empty": "New password is required",
-        "confirm_password_equal": "Confirm password must be the same as the new password",
         "password_strength": "Password must contain at least 1 uppercase letter, 1 number, and 1 special character",
         "old_password_is_incorrect": "Old password is incorrect",
         "old_password_require": "Old password is required",
@@ -102,6 +114,7 @@
         "sex_require": "Sex is required",
         "choose_sex": "Choose Sex",
 
+        "avatar_not_found": "Avatar not found",
         "upload_avatar": "Upload avatar",
         "delete_avatar": "Delete avatar",
 
@@ -114,6 +127,9 @@
         "please_upload_citizen_identity": "Please upload your Cititzen Identity",
         "citizen_identity_number_require": "Cititzen Identity number is required",
         "citizen_identity_expired_time_require": "Cititzen Identity expired time is required",
+        "invalid_citizen_identity_data": "Invalid citizen identity data",
+        "citizen_identity_not_found": "Citizen identity not found",
+        "citizen_identity_duplicate": "This citizen identity already exists",
 
         "driver_license": "Driver License",
         "upload_driver_license": "Upload Driver License",
@@ -122,10 +138,15 @@
         "driver_license_class_require": "Driver License class is required",
         "driver_license_number_require": "Driver License number is required",
         "driver_license_expired_time_require": "Driver License expired time is required",
+        "invalid_driver_license_data": "Invalid driver license data",
+        "driver_license_not_found": "Driver license not found",
+        "driver_license_duplicate": "This driver license already exists",
 
         "unauthorized": "Unauthorized",
+        "do_not_have_permission": "Permission denied",
         "invalid_token": "Invalid token",
         "invalid_access_token": "Invalid access token",
+        "invalid_refresh_token": "Invalid refresh token",
         "missing_token": "Missing token in header",
         "user_not_found": "User not found",
         "account_information": "Account information",
@@ -174,6 +195,7 @@
         "pickup_return_time": "Pickup and return time",
         "station": "Station",
         "status": "Status",
+        "no": "No.",
         "id": "Id",
         "name": "Name",
         "email": "Email",
@@ -184,7 +206,16 @@
         "citizen_id": "Citizen ID",
         "driver_license": "Driver License",
         "documents": "Documents",
-        "description": "Description"
+        "description": "Description",
+        "vehicle": "Vehicle",
+        "type": "Type",
+        "staff": "Staff",
+        "customer": "Customer",
+        "contract_id": "Contract ID",
+        "unknown_station": "Unknown station",
+        "unknown_brand": "Unknown brand",
+        "unknown_model": "Unknown model",
+        "notes": "Notes"
     },
     "contral_form": {
         "payment_method_require": "Please select a payment method",
@@ -192,6 +223,32 @@
         "agree_terms_require": "You must agree to the payment terms",
         "agree_data_policy_require": "You must agree to the data sharing terms",
         "wait_for_confirm": "Your order is being processed. Please wait for the confirmation email before making a payment."
+    },
+    "vehicle": {
+        "not_found": "Vehicle not found",
+        "license_plate_is_exist": "This license plate already exists",
+        "license_plate": "License plate",
+        "license_plate_placeholder": "Enter license plate",
+        "model_id": "Model ID",
+        "model_id_placeholder": "Enter model ID",
+        "model_name": "Vehicle model",
+        "model_name_placeholder": "Select model",
+        "station_name": "Station",
+        "station_placeholder": "Select station",
+        "status_label": "Status",
+        "status_placeholder": "Select status",
+        "management_empty": "No found vehicles.",
+
+        "status_value_available": "Available",
+        "status_value_unavailable": "Unavailable",
+        "status_value_rented": "Rented",
+        "status_value_maintenance": "Maintenance",
+        "status_value_missingnoreason": "Missing (no reason)",
+        "status_value_latereturn": "Late return",
+        "status_value_unknown": "Unknown"
+    },
+    "vehicle_segment": {
+        "not_found": "Vehicle segment not found"
     },
     "vehicle_model": {
         "station": "Station",
@@ -214,7 +271,35 @@
         "seats": "Seats",
         "battery_capacity": "Battery capacity",
         "airbag": "Airbag",
-        "not_include_tax": "Not include tax"
+        "not_include_tax": "Not include tax",
+        "not_found": "Vehicle model not found",
+        "rent_time_is_not_available": "Rent time is not available",
+        "name_require": "Name is required",
+        "seating_capacity_require": "Seating capacity is required",
+        "seating_capacity_can_not_negative": "Seating capacity can not be negative",
+        "airbag_require": "Ari bag is required",
+        "airbag_can_not_negative": "Air bag can not be negative",
+        "motor_power_require": "Motor power is required",
+        "motor_power_can_not_negative": "Motor power can not be negative",
+        "battery_capacity_require": "Battery capacity is required",
+        "battery_capacity_can_not_negative": "Battery capacity can not be negative",
+        "eco_range_km_require": "Eco range km is required",
+        "eco_range_km_can_not_negative": "Eco range km can not be negative",
+        "sport_rang_km_require": "Sport range km is required",
+        "sport_rang_km_can_not_negative": "Sport range km can not be negative",
+        "brand_id_require": "Brand id is required",
+        "segment_id_require": "Segment id is required"
+    },
+    "vehicle_model_image": {
+        "main_image_not_found": "Main image not found"
+    },
+    "vehicle_component": {
+        "not_found": "Vehicke component not found",
+        "component": "Component"
+    },
+    "station": {
+        "station": "Station",
+        "not_found": "Station not found"
     },
     "vehicle_filter": {
         "require": "Please complete the filter form before continuing",
@@ -293,9 +378,12 @@
         "refund_payment": "Refund payment",
         "other_payment": "Other payment",
         "reservation_payment": "Reservation payment",
-        "customerSupport": "Customer support",
-        "staffReport": "Staff report",
-        "escalatedToAdmin": "Escalated to admin"
+        "customer_support": "Customer support",
+        "staff_report": "Staff report",
+        "escalated_to_admin": "Escalated to admin",
+        "out_of_contract": "Out Of Contract",
+        "return": "Return",
+        "handover": "Handover"
     },
     "car_rental": {
         "vehicle": "Vehicle",
@@ -339,7 +427,7 @@
     },
     "staff": {
         "sidebar_dashboard": "Dash Board",
-        "sidebar_handovers": "Handovers",
+        "sidebar_vehicle_checklists": "Checklists",
         "sidebar_contracts": "Contracts",
         "sidebar_test": "Test",
         "sidebar_verify_customer": "Customer Verification",
@@ -413,7 +501,14 @@
         "sidebar_staff_management": "Staff Management",
         "staff_management_title": "Staff Management",
         "staff_management_description": "View and manage staff profiles and access levels across branches.",
-        "staff_management_placeholder": "Connect this area with HR services to onboard, update, or offboard team members."
+        "staff_management_placeholder": "Connect this area with HR services to onboard, update, or offboard team members.",
+        "vehicle_management_title": "Vehicle Management",
+        "vehicle_filter_title": "Vehicle filters",
+        "vehicle_new_button": "New",
+        "vehicle_create_title": "Create new vehicle",
+        "vehicle_edit_title": "Update vehicle",
+        "vehicle_delete_title": "Delete vehicle",
+        "vehicle_delete_confirm": "Are you sure you want to remove this vehicle from the fleet?"
     },
     "footer": {
         "green_wheel_company_name": "GREEN WHEEL Trading and Service Joint Stock Company",
@@ -459,7 +554,7 @@
         "actual_start_date": "Actual start date",
         "end_date": "End date",
         "actual_end_date": "Actual end date",
-        "staff_and_invoice": "Processing staff & Invoice",
+        "staff": "Processing staff",
         "vehicle_handover_staff": "Vehicle handover staff",
         "vehicle_return_staff": "Vehicle return staff",
         "payment_invoice_list": "Payment invoice list",
@@ -479,10 +574,37 @@
         "cleaning_fee": "Cleaning fee",
         "late_return_fee": "Late return fee",
         "damage_fee": "Damage fee",
+        "damage_details": "Damage details",
         "view_damage_details": "View damage details",
         "total": "Total",
         "no_damage_items": "No damage items.",
-        "no_detailed_description": "No detailed description."
+        "no_detailed_description": "No detailed description.",
+        "create_at": "Created at",
+        "user_already_have_contract": "You can only have one pending or active contract at a time",
+        "not_found": "Rental contract not found",
+        "already_process": "This rental contract already processes",
+        "can_not_cancel": "This rental contract can not be cancelled",
+        "handover": "Handover",
+        "return": "Return",
+        "fees_include_tax": "Fees marked with * include tax"
+    },
+    "invoice": {
+        "not_found": "Invoice not found",
+        "this_invoice_was_paid_or_cancel": "This invoice was paid or cancelled"
+    },
+    "momo": {
+        "invalid_signature": "Invalid signature",
+        "missing_access_key_partner_code_secret_key": "Missing required keys",
+        "not_have_permission": "Permission denied",
+        "invalid_end_point": "Invalid end point",
+        "failed_to_create_momo_payment": "Failed to create momo payment"
+    },
+    "ticket": {
+        "not_found": "Ticket not found",
+        "already_escalated": "This ticket already escalated to admin"
+    },
+    "station_feedback": {
+        "not_found": "Station feedback not found"
     },
     "about_us": {
         "": ""
@@ -490,5 +612,77 @@
     "dispatch": {
         "create_success": "Create dispatch successfully",
         "update_success": "Update dispatch successfully"
+    },
+    "document_preview": {
+        "upload_image": "Upload image",
+        "replace_image": "Replace image",
+        "empty_citizen_identity": "Citizen identity document has not been uploaded yet.",
+        "empty_driver_license": "Driver license document has not been uploaded yet.",
+        "delete_confirm": "Are you sure you want to remove this document?"
+    },
+    "staff_management": {
+        "page_title": "Staff Management",
+        "page_subtitle": "Create, update, and monitor staff assignments across stations.",
+        "filter_title": "Filters",
+        "filter_keyword": "Keyword",
+        "filter_keyword_placeholder": "Search by name or phone number",
+        "filter_station": "Station",
+        "filter_station_placeholder": "Select station",
+        "all_stations": "All stations",
+        "add_staff_button": "Add Staff",
+        "add_staff_title": "Add Staff",
+        "edit_staff_title": "Edit Staff",
+        "column_staff": "Staff",
+        "empty_state": "No staff members match the current filters.",
+        "unknown_name": "Unnamed staff",
+        "no_email": "No email",
+        "no_phone": "No phone",
+        "unknown_station": "Unknown station",
+        "refreshing": "Refreshing data...",
+        "form_full_name": "Full name",
+        "form_full_name_required": "Full name is required",
+        "form_full_name_invalid": "Full name contains invalid characters",
+        "form_email": "Email",
+        "form_email_required": "Email is required",
+        "form_email_invalid": "Email is invalid",
+        "form_phone": "Phone",
+        "form_phone_required": "Phone number is required",
+        "form_phone_invalid": "Phone number format is invalid",
+        "form_station": "Station",
+        "form_station_placeholder": "Select a station",
+        "form_station_required": "Station is required",
+        "form_date_of_birth": "Date of birth",
+        "form_date_of_birth_required": "Date of birth is required",
+        "form_status": "Status",
+        "status_active": "Active",
+        "status_inactive": "Inactive",
+        "delete_confirm": "Are you sure you want to remove this staff member?",
+        "saving": "Saving...",
+        "creating": "Creating..."
+    },
+    "vehicle_checklist": {
+        "not_found": "Vehicle checklist not found",
+        "vehicle_checklist": "Vehicle checklist",
+        "checklist": "Checklist",
+        "checklist_type": "Checklist type",
+        "staff_name": "Staff name",
+        "customer_name": "Customer name",
+        "vehicle_license_plate": "Vehicle license plate",
+        "status": "Status",
+        "contract_id": "Contract ID",
+        "create_handover": "Create handover checklist",
+        "view_handover": "View handover checklist",
+        "create_return": "Create return checklist",
+        "view_return": "View return checklist",
+        "create_out_of_contract": "Create out of contract checklist",
+        "view_out_of_contract": "View out of contract checklist",
+        "item_image": "Vehicle checklist item image"
+    },
+    "signature": {
+        "signature": "Signature",
+        "signed_by_staff": "Staff signature",
+        "signed_by_customer": "Customer signature",
+        "signed_by_staff_require": "Staff must sign",
+        "signed_by_customer_require": "Customer must sign"
     }
 }

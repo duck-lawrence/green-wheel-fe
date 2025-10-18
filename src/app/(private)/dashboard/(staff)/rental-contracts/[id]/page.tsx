@@ -9,5 +9,5 @@ export default function RentalContractPage() {
 
     if (!contractId) return <SpinnerStyled />
 
-    return <RentalContractDetail contractId={contractId} />
+    return <RentalContractDetail contractId={contractId} isStaff={true} />
 }

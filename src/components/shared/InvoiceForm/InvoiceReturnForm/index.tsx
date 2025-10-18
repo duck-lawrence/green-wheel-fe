@@ -1,15 +1,16 @@
 "use client"
 import React from "react"
-import { ButtonStyled, InputStyled, TextareaStyled } from "@/components"
+import { ButtonStyled, DetailDamageModal, InputStyled, TextareaStyled } from "@/components"
 import { Money, Broom, Clock, Wrench } from "@phosphor-icons/react"
 import { useDisclosure } from "@heroui/react"
-import SeeDetailDamageModal from "@/components/modals/SeeDetailDamageModel"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { InvoiceItemType } from "@/constants/enum"
 import { useTranslation } from "react-i18next"
 
-export default function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes }) {
+export * from "./DetailDamage"
+
+export function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes }) {
     const { t } = useTranslation()
     const { isOpen, onOpen, onOpenChange } = useDisclosure()
     const clean = formatCurrency(
@@ -30,6 +31,7 @@ export default function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes
                 value={clean}
                 startContent={<Broom size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
+                isIncludeTax={true}
             />
             <InputStyled
                 label={t("rental_contract.late_return_fee")}
@@ -42,26 +44,21 @@ export default function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes
                 value={formatCurrency(totalDamage)}
                 startContent={<Wrench size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
+                isIncludeTax={true}
             />
-            <div className="mt-1 flex justify-center">
+            <div className="mt-1">
                 <ButtonStyled
                     onPress={onOpen}
                     size="lg"
+                    variant="bordered"
                     color="primary"
-                    className="px-8 py-3 font-semibold text-white rounded-xl 
-              bg-gradient-to-r from-primary to-teal-400 
-              hover:from-teal-500 hover:to-green-400 
-              shadow-md transition-all duration-300"
+                    className="px-8 py-3 hover:text-white hover:bg-primary"
                 >
                     {t("rental_contract.view_damage_details")}
                 </ButtonStyled>
             </div>
 
-            <SeeDetailDamageModal
-                isOpen={isOpen}
-                onOpenChange={onOpenChange}
-                itemDamage={invoice}
-            />
+            <DetailDamageModal isOpen={isOpen} onOpenChange={onOpenChange} itemDamage={invoice} />
 
             <InputStyled
                 label={t("rental_contract.total")}

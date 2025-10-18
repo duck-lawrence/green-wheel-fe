@@ -13,7 +13,8 @@ import {
     OrderStatus,
     InvoiceType,
     TicketType,
-    TicketStatus
+    TicketStatus,
+    VehicleChecklistType
 } from "./enum"
 
 export const SexLabels: Record<Sex, string> = {
@@ -42,12 +43,10 @@ export const InvoiceStatusLabels: Record<InvoiceStatus, string> = {
 }
 
 export const RentalContractStatusLabels: Record<RentalContractStatus, string> = {
-    [RentalContractStatus.RequestPending]: i18n.t("enum.request_pending"),
-    // [RentalContractStatus.ConfirmChangeStationPending]: i18n.t(
-    //     "enum.confirm_change_station_pending"
-    // ),
+    [RentalContractStatus.RequestPeding]: i18n.t("enum.request_pending"),
     [RentalContractStatus.PaymentPending]: i18n.t("enum.payment_pending"),
     [RentalContractStatus.Active]: i18n.t("enum.active"),
+    [RentalContractStatus.Returned]: i18n.t("enum.returned"),
     [RentalContractStatus.Completed]: i18n.t("enum.completed"),
     [RentalContractStatus.Cancelled]: i18n.t("enum.cancelled")
 }
@@ -108,14 +107,14 @@ export const PaymentMethodLabels: Record<PaymentMethod, string> = {
 // }
 
 export const TicketTypeLabels: Record<TicketType, string> = {
-    [TicketType.CustomerSupport]: i18n.t("enum.customerSupport"),
-    [TicketType.StaffReport]: i18n.t("enum.staffReport")
+    [TicketType.CustomerSupport]: i18n.t("enum.customer_support"),
+    [TicketType.StaffReport]: i18n.t("enum.staff_report")
 }
 
 export const TicketStatusLabels: Record<TicketStatus, string> = {
     [TicketStatus.Pending]: i18n.t("enum.pending"),
     [TicketStatus.Resolve]: i18n.t("enum.resolve"),
-    [TicketStatus.EscalatedToAdmin]: i18n.t("enum.escalatedToAdmin")
+    [TicketStatus.EscalatedToAdmin]: i18n.t("enum.escalated_to_admin")
 }
 
 export const LicenseClassLabels: Record<LicenseClass, string> = {
@@ -156,4 +155,10 @@ export const InvoiceTypeLabels: Record<InvoiceType, string> = {
     [InvoiceType.Refund]: i18n.t("enum.refund_payment"),
     [InvoiceType.Other]: i18n.t("enum.other_payment"),
     [InvoiceType.Reservation]: i18n.t("enum.reservation_payment")
+}
+
+export const VehicleChecklistTypeLabels: Record<VehicleChecklistType, string> = {
+    [VehicleChecklistType.OutOfContract]: i18n.t("enum.out_of_contract"),
+    [VehicleChecklistType.Handover]: i18n.t("enum.handover"),
+    [VehicleChecklistType.Return]: i18n.t("enum.return")
 }

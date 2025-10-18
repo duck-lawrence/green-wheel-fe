@@ -88,13 +88,7 @@ export default function AboutPage() {
                                 are environmentally friendly, helping customers enjoy smooth,
                                 cost-effective, and eco-conscious journeys.
                             </p>
-                            <ButtonStyled
-                                color="primary"
-                                variant="solid"
-                                className="
-                                bg-gradient-to-r from-primary to-teal-400
-                              hover:from-teal-500 hover:to-green-400"
-                            >
+                            <ButtonStyled color="primary" variant="solid" className="btn-gradient">
                                 Learn more
                             </ButtonStyled>
                         </motion.div>
@@ -168,9 +162,7 @@ export default function AboutPage() {
                         href="/contact"
                         color="primary"
                         size="lg"
-                        className="
-                                bg-gradient-to-r from-primary to-teal-400
-                              hover:from-teal-500 hover:to-green-400"
+                        className="btn-gradient"
                     >
                         Contact Us
                     </ButtonStyled>

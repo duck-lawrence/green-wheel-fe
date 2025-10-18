@@ -1,13 +1,22 @@
 "use client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { QUERY_KEYS } from "@/constants/queryKey"
-import { StaffReq, UserFilterReq } from "@/models/user/schema/request"
+import {
+    CreateStaffReq,
+    StaffReq,
+    UserFilterReq,
+    UserUpdateReq
+} from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { userApi } from "@/services/userApi"
 import { useTranslation } from "react-i18next"
 import toast from "react-hot-toast"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { BackendError } from "@/models/common/response"
+import axiosInstance from "@/utils/axios"
+import { requestWrapper } from "@/utils/helpers/axiosHelper"
+import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
+import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
 
 export const useCreateNewUser = ({
     onSuccess,
@@ -17,11 +26,68 @@ export const useCreateNewUser = ({
     onError?: () => void
 } = {}) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
     return useMutation({
         mutationFn: userApi.create,
         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
             onSuccess?.()
             toast.success(t("success.create"))
+        },
+        onError: (error: BackendError) => {
+            onError?.()
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useCreateStaff = ({
+    onSuccess,
+    onError
+}: {
+    onSuccess?: () => void
+    onError?: () => void
+} = {}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (payload: Omit<CreateStaffReq, "role"> & { role?: "staff" }) =>
+            userApi.create({
+                ...payload,
+                role: "staff"
+            }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
+            onSuccess?.()
+            toast.success(t("success.create"))
+        },
+        onError: (error: BackendError) => {
+            onError?.()
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useUpdateUser = ({
+    onSuccess,
+    onError
+}: {
+    onSuccess?: () => void
+    onError?: () => void
+} = {}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: ({ userId, data }: { userId: string; data: UserUpdateReq }) =>
+            requestWrapper(async () => {
+                await axiosInstance.patch(`/users/${userId}`, data)
+            }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
+            onSuccess?.()
+            toast.success(t("success.update"))
         },
         onError: (error: BackendError) => {
             onError?.()
@@ -35,6 +101,7 @@ export const useGetAllUsers = ({
     enabled = true
 }: {
     params: UserFilterReq
+    // params: Record<string, unknown>
     enabled?: boolean
 }) => {
     const queryClient = useQueryClient()
@@ -64,6 +131,30 @@ export const useGetAllStaffs = ({
     return query
 }
 
+export const useDeleteUser = ({
+    onSuccess,
+    onError
+}: {
+    onSuccess?: () => void
+    onError?: () => void
+} = {}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: userApi.deleteById,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
+            onSuccess?.()
+            toast.success(t("success.delete"))
+        },
+        onError: (error: BackendError) => {
+            onError?.()
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
 // citizen identity
 export const useUploadCitizenIdById = ({
     userId,
@@ -71,7 +162,7 @@ export const useUploadCitizenIdById = ({
     onError
 }: {
     userId: string
-    onSuccess?: () => void
+    onSuccess?: (data: CitizenIdentityViewRes) => void
     onError?: () => void
 }) => {
     const { t } = useTranslation()
@@ -81,7 +172,7 @@ export const useUploadCitizenIdById = ({
         mutationFn: async (formData: FormData) => {
             return await userApi.uploadCitizenIdById({ userId, formData })
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
             // queryClient.setQueryData<CitizenIdentityViewRes>(
             //     [...QUERY_KEYS.ME, ...QUERY_KEYS.CITIZEN_IDENTITY],
             //     (prev) => {
@@ -92,7 +183,7 @@ export const useUploadCitizenIdById = ({
             //         }
             //     }
             // )
-            onSuccess?.()
+            onSuccess?.(data)
             toast.success(t("success.upload"))
         },
         onError: (error: BackendError) => {
@@ -168,7 +259,7 @@ export const useUploadDriverLicenseById = ({
     onError
 }: {
     userId: string
-    onSuccess?: () => void
+    onSuccess?: (data: DriverLicenseViewRes) => void
     onError?: () => void
 }) => {
     const { t } = useTranslation()
@@ -178,7 +269,7 @@ export const useUploadDriverLicenseById = ({
         mutationFn: async (formData: FormData) => {
             return await userApi.uploadDriverLicenseById({ userId, formData })
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
             // queryClient.setQueryData<DriverLicenseViewRes>(
             //     [...QUERY_KEYS.ME, ...QUERY_KEYS.DRIVER_LICENSE],
             //     (prev) => {
@@ -189,7 +280,7 @@ export const useUploadDriverLicenseById = ({
             //         }
             //     }
             // )
-            onSuccess?.()
+            onSuccess?.(data)
             toast.success(t("success.upload"))
         },
         onError: (error: BackendError) => {

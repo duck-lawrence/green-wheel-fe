@@ -9,17 +9,15 @@ import type { Selection } from "@heroui/react"
 
 import {
     ButtonStyled,
+    EditUserModal,
     FilterTypeStyle,
     FilterTypeOption,
-    ImageStyled,
     InputStyled,
-    ModalStyled,
-    ModalBodyStyled,
-    ModalContentStyled,
-    ModalFooterStyled,
-    ModalHeaderStyled,
+    PaginationStyled,
     TableUserManagement,
-    useModalDisclosure
+    useModalDisclosure,
+    CitizenIdentityPreviewModal,
+    DriverLicensePreviewModal
 } from "@/components"
 import { ROLE_ADMIN, ROLE_STAFF } from "@/constants/constants"
 import { useGetAllUsers } from "@/hooks"
@@ -34,6 +32,8 @@ type UserFilterFormValues = {
 export default function StaffUserManagementPage() {
     const { t } = useTranslation()
     const [users, setUsers] = useState<UserProfileViewRes[]>([])
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 10
     const [clientFilters, setClientFilters] = useState<{
         name: string
         phone: string
@@ -43,8 +43,12 @@ export default function StaffUserManagementPage() {
         phone: "",
         hasDocument: undefined
     })
-    const [preview, setPreview] = useState<{ url: string; label: string } | null>(null)
-    const { isOpen, onOpen, onOpenChange, onClose } = useModalDisclosure()
+    const [previewDocument, setPreviewDocument] = useState<{
+        user: UserProfileViewRes
+        type: "citizen" | "driver"
+    } | null>(null)
+    const [editingUser, setEditingUser] = useState<UserProfileViewRes | null>(null)
+    const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useModalDisclosure()
 
     const { data, isFetching } = useGetAllUsers({
         params: {},
@@ -70,13 +74,9 @@ export default function StaffUserManagementPage() {
         return Yup.object({
             name: Yup.string().trim(),
             phone: Yup.string().trim(),
-            hasDocument: Yup.mixed<UserFilterFormValues["hasDocument"]>().oneOf([
-                "both",
-                "license",
-                "citizen",
-                "none",
-                undefined
-            ])
+            hasDocument: Yup.mixed<UserFilterFormValues["hasDocument"]>()
+                .oneOf(["both", "license", "citizen", "none"] as const)
+                .optional()
         })
     }, [])
 
@@ -86,6 +86,7 @@ export default function StaffUserManagementPage() {
             phone: values.phone.trim(),
             hasDocument: values.hasDocument
         })
+        setPage(1)
     }, [])
 
     const formik = useFormik<UserFilterFormValues>({
@@ -153,18 +154,77 @@ export default function StaffUserManagementPage() {
         })
     }, [clientFilters.name, clientFilters.phone, clientFilters.hasDocument, users])
 
-    const handleOpenPreview = useCallback(
-        (label: string, url: string) => {
-            setPreview({ label, url })
-            onOpen()
+    const totalItems = filteredUsers.length
+    const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE))
+
+    useEffect(() => {
+        setPage((prev) => Math.min(prev, totalPages))
+    }, [totalPages])
+
+    const paginatedUsers = useMemo(() => {
+        const startIndex = (page - 1) * PAGE_SIZE
+        return filteredUsers.slice(startIndex, startIndex + PAGE_SIZE)
+    }, [filteredUsers, page, PAGE_SIZE])
+
+    const handleOpenDocumentPreview = useCallback(
+        (payload: {
+            user: UserProfileViewRes
+            type: "citizen" | "driver"
+            url?: string | null
+            label: string
+        }) => {
+            setPreviewDocument({ user: payload.user, type: payload.type })
         },
-        [onOpen]
+        []
     )
 
-    const handleClosePreview = useCallback(() => {
-        setPreview(null)
-        onClose()
-    }, [onClose])
+    const handleCloseDocumentPreview = useCallback(() => {
+        setPreviewDocument(null)
+    }, [])
+
+    const handleDocumentStateUpdate = useCallback(
+        (userId: string, type: "citizen" | "driver", nextUrl: string | null) => {
+            setUsers((prev) =>
+                prev.map((item) => {
+                    if (item.id !== userId) return item
+                    if (type === "citizen") {
+                        return {
+                            ...item,
+                            citizenUrl: nextUrl ?? undefined
+                        }
+                    }
+                    return {
+                        ...item,
+                        licenseUrl: nextUrl ?? undefined
+                    }
+                })
+            )
+
+            setPreviewDocument((prev) => {
+                if (!prev || prev.user.id !== userId) return prev
+                const updatedUser =
+                    type === "citizen"
+                        ? { ...prev.user, citizenUrl: nextUrl ?? undefined }
+                        : { ...prev.user, licenseUrl: nextUrl ?? undefined }
+
+                return { ...prev, user: updatedUser }
+            })
+        },
+        []
+    )
+
+    const handleOpenEditUser = useCallback(
+        (user: UserProfileViewRes) => {
+            setEditingUser(user)
+            onEditOpen()
+        },
+        [onEditOpen]
+    )
+
+    const handleCloseEditUser = useCallback(() => {
+        setEditingUser(null)
+        onEditClose()
+    }, [onEditClose])
 
     return (
         <div className="rounded-2xl bg-white shadow-sm px-6 py-6">
@@ -185,7 +245,7 @@ export default function StaffUserManagementPage() {
                         <ButtonStyled
                             type="submit"
                             isLoading={isFetching}
-                            className="bg-gradient-to-r from-primary to-teal-400 hover:from-teal-500 hover:to-green-400 text-white px-6 py-2 rounded-lg font-semibold transition-all"
+                            className="btn-gradient px-6 py-2 rounded-lg"
                         >
                             {t("staff.handovers_filters_search")}
                         </ButtonStyled>
@@ -249,32 +309,47 @@ export default function StaffUserManagementPage() {
             </div>
 
             <TableUserManagement
-                users={filteredUsers}
-                onPreviewDocument={({ label, url }) => handleOpenPreview(label, url)}
+                users={paginatedUsers}
+                onPreviewDocument={handleOpenDocumentPreview}
+                onEditUser={handleOpenEditUser}
             />
 
-            <ModalStyled isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-3xl">
-                <ModalContentStyled>
-                    <ModalHeaderStyled>{preview?.label}</ModalHeaderStyled>
-                    <ModalBodyStyled>
-                        {preview?.url ? (
-                            <ImageStyled
-                                src={preview.url}
-                                alt={preview.label}
-                                className="w-full h-auto"
-                            />
-                        ) : null}
-                    </ModalBodyStyled>
-                    <ModalFooterStyled>
-                        <ButtonStyled
-                            className="bg-primary text-white px-6"
-                            onPress={handleClosePreview}
-                        >
-                            {t("common.cancel")}
-                        </ButtonStyled>
-                    </ModalFooterStyled>
-                </ModalContentStyled>
-            </ModalStyled>
+            {totalItems > PAGE_SIZE ? ( //PAGE_SIZE = 10
+                <div className="mt-6 flex justify-center">
+                    <PaginationStyled
+                        pageNumber={page}
+                        totalItems={totalItems}
+                        pageSize={PAGE_SIZE}
+                        onPageChange={setPage}
+                    />
+                </div>
+            ) : null}
+
+            {previewDocument && previewDocument.type === "citizen" ? (
+                <CitizenIdentityPreviewModal
+                    userId={previewDocument.user.id}
+                    isOpen
+                    imageUrl={previewDocument.user.citizenUrl}
+                    onClose={handleCloseDocumentPreview}
+                    onUpdated={(nextUrl) =>
+                        handleDocumentStateUpdate(previewDocument.user.id, "citizen", nextUrl)
+                    }
+                />
+            ) : null}
+
+            {previewDocument && previewDocument.type === "driver" ? (
+                <DriverLicensePreviewModal
+                    userId={previewDocument.user.id}
+                    isOpen
+                    imageUrl={previewDocument.user.licenseUrl}
+                    onClose={handleCloseDocumentPreview}
+                    onUpdated={(nextUrl) =>
+                        handleDocumentStateUpdate(previewDocument.user.id, "driver", nextUrl)
+                    }
+                />
+            ) : null}
+
+            <EditUserModal user={editingUser} isOpen={isEditOpen} onClose={handleCloseEditUser} />
         </div>
     )
 }

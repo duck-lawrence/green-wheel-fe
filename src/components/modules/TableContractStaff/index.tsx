@@ -15,11 +15,12 @@ import { useTranslation } from "react-i18next"
 import { ButtonStyled } from "../../styled/ButtonStyled"
 import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
-import { useConfirmContract, useDay } from "@/hooks"
-import { VehicleStatusLabels } from "@/constants/labels"
+import { useConfirmContract, useDay, useName } from "@/hooks"
+import { RentalContractStatusLabels, VehicleStatusLabels } from "@/constants/labels"
 import { DropdownStyled } from "../../styled/DropdownStyled"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { useRouter } from "next/navigation"
+import { TableStyled } from "@/components/styled"
 
 export function TableContractStaff({
     contracts,
@@ -29,6 +30,7 @@ export function TableContractStaff({
     onStatusChange?: () => void
 }) {
     const { t } = useTranslation()
+    const { toFullName } = useName()
     const router = useRouter()
     const { acceptContract, rejectContract } = useConfirmContract({ onSuccess: onStatusChange })
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
@@ -56,11 +58,7 @@ export function TableContractStaff({
 
     return (
         <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
-            <Table
-                aria-label="Staff Contract Table"
-                className="min-w-full text-sm md:text-base"
-                removeWrapper
-            >
+            <TableStyled className="min-w-full text-sm md:text-base" removeWrapper>
                 <TableHeader>
                     <TableColumn className="text-center text-gray-700 font-semibold">
                         {t("table.id")}
@@ -99,7 +97,10 @@ export function TableContractStaff({
                                     {index + 1}
                                 </TableCell>
                                 <TableCell className="text-center text-gray-700 font-medium">
-                                    {`${item.customer.firstName} ${item.customer.lastName}`}
+                                    {toFullName({
+                                        firstName: item.customer.firstName,
+                                        lastName: item.customer.lastName
+                                    })}
                                 </TableCell>
                                 <TableCell className="text-center text-gray-600">
                                     {item.startDate && formatDateTime({ date: item.startDate })}
@@ -114,7 +115,7 @@ export function TableContractStaff({
                                 {/* status */}
                                 <TableCell className="text-center">
                                     <span className="px-3 py-1 rounded-full text-xs">
-                                        {VehicleStatusLabels[item.status]}
+                                        {RentalContractStatusLabels[item.status]}
                                     </span>
                                 </TableCell>
 
@@ -125,7 +126,8 @@ export function TableContractStaff({
                                             {/* Accept */}
                                             <ButtonStyled
                                                 color="primary"
-                                                className="bg-white text-black border-1 border-primary hover:text-white hover:bg-primary font-semibold px-5 py-2 rounded-lg w-28"
+                                                variant="bordered"
+                                                className="h-7 w-20 border-1 border-primary hover:text-white hover:bg-primary font-semibold px-5 py-2 rounded-lg"
                                                 onPress={() => handleAccept(item.id)}
                                                 isLoading={
                                                     acceptContract.isPending &&
@@ -143,7 +145,7 @@ export function TableContractStaff({
                                             >
                                                 <DropdownTrigger>
                                                     <ButtonStyled
-                                                        className="bg-white border-1 border-danger text-danger hover:bg-red-600 hover:text-white font-semibold w-28 rounded-lg"
+                                                        className="h-7 w-20 bg-white border-1 border-danger text-danger hover:bg-red-600 hover:text-white font-semibold rounded-lg"
                                                         isLoading={
                                                             rejectContract.isPending &&
                                                             rejectContract.variables?.id === item.id
@@ -180,7 +182,7 @@ export function TableContractStaff({
                         )
                     })}
                 </TableBody>
-            </Table>
+            </TableStyled>
         </div>
     )
 }

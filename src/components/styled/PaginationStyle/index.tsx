@@ -2,7 +2,12 @@
 
 import React from "react"
 import { Pagination, PaginationItemRenderProps, cn } from "@heroui/react"
-
+// KHÔNG ACTIVE "1" được khi click (nếu đang ở trang 1).
+//VÌ SAO: vì kế thừa thằng HeroUI, mà thằng HeroUI nó có sẵn cái isActive.
+//  Nên khi click vào "1" (đang active) thì nó không gọi onChange nữa.
+//  Mà ta muốn gọi onChange để set lại page=1 (dù vẫn là 1) để fetch lại dữ liệu.
+//  Nên click vào "1" vẫn gọi onChange nên nó không hiển thị màu. Cao nhân nào cao tay hơn
+// thì custom riêng . 
 // Code Backend
 // public IEnumerable<T> Items { get; set; }      // mảng dữ liệu
 // public int PageNumber { get; set; }            // Số trang hiện tại (1-based)
@@ -246,7 +251,10 @@ function renderItem(
 
     if (!inCore && !(isFirst && showFirst) && !(isLast && showLast)) return null
 
-    const clickNum = () => { if (value !== currentPage) onPageChange?.(value) }
+    const clickNum = () => {
+      // HeroUI skips onChange for the active page; we still invoke it so callers can refetch.
+      onPageChange?.(value)
+    }
 
     const btn = (
       <button

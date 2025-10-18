@@ -7,10 +7,9 @@ import { formatCurrency } from "@/utils/helpers/currency"
 import { Wrench, Note, CurrencyCircleDollar, HashStraight } from "@phosphor-icons/react"
 import { useTranslation } from "react-i18next"
 
-export default function DetailDamage({ invoice }: { invoice: InvoiceViewRes }) {
+export function DetailDamage({ invoice }: { invoice: InvoiceViewRes }) {
     const { t } = useTranslation()
 
-    // Lọc ra các item có type = Damage
     const itemDamage =
         invoice.invoiceItems?.filter((item) => item.type === InvoiceItemType.Damage) ?? []
 
@@ -28,7 +27,7 @@ export default function DetailDamage({ invoice }: { invoice: InvoiceViewRes }) {
                         <div className="flex items-center justify-between mb-2">
                             <p className="font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
                                 <Wrench size={20} className="text-primary" />
-                                {value.checkListItem?.component?.name || "Hạng mục hư hỏng"}
+                                {value.checkListItem?.component?.name || ""}
                             </p>
                             {/* Thông tin số lượng + chi phí */}
                             <div className="flex items-center gap-6 sm:gap-8">

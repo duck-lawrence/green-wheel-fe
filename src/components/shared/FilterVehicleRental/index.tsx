@@ -13,7 +13,7 @@ import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import toast from "react-hot-toast"
 import { DEFAULT_TIMEZONE, MAX_HOUR, MIN_HOUR } from "@/constants/constants"
 import dayjs from "dayjs"
-import { useGetAllVehicleModels } from "@/hooks/queries/useVehicleModel"
+import { useSearchVehicleModels } from "@/hooks/queries/useVehicleModel"
 
 export function FilterVehicleRental({ className = "" }: { className?: string }) {
     const { t } = useTranslation()
@@ -77,7 +77,7 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
     }, [endDate, formatDateTime, minEndDate, minStartDate, setEndDate, setStartDate, startDate])
 
     // get models
-    const { getCachedOrFetch } = useGetAllVehicleModels({
+    const { getCachedOrFetch } = useSearchVehicleModels({
         query: {
             stationId: stationId || "",
             startDate: startDate || formatDateTime({ date: minStartDate }),

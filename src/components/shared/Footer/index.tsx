@@ -126,12 +126,7 @@ function SocialIcon({
     Icon: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
 }) {
     return (
-        <Link
-            href={href}
-            className="p-2 rounded-xl bg-gradient-to-r from-primary to-teal-400 
-                 hover:from-teal-500 hover:to-green-400 text-black
-                 transition-all duration-300 hover:scale-110"
-        >
+        <Link href={href} className="btn-gradient p-2 hover:scale-110">
             <Icon size={22} weight="fill" />
         </Link>
     )

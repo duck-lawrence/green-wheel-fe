@@ -5,7 +5,8 @@ import { Money, ClipboardText, Receipt, Percent } from "@phosphor-icons/react"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { useTranslation } from "react-i18next"
-export default function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceViewRes }) {
+
+export function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceViewRes }) {
     const { t } = useTranslation()
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -22,6 +23,7 @@ export default function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceView
                 value={formatCurrency(invoice.subtotal)}
                 startContent={<Receipt size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
+                isIncludeTax={true}
             />
             <InputStyled
                 label={t("rental_contract.vat_tax")}

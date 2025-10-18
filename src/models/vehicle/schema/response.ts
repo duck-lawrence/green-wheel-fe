@@ -1,4 +1,5 @@
 import { BrandViewRes } from "@/models/brand/schema/response"
+import { VehicleStatus } from "@/constants/enum"
 
 export type VehicleModelViewRes = {
     id: string
@@ -14,7 +15,6 @@ export type VehicleModelViewRes = {
     sportRangeKm: number
     imageUrl?: string
     imageUrls: string[]
-
     brand: BrandViewRes
     segment: VehicleSegmentViewRes
     availableVehicleCount: number
@@ -42,4 +42,6 @@ export type VehicleViewRes = {
     licensePlate: string
     stationId: string
     model: VehicleModelViewRes
+    status: VehicleStatus
+
 }

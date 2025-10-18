@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { ButtonStyled, EnumPicker, InputStyled, TableContractStaff } from "@/components"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
-import { useSearchRentalContracts } from "@/hooks"
+import { useGetAllRentalContracts } from "@/hooks"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { RentalContractStatus } from "@/constants/enum"
@@ -13,9 +13,10 @@ import { ContractQueryParams } from "@/models/rental-contract/schema/request"
 
 export default function StaffContractsPage() {
     const { t } = useTranslation()
+
     const [filters, setFilter] = useState<ContractQueryParams>({})
     const [contracts, setContracts] = useState<RentalContractViewRes[]>([])
-    const { data, isFetching, refetch } = useSearchRentalContracts({
+    const { data, isFetching, refetch } = useGetAllRentalContracts({
         params: filters,
         enabled: true
     })
@@ -78,9 +79,7 @@ export default function StaffContractsPage() {
                         <ButtonStyled
                             type="submit"
                             isLoading={isFetching}
-                            className="bg-gradient-to-r from-primary to-teal-400 
-                                     hover:from-teal-500 hover:to-green-400 text-white 
-                                     px-6 py-2 rounded-lg font-semibold transition-all"
+                            className="btn-gradient px-6 py-2 rounded-lg"
                         >
                             {t("staff.handovers_filters_search")}
                         </ButtonStyled>
@@ -96,14 +95,12 @@ export default function StaffContractsPage() {
                         />
                         <InputStyled
                             label={t("table.phone")}
-                            placeholder="e.g. 0901234567"
                             value={formik.values.phone}
                             onChange={(value) => formik.setFieldValue("phone", value.target.value)}
                             onClear={() => formik.setFieldValue("phone", "")}
                         />
                         <InputStyled
                             label={t("table.citizen_id")}
-                            placeholder="e.g. 079123456789"
                             value={formik.values.citizenIdentityNumber}
                             onChange={(value) =>
                                 formik.setFieldValue("citizenIdentityNumber", value.target.value)
@@ -112,7 +109,6 @@ export default function StaffContractsPage() {
                         />
                         <InputStyled
                             label={t("table.driver_license")}
-                            placeholder="e.g. 60K-99999"
                             value={formik.values.driverLicenseNumber}
                             onChange={(value) =>
                                 formik.setFieldValue("driverLicenseNumber", value.target.value)
