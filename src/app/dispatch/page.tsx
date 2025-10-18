@@ -12,24 +12,22 @@ import { useTranslation } from "react-i18next"
 
 export default function DispatchPage() {
     const { t } = useTranslation()
+
     const { data: user } = useGetMe()
     const stationIdStaff = user?.station?.id
-    const { data: stations } = useGetAllStations()
-    const { data: vehicles } = useGetAllVehicle({
-        params: { stationId: stationIdStaff },
-        enabled: true
-    })
+    const { data: stations = [] } = useGetAllStations()
     const { data: staffs } = useGetAllStaffs({
         params: { stationId: stationIdStaff },
         enabled: true
     })
-
+    const { data: vehicles } = useGetAllVehicle({
+        params: { stationId: stationIdStaff },
+        enabled: true
+    })
     const createDispatch = useCreateDispatch({})
-
-    let stationDispatch = null
-    if (stations && stationIdStaff) {
-        stationDispatch = stationIdStaff === stations[0].id ? stations[1] : stations[0]
-    }
+    const stationDispatch = stationIdStaff
+        ? stations.find(({ id }) => id !== stationIdStaff) || null
+        : null
 
     const [textArea, setTextArea] = useState("")
     const [selectStaffs, setSelectStaffs] = useState<string[]>([])
@@ -59,7 +57,8 @@ export default function DispatchPage() {
                 <SectionStyled title="Station">
                     <InputStyled
                         label={t("table.station")}
-                        value={stationDispatch?.name}
+                        // value={stationDispatch?.name}
+                        value={stationIdStaff}
                         readOnly
                     />
                 </SectionStyled>
