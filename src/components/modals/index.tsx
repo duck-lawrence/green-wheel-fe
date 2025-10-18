@@ -6,6 +6,8 @@ import { ForgotPasswordModal } from "./ForgotPasswordModal"
 export * from "./ChecklistModal"
 export * from "./DetailDamageModal"
 export * from "./EditUserModal"
+export * from "./DocumentPreview"
+
 export * from "./ImageUploaderModal"
 
 

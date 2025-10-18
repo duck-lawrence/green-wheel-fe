@@ -2,18 +2,19 @@ import { UpdateCitizenIdentityReq } from "@/models/citizen-identity/schema/reque
 import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
 import { UpdateDriverLicenseReq } from "@/models/driver-license/schema/request"
 import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
-import { CreateUserReq, UserFilterReq, UserUpdateReq } from "@/models/user/schema/request"
+import { CreateStaffReq, CreateUserReq, UserUpdateReq, UserFilterReq } from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import axiosInstance from "@/utils/axios"
 import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
+
 export const userApi = {
-    getAll: (query: UserFilterReq) =>
+        getAll: (query: UserFilterReq) =>
         requestWrapper<UserProfileViewRes[]>(async () => {
             const params = buildQueryParams(query)
             const res = await axiosInstance.get("/users", { params })
             return res.data
         }),
-    create: (req: CreateUserReq) =>
+    create: (req: CreateUserReq | CreateStaffReq) =>
         requestWrapper<{ userId: string }>(async () => {
             const res = await axiosInstance.post("/users", req)
             return res.data
@@ -63,5 +64,9 @@ export const userApi = {
     deleteDriverLicenseById: (userId: string) =>
         requestWrapper<void>(async () => {
             await axiosInstance.delete(`/users/${userId}/driver-license`)
+        }),
+    deleteById: (userId: string) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.delete(`/users/${userId}`)
         })
 }
