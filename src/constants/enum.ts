@@ -32,7 +32,7 @@ export enum InvoiceType {
 }
 
 export enum RentalContractStatus {
-    RequestPeding = 0,
+    RequestPending = 0,
     PaymentPending = 1,
     Active = 2,
     Returned = 3,

@@ -1,6 +1,7 @@
 import { QUERY_KEYS } from "@/constants/queryKey"
 import {
     GetAllVehicleChecklistParams,
+    UpdateChecklistItemReq,
     UpdateVehicleChecklistReq
 } from "@/models/checklist/schema/request"
 import { VehicleChecklistViewRes } from "@/models/checklist/schema/response"
@@ -50,6 +51,7 @@ export const useGetVehicleChecklistById = ({
                 id
             ])
         },
+        refetchOnWindowFocus: false,
         enabled
     })
     return query
@@ -79,11 +81,31 @@ export const useUpdateVehicleChecklist = ({ onSuccess }: { onSuccess?: () => voi
             await vehicleChecklistsApi.update({ id, req })
         },
         onSuccess: (id) => {
+            queryClient.refetchQueries({
+                queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, id]
+            })
             toast.success(t("success.update"))
             onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useUpdateVehicleChecklistItem = ({ onSuccess }: { onSuccess?: () => void }) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async ({ id, req }: { id: string; req: UpdateChecklistItemReq }) => {
+            await vehicleChecklistsApi.updateItem({ id, req })
+        },
+        onSuccess: (id) => {
             queryClient.invalidateQueries({
                 queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, id]
             })
+            // toast.success(t("success.update"))
+            onSuccess?.()
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))
@@ -109,7 +131,7 @@ export const useUploadChecklistItem = ({
         mutationFn: async (formData: FormData) => {
             return await vehicleChecklistsApi.uploadItemImage({ itemId, formData })
         },
-        onSuccess: () => {
+        onSuccess: async () => {
             queryClient.refetchQueries({
                 queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, checklistId]
             })

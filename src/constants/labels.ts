@@ -43,7 +43,7 @@ export const InvoiceStatusLabels: Record<InvoiceStatus, string> = {
 }
 
 export const RentalContractStatusLabels: Record<RentalContractStatus, string> = {
-    [RentalContractStatus.RequestPeding]: i18n.t("enum.request_pending"),
+    [RentalContractStatus.RequestPending]: i18n.t("enum.request_pending"),
     [RentalContractStatus.PaymentPending]: i18n.t("enum.payment_pending"),
     [RentalContractStatus.Active]: i18n.t("enum.active"),
     [RentalContractStatus.Returned]: i18n.t("enum.returned"),

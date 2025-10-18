@@ -19,7 +19,7 @@ export type UpdateVehicleChecklistReq = {
 }
 
 export type UpdateChecklistItemReq = {
-    id: string
+    id?: string
     status: DamageStatus
     notes?: string
 }
