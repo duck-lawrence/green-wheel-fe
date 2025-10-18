@@ -23,5 +23,5 @@ export type InvoiceItemViewRes = {
     unitPrice: number
     subTotal: number
     type: InvoiceItemType
-    checkListItem?: VehicleChecklistItemViewRes
+    checklistItem?: VehicleChecklistItemViewRes
 }

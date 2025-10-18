@@ -49,11 +49,11 @@ export function Footer() {
                                 {t("footer.about_us")}
                             </Link>
                         </li>
-                        <li>
+                        {/* <li>
                             <Link href="/services" className="hover:text-primary duration-200">
                                 {t("footer.services")}
                             </Link>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
 

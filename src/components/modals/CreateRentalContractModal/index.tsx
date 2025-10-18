@@ -1,3 +1,4 @@
+"use client"
 import { ModalStyled } from "@/components/"
 import { ModalBody, ModalContent } from "@heroui/react"
 import React, { useCallback } from "react"

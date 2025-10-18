@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import { useTranslation } from "react-i18next"
 import { MapPin, Phone, EnvelopeSimple, PaperPlaneTilt } from "@phosphor-icons/react"
 import { ButtonStyled, InputStyled, TextareaStyled } from "@/components"
+import { GREENWHEEL_ADDRESS, GREENWHEEL_EMAIL, GREENWHEEL_PHONE } from "@/constants/constants"
 
 export default function Contact() {
     const { t } = useTranslation()
@@ -128,22 +129,22 @@ export default function Contact() {
                             <p className="flex items-center gap-3">
                                 <MapPin size={22} weight="fill" className="text-primary" />
                                 <span>
-                                    <span className="font-bold text-primary">Address:</span> TP HCM,
-                                    Việt Nam
+                                    <span className="font-bold text-primary">Address:</span>{" "}
+                                    {GREENWHEEL_ADDRESS}
                                 </span>
                             </p>
                             <p className="flex items-center gap-3">
                                 <Phone size={22} weight="fill" className="text-primary" />
                                 <span>
-                                    <span className="font-bold text-primary">Phone:</span> 0900 123
-                                    432
+                                    <span className="font-bold text-primary">Phone:</span>{" "}
+                                    {GREENWHEEL_PHONE}
                                 </span>
                             </p>
                             <p className="flex items-center gap-3">
                                 <EnvelopeSimple size={22} weight="fill" className="text-primary" />
                                 <span>
                                     <span className="font-bold text-primary">Email:</span>{" "}
-                                    greenwheel@gmail.com
+                                    {GREENWHEEL_EMAIL}
                                 </span>
                             </p>
                             <p className="text-gray-400 text-sm mt-2">

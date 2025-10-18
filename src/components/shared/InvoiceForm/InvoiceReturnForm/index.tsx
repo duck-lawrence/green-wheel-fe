@@ -58,7 +58,7 @@ export function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes }) {
                 </ButtonStyled>
             </div>
 
-            <DetailDamageModal isOpen={isOpen} onOpenChange={onOpenChange} itemDamage={invoice} />
+            <DetailDamageModal isOpen={isOpen} onOpenChange={onOpenChange} invoiceId={invoice.id} />
 
             <InputStyled
                 label={t("rental_contract.total")}

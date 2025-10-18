@@ -39,12 +39,12 @@ export default async function RootLayout({
             <body className="antialiased bg-secondary diamondBackground">
                 <AppProviders locale={locale}>
                     <ClientHydration>
-                        <div className="min-h-screen flex flex-col items-center pt-25">
+                        <div className="min-h-screen flex flex-col items-center pt-25 mb-10">
                             <Navbar />
                             {children}
                             <ScrollToTopButton />
-                            <Footer />
                         </div>
+                        <Footer />
                         <Modals />
                         <Toaster
                             position="bottom-right"
