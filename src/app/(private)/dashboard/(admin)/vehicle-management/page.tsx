@@ -102,18 +102,18 @@ export default function AdminVehicleManagementPage() {
             }),
         [t]
     )
-    const vehicleModelQuery = useMemo(
-        () => ({
-            stationId: "",
-            startDate: "",
-            endDate: ""
-        }),
-        []
-    )
-    const { data: vehicleModels = [], isFetching: isFetchingVehicleModels } = useGetAllVehicleModels({
-        query: vehicleModelQuery,
+    const { data: vehiclesData = [], isFetching: isFetchingVehicles } = useGetAllVehicles({
+        params: filters,
         enabled: true
     })
+    const vehicles = useMemo<VehicleWithStatus[]>(() => {
+        return (vehiclesData as VehicleWithStatus[]).map((vehicle) => ({
+            ...vehicle,
+            modelId: vehicle.modelId ?? vehicle.model?.id
+        }))
+    }, [vehiclesData])
+    const { data: vehicleModels = [], isFetching: isFetchingVehicleModels } =
+        useGetAllVehicleModels()
     const vehicleModelsById = useMemo(() => {
         return vehicleModels.reduce<Record<string, VehicleModelViewRes>>((acc, model) => {
             acc[model.id] = model
@@ -137,16 +137,6 @@ export default function AdminVehicleManagementPage() {
     //             label: [model.brand?.name, model.name].filter(Boolean).join(" ") || model.name
     //         })),
     // )
-    const { data: vehiclesData = [], isFetching: isFetchingVehicles } = useGetAllVehicles({
-        params: filters,
-        enabled: true
-    })
-    const vehicles = useMemo<VehicleWithStatus[]>(() => {
-        return (vehiclesData as VehicleWithStatus[]).map((vehicle) => ({
-            ...vehicle,
-            modelId: vehicle.modelId ?? vehicle.model?.id
-        }))
-    }, [vehiclesData])
     const filteredVehicles = useMemo(() => {
         return vehicles.filter((vehicle) => {
             if (filters.licensePlate) {

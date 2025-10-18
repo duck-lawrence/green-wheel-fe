@@ -4,6 +4,14 @@ import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { vehicleModelApi } from "@/services/vehicleModelApi"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 
+export const useGetAllVehicleModels = ({ enabled = true }: { enabled?: boolean } = {}) => {
+    return useQuery({
+        queryKey: [...QUERY_KEYS.VEHICLE_MODELS, "all"],
+        queryFn: vehicleModelApi.getAll,
+        enabled
+    })
+}
+
 export const useSearchVehicleModels = ({
     query,
     enabled = true
