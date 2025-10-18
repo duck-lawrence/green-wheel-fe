@@ -35,7 +35,8 @@
         "search": "Search",
         "save": "Save",
         "delete": "Delete",
-        "create": "Create"
+        "create": "Create",
+        "close": "Close"
     },
     "json": {
         "parsing_failed": "Failed to parse json"
@@ -599,6 +600,53 @@
     },
     "about_us": {
         "": ""
+    },
+    "document_preview": {
+        "upload_image": "Upload image",
+        "replace_image": "Replace image",
+        "empty_citizen_identity": "Citizen identity document has not been uploaded yet.",
+        "empty_driver_license": "Driver license document has not been uploaded yet.",
+        "delete_confirm": "Are you sure you want to remove this document?"
+    },
+    "staff_management": {
+        "page_title": "Staff Management",
+        "page_subtitle": "Create, update, and monitor staff assignments across stations.",
+        "filter_title": "Filters",
+        "filter_keyword": "Keyword",
+        "filter_keyword_placeholder": "Search by name or phone number",
+        "filter_station": "Station",
+        "filter_station_placeholder": "Select station",
+        "all_stations": "All stations",
+        "add_staff_button": "Add Staff",
+        "add_staff_title": "Add Staff",
+        "edit_staff_title": "Edit Staff",
+        "column_staff": "Staff",
+        "empty_state": "No staff members match the current filters.",
+        "unknown_name": "Unnamed staff",
+        "no_email": "No email",
+        "no_phone": "No phone",
+        "unknown_station": "Unknown station",
+        "refreshing": "Refreshing data...",
+        "form_full_name": "Full name",
+        "form_full_name_required": "Full name is required",
+        "form_full_name_invalid": "Full name contains invalid characters",
+        "form_email": "Email",
+        "form_email_required": "Email is required",
+        "form_email_invalid": "Email is invalid",
+        "form_phone": "Phone",
+        "form_phone_required": "Phone number is required",
+        "form_phone_invalid": "Phone number format is invalid",
+        "form_station": "Station",
+        "form_station_placeholder": "Select a station",
+        "form_station_required": "Station is required",
+        "form_date_of_birth": "Date of birth",
+        "form_date_of_birth_required": "Date of birth is required",
+        "form_status": "Status",
+        "status_active": "Active",
+        "status_inactive": "Inactive",
+        "delete_confirm": "Are you sure you want to remove this staff member?",
+        "saving": "Saving...",
+        "creating": "Creating..."
     },
     "vehicle_checklist": {
         "not_found": "Vehicle checklist not found",
