@@ -74,6 +74,7 @@ export const InvoiceItemTypeLabels: Record<InvoiceItemType, string> = {
     [InvoiceItemType.LateReturn]: i18n.t("enum.late_return"),
     [InvoiceItemType.Cleaning]: i18n.t("enum.cleaning"),
     [InvoiceItemType.Penalty]: i18n.t("enum.penalty"),
+    [InvoiceItemType.Refund]: i18n.t("enum.refund"),
     [InvoiceItemType.Other]: i18n.t("enum.other")
 }
 

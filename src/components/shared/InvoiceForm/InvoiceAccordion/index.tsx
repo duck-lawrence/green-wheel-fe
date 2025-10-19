@@ -1,6 +1,6 @@
 "use client"
 import React, { useCallback, useMemo } from "react"
-import { Accordion, AccordionItem, Chip } from "@heroui/react"
+import { Accordion, AccordionItem, Chip, cn } from "@heroui/react"
 import { InvoiceStatus, InvoiceType, PaymentMethod, RentalContractStatus } from "@/constants/enum"
 import { InvoiceStatusLabels } from "@/constants/labels"
 import { useGetMe, usePayInvoice } from "@/hooks"
@@ -12,9 +12,11 @@ import { ROLE_CUSTOMER } from "@/constants/constants"
 import { ButtonStyled } from "@/components"
 
 export function InvoiceAccordion({
+    className = "",
     items,
     contractStatus
 }: {
+    className?: string
     items: {
         key: string
         ariaLabel: string
@@ -118,7 +120,7 @@ export function InvoiceAccordion({
         )
     }
     return (
-        <Accordion variant="splitted" className="w-full">
+        <Accordion variant="splitted" className={cn("w-full", className)}>
             {items
                 .sort((a, b) => a.invoice.type - b.invoice.type)
                 .map((val) => (

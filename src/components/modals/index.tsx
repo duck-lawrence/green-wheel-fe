@@ -4,6 +4,7 @@ import { RegisterModal } from "./RegisterModal"
 import { ForgotPasswordModal } from "./ForgotPasswordModal"
 
 export * from "./ChecklistModal"
+export * from "./CreateInvoiceModal"
 export * from "./CreateRentalContractModal"
 export * from "./DetailDamageModal"
 export * from "./EditUserModal"

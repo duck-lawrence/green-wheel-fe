@@ -63,7 +63,8 @@ export enum InvoiceItemType {
     LateReturn = 2,
     Cleaning = 3,
     Penalty = 4, //PHẠT NGUỘI
-    Other = 5
+    Refund = 5,
+    Other = 6
 }
 
 export enum PaymentMethod {

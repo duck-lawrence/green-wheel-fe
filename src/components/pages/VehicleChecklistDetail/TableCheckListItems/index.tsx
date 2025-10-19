@@ -1,10 +1,10 @@
 "use client"
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react"
+import { TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react"
 import React from "react"
 import { useTranslation } from "react-i18next"
 import { VehicleChecklistItemViewRes } from "@/models/checklist/schema/response"
 import { DamageStatusLabels } from "@/constants/labels"
-import { TextareaStyled, ChecklistItemUploader, EnumPicker } from "@/components/"
+import { TextareaStyled, ChecklistItemUploader, EnumPicker, TableStyled } from "@/components/"
 
 export function TableCheckListItems({
     isEditable = false,
@@ -20,7 +20,7 @@ export function TableCheckListItems({
     const { t } = useTranslation()
     return (
         <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
-            <Table className="min-w-full text-sm md:text-base" removeWrapper>
+            <TableStyled className="min-w-full text-sm md:text-base" removeWrapper>
                 <TableHeader>
                     <TableColumn className="text-center text-gray-700 font-semibold w-12">
                         {t("table.no")}
@@ -99,7 +99,7 @@ export function TableCheckListItems({
                             )
                         })}
                 </TableBody>
-            </Table>
+            </TableStyled>
         </div>
     )
 }

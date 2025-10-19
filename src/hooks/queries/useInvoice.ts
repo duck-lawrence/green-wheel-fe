@@ -39,3 +39,20 @@ export const usePayInvoice = () => {
         }
     })
 }
+
+export const useCreateInvoice = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
+    const { t } = useTranslation()
+    const router = useRouter()
+
+    return useMutation({
+        mutationFn: invoiceApi.create,
+        onSuccess: () => {
+            router.refresh()
+            onSuccess?.()
+            toast.success(t("success.create"))
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}

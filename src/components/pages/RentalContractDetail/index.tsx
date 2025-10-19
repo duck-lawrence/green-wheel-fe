@@ -41,8 +41,9 @@ import { Spinner } from "@heroui/react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { decodeJwt } from "@/utils/helpers/jwt"
-import { RentalContractStatus, VehicleChecklistType } from "@/constants/enum"
+import { InvoiceType, RentalContractStatus, VehicleChecklistType } from "@/constants/enum"
 import { ChecklistSection } from "./ChecklistSection"
+import { CreateInvoiceSection } from "./CreateInvoiceSection"
 
 export function RentalContractDetail({
     contractId,
@@ -388,7 +389,14 @@ export function RentalContractDetail({
                     <div className="mt-[-1rem] mb-3 px-4 italic text-default-500 text-sm">
                         {t("rental_contract.fees_include_tax")}
                     </div>
-                    <InvoiceAccordion items={invoiceAccordion} contractStatus={contract.status} />
+                    <InvoiceAccordion
+                        items={invoiceAccordion}
+                        contractStatus={contract.status}
+                        className="mb-3"
+                    />
+                    {isStaff && contract.status == RentalContractStatus.Returned && (
+                        <CreateInvoiceSection contractId={contract.id} type={InvoiceType.Refund} />
+                    )}
                 </SectionStyled>
 
                 {/* Signature */}

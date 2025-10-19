@@ -1,4 +1,4 @@
-import { PaymentReq } from "@/models/invoice/schema/request"
+import { CreateInvoiceReq, PaymentReq } from "@/models/invoice/schema/request"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import axiosInstance from "@/utils/axios"
 import { requestWrapper } from "@/utils/helpers/axiosHelper"
@@ -14,5 +14,10 @@ export const invoiceApi = {
         requestWrapper<InvoiceViewRes>(async () => {
             const res = await axiosInstance.get(`/invoices/${id}`)
             return res.data
+        }),
+
+    create: (req: CreateInvoiceReq) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.post("/invoices", req)
         })
 }

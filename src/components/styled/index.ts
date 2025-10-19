@@ -28,6 +28,7 @@ export * from "./LogoStyled"
 export * from "./ModalStyled"
 
 export * from "./NavbarStyled"
+export * from "./NumberInputStyled"
 
 export * from "./PaginationStyle"
 

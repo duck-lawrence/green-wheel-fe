@@ -213,7 +213,8 @@
         "unknown_station": "Unknown station",
         "unknown_brand": "Unknown brand",
         "unknown_model": "Unknown model",
-        "notes": "Notes"
+        "notes": "Notes",
+        "description": "Description"
     },
     "contral_form": {
         "payment_method_require": "Please select a payment method",
@@ -339,6 +340,7 @@
         "damage": "Damage",
         "cleaning": "Cleaning",
         "penalty": "Penalty",
+        "refund": "Refund",
         "other": "Other",
         "cash": "Cash",
         "momo_wallet": "Momo Wallet",
@@ -532,6 +534,7 @@
         "sub": "Our team will get back to you as soon as possible. For urgent matters, please call our hotline."
     },
     "rental_contract": {
+        "id": "Contract ID",
         "back_to_rental_contract": "Back to rental contract",
         "update_success": "Update success",
         "update_failed": "Update failed",
@@ -588,7 +591,18 @@
     },
     "invoice": {
         "not_found": "Invoice not found",
-        "this_invoice_was_paid_or_cancel": "This invoice was paid or cancelled"
+        "this_invoice_was_paid_or_cancel": "This invoice was paid or cancelled",
+        "create_title": "CREATE INVOICE",
+        "unit_price": "Unit price",
+        "unit_price_require": "Unit price is required",
+        "unit_price_min": "Unit price must be greater than 0",
+        "quantity": "Quantity",
+        "quantity_require": "Quantity is required",
+        "quantity_min": "Quantity must be greater than 0",
+        "item_type": "Item type",
+        "item_type_require": "Invoice item type is required",
+        "add_item": "Add new item",
+        "create_refund": "Create refund invoice"
     },
     "momo": {
         "invalid_signature": "Invalid signature",
@@ -616,7 +630,6 @@
         "customer_name": "Customer name",
         "vehicle_license_plate": "Vehicle license plate",
         "status": "Status",
-        "contract_id": "Contract ID",
         "create_handover": "Create handover checklist",
         "view_handover": "View handover checklist",
         "create_return": "Create return checklist",
