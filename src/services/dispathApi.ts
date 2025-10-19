@@ -25,10 +25,9 @@ export const dispatchApi = {
             return res.data
         }),
 
-    getById: (id: string) => {
+    getById: (id: string) =>
         requestWrapper<DispatchViewRes>(async () => {
             const res = await axiosInstance.get(`/dispatch-requests/${id}`)
             return res.data
         })
-    }
 }

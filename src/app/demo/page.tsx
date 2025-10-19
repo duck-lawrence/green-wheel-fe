@@ -1,182 +1,48 @@
 "use client"
-import { ButtonStyled, SpinnerStyled, TableStyled } from "@/components"
-import { useGetAllDispatch, useGetMe } from "@/hooks"
-import { Chip, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
-import React from "react"
-import { useTranslation } from "react-i18next"
-import { Tooltip } from "recharts"
+import React, { useState } from "react"
+import { v4 as uuidv4 } from "uuid" // npm i uuid
 
-export default function DispatchAllPage() {
-    const { t } = useTranslation()
-    const { data: user } = useGetMe()
+export default function DynamicInputList() {
+    const [steps, setSteps] = useState([{ id: uuidv4(), value: "" }])
 
-    const { data: dispaths, isLoading } = useGetAllDispatch({
-        params: { toStation: user?.station?.id },
-        enabled: true
-    })
+    const handleAdd = () => {
+        setSteps([...steps, { id: uuidv4(), value: "" }])
+    }
 
-    if (isLoading) return <SpinnerStyled />
+    const handleChange = (id: string, value: string) => {
+        setSteps(steps.map((s) => (s.id === id ? { ...s, value } : s)))
+    }
+
+    const handleRemove = (id: string) => {
+        setSteps(steps.filter((s) => s.id !== id))
+    }
 
     return (
-        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
-            <TableStyled className="min-w-full text-sm md:text-base" removeWrapper>
-                <TableHeader>
-                    <TableColumn className="text-center text-gray-700 font-semibold">
-                        STT
-                    </TableColumn>
-                    <TableColumn className="text-center text-gray-700 font-semibold">
-                        From station
-                    </TableColumn>
-                    <TableColumn className="text-center text-gray-700 font-semibold">
-                        vehicle
-                    </TableColumn>
-                    <TableColumn className="text-center text-gray-700 font-semibold">
-                        staff
-                    </TableColumn>
-                    <TableColumn className="text-center text-gray-700 font-semibold">
-                        des
-                    </TableColumn>
-                    <TableColumn className="text-center text-gray-700 font-semibold">
-                        Action
-                    </TableColumn>
-                </TableHeader>
+        <div className="space-y-3">
+            {steps.map((step, index) => (
+                <div key={step.id} className="flex items-center gap-2">
+                    <input
+                        value={step.value}
+                        onChange={(e) => handleChange(step.id, e.target.value)}
+                        placeholder={`Bước ${index + 1}`}
+                        className="flex-1 border p-2 rounded"
+                    />
+                    {steps.length > 1 && (
+                        <button
+                            onClick={() => handleRemove(step.id)}
+                            className="text-red-500 font-bold"
+                        >
+                            ✕
+                        </button>
+                    )}
+                </div>
+            ))}
 
-                <TableBody>
-                    {dispaths!.map((item, index) => {
-                        return (
-                            <TableRow
-                                key={item.id}
-                                className="hover:bg-gray-50 transition-colors border-b border-gray-100 cursor-pointer"
-                            >
-                                <TableCell className="text-center text-gray-700">
-                                    {index + 1}
-                                </TableCell>
-                                <TableCell className="text-center text-gray-700 font-medium">
-                                    {item.toStationId}
-                                </TableCell>
-                                {/* <TableCell className="text-center text-gray-700 font-medium">
-                                    {item.staffs}
-                                </TableCell>
-                                <TableCell className="text-center text-gray-600">
-                                    {item.vehicles}
-                                </TableCell> */}
-                                <TableCell>
-                                    <div className="flex flex-wrap gap-1">
-                                        {item.staffs.slice(0, 3).map((s) => (
-                                            <Chip
-                                                key={s.id}
-                                                size="sm"
-                                                color="primary"
-                                                variant="flat"
-                                            >
-                                                {s.firstName}
-                                            </Chip>
-                                        ))}
-                                        {item.staffs.length > 3 && (
-                                            <Tooltip
-                                                content={item.staffs.slice(3).map((s) => (
-                                                    <p key={s.id}>
-                                                        {s.firstName} {s.lastName}
-                                                    </p>
-                                                ))}
-                                            >
-                                                <Chip size="sm" color="default" variant="bordered">
-                                                    +{item.staffs.length - 3}
-                                                </Chip>
-                                            </Tooltip>
-                                        )}
-                                    </div>
-                                </TableCell>
+            <button onClick={handleAdd} className="bg-blue-500 text-white px-4 py-2 rounded">
+                + Thêm bước
+            </button>
 
-                                <TableCell>
-                                    <div className="flex flex-wrap gap-1">
-                                        {item.vehicles.slice(0, 3).map((s) => (
-                                            <Chip
-                                                key={s.id}
-                                                size="sm"
-                                                color="primary"
-                                                variant="flat"
-                                            >
-                                                {s.licensePlate}
-                                            </Chip>
-                                        ))}
-                                        {item.vehicles.length > 3 && (
-                                            <Tooltip
-                                                content={item.vehicles.slice(3).map((s) => (
-                                                    <p key={s.id}></p>
-                                                ))}
-                                            >
-                                                <Chip size="sm" color="default" variant="bordered">
-                                                    +{item.vehicles.length - 3}
-                                                </Chip>
-                                            </Tooltip>
-                                        )}
-                                    </div>
-                                </TableCell>
-
-                                <TableCell className="text-center text-gray-600">
-                                    {item.description}
-                                </TableCell>
-
-                                {/* action */}
-                                <TableCell className="text-center">
-                                    {item.status  ?? (
-                                        <div className="flex flex-col md:flex-row items-center justify-center gap-2">
-                                            {/* Approved */}
-                                            <ButtonStyled
-                                                color="primary"
-                                                variant="bordered"
-                                                className="h-7 w-20 border-1 border-primary hover:text-white hover:bg-primary font-semibold px-5 py-2 rounded-lg"
-                                                onPress={() => handleAccept(item.id)}
-                                                hidden={isLoading(item.id)}
-                                            >
-                                                {t("rental_contract.accept")}
-                                            </ButtonStyled>
-
-                                            {/* Reject */}
-                                            <ButtonStyled
-                                                color="primary"
-                                                variant="bordered"
-                                                className="h-7 w-20 border-1 border-primary hover:text-white hover:bg-primary font-semibold px-5 py-2 rounded-lg"
-                                                onPress={() => handleAccept(item.id)}
-                                                hidden={isLoading(item.id)}
-                                            >
-                                                {t("rental_contract.accept")}
-                                            </ButtonStyled>
-
-                                            {/* Cancel */}
-                                            <ButtonStyled
-                                                color="primary"
-                                                variant="bordered"
-                                                className="h-7 w-20 border-1 border-primary hover:text-white hover:bg-primary font-semibold px-5 py-2 rounded-lg"
-                                                onPress={() => handleAccept(item.id)}
-                                                hidden={isLoading(item.id)}
-                                            >
-                                                {t("rental_contract.accept")}
-                                            </ButtonStyled>
-
-                                            {/* Received */}
-                                            <ButtonStyled
-                                                color="primary"
-                                                variant="bordered"
-                                                className="h-7 w-20 border-1 border-primary hover:text-white hover:bg-primary font-semibold px-5 py-2 rounded-lg"
-                                                onPress={() => handleAccept(item.id)}
-                                                hidden={isLoading(item.id)}
-                                            >
-                                                {t("rental_contract.accept")}
-                                            </ButtonStyled>
-                                        </div>
-                                    ) : (
-                                        <span className="text-gray-400 text-sm">
-                                            {t("rental_contract.no_action")}
-                                        </span>
-                                    )}
-                                </TableCell>
-                            </TableRow>
-                        )
-                    })}
-                </TableBody>
-            </TableStyled>
+            <pre className="bg-gray-100 p-2 rounded text-sm">{JSON.stringify(steps, null, 2)}</pre>
         </div>
     )
 }

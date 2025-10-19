@@ -13,7 +13,7 @@ export default function TableSelectionVehicle({
     const rows = vehicles.map((item) => ({
         key: item.id,
         id: item.id,
-        modal: item.model.name,
+        model: item.model.name,
         licensePlate: item.licensePlate
     }))
 
@@ -24,7 +24,7 @@ export default function TableSelectionVehicle({
         },
         {
             key: "model",
-            label: "MODeL"
+            label: "MODEL"
         },
         {
             key: "licensePlate",

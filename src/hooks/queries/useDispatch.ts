@@ -62,10 +62,12 @@ export const useGetAllDispatch = ({
     return query
 }
 
-export const useGetByIdDispatch = ({ id, enabled = true }: { id: string; enabled?: boolean }) => {
+export const useGetDispatchById = ({ id, enabled = true }: { id: string; enabled?: boolean }) => {
+    // const queryClient = useQueryClient()
     const query = useQuery({
         queryKey: [...QUERY_KEYS.DISPATCH_REQUESTS, id],
         queryFn: () => dispatchApi.getById(id),
+
         enabled
     })
     return query

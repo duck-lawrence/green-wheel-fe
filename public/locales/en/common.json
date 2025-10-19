@@ -215,7 +215,12 @@
         "unknown_station": "Unknown station",
         "unknown_brand": "Unknown brand",
         "unknown_model": "Unknown model",
-        "notes": "Notes"
+        "notes": "Notes",
+        "from_station": "From Station",
+        "to_station": "To Station",
+        "view_detail": "View Detail",
+        "dispatch_managerment": "Dispatch Management",
+        "create_dispatch": "Create Dispatch"
     },
     "contral_form": {
         "payment_method_require": "Please select a payment method",
@@ -508,7 +513,8 @@
         "vehicle_create_title": "Create new vehicle",
         "vehicle_edit_title": "Update vehicle",
         "vehicle_delete_title": "Delete vehicle",
-        "vehicle_delete_confirm": "Are you sure you want to remove this vehicle from the fleet?"
+        "vehicle_delete_confirm": "Are you sure you want to remove this vehicle from the fleet?",
+        "dispatch": "Dispatch"
     },
     "footer": {
         "green_wheel_company_name": "GREEN WHEEL Trading and Service Joint Stock Company",
@@ -611,7 +617,24 @@
     },
     "dispatch": {
         "create_success": "Create dispatch successfully",
-        "update_success": "Update dispatch successfully"
+        "update_success": "Update dispatch successfully",
+        "dispatch": "Dispatch",
+        "title": "Dispatch staff and vehicles between stations",
+        "list_vehicle": "List vehicles",
+        "list_staff": "List staffs",
+        "dispatch_detail": "Dispatch Detail",
+        "station_information": "Station Information",
+        "station_form": "Station form",
+        "station_id": "Station ID",
+        "station_name": "Station name",
+        "to_station": "To station",
+        "cur_status": "Current Status",
+        "dispatch_status": "Dispatch Status",
+        "assigned_staff": "Assigned Staffs",
+        "assigned_vehicle": "Assigned vehicles",
+        "station": "Station",
+        "description": "Description",
+        "dispatch_table": "Dispatch table"
     },
     "document_preview": {
         "upload_image": "Upload image",

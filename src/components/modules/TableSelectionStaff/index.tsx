@@ -13,7 +13,8 @@ export default function TableSelectionStaff({
     const rows = staffs.map((item) => ({
         key: item.id,
         id: item.id,
-        name: `${item.firstName} ${item.lastName}`
+        name: `${item.firstName} ${item.lastName}`,
+        station: item.station?.name
     }))
 
     const columns = [
@@ -26,8 +27,8 @@ export default function TableSelectionStaff({
             label: "NAME"
         },
         {
-            key: "status",
-            label: "STATUS"
+            key: "station",
+            label: "STATION"
         }
     ]
 

@@ -1,108 +1,128 @@
 "use client"
-import { ButtonStyled, InputStyled, SectionStyled } from "@/components"
-import TableSelectionStaff from "@/components/modules/TableSelectionStaff"
-import TableSelectionVehicle from "@/components/modules/TableSelectionVehicle/indesx"
-import { useGetAllStaffs, useGetAllStations, useGetAllVehicles, useGetMe } from "@/hooks"
-import { useCreateDispatch } from "@/hooks/queries/useDispatch"
-import { Textarea } from "@heroui/react"
-import { Car, UserSwitchIcon } from "@phosphor-icons/react"
-import React, { useCallback, useState } from "react"
+import { ButtonStyled, SpinnerStyled, TableStyled } from "@/components"
+import { DispatchRequestStatusLabels } from "@/constants/labels"
+import { useGetAllDispatch, useGetAllStations, useGetMe } from "@/hooks"
+import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import React from "react"
 import { useTranslation } from "react-i18next"
 
-export default function DispatchPage() {
+export default function DispatchAllPage() {
+    const router = useRouter()
     const { t } = useTranslation()
-
     const { data: user } = useGetMe()
-    const stationIdNow = user?.station?.id
-    // const stationIdNow = "d565f693-3111-4bf2-80a6-e409e1b48411"
-
-    const { data: stations } = useGetAllStations()
-    const { data: staffs } = useGetAllStaffs({
-        params: { stationId: stationIdNow },
-        enabled: true
-    })
-    const { data: vehicles } = useGetAllVehicles({
-        params: { stationId: stationIdNow },
+    const { data: stations = [] } = useGetAllStations()
+    const { data: dispatches, isLoading } = useGetAllDispatch({
+        params: { toStation: user?.station?.id },
         enabled: true
     })
 
-    const createDispatch = useCreateDispatch({})
-
-    const stationDispatch = stationIdNow
-        ? (stations || []).find(({ id }) => id !== stationIdNow) || null
-        : null
-
-    const [textArea, setTextArea] = useState("")
-    const [selectStaffs, setSelectStaffs] = useState<string[]>([])
-    const [selectVehicles, setSelectVehicles] = useState<string[]>([])
-
-    const handleCreateDispatch = useCallback(async () => {
-        await createDispatch.mutateAsync({
-            fromStationId: stationDispatch?.id!,
-            description: textArea,
-            staffIds: selectStaffs,
-            vehicleIds: selectVehicles
-        })
-    }, [createDispatch, selectStaffs, selectVehicles, stationDispatch, textArea])
+    if (isLoading) return <SpinnerStyled />
 
     return (
-        <div className="max-w-7xl mx-auto w-full bg-white p-8 rounded-2xl shadow-md border border-gray-100">
+        <div className="max-w-6xl mx-auto w-full bg-white p-10 rounded-2xl shadow-md border border-gray-100">
             {/* Header */}
-            <div className="text-center mb-10">
-                <h1 className="text-3xl font-bold text-primary tracking-wide">Dispatch</h1>
-                <p className="text-gray-500 text-sm mt-1">
-                    Dispatch staff and vehicles between stations
-                </p>
+            <div className="flex flex-col md:flex-row items-center justify-between mb-6">
+                <h1 className="text-3xl font-bold text-primary tracking-wide">
+                    {t("table.dispatch_managerment")}
+                </h1>
+                <Link href="/dashboard/dispatch/create">
+                    <ButtonStyled className="btn-gradient btn-gradient:hover btn-gradient:active text-white font-semibold">
+                        + {t("table.create_dispatch")}
+                    </ButtonStyled>
+                </Link>
             </div>
 
-            {/* Station - Description */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                <SectionStyled title="Station">
-                    <InputStyled
-                        label={t("table.station")}
-                        // value={stationDispatch?.name}
-                        value={stationIdNow}
-                        readOnly
-                    />
-                </SectionStyled>
+            {/* Table */}
+            <div className="overflow-x-auto rounded-xl border border-gray-200 bg-gray-50/70 shadow-sm">
+                <TableStyled
+                    aria-label={t("dispatch.dispatch_table")}
+                    className="min-w-full text-sm md:text-base"
+                    removeWrapper
+                >
+                    <TableHeader>
+                        <TableColumn className="text-center text-gray-700 font-semibold py-3">
+                            STT
+                        </TableColumn>
+                        <TableColumn className="text-center text-gray-700 font-semibold py-3">
+                            {t("table.from_station")}
+                        </TableColumn>
+                        <TableColumn className="text-center text-gray-700 font-semibold py-3">
+                            {t("table.to_station")}
+                        </TableColumn>
+                        <TableColumn className="text-center text-gray-700 font-semibold py-3">
+                            {t("table.status")}
+                        </TableColumn>
+                        <TableColumn className="text-center text-gray-700 font-semibold py-3">
+                            {t("table.action")}
+                        </TableColumn>
+                    </TableHeader>
 
-                <SectionStyled title="Description">
-                    <Textarea
-                        label={t("table.description")}
-                        minRows={4}
-                        className="w-full"
-                        placeholder="Type dispatch details..."
-                        value={textArea}
-                        onChange={(value) => setTextArea(value.target.value)}
-                    />
-                </SectionStyled>
-            </div>
+                    <TableBody>
+                        {dispatches?.length ? (
+                            dispatches.map((item, index) => {
+                                const fromStation =
+                                    stations.find((s) => s.id === item.fromStationId)?.name || "—"
+                                const toStation =
+                                    stations.find((s) => s.id === item.toStationId)?.name || "—"
+                                const statusLabel = DispatchRequestStatusLabels[item.status]
 
-            {/* Tables */}
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-10">
-                <SectionStyled title="Danh sách nhân viên" icon={UserSwitchIcon}>
-                    <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
-                        <TableSelectionStaff
-                            staffs={staffs ?? []}
-                            onChangeSelected={setSelectStaffs}
-                        />
-                    </div>
-                </SectionStyled>
+                                const statusColor =
+                                    item.status === 0
+                                        ? "bg-yellow-100 text-yellow-700"
+                                        : item.status === 1
+                                        ? "bg-blue-100 text-blue-700"
+                                        : item.status === 3
+                                        ? "bg-green-100 text-green-700"
+                                        : "bg-gray-100 text-gray-700"
 
-                <SectionStyled title="Danh sách xe" icon={Car}>
-                    <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
-                        <TableSelectionVehicle
-                            vehicles={vehicles ?? []}
-                            onChangeSelected={setSelectVehicles}
-                        />
-                    </div>
-                </SectionStyled>
-            </div>
-
-            <div className="flex justify-center items-center">
-                <ButtonStyled color="primary" className="p-6 " onPress={handleCreateDispatch}>
-                    Create
-                </ButtonStyled>
+                                return (
+                                    <TableRow
+                                        key={item.id}
+                                        className="hover:bg-white transition-all duration-200 border-b border-gray-200 cursor-pointer"
+                                        onClick={() =>
+                                            router.push(`/dashboard/dispatch/${item.id}`)
+                                        }
+                                    >
+                                        <TableCell className="text-center text-gray-700 font-medium">
+                                            {index + 1}
+                                        </TableCell>
+                                        <TableCell className="text-center text-gray-700">
+                                            {fromStation}
+                                        </TableCell>
+                                        <TableCell className="text-center text-gray-700">
+                                            {toStation}
+                                        </TableCell>
+                                        <TableCell className="text-center">
+                                            <span
+                                                className={`px-3 py-1 text-xs font-semibold rounded-full ${statusColor}`}
+                                            >
+                                                {statusLabel}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell className="text-center">
+                                            <Link href={`/dashboard/dispatch/${item.id}`}>
+                                                <ButtonStyled className="text-primary border border-primary bg-white hover:bg-primary hover:text-white font-semibold px-5 py-1.5 rounded-lg transition-all duration-300">
+                                                    {t("table.view_detail")}
+                                                </ButtonStyled>
+                                            </Link>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                            })
+                        ) : (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={5}
+                                    className="text-center py-10 text-gray-500 italic"
+                                >
+                                    ...
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </TableStyled>
             </div>
         </div>
     )
