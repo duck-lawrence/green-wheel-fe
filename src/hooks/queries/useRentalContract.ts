@@ -20,11 +20,11 @@ export const useGetAllRentalContract = ({
 }) => {
     const queryClient = useQueryClient()
     const query = useQuery({
-        queryKey: [...QUERY_KEYS.VEHICLE_SEGMENTS, params],
+        queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, params],
         queryFn: () => rentalContractApi.getAll(params),
         initialData: () => {
             return queryClient.getQueryData<RentalContractViewRes[]>([
-                ...QUERY_KEYS.VEHICLE_SEGMENTS,
+                ...QUERY_KEYS.RENTAL_CONTRACTS,
                 params
             ])
         },
@@ -65,7 +65,13 @@ export const useCreateRentalContract = ({ onSuccess }: { onSuccess?: () => void 
     })
 }
 
-export const useConfirmContract = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useConfirmContract = ({
+    params,
+    onSuccess
+}: {
+    params: ContractQueryParams
+    onSuccess?: () => void
+}) => {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
 
@@ -75,9 +81,9 @@ export const useConfirmContract = ({ onSuccess }: { onSuccess?: () => void }) =>
         },
 
         onSuccess: () => {
+            queryClient.refetchQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, params] })
             onSuccess?.()
             toast.success(t("rental_contract.update_success"))
-            queryClient.invalidateQueries({ queryKey: ["rental-contracts"] })
         },
 
         onError: (error: BackendError) => {
@@ -93,9 +99,9 @@ export const useConfirmContract = ({ onSuccess }: { onSuccess?: () => void }) =>
         },
 
         onSuccess: () => {
+            queryClient.refetchQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, params] })
             onSuccess?.()
             toast.success(t("rental_contract.update_success"))
-            queryClient.invalidateQueries({ queryKey: ["rental-contracts"] })
         },
 
         onError: (error: BackendError) => {
@@ -109,25 +115,34 @@ export const useConfirmContract = ({ onSuccess }: { onSuccess?: () => void }) =>
 }
 
 export const useGetAllRentalContracts = ({
-    params,
     enabled = true
 }: {
-    params: ContractQueryParams
     enabled?: boolean
-}) => {
+} = {}) => {
     const queryClient = useQueryClient()
+    // const key = [...QUERY_KEYS.RENTAL_CONTRACTS, params]
+
     const query = useQuery({
-        queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, params],
-        queryFn: () => rentalContractApi.getAll(params),
+        queryKey: QUERY_KEYS.RENTAL_CONTRACTS,
+        queryFn: () => rentalContractApi.getAll({}),
         initialData: () => {
-            return queryClient.getQueryData<RentalContractViewRes[]>([
-                ...QUERY_KEYS.RENTAL_CONTRACTS,
-                params
-            ])
+            return queryClient.getQueryData<RentalContractViewRes[]>(QUERY_KEYS.RENTAL_CONTRACTS)
         },
         enabled
     })
-    return query
+
+    const getCachedOrFetch = async (params: ContractQueryParams) => {
+        const key = [...QUERY_KEYS.RENTAL_CONTRACTS, params]
+        const cached = queryClient.getQueryData<RentalContractViewRes[]>(key)
+        if (cached) return cached
+        const data = await queryClient.fetchQuery({
+            queryKey: key,
+            queryFn: () => rentalContractApi.getAll(params)
+        })
+        return data
+    }
+
+    return { ...query, getCachedOrFetch }
 }
 
 export const useGetRentalContractById = ({

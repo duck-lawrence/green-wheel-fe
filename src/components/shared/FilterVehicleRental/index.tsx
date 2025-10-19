@@ -216,7 +216,7 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                             formik.setFieldValue("stationId", id)
                             setStationId(id as string | undefined)
                         }}
-                        onKeyDown={() => formik.handleSubmit()}
+                        // onKeyDown={() => formik.handleSubmit()}
                         className="max-w-60 h-20 mr-0"
                         isClearable={false}
                     >
@@ -247,7 +247,7 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                             setSegmentId(id as string | undefined)
                             formik.setFieldValue("segmentId", id)
                         }}
-                        onKeyDown={() => formik.handleSubmit()}
+                        // onKeyDown={() => formik.handleSubmit()}
                         className="max-w-40 h-20 mr-0"
                     >
                         {(vehicleSegments ?? []).map((item) => (
@@ -276,7 +276,7 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                             formik.setFieldValue("startDate", date)
                             setStartDate(date)
                         }}
-                        onKeyDown={() => formik.handleSubmit()}
+                        // onKeyDown={() => formik.handleSubmit()}
                         onBlur={() => {
                             formik.setFieldTouched("startDate")
                         }}
@@ -303,7 +303,7 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                             formik.setFieldValue("endDate", date)
                             setEndDate(date)
                         }}
-                        onKeyDown={() => formik.handleSubmit()}
+                        // onKeyDown={() => formik.handleSubmit()}
                         onBlur={() => {
                             formik.setFieldTouched("endDate")
                         }}

@@ -88,13 +88,12 @@ export function TableCheckListItems({
 
                                     {/* Action */}
                                     <TableCell className="flex justify-start items-center flex-col gap-2">
-                                        {isEditable && (
-                                            <ChecklistItemUploader
-                                                key={item.id}
-                                                itemId={item.id}
-                                                itemImg={item.imageUrl}
-                                            />
-                                        )}
+                                        <ChecklistItemUploader
+                                            key={item.id}
+                                            itemId={item.id}
+                                            itemImg={item.imageUrl}
+                                            isEditable={isEditable}
+                                        />
                                     </TableCell>
                                 </TableRow>
                             )

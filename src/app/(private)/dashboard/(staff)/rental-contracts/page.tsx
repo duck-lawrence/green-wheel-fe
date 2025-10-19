@@ -1,62 +1,61 @@
 "use client"
-import React, { useCallback, useEffect, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { ButtonStyled, EnumPicker, InputStyled, TableContractStaff } from "@/components"
+import {
+    AutocompleteStyle,
+    ButtonStyled,
+    EnumPicker,
+    InputStyled,
+    TableContractStaff
+} from "@/components"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
-import { useGetAllRentalContracts } from "@/hooks"
+import { useGetAllRentalContracts, useGetAllStations } from "@/hooks"
 import { useFormik } from "formik"
-import * as Yup from "yup"
-import { RentalContractStatus } from "@/constants/enum"
-import { FunnelSimple } from "@phosphor-icons/react"
+import { FunnelSimple, MapPinAreaIcon } from "@phosphor-icons/react"
 import { RentalContractStatusLabels } from "@/constants/labels"
 import { ContractQueryParams } from "@/models/rental-contract/schema/request"
+import { BackendError } from "@/models/common/response"
+import toast from "react-hot-toast"
+import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
+import { AutocompleteItem } from "@heroui/react"
 
 export default function StaffContractsPage() {
     const { t } = useTranslation()
 
-    const [filters, setFilter] = useState<ContractQueryParams>({})
     const [contracts, setContracts] = useState<RentalContractViewRes[]>([])
-    const { data, isFetching, refetch } = useGetAllRentalContracts({
-        params: filters,
-        enabled: true
-    })
-
-    useEffect(() => {
-        if (data) setContracts(data)
-    }, [data])
+    const { getCachedOrFetch, isFetching } = useGetAllRentalContracts()
+    const {
+        data: stations,
+        isLoading: isGetStationsLoading,
+        error: getStationsError
+    } = useGetAllStations()
 
     const handleFilterChange = useCallback(
-        async (val: ContractQueryParams) => {
-            setFilter(val)
-            await refetch()
+        async (params: ContractQueryParams) => {
+            const data = await getCachedOrFetch(params)
+            setContracts(data || [])
         },
-        [refetch]
+        [getCachedOrFetch]
     )
 
-    const initialValues = useMemo(
-        () => ({
-            status: undefined,
-            phone: "",
-            citizenIdentityNumber: "",
-            driverLicenseNumber: ""
-        }),
-        []
-    )
-
-    const validationSchema = useMemo(() => {
-        return Yup.object({
-            status: Yup.mixed<RentalContractStatus>().nullable(),
-            phone: Yup.string(),
-            citizenIdentity: Yup.string(),
-            driverLicense: Yup.string()
-        })
-    }, [])
-
-    const formik = useFormik({
-        initialValues,
-        validationSchema,
+    const formik = useFormik<ContractQueryParams>({
+        initialValues: {},
+        // validationSchema,
         onSubmit: handleFilterChange
     })
+
+    // Load station
+    useEffect(() => {
+        if (getStationsError) {
+            const error = getStationsError as BackendError
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    }, [getStationsError, isGetStationsLoading, stations, t])
+
+    useEffect(() => {
+        formik.submitForm()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <div className="rounded-2xl bg-white shadow-sm px-6 py-6">
@@ -86,12 +85,29 @@ export default function StaffContractsPage() {
                     </div>
 
                     {/* Filter inputs */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-2">
+                        <AutocompleteStyle
+                            label={t("vehicle_model.station")}
+                            items={stations}
+                            startContent={<MapPinAreaIcon className="text-xl" />}
+                            selectedKey={formik.values.stationId}
+                            onSelectionChange={(id) => {
+                                formik.setFieldValue("stationId", id)
+                                formik.handleSubmit()
+                            }}
+                        >
+                            {(stations ?? []).map((item) => (
+                                <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
+                            ))}
+                        </AutocompleteStyle>
                         <EnumPicker
                             label={t("table.status")}
                             labels={RentalContractStatusLabels}
-                            // value={formik.values.status ?? null}
-                            onChange={(val) => formik.setFieldValue("status", val)}
+                            value={formik.values.status ?? null}
+                            onChange={(val) => {
+                                formik.setFieldValue("status", val)
+                                formik.handleSubmit()
+                            }}
                         />
                         <InputStyled
                             label={t("table.phone")}
@@ -119,7 +135,7 @@ export default function StaffContractsPage() {
                 </form>
             </div>
             {/* Table */}
-            <TableContractStaff contracts={contracts} onStatusChange={() => refetch()} />
+            <TableContractStaff contracts={contracts} params={formik.values} />
         </div>
     )
 }

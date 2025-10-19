@@ -4,3 +4,5 @@ export type PaymentReq = {
     paymentMethod: PaymentMethod
     fallbackUrl: string
 }
+
+export type CreateInvoiceItemReq = {}

@@ -7,10 +7,12 @@ import { useTranslation } from "react-i18next"
 
 export function ChecklistItemUploader({
     btnClassName = "",
+    isEditable,
     itemId,
     itemImg
 }: {
     btnClassName?: string
+    isEditable: boolean
     itemId: string
     itemImg?: string
 }) {
@@ -29,25 +31,29 @@ export function ChecklistItemUploader({
                     height={125}
                 />
             )}
-            <ImageUploadButton
-                color="primary"
-                label={t("common.upload")}
-                onFileSelect={onFileSelect}
-                btnClassName={btnClassName}
-            />
-            <ImageUploaderModal
-                label={t("common.upload")}
-                imgSrc={imgSrc}
-                setImgSrc={setImgSrc}
-                isOpen={isOpen}
-                onOpenChange={onOpenChange}
-                onClose={onClose}
-                uploadFn={upload.mutateAsync}
-                setDisplayImg={setDisplayImg}
-                isUploadPending={upload.isPending}
-                cropShape="rect"
-                cropSize={{ width: 700, height: 437.5 }}
-            />
+            {isEditable && (
+                <>
+                    <ImageUploadButton
+                        color="primary"
+                        label={t("common.upload")}
+                        onFileSelect={onFileSelect}
+                        btnClassName={btnClassName}
+                    />
+                    <ImageUploaderModal
+                        label={t("common.upload")}
+                        imgSrc={imgSrc}
+                        setImgSrc={setImgSrc}
+                        isOpen={isOpen}
+                        onOpenChange={onOpenChange}
+                        onClose={onClose}
+                        uploadFn={upload.mutateAsync}
+                        setDisplayImg={setDisplayImg}
+                        isUploadPending={upload.isPending}
+                        cropShape="rect"
+                        cropSize={{ width: 700, height: 437.5 }}
+                    />
+                </>
+            )}
         </>
     )
 }

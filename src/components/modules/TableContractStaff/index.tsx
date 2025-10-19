@@ -20,18 +20,19 @@ import { DropdownStyled } from "../../styled/DropdownStyled"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { useRouter } from "next/navigation"
 import { TableStyled } from "@/components/styled"
+import { ContractQueryParams } from "@/models/rental-contract/schema/request"
 
 export function TableContractStaff({
     contracts,
-    onStatusChange
+    params
 }: {
     contracts: RentalContractViewRes[]
-    onStatusChange?: () => void
+    params: ContractQueryParams
 }) {
     const { t } = useTranslation()
     const { toFullName } = useName()
     const router = useRouter()
-    const { acceptContract, rejectContract } = useConfirmContract({ onSuccess: onStatusChange })
+    const { acceptContract, rejectContract } = useConfirmContract({ params })
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
 
     const handleAccept = useCallback(
