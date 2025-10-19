@@ -2,7 +2,7 @@
 import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react"
 import { useState } from "react"
 import React from "react"
-export default function AlertExample() {
+export function ConfirmForm({ onSuccess }: { onSuccess?: () => void }) {
     const [isOpen, setIsOpen] = useState(false)
 
     return (

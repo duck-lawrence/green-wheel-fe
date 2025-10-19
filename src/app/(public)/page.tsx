@@ -6,7 +6,12 @@ import { useTranslation } from "react-i18next"
 import { useNavbarItemStore } from "@/hooks/singleton/store/useNavbarItemStore"
 import { useRouter, useSearchParams } from "next/navigation"
 import toast from "react-hot-toast"
-import GreenWheelExperience from "../demo/page"
+import { motion } from "framer-motion"
+import GreenWheelExperience from "@/components/modules/GreenWheelExperience"
+import CardReviewUser from "@/components/styled/GrateStyled"
+import HowItWorks from "@/components/modules/HomeItem/HowItWorks"
+import WhyChoose from "@/components/modules/HomeItem/WhyChoose"
+import Stations from "@/components/modules/HomeItem/Station"
 
 export default function HomePage() {
     const { t } = useTranslation()
@@ -40,23 +45,94 @@ export default function HomePage() {
 
     return (
         <>
-            <div className="min-h-[80vh]">
-                <div className="bannerBackground min-h-[80vh] min-w-full flex flex-col items-start justify-center gap-4"></div>
-                <div className="font-bold text-2xl ">Green Rides. Brighter Future.</div>
-                <div className="text-gray-500">{t("home.description")}</div>
-                <ButtonStyled
-                    href="/vehicle-rental"
-                    className="text-black h-13 transition-all duration-500
-                                            hover:bg-primary hover:text-white hover:border-black"
-                    variant="bordered"
+            {/* HERO SECTION */}
+            <section className="relative h-screen w-full overflow-hidden mt-[-100]">
+                {/* Ảnh nền full màn hình */}
+                <img
+                    src="/images/bg-2.jpg"
+                    alt="Green Wheel"
+                    className="absolute inset-0 w-full h-full object-cover object-center"
+                />
+
+                {/* Overlay tối nhẹ nếu cần (giúp chữ dễ đọc) */}
+                <div className="absolute inset-0 bg-black/30" />
+
+                {/* text*/}
+                <div className="relative z-10 flex flex-col justify-center items-start h-full px-8 md:px-24 max-w-2xl space-y-4 text-white">
+                    <h1 className="font-bold text-4xl md:text-5xl">
+                        Green Rides. Brighter Future.
+                    </h1>
+                    <p className="text-lg md:text-xl text-gray-100">{t("home.description")}</p>
+                    <ButtonStyled
+                        href="/vehicle-rental"
+                        className="text-lg font-semibold px-8 py-3 border-2 border-white rounded-xl transition-all duration-500 hover:bg-primary hover:border-primary hover:text-white"
+                        variant="bordered"
+                    >
+                        {t("home.view_details")}
+                    </ButtonStyled>
+                </div>
+            </section>
+
+            {/* CAROUSEL */}
+            <section className="max-w-screen-xl mx-auto py-16 px-4">
+                {/* <h2 className="text-3xl text-primary font-bold text-center mb-8">
+                    Danh sách sản phẩm
+                </h2> */}
+
+                <motion.div
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
                 >
-                    {t("home.view_details")}
-                </ButtonStyled>
-                {/* Carousel */}
+                    <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+                        Vision & Core Values
+                    </h2>
+                </motion.div>
                 <Carousel slides={slides} />
-            </div>
-            <Carousel slides={slides} />
-            <GreenWheelExperience />
+            </section>
+
+            {/* CONTENT SECTIONS (no background) */}
+            <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                // className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
+                className="max-w-screen-xl mx-auto px-4 space-y-20"
+            >
+                <HowItWorks />
+                <WhyChoose />
+                <Stations />
+                <GreenWheelExperience />
+            </motion.div>
+
+            <section className="max-w-screen-xl mx-auto py-16 px-4">
+                <motion.div
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    // className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
+                    viewport={{ once: false, amount: 0.2 }}
+                    className="max-w-screen-xl mx-auto px-4 space-y-20"
+                >
+                    <HowItWorks />
+                </motion.div>
+            </section>
+
+            {/* REVIEWS */}
+            <section className="py-20">
+                <h2 className="text-3xl text-primary font-bold text-center mb-8">
+                    Khách hàng đánh giá
+                </h2>
+                <div className="max-w-6xl mx-auto">
+                    <div className="flex gap-4 overflow-x-auto px-4 py-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+                        {[...Array(7)].map((_, i) => (
+                            <CardReviewUser key={i} />
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             <ScrollToTopButton />
             <Footer />
         </>
