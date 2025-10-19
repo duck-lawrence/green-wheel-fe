@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react"
 import { motion } from "framer-motion"
 import {
+    AlertStyled,
     InvoiceAccordion,
     InputStyled,
     renderInvoiceForm,
@@ -386,17 +387,25 @@ export function RentalContractDetail({
 
                 {/* Invoice Accordion  isLoading={isFetching}*/}
                 <SectionStyled title={t("rental_contract.payment_invoice_list")}>
-                    <div className="mt-[-1rem] mb-3 px-4 italic text-default-500 text-sm">
+                    <AlertStyled className="mb-3 mt-[-0.75rem] mx-2 max-w-fit italic">
                         {t("rental_contract.fees_include_tax")}
-                    </div>
+                    </AlertStyled>
+                    {/* <div className="mt-[-1rem] mb-3 px-4 italic text-default-500 text-sm">
+                        {t("rental_contract.fees_include_tax")}
+                    </div> */}
                     <InvoiceAccordion
                         items={invoiceAccordion}
                         contractStatus={contract.status}
                         className="mb-3"
                     />
-                    {isStaff && contract.status == RentalContractStatus.Returned && (
-                        <CreateInvoiceSection contractId={contract.id} type={InvoiceType.Refund} />
-                    )}
+                    {isStaff &&
+                        contract.status == RentalContractStatus.Returned &&
+                        !contract.invoices.find((item) => item.type == InvoiceType.Refund) && (
+                            <CreateInvoiceSection
+                                contractId={contract.id}
+                                type={InvoiceType.Refund}
+                            />
+                        )}
                 </SectionStyled>
 
                 {/* Signature */}

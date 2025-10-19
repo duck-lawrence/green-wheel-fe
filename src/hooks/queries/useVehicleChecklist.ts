@@ -73,15 +73,21 @@ export const useCreateVehicleChecklist = ({ onSuccess }: { onSuccess?: () => voi
     })
 }
 
-export const useUpdateVehicleChecklist = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useUpdateVehicleChecklist = ({
+    id,
+    onSuccess = undefined
+}: {
+    id: string
+    onSuccess?: () => void
+}) => {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
     return useMutation({
-        mutationFn: async ({ id, req }: { id: string; req: UpdateVehicleChecklistReq }) => {
+        mutationFn: async (req: UpdateVehicleChecklistReq) => {
             await vehicleChecklistsApi.update({ id, req })
         },
         onSuccess: (id) => {
-            queryClient.refetchQueries({
+            queryClient.invalidateQueries({
                 queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, id]
             })
             toast.success(t("success.update"))
@@ -95,15 +101,14 @@ export const useUpdateVehicleChecklist = ({ onSuccess }: { onSuccess?: () => voi
 
 export const useUpdateVehicleChecklistItem = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
-    const queryClient = useQueryClient()
+    const router = useRouter()
+
     return useMutation({
         mutationFn: async ({ id, req }: { id: string; req: UpdateChecklistItemReq }) => {
             await vehicleChecklistsApi.updateItem({ id, req })
         },
-        onSuccess: (id) => {
-            queryClient.refetchQueries({
-                queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, id]
-            })
+        onSuccess: () => {
+            router.refresh()
             // toast.success(t("success.update"))
             onSuccess?.()
         },

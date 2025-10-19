@@ -1,3 +1,4 @@
+export * from "./AlertStyled"
 export * from "./AutocompleteStyle"
 export * from "./AvatarStyled"
 

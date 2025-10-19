@@ -7,7 +7,7 @@ import React, { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { InvoiceItemTypeLabels, InvoiceTypeLabels } from "@/constants/labels"
 import { ButtonStyled, NumberInputStyled, TableStyled, TextareaStyled } from "@/components/styled"
-import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
+import { Spinner, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { EnumPicker } from "@/components/modules"
 
 type CreateInvoiceItemUI = CreateInvoiceReq["items"][number] & { _id: string }
@@ -25,7 +25,7 @@ export function CreateInvoiceForm({
     onClose: () => void
 }) {
     const { t } = useTranslation()
-    const createMutation = useCreateInvoice({ onSuccess: onClose })
+    const createMutation = useCreateInvoice({ contractId, onSuccess: onClose })
 
     const initialValues = useMemo<CreateInvoiceFormValues>(
         () => ({
@@ -213,22 +213,34 @@ export function CreateInvoiceForm({
                     })}
                 </TableBody>
             </TableStyled>
-            <ButtonStyled
-                onPress={() => {
-                    formik.setFieldValue(
-                        "items",
-                        formik.values.items.concat({
-                            _id: crypto.randomUUID(),
-                            unitPrice: 1000,
-                            quantity: 1,
-                            description: "",
-                            type: InvoiceItemType.Penalty
-                        })
-                    )
-                }}
-            >
-                {t("invoice.add_item")}
-            </ButtonStyled>
+            <div className="flex justify-between">
+                <ButtonStyled
+                    onPress={() => {
+                        formik.setFieldValue(
+                            "items",
+                            formik.values.items.concat({
+                                _id: crypto.randomUUID(),
+                                unitPrice: 1000,
+                                quantity: 1,
+                                description: "",
+                                type: InvoiceItemType.Penalty
+                            })
+                        )
+                    }}
+                >
+                    {t("invoice.add_item")}
+                </ButtonStyled>
+                <ButtonStyled
+                    type="submit"
+                    color="primary"
+                    variant="bordered"
+                    className="hover:bg-primary hover:text-white"
+                    onPress={() => formik.handleSubmit()}
+                    isDisabled={formik.isSubmitting || !formik.isValid}
+                >
+                    {formik.isSubmitting ? <Spinner /> : t("common.create")}
+                </ButtonStyled>
+            </div>
         </form>
     )
 }

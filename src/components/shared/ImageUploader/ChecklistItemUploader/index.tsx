@@ -23,14 +23,6 @@ export function ChecklistItemUploader({
 
     return (
         <>
-            {displayImg && (
-                <ImageStyled
-                    alt={t("vehicle_checklist.item_image")}
-                    src={displayImg}
-                    width={200}
-                    height={125}
-                />
-            )}
             {isEditable && (
                 <>
                     <ImageUploadButton
@@ -53,6 +45,14 @@ export function ChecklistItemUploader({
                         cropSize={{ width: 700, height: 437.5 }}
                     />
                 </>
+            )}
+            {displayImg && (
+                <ImageStyled
+                    alt={t("vehicle_checklist.item_image")}
+                    src={displayImg}
+                    width={200}
+                    height={125}
+                />
             )}
         </>
     )

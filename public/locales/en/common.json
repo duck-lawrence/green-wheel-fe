@@ -567,7 +567,7 @@
         "incident_cause": "Incident cause",
         "repair_rescue_cost": "Repair / rescue cost",
         "initial_deposit_amount": "Initial deposit amount",
-        "traffic_fine_if_any": "Traffic fine (if any)",
+        "penalty_total": "Penalty total",
         "total_after_deduction": "Total after deduction",
         "amount_customer_must_pay": "Amount customer must pay",
         "amount_refunded_to_customer": "Amount refunded to customer",
@@ -587,7 +587,8 @@
         "can_not_cancel": "This rental contract can not be cancelled",
         "handover": "Handover",
         "return": "Return",
-        "fees_include_tax": "Fees marked with * include tax"
+        "fees_include_tax": "Fees marked with * include tax",
+        "penalty_warning": "Please be aware that the deposit is non-refundable if any penalty fees are incurred"
     },
     "invoice": {
         "not_found": "Invoice not found",
@@ -602,7 +603,8 @@
         "item_type": "Item type",
         "item_type_require": "Invoice item type is required",
         "add_item": "Add new item",
-        "create_refund": "Create refund invoice"
+        "create_refund": "Create refund invoice",
+        "subtotal": "Subtotal"
     },
     "momo": {
         "invalid_signature": "Invalid signature",

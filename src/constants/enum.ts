@@ -12,9 +12,8 @@ export enum DispatchRequestStatus {
 
 export enum DepositStatus {
     Pending = 0,
-    Paid = 1,
-    Refunded = 2,
-    Forfeited = 3
+    Refunded = 1,
+    Forfeited = 2
 }
 
 export enum InvoiceStatus {

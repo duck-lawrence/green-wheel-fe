@@ -17,32 +17,30 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
     const { toFullName } = useName()
 
     const { data: checklist, isLoading } = useGetVehicleChecklistById({
-        id: id as string,
+        id,
         enabled: true
     })
 
     const isEditable = useMemo(() => {
         return isStaff && !checklist?.isSignedByStaff && !checklist?.isSignedByCustomer
     }, [checklist?.isSignedByCustomer, checklist?.isSignedByStaff, isStaff])
+
     const contractUrl = useMemo(() => {
         return isStaff
             ? `/dashboard/rental-contracts/${checklist?.contractId}`
             : `/rental-contracts/${checklist?.contractId}`
     }, [checklist?.contractId, isStaff])
 
-    const updateChecklist = useUpdateVehicleChecklist({})
+    const updateChecklist = useUpdateVehicleChecklist({ id })
     const handleUpdate = useCallback(
         async (value: UpdateVehicleChecklistReq) => {
             await updateChecklist.mutateAsync({
-                id: checklist!.id,
-                req: {
-                    checklistItems: value.checklistItems,
-                    isSignedByCustomer: value.isSignedByCustomer,
-                    isSignedByStaff: value.isSignedByStaff
-                }
+                checklistItems: value.checklistItems,
+                isSignedByCustomer: value.isSignedByCustomer,
+                isSignedByStaff: value.isSignedByStaff
             })
         },
-        [checklist, updateChecklist]
+        [updateChecklist]
     )
 
     const formik = useFormik({

@@ -31,7 +31,6 @@ export const DispatchRequestStatusLabels: Record<DispatchRequestStatus, string> 
 
 export const DepositStatusLabels: Record<DepositStatus, string> = {
     [DepositStatus.Pending]: i18n.t("enum.pending"),
-    [DepositStatus.Paid]: i18n.t("enum.paid"),
     [DepositStatus.Refunded]: i18n.t("enum.refunded"),
     [DepositStatus.Forfeited]: i18n.t("enum.forfeited")
 }

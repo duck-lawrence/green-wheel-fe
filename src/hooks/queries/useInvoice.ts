@@ -2,7 +2,7 @@ import { QUERY_KEYS } from "@/constants/queryKey"
 import { BackendError } from "@/models/common/response"
 import { invoiceApi } from "@/services/invoiceApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
@@ -23,12 +23,7 @@ export const usePayInvoice = () => {
     // const QueryClient = useQueryClient()
     const router = useRouter()
     return useMutation({
-        // mutationFn: async (invoiceId: string, paymentMethod: PaymentMethod) => {
-        //     const res = await invoiceApi.createPayment(invoiceId, paymentMethod)
-        //     return res
-        // },
         mutationFn: invoiceApi.createPayment,
-
         onSuccess: (data) => {
             if (data?.link) {
                 router.push(data.link)
@@ -40,14 +35,22 @@ export const usePayInvoice = () => {
     })
 }
 
-export const useCreateInvoice = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
+export const useCreateInvoice = ({
+    contractId,
+    onSuccess = undefined
+}: {
+    contractId: string
+    onSuccess?: () => void
+}) => {
     const { t } = useTranslation()
-    const router = useRouter()
+    const queryClient = useQueryClient()
 
     return useMutation({
         mutationFn: invoiceApi.create,
         onSuccess: () => {
-            router.refresh()
+            queryClient.invalidateQueries({
+                queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, contractId]
+            })
             onSuccess?.()
             toast.success(t("success.create"))
         },
