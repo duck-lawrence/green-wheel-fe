@@ -43,7 +43,7 @@ export const vehicleChecklistsApi = {
         }),
 
     uploadItemImage: ({ itemId, formData }: { itemId: string; formData: FormData }) =>
-        requestWrapper<VehicleChecklistItemViewRes>(async () => {
+        requestWrapper<string>(async () => {
             const res = await axiosInstance.post(
                 `/vehicle-checklists/items/${itemId}/image`,
                 formData,

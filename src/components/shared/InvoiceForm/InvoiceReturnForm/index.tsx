@@ -69,6 +69,7 @@ export function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes }) {
             />
             <TextareaStyled
                 label={t("rental_contract.note")}
+                value={invoice.notes || ""}
                 variant="bordered"
                 className="sm:col-span-2"
             />

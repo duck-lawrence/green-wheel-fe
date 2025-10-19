@@ -21,6 +21,9 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
         enabled: true
     })
 
+    const isEditable = useMemo(() => {
+        return isStaff && !checklist?.isSignedByStaff && !checklist?.isSignedByCustomer
+    }, [checklist?.isSignedByCustomer, checklist?.isSignedByStaff, isStaff])
     const contractUrl = useMemo(() => {
         return isStaff
             ? `/dashboard/rental-contracts/${checklist?.contractId}`
@@ -122,8 +125,8 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
 
             {/* Table */}
             <TableCheckListItems
-                isStaff={isStaff}
-                checklistId={id as string}
+                isEditable={isEditable}
+                // checklistId={id as string}
                 vehicleCheckListItem={formik.values.checklistItems}
                 setFieldValue={formik.setFieldValue}
             />
@@ -149,7 +152,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
             <SignatureSection
                 // className="pt-10"
                 sectionClassName="mt-8"
-                isReadOnly={!isStaff}
+                isReadOnly={!isEditable}
                 staffSign={{
                     id: "isSignedByStaff",
                     name: "isSignedByStaff",
@@ -174,7 +177,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                 }}
             />
 
-            {isStaff && !checklist?.isSignedByStaff && !checklist?.isSignedByCustomer && (
+            {isEditable && (
                 <div className="flex justify-center">
                     <ButtonStyled
                         type="submit"

@@ -101,7 +101,7 @@ export const useUpdateVehicleChecklistItem = ({ onSuccess }: { onSuccess?: () =>
             await vehicleChecklistsApi.updateItem({ id, req })
         },
         onSuccess: (id) => {
-            queryClient.invalidateQueries({
+            queryClient.refetchQueries({
                 queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, id]
             })
             // toast.success(t("success.update"))
@@ -113,28 +113,22 @@ export const useUpdateVehicleChecklistItem = ({ onSuccess }: { onSuccess?: () =>
     })
 }
 
-export const useUploadChecklistItem = ({
-    checklistId,
+export const useUploadChecklistItemImage = ({
     itemId,
     onSuccess,
     onError
 }: {
-    checklistId: string
     itemId: string
     onSuccess?: () => void
     onError?: () => void
 }) => {
     const { t } = useTranslation()
-    const queryClient = useQueryClient()
 
     return useMutation({
         mutationFn: async (formData: FormData) => {
             return await vehicleChecklistsApi.uploadItemImage({ itemId, formData })
         },
         onSuccess: async () => {
-            queryClient.refetchQueries({
-                queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, checklistId]
-            })
             onSuccess?.()
             toast.success(t("success.upload"))
         },

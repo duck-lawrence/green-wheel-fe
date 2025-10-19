@@ -1,30 +1,23 @@
 "use client"
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react"
-import React, { useRef } from "react"
+import React from "react"
 import { useTranslation } from "react-i18next"
 import { VehicleChecklistItemViewRes } from "@/models/checklist/schema/response"
 import { DamageStatusLabels } from "@/constants/labels"
-import { TextareaStyled, ChecklistItemUploader, EnumPicker, ImageStyled } from "@/components/"
-import { useUpdateVehicleChecklistItem } from "@/hooks"
-import { DamageStatus } from "@/constants/enum"
-import { debouncedWrapper } from "@/utils/helpers/axiosHelper"
+import { TextareaStyled, ChecklistItemUploader, EnumPicker } from "@/components/"
 
 export function TableCheckListItems({
-    isStaff = false,
-    checklistId,
+    isEditable = false,
+    // checklistId,
     vehicleCheckListItem,
     setFieldValue
 }: {
-    isStaff: boolean
-    checklistId: string
+    isEditable: boolean
+    // checklistId: string
     vehicleCheckListItem: VehicleChecklistItemViewRes[]
     setFieldValue: (field: string, value: any) => void
 }) {
     const { t } = useTranslation()
-    const updateItemMutation = useUpdateVehicleChecklistItem({})
-
-    const debouncedRefs = useRef<Record<string, ReturnType<typeof debouncedWrapper>>>({})
-
     return (
         <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
             <Table className="min-w-full text-sm md:text-base" removeWrapper>
@@ -49,20 +42,6 @@ export function TableCheckListItems({
                 <TableBody>
                     {vehicleCheckListItem &&
                         vehicleCheckListItem.map((item, index) => {
-                            if (!debouncedRefs.current[item.id]) {
-                                debouncedRefs.current[item.id] = debouncedWrapper(
-                                    async (notes: string) => {
-                                        await updateItemMutation.mutateAsync({
-                                            id: item.id,
-                                            req: { status: item.status, notes }
-                                        })
-                                    },
-                                    500
-                                )
-                            }
-
-                            const debouncedUpdate = debouncedRefs.current[item.id]
-
                             return (
                                 <TableRow key={item.id}>
                                     {/* No. */}
@@ -82,19 +61,13 @@ export function TableCheckListItems({
                                             label={t("table.status")}
                                             labels={DamageStatusLabels}
                                             value={item.status}
-                                            onChange={async (val) => {
+                                            onChange={(val) => {
                                                 setFieldValue(
                                                     `checklistItems[${index}].status`,
                                                     val
                                                 )
-                                                await updateItemMutation.mutateAsync({
-                                                    id: item.id,
-                                                    req: {
-                                                        status: val as DamageStatus
-                                                    }
-                                                })
                                             }}
-                                            isReadOnly={!isStaff || updateItemMutation.isPending}
+                                            isReadOnly={!isEditable}
                                             isClearable={false}
                                         />
                                     </TableCell>
@@ -102,45 +75,24 @@ export function TableCheckListItems({
                                     {/* Notes */}
                                     <TableCell className="text-center align-top text-gray-600 text-sm italic">
                                         <TextareaStyled
-                                            isReadOnly={!isStaff}
                                             value={item.notes || ""}
-                                            onChange={async (val) => {
+                                            onChange={(val) => {
                                                 setFieldValue(
                                                     `checklistItems[${index}].notes`,
                                                     val.target.value
                                                 )
-                                                await debouncedUpdate(val.target.value)
-                                                // await debouncedUpdate({
-                                                //     id: item.id,
-                                                //     status: item.status,
-                                                //     notes: val.target.value
-                                                // })
                                             }}
+                                            isReadOnly={!isEditable}
                                         />
                                     </TableCell>
 
                                     {/* Action */}
                                     <TableCell className="flex justify-start items-center flex-col gap-2">
-                                        {/* <ButtonStyled
-                                    color="primary"
-                                    className="text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center"
-                                >
-                                    <Camera size={18} fontWeight="fill" />
-                                    <Link href="/">{t("common.update")}</Link>
-                                </ButtonStyled> */}
-                                        {isStaff && (
+                                        {isEditable && (
                                             <ChecklistItemUploader
                                                 key={item.id}
-                                                checklistId={checklistId}
                                                 itemId={item.id}
-                                            />
-                                        )}
-                                        {item.imageUrl && (
-                                            <ImageStyled
-                                                alt={t("vehicle_checklist.item_image")}
-                                                src={item.imageUrl}
-                                                width={200}
-                                                height={125}
+                                                itemImg={item.imageUrl}
                                             />
                                         )}
                                     </TableCell>
