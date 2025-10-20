@@ -10,7 +10,7 @@ export default function RentalContractDetailPage() {
     if (!contractId) return <SpinnerStyled />
 
     return (
-        <div className="max-w-3xl">
+        <div className="max-w-screen md:max-w-3xl">
             <RentalContractDetail contractId={contractId} />
         </div>
     )

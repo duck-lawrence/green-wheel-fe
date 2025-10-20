@@ -131,7 +131,6 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                         "is-valid-min-end-date",
                         t("vehicle_filter.min_end_date"),
                         function (this: Yup.TestContext, value) {
-                            // ✅ định kiểu this tại đây
                             const { startDate } = this.parent as { startDate?: string }
                             if (!startDate || !value) return true
 

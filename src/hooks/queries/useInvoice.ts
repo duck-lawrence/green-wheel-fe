@@ -25,8 +25,11 @@ export const usePayInvoice = () => {
     return useMutation({
         mutationFn: invoiceApi.createPayment,
         onSuccess: (data) => {
-            if (data?.link) {
+            if (data?.link && typeof data.link === "string") {
                 router.push(data.link)
+            } else {
+                router.refresh()
+                toast.success(t("success.payment"))
             }
         },
         onError: (error: BackendError) => {

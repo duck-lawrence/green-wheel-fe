@@ -563,6 +563,7 @@
         "deposit_amount": "Deposit amount",
         "rental_fee": "Rental fee",
         "vat_tax": "VAT tax",
+        "amount": "Amount",
         "total_amount": "Total amount",
         "note": "Note",
         "incident_cause": "Incident cause",
