@@ -1,6 +1,7 @@
 // export * from "./CardListVehicleRental"
 export * from "./CriclesChart"
 export * from "./EnumPicker"
+export * from "./HomeItem"
 export * from "./KpiStat"
 export * from "./RowSteps"
 export * from "./ScrollToTopButton"

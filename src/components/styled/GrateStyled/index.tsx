@@ -3,24 +3,34 @@ import CardReview from "./CardReview"
 import { cn } from "@heroui/react"
 
 type CardReviewProps = {
-    content?: string
-    rating?: number
-    title?: string
-    name?: string
-    avatar?: string
+    name: string
+    avatar: string
+    rating: number
+    title: string
+    content: string
+    createdAt: string
     className?: string
 }
-export default function CardReviewUser(props: CardReviewProps) {
+
+export default function CardReviewUser({
+    name,
+    avatar,
+    rating,
+    title,
+    content,
+    createdAt,
+    className
+}: CardReviewProps) {
     return (
-        <div className={cn("flex flex-col gap-4", props.className)}>
+        <div className={cn("flex flex-col gap-4 min-w-[300px] max-w-sm", className)}>
             <CardReview
-                content="Arcu dui vivamus arcu felis bibendum. Amet tellus cras adipiscing enim eu turpis egestas pretium. "
-                createdAt="2021-08-01T12:00:00.000Z"
-                rating={props.rating ?? 0}
-                title={props.title ?? ""}
+                content={content}
+                createdAt={createdAt}
+                rating={rating}
+                title={title}
                 user={{
-                    name: props.name ?? "",
-                    avatar: props.avatar ?? ""
+                    name,
+                    avatar
                 }}
             />
         </div>

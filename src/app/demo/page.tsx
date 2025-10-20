@@ -1,31 +1,19 @@
+// components/ui/EnergySpark.tsx
 "use client"
-import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react"
-import { useState } from "react"
+import { motion } from "framer-motion"
 import React from "react"
-export default function AlertExample() {
-    const [isOpen, setIsOpen] = useState(false)
+export default function EnergySpark({ direction = "horizontal" }) {
+    const baseClass =
+        direction === "horizontal"
+            ? "w-32 h-[3px] bg-gradient-to-r from-primary via-teal-400 to-green-400"
+            : "h-32 w-[3px] bg-gradient-to-b from-primary via-teal-400 to-green-400"
 
     return (
-        <>
-            <Button color="primary" onPress={() => setIsOpen(true)}>
-                Show Alert
-            </Button>
-
-            <Modal isOpen={isOpen} onOpenChange={setIsOpen} placement="center">
-                <ModalContent>
-                    {(onClose) => (
-                        <>
-                            <ModalHeader>Thông báo</ModalHeader>
-                            <ModalBody>Hành động của bạn đã được thực hiện thành công 🎉</ModalBody>
-                            <ModalFooter>
-                                <Button color="primary" onPress={onClose}>
-                                    OK
-                                </Button>
-                            </ModalFooter>
-                        </>
-                    )}
-                </ModalContent>
-            </Modal>
-        </>
+        <motion.div
+            className={`${baseClass} bg-[length:200%] animate-[flow_3s_linear_infinite] rounded-full opacity-70 mx-auto my-6`}
+            style={{
+                filter: "drop-shadow(0 0 6px rgba(20,184,166,0.5))"
+            }}
+        />
     )
 }

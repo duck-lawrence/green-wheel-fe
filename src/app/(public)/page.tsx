@@ -1,17 +1,21 @@
 "use client"
-import { ButtonStyled, Carousel, Footer, ScrollToTopButton } from "@/components"
+import {
+    ButtonStyled,
+    Carousel,
+    Footer,
+    GreenWheelExperience,
+    HowItWorks,
+    ScrollToTopButton,
+    Stations,
+    WhyChoose
+} from "@/components"
 import React, { useEffect, useRef } from "react"
 import { slides } from "@/../public/cars"
 import { useTranslation } from "react-i18next"
 import { useNavbarItemStore } from "@/hooks/singleton/store/useNavbarItemStore"
 import { useRouter, useSearchParams } from "next/navigation"
 import toast from "react-hot-toast"
-import { motion } from "framer-motion"
-import GreenWheelExperience from "@/components/modules/GreenWheelExperience"
-import CardReviewUser from "@/components/styled/GrateStyled"
-import HowItWorks from "@/components/modules/HomeItem/HowItWorks"
-import WhyChoose from "@/components/modules/HomeItem/WhyChoose"
-import Stations from "@/components/modules/HomeItem/Station"
+import CustomerReview from "@/components/modules/HomeItem/CustomerReview"
 
 export default function HomePage() {
     const { t } = useTranslation()
@@ -42,6 +46,58 @@ export default function HomePage() {
             { scroll: false }
         )
     }, [params, t, router])
+
+    const reviews = [
+        {
+            id: "1",
+            name: "Nguyễn Minh Hòa",
+            avatar: "/images/users/user1.jpg",
+            rating: 1,
+            title: "Trải nghiệm tuyệt vời!",
+            content:
+                "Xe chạy êm, nhân viên hỗ trợ nhiệt tình. Tôi rất hài lòng với dịch vụ của Green Wheel!",
+            createdAt: "2025-10-01"
+        },
+        {
+            id: "2",
+            name: "Trần Bảo Ngọc",
+            avatar: "/images/users/user2.jpg",
+            rating: 4,
+            title: "Dịch vụ ổn định",
+            content: "Quy trình thuê xe nhanh chóng, giá cả hợp lý. Sẽ quay lại lần tới!",
+            createdAt: "2025-09-20"
+        },
+        {
+            id: "3",
+            name: "Lê Hoàng",
+            avatar: "/images/users/user3.jpg",
+            rating: 5,
+            title: "Green Wheel xịn xò",
+            content:
+                "Rất thích cách Green Wheel tối ưu app thuê xe, mọi thứ trơn tru và thân thiện.",
+            createdAt: "2025-09-10"
+        },
+        {
+            id: "4",
+            name: "Lê Hoàng",
+            avatar: "/images/users/user3.jpg",
+            rating: 5,
+            title: "Green Wheel xịn xò",
+            content:
+                "Rất thích cách Green Wheel tối ưu app thuê xe, mọi thứ trơn tru và thân thiện.",
+            createdAt: "2025-09-10"
+        },
+        {
+            id: "5",
+            name: "Lê Hoàng",
+            avatar: "/images/users/user3.jpg",
+            rating: 5,
+            title: "Green Wheel xịn xò",
+            content:
+                "Rất thích cách Green Wheel tối ưu app thuê xe, mọi thứ trơn tru và thân thiện.",
+            createdAt: "2025-09-10"
+        }
+    ]
 
     return (
         <>
@@ -79,7 +135,7 @@ export default function HomePage() {
                     Danh sách sản phẩm
                 </h2> */}
 
-                <motion.div
+                {/* <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
@@ -88,86 +144,29 @@ export default function HomePage() {
                     <h2 className="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white text-primary">
                         Vision & Core Values
                     </h2>
-                </motion.div>
+                </motion.div> */}
                 <Carousel slides={slides} />
             </section>
 
-            {/* CONTENT SECTIONS (no background) */}
-            <section className="max-w-screen-xl mx-auto py-16 px-4">
-                <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    // className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
-                    viewport={{ once: false, amount: 0.2 }}
-                    className="max-w-screen-xl mx-auto px-4 space-y-20"
-                >
-                    <HowItWorks />
-                </motion.div>
-            </section>
+            {/* CONTENT SECTIONS */}
+            <div>
+                <HowItWorks />
+            </div>
 
-            <section className="max-w-screen-xl mx-auto py-16 px-4">
-                <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    // className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
-                    viewport={{ once: false, amount: 0.2 }}
-                    className="max-w-screen-xl mx-auto px-4 space-y-20"
-                >
-                    <WhyChoose />
-                </motion.div>
-            </section>
+            <div>
+                <WhyChoose />
+            </div>
 
-            <section className="max-w-screen-xl mx-auto py-16 px-4">
-                <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    // className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
-                    viewport={{ once: false, amount: 0.2 }}
-                    className="max-w-screen-xl mx-auto px-4 space-y-20"
-                >
-                    <Stations />
-                </motion.div>
-            </section>
+            <div>
+                <Stations />
+            </div>
 
-            <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                // className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
-                className="max-w-screen-xl mx-auto px-4 space-y-20"
-            >
+            <div>
                 <GreenWheelExperience />
-            </motion.div>
-
-            {/* <section className="max-w-screen-xl mx-auto py-16 px-4">
-                <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    // className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
-                    viewport={{ once: false, amount: 0.2 }}
-                    className="max-w-screen-xl mx-auto px-4 space-y-20"
-                >
-                    <HowItWorks />
-                </motion.div>
-            </section> */}
+            </div>
 
             {/* REVIEWS */}
-            <section className="py-20">
-                <h2 className="text-3xl text-primary font-bold text-center mb-8">
-                    Khách hàng đánh giá
-                </h2>
-                <div className="max-w-7xl mx-auto">
-                    <div className="flex gap-4 overflow-x-auto px-4 py-2 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-100">
-                        {[...Array(10)].map((_, i) => (
-                            <CardReviewUser key={i} />
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <CustomerReview reviews={reviews} onAddReview={() => alert("Gửi phản hồi")} />
 
             <ScrollToTopButton />
             <Footer />
