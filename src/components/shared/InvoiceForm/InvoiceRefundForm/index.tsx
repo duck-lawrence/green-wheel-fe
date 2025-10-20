@@ -45,16 +45,9 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                     variant="bordered"
                 />
 
-                {/* Penalty - deposit */}
-                {/* <InputStyled
-                    label={t("rental_contract.total_after_deduction")}
-                    value={formatCurrency(1)}
-                    startContent={<Money size={22} className="text-primary" weight="duotone" />}
-                    variant="bordered"
-                /> */}
                 <InputStyled
                     label={
-                        invoice.total > 0
+                        invoice.total >= 0
                             ? t("rental_contract.amount_customer_must_pay")
                             : t("rental_contract.amount_refunded_to_customer")
                     }
@@ -90,22 +83,22 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                     <TableBody>
                         {penaltyItems.map((item, index) => (
                             <TableRow key={item.id}>
-                                <TableCell className="text-center align-top text-gray-700 font-medium">
+                                <TableCell className="text-center align-top text-gray-700">
                                     {index + 1}
                                 </TableCell>
-                                <TableCell className="text-center align-top text-gray-700 font-medium">
+                                <TableCell className="text-center align-top text-gray-700">
                                     {item.description || ""}
                                 </TableCell>
-                                <TableCell className="text-center align-top text-gray-700 font-medium">
+                                <TableCell className="text-center align-top text-gray-700">
                                     {InvoiceItemTypeLabels[item.type]}
                                 </TableCell>
-                                <TableCell className="text-center align-top text-gray-700 font-medium">
+                                <TableCell className="text-center align-top text-gray-700">
                                     {formatCurrency(item.unitPrice)}
                                 </TableCell>
-                                <TableCell className="text-center align-top text-gray-700 font-medium">
+                                <TableCell className="text-center align-top text-gray-700">
                                     {formatCurrency(item.quantity)}
                                 </TableCell>
-                                <TableCell className="text-center align-top text-gray-700 font-medium">
+                                <TableCell className="text-center align-top text-gray-700">
                                     {formatCurrency(item.subTotal)}
                                 </TableCell>
                             </TableRow>

@@ -143,15 +143,19 @@ export default function VehicleDetailPage() {
             <header className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-4">
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
                     <div>
-                        <h1 className="text-3xl/tight sm:text-4xl font-bold tracking-tight">
-                            {model.name}
-                        </h1>
-                        <p className="text-neutral-600">{model.description}</p>
+                        <div className="flex gap-2 items-center">
+                            <h1 className="text-3xl/tight sm:text-4xl font-bold tracking-tight">
+                                {model.name}
+                            </h1>
+                            <p className="text-3xl/tight sm:text-[2.1rem] font-semibold text-neutral-600">
+                                {`- ${model.description}`}
+                            </p>
+                        </div>
                         {/* <p className="mt-1 text-sm text-neutral-500">
                             Hãng xe: <span className="font-medium">{vehicle.brand_name}</span> •
                             Phân khúc: <span className="font-medium">{vehicle.segment_name}</span>
                         </p> */}
-                        <p className="text-lg text-neutral-500">
+                        <p className="text-lg text-neutral-500 font-semibold">
                             {t("vehicle_model.remaining_vehicle_count")} &nbsp;
                             <span className="font-extrabold text-emerald-600">
                                 {model.availableVehicleCount}

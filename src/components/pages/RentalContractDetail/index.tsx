@@ -375,7 +375,7 @@ export function RentalContractDetail({
                         checklist={hanoverChecklist}
                         type={VehicleChecklistType.Handover}
                     />
-                    {contract.status == RentalContractStatus.Returned && (
+                    {contract.status >= RentalContractStatus.Returned && (
                         <ChecklistSection
                             isStaff={isStaff}
                             contract={contract}

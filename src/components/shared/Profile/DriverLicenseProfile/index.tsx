@@ -79,7 +79,7 @@ export function DriverLicenseProfile() {
                 {isLoading ? (
                     <Spinner />
                 ) : !driverLicense ? (
-                    <div className="flex justify-between items-center text-md px-4 italic mt-[-0.75rem]">
+                    <div className="flex justify-between items-center text-md pr-4 italic mt-[-0.75rem]">
                         <p>{t("user.please_upload_driver_license")}</p>
                         <DriverLicenseUploader />
                     </div>

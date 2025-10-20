@@ -13,19 +13,8 @@ export default function VehicleModelsPage() {
         setActiveMenuKey("vehicle-rental")
     }, [setActiveMenuKey])
 
-    // useEffect(() => {
-    //     if (!station || !start || !end) return
-    //     const filtered = allVehicles.filter(
-    //         (v) => v.station === station
-    //     )
-    //     setFilteredVehicles(filtered)
-    // }, [station, start, end, allVehicles, setFilteredVehicles])
-
-    // const handleFilter = (station: string, start: string, end: string) => {
-    //     setBookingFilter(station, start, end)
-    // }
     return (
-        <div className="min-h-[80vh] h-fit p-4">
+        <div className="min-h-[80vh] h-fit max-w-screen p-4">
             <FilterVehicleRental />
 
             <div className="mt-10 gap-8 grid grid-cols-2 sm:grid-cols-3 ">

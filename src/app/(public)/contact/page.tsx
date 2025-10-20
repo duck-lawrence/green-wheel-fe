@@ -98,6 +98,16 @@ export default function Contact() {
                             isInvalid={!!(formik.touched.email && formik.errors.email)}
                             errorMessage={formik.errors.email}
                         />
+                        <InputStyled
+                            isClearable
+                            variant="bordered"
+                            label={t("auth.email")}
+                            value={formik.values.email}
+                            onValueChange={(value) => formik.setFieldValue("email", value)}
+                            onBlur={() => formik.setFieldTouched("email")}
+                            isInvalid={!!(formik.touched.email && formik.errors.email)}
+                            errorMessage={formik.errors.email}
+                        />
                         <TextareaStyled
                             isClearable
                             label="Message"

@@ -35,8 +35,8 @@ export default async function RootLayout({
     const locale = cookieStore.get("i18next")?.value || "en"
 
     return (
-        <html lang={locale} className={`${geistSans.variable} ${geistMono.variable}`}>
-            <body className="antialiased bg-secondary diamondBackground">
+        <html lang={locale} className={`${geistSans.variable} ${geistMono.variable} min-w-xs`}>
+            <body className="antialiased bg-secondary diamondBackground min-w-xs">
                 <AppProviders locale={locale}>
                     <ClientHydration>
                         <div className="min-h-screen flex flex-col items-center pt-25 mb-10">

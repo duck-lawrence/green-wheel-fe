@@ -6,7 +6,7 @@ import { CalendarDateTime, fromDate } from "@internationalized/date"
 import { useTranslation } from "react-i18next"
 import { AutocompleteItem, cn, Spinner } from "@heroui/react"
 import { MapPinAreaIcon } from "@phosphor-icons/react"
-import { ButtonStyled, AutocompleteStyle, DateTimeStyled } from "@/components"
+import { AutocompleteStyle, DateTimeStyled } from "@/components"
 import { useBookingFilterStore, useDay, useGetAllStations, useGetAllVehicleSegments } from "@/hooks"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
@@ -51,8 +51,7 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
             zonedNow.month,
             zonedNow.day,
             zonedNow.hour,
-            zonedNow.minute,
-            zonedNow.second
+            zonedNow.minute
         )
 
         const isAfterMax = nowTime.hour + 3 >= MAX_HOUR
@@ -86,7 +85,7 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
         }
     })
 
-    const handleSubmit = useCallback(async () => {
+    const handleSearch = useCallback(async () => {
         const data = await getCachedOrFetch()
         setFilteredVehicleModels(data || [])
     }, [getCachedOrFetch, setFilteredVehicleModels])
@@ -95,7 +94,6 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
     const bookingSchema = useMemo(
         () =>
             Yup.object().shape({
-                stationId: Yup.string().required(t("vehicle_model.pick_station")),
                 startDate: Yup.string()
                     .required(t("vehicle_filter.start_date_require"))
                     .test(
@@ -103,6 +101,10 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                         t("vehicle_filter.invalid_start_date"),
                         (value) => {
                             const valueDatetime = toCalenderDateTime(value)
+                            console.log(valueDatetime?.toString())
+                            if (valueDatetime)
+                                console.log(`result: ${valueDatetime.compare(minStartDate)}`)
+
                             return (
                                 !!valueDatetime &&
                                 valueDatetime.compare(minStartDate) >= 0 &&
@@ -125,13 +127,21 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                             )
                         }
                     )
-                    .test("is-valid-min-end-date", t("vehicle_filter.min_end_date"), (value) => {
-                        return dayjs(startDate).isBefore(
-                            dayjs(value).add(-1, "day").add(1, "minute")
-                        )
-                    })
+                    .test(
+                        "is-valid-min-end-date",
+                        t("vehicle_filter.min_end_date"),
+                        function (this: Yup.TestContext, value) {
+                            // ✅ định kiểu this tại đây
+                            const { startDate } = this.parent as { startDate?: string }
+                            if (!startDate || !value) return true
+
+                            return dayjs(startDate).isBefore(
+                                dayjs(value).add(-1, "day").add(1, "minute")
+                            )
+                        }
+                    )
             }),
-        [minStartDate, startDate, t, toCalenderDateTime]
+        [minStartDate, t, toCalenderDateTime]
     )
 
     //  useFormik
@@ -143,7 +153,17 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
             endDate: endDate || minEndDate.toString()
         },
         validationSchema: bookingSchema,
-        onSubmit: handleSubmit
+        validateOnChange: false,
+        validateOnBlur: false,
+        validateOnMount: true,
+        onSubmit: () => {
+            setStationId(formik.values.stationId)
+            setSegmentId(formik.values.segmentId)
+            setStartDate(formik.values.startDate)
+            setEndDate(formik.values.endDate)
+            handleSearch()
+            formik.setSubmitting(false)
+        }
     })
 
     // Load station
@@ -168,10 +188,6 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
 
     // Load segment
     useEffect(() => {
-        // if (!segmentId && !isGetVehicleSegmentsLoading && vehicleSegments!?.length > 0) {
-        //     formik.values.segmentId = vehicleSegments![0].id
-        //     setSegmentId(vehicleSegments![0].id)
-        // }
         if (getVehicleSegmentsError) {
             const error = getVehicleSegmentsError as BackendError
             toast.error(translateWithFallback(t, error.detail))
@@ -181,11 +197,13 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
     // load filtered vehicle when enter page and if form is valid
     useEffect(() => {
         if (!formik.isValid) return
+
         const run = async () => {
-            await handleSubmit()
+            await handleSearch()
         }
         run()
-    }, [formik.isValid, handleSubmit])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     if (
         isGetStationsLoading ||
@@ -200,128 +218,96 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
             <form
                 onSubmit={formik.handleSubmit}
                 className={cn(
-                    "flex gap-6 px-5 pt-3 pb-8 justify-center items-center",
-                    "border border-gray-300 rounded-4xl shadow-2xl min-w-fit bg-secondary",
+                    "bg-secondary border border-gray-300 rounded-4xl shadow-2xl",
+                    "px-8 py-3 mx-auto max-w-screen md:w-3xl lg:w-4xl",
+                    "flex gap-4 justify-center flex-col sm:flex-row",
                     className
                 )}
             >
-                <div className="flex flex-col h-14">
-                    <AutocompleteStyle
-                        label={t("vehicle_model.station")}
-                        items={stations}
-                        startContent={<MapPinAreaIcon className="text-xl" />}
-                        selectedKey={formik.values.stationId}
-                        errorMessage={formik.errors.stationId}
-                        onSelectionChange={(id) => {
-                            formik.setFieldValue("stationId", id)
-                            setStationId(id as string | undefined)
-                        }}
-                        // onKeyDown={() => formik.handleSubmit()}
-                        className="max-w-60 h-20 mr-0"
-                        isClearable={false}
-                    >
-                        {(stations ?? []).map((item) => (
-                            <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
-                        ))}
-                    </AutocompleteStyle>
-                    <div className="text-sm mt-1 ml-4 truncate w-full min-h-fit">
-                        {
-                            stations?.find((station) => station.id === formik.values.stationId)
-                                ?.address
-                        }
+                {/* Left section */}
+                <div>
+                    <div className="grid md:flex gap-4">
+                        <AutocompleteStyle
+                            className="md:w-50"
+                            label={t("vehicle_model.station")}
+                            items={stations}
+                            startContent={<MapPinAreaIcon className="text-xl" />}
+                            selectedKey={formik.values.stationId}
+                            onSelectionChange={async (id) => {
+                                await formik.setFieldValue("stationId", id)
+                                formik.handleSubmit()
+                            }}
+                            isClearable={false}
+                        >
+                            {(stations ?? []).map((item) => (
+                                <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
+                            ))}
+                        </AutocompleteStyle>
+
+                        <AutocompleteStyle
+                            className="md:w-36"
+                            label={t("vehicle_model.segment")}
+                            items={vehicleSegments}
+                            selectedKey={formik.values.segmentId}
+                            onSelectionChange={async (id) => {
+                                await formik.setFieldValue("segmentId", id)
+                                formik.handleSubmit()
+                            }}
+                        >
+                            {(vehicleSegments ?? []).map((item) => (
+                                <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
+                            ))}
+                        </AutocompleteStyle>
                     </div>
-                    {/* {formik.touched.stationId && typeof formik.errors.stationId === "string" && (
-                        <div className="text-red-500 text-sm mt-1">{formik.errors.stationId}</div>
-                    )} */}
+                    <div className="hidden md:block">{`${t("station.address")}: ${
+                        stations?.find((station) => station.id === formik.values.stationId)?.address
+                    }`}</div>
                 </div>
 
-                <div className="flex flex-col h-14">
-                    <AutocompleteStyle
-                        label={t("vehicle_model.segment")}
-                        items={vehicleSegments}
-                        // startContent={<MapPinAreaIcon className="text-xl" />}
-                        selectedKey={formik.values.segmentId}
-                        errorMessage={formik.errors.segmentId}
-                        // onChange={(val) => formik.setFieldValue("segment", val)}
-                        onSelectionChange={(id) => {
-                            setSegmentId(id as string | undefined)
-                            formik.setFieldValue("segmentId", id)
-                        }}
-                        // onKeyDown={() => formik.handleSubmit()}
-                        className="max-w-40 h-20 mr-0"
-                    >
-                        {(vehicleSegments ?? []).map((item) => (
-                            <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
-                        ))}
-                    </AutocompleteStyle>
-                    {/* {formik.touched.segmentId && typeof formik.errors.segmentId === "string" && (
-                        <div className="text-red-500 text-sm mt-1">{formik.errors.segmentId}</div>
-                    )} */}
-                </div>
+                {/* Right section */}
+                <div className="md:w-md">
+                    <div className="grid md:flex gap-4">
+                        {/* STARTDate */}
+                        <DateTimeStyled
+                            label={t("vehicle_model.start_date_time")}
+                            value={toCalenderDateTime(formik.values.startDate)}
+                            minValue={minStartDate}
+                            isInvalid={!!formik.errors.startDate}
+                            onChange={async (value) => {
+                                if (!value) {
+                                    formik.setFieldValue("startDate", null)
+                                    return
+                                }
+                                const date = formatDateTime({ date: value })
+                                await formik.setFieldValue("startDate", date)
+                                formik.handleSubmit()
+                            }}
+                        />
 
-                {/* STARTDate */}
-                <div className="flex flex-col h-14">
-                    <DateTimeStyled
-                        label={t("vehicle_model.start_date_time")}
-                        value={toCalenderDateTime(formik.values.startDate)}
-                        minValue={minStartDate}
-                        isInvalid={!!(formik.touched.startDate && formik.errors.startDate)}
-                        errorMessage={formik.errors.startDate}
-                        onChange={(value) => {
-                            if (!value) {
-                                formik.setFieldValue("startDate", null)
-                                return
+                        {/* ENDDate */}
+                        <DateTimeStyled
+                            label={t("vehicle_model.end_date_time")}
+                            value={toCalenderDateTime(formik.values.endDate)}
+                            minValue={
+                                toCalenderDateTime(formik.values.startDate)?.add({ days: 1 }) ||
+                                minEndDate
                             }
-                            const date = formatDateTime({ date: value })
-                            formik.setFieldValue("startDate", date)
-                            setStartDate(date)
-                        }}
-                        // onKeyDown={() => formik.handleSubmit()}
-                        onBlur={() => {
-                            formik.setFieldTouched("startDate")
-                        }}
-                    />
-                    {/* {formik.touched.startDate && typeof formik.errors.startDate === "string" && (
-                        <div className="text-red-500 text-sm mt-1">{formik.errors.startDate}</div>
-                    )} */}
-                </div>
-
-                {/* ENDDate */}
-                <div className="flex flex-col h-14">
-                    <DateTimeStyled
-                        label={t("vehicle_model.end_date_time")}
-                        value={toCalenderDateTime(formik.values.endDate)}
-                        minValue={minEndDate}
-                        isInvalid={!!(formik.touched.endDate && formik.errors.endDate)}
-                        errorMessage={formik.errors.endDate}
-                        onChange={(value) => {
-                            if (!value) {
-                                formik.setFieldValue("endDate", null)
-                                return
-                            }
-                            const date = formatDateTime({ date: value })
-                            formik.setFieldValue("endDate", date)
-                            setEndDate(date)
-                        }}
-                        // onKeyDown={() => formik.handleSubmit()}
-                        onBlur={() => {
-                            formik.setFieldTouched("endDate")
-                        }}
-                    />
-                    {/* {formik.touched.endDate && typeof formik.errors.endDate === "string" && (
-                        <div className="text-red-500 text-sm mt-1">{formik.errors.endDate}</div>
-                    )} */}
-                </div>
-
-                <div className="flex justify-center items-center mt-0">
-                    <ButtonStyled
-                        type="submit"
-                        color="primary"
-                        // isDisabled={!formik.isValid}
-                        className="w-40 h-13.5"
-                    >
-                        {t("vehicle_model.search_car")}
-                    </ButtonStyled>
+                            isInvalid={!!formik.errors.endDate}
+                            onChange={async (value) => {
+                                if (!value) {
+                                    formik.setFieldValue("endDate", null)
+                                    return
+                                }
+                                const date = formatDateTime({ date: value })
+                                await formik.setFieldValue("endDate", date)
+                                formik.handleSubmit()
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <div className="text-danger-500 text-small">{formik.errors.startDate}</div>
+                        <div className="text-danger-500 text-small">{formik.errors.endDate}</div>
+                    </div>
                 </div>
             </form>
         </>
