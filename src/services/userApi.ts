@@ -14,9 +14,14 @@ export const userApi = {
             const res = await axiosInstance.get("/users", { params })
             return res.data
         }),
-    create: (req: CreateUserReq | CreateStaffReq) =>
+    create: (req: CreateUserReq) =>
         requestWrapper<{ userId: string }>(async () => {
             const res = await axiosInstance.post("/users", req)
+            return res.data
+        }),
+    createStaff: (req: CreateStaffReq) =>
+        requestWrapper<{ userId: string }>(async () => {
+            const res = await axiosInstance.post("/users/create-staff", req)
             return res.data
         }),
     update: ({ id, req }: { id: string; req: UserUpdateReq }) =>
