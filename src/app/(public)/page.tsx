@@ -85,7 +85,7 @@ export default function HomePage() {
                     transition={{ duration: 0.5 }}
                     className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
                 >
-                    <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+                    <h2 className="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white text-primary">
                         Vision & Core Values
                     </h2>
                 </motion.div>
@@ -93,19 +93,6 @@ export default function HomePage() {
             </section>
 
             {/* CONTENT SECTIONS (no background) */}
-            <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                // className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
-                className="max-w-screen-xl mx-auto px-4 space-y-20"
-            >
-                <HowItWorks />
-                <WhyChoose />
-                <Stations />
-                <GreenWheelExperience />
-            </motion.div>
-
             <section className="max-w-screen-xl mx-auto py-16 px-4">
                 <motion.div
                     initial={{ opacity: 0, y: 40 }}
@@ -118,6 +105,55 @@ export default function HomePage() {
                     <HowItWorks />
                 </motion.div>
             </section>
+
+            <section className="max-w-screen-xl mx-auto py-16 px-4">
+                <motion.div
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    // className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
+                    viewport={{ once: false, amount: 0.2 }}
+                    className="max-w-screen-xl mx-auto px-4 space-y-20"
+                >
+                    <WhyChoose />
+                </motion.div>
+            </section>
+
+            <section className="max-w-screen-xl mx-auto py-16 px-4">
+                <motion.div
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    // className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
+                    viewport={{ once: false, amount: 0.2 }}
+                    className="max-w-screen-xl mx-auto px-4 space-y-20"
+                >
+                    <Stations />
+                </motion.div>
+            </section>
+
+            <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                // className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
+                className="max-w-screen-xl mx-auto px-4 space-y-20"
+            >
+                <GreenWheelExperience />
+            </motion.div>
+
+            {/* <section className="max-w-screen-xl mx-auto py-16 px-4">
+                <motion.div
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    // className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
+                    viewport={{ once: false, amount: 0.2 }}
+                    className="max-w-screen-xl mx-auto px-4 space-y-20"
+                >
+                    <HowItWorks />
+                </motion.div>
+            </section> */}
 
             {/* REVIEWS */}
             <section className="py-20">

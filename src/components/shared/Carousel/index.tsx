@@ -185,11 +185,10 @@ export const Carousel: React.FC<CarouselProps> = ({ slides }) => {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [slidesPerView, setSlidesPerView] = useState(1)
     const [isTransitioning, setIsTransitioning] = useState(true)
-    const [isVisible, setIsVisible] = useState(false) // 👈 trạng thái hiển thị
+    const [isVisible, setIsVisible] = useState(false)
     const startX = useRef<number | null>(null)
-    const sectionRef = useRef<HTMLDivElement>(null) // 👈 ref theo dõi vị trí scroll
+    const sectionRef = useRef<HTMLDivElement>(null)
 
-    // 👇 Animation khi scroll lên hoặc xuống
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
