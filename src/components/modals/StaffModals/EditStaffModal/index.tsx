@@ -19,40 +19,36 @@ import {
     ModalHeaderStyled,
     ModalStyled
 } from "@/components"
-import { Select, SelectItem ,Selection} from "@heroui/react"
 import { Sex } from "@/constants/enum"
 import { SexLabels } from "@/constants/labels"
 import { NAME_REGEX, PHONE_REGEX } from "@/constants/regex"
 import { useDay, useDeleteUser, useUpdateUser } from "@/hooks"
-import { StationViewRes } from "@/models/station/schema/response"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
 import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
-// import type { Selection } from "@/components/styled/FilterTypeStyle"
-
 type EditStaffFormValues = {
     firstName: string
     lastName: string
+    email: string
     phone: string
     sex: Sex | null
     dateOfBirth: string
-    stationId: string
 }
 
 type EditStaffModalProps = {
     staff: UserProfileViewRes | null
     isOpen: boolean
     onClose: () => void
-    stations: StationViewRes[]
     onAfterDelete?: () => void
 }
+
+const EMAIL_REGEX = /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
 
 export function EditStaffModal({
     staff,
     isOpen,
     onClose,
-    stations,
     onAfterDelete
 }: EditStaffModalProps) {
     const { t } = useTranslation()
@@ -69,34 +65,29 @@ export function EditStaffModal({
         }
     })
 
-    const stationOptions = useMemo(
-        () =>
-            stations.map((station) => ({
-                id: station.id,
-                label: station.name
-            })),
-        [stations]
-    )
-
     const initialValues = useMemo<EditStaffFormValues>(
         () => ({
             firstName: staff?.firstName ?? "",
             lastName: staff?.lastName ?? "",
+            email: staff?.email ?? "",
             phone: staff?.phone ?? "",
             sex: (staff?.sex as Sex | null) ?? Sex.Male,
-            dateOfBirth: staff?.dateOfBirth ?? "",
-            stationId: staff?.station?.id ?? staff?.stationId ?? ""
+            dateOfBirth: staff?.dateOfBirth ?? ""
         }),
         [staff]
     )
 
     const [citizenUrl, setCitizenUrl] = useState<string | null>(staff?.citizenUrl ?? null)
     const [licenseUrl, setLicenseUrl] = useState<string | null>(staff?.licenseUrl ?? null)
+    const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false)
 
     useEffect(() => {
         setCitizenUrl(staff?.citizenUrl ?? null)
         setLicenseUrl(staff?.licenseUrl ?? null)
-    }, [staff])
+        if (!isOpen) {
+            setIsDeleteConfirmOpen(false)
+        }
+    }, [staff, isOpen])
 
     const formik = useFormik<EditStaffFormValues>({
         enableReinitialize: true,
@@ -108,12 +99,14 @@ export function EditStaffModal({
             lastName: Yup.string()
                 .required(t("user.last_name_require"))
                 .matches(NAME_REGEX, t("user.invalid_last_name")),
+            email: Yup.string()
+                .required(t("staff_management.form_email_required"))
+                .matches(EMAIL_REGEX, t("staff_management.form_email_invalid")),
             phone: Yup.string()
                 .required(t("user.phone_require"))
                 .matches(PHONE_REGEX, t("user.invalid_phone")),
             sex: Yup.number().required(t("user.sex_require")),
-            dateOfBirth: Yup.string().required(t("user.date_of_birth_require")),
-            stationId: Yup.string().required(t("staff_management.form_station_required"))
+            dateOfBirth: Yup.string().required(t("user.date_of_birth_require"))
         }),
         onSubmit: async (values) => {
             if (!staff?.id || values.sex == null) return
@@ -122,10 +115,10 @@ export function EditStaffModal({
                 data: {
                     firstName: values.firstName.trim(),
                     lastName: values.lastName.trim(),
+                    email: values.email.trim(),
                     phone: values.phone.replace(/\s+/g, ""),
                     sex: values.sex,
-                    dateOfBirth: values.dateOfBirth,
-                    stationId: values.stationId
+                    dateOfBirth: values.dateOfBirth
                 }
             })
         }
@@ -147,29 +140,36 @@ export function EditStaffModal({
         [queryClient]
     )
 
-    const handleDelete = async () => {
+    const handleDelete = () => {
         if (!staff?.id) return
-        const confirmed = window.confirm(t("staff_management.delete_confirm"))
-        if (!confirmed) return
-        await deleteUserMutation.mutateAsync(staff.id)
+        setIsDeleteConfirmOpen(true)
+    }
+
+    const handleConfirmDelete = async () => {
+        if (!staff?.id) return
+        try {
+            await deleteUserMutation.mutateAsync(staff.id)
+            setIsDeleteConfirmOpen(false)
+        } catch (error) {
+            /* no-op: keep dialog open on failure */
+        }
     }
 
     const isMutating = updateUserMutation.isPending || deleteUserMutation.isPending
-    const stationError = formik.touched.stationId && formik.errors.stationId
-
     return (
-        <ModalStyled
-            isOpen={isOpen}
-            onOpenChange={(open) => {
-                if (!open) {
-                    onClose()
+        <>
+            <ModalStyled
+                isOpen={isOpen}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        onClose()
                 }
             }}
             className="max-w-160"
         >
             <ModalContentStyled>
                 <ModalHeaderStyled>{t("staff_management.edit_staff_title")}</ModalHeaderStyled>
-                <ModalBodyStyled className="max-h-[70vh] overflow-y-auto pr-1">
+                <ModalBodyStyled className="max-h-[70vh] overflow-y-auto px-5">
                     <form onSubmit={formik.handleSubmit} className="flex flex-col gap-6">
                         <div className="grid gap-4 md:grid-cols-2">
                             <InputStyled
@@ -198,6 +198,18 @@ export function EditStaffModal({
 
                         <div className="grid gap-4 md:grid-cols-2">
                             <InputStyled
+                                label={t("staff_management.form_email")}
+                                placeholder={t("staff_management.form_email")}
+                                type="email"
+                                variant="bordered"
+                                value={formik.values.email}
+                                onValueChange={(value) => formik.setFieldValue("email", value)}
+                                isInvalid={!!(formik.touched.email && formik.errors.email)}
+                                errorMessage={formik.errors.email}
+                                onBlur={() => formik.setFieldTouched("email")}
+                                isDisabled={isMutating}
+                            />
+                            <InputStyled
                                 label={t("staff_management.form_phone")}
                                 placeholder={t("staff_management.form_phone")}
                                 variant="bordered"
@@ -216,33 +228,6 @@ export function EditStaffModal({
                                 }}
                                 isDisabled={isMutating}
                             />
-                            <div className="flex flex-col gap-1">
-                                <Select
-                                    label={t("staff_management.form_station")}
-                                    placeholder={t("staff_management.form_station_placeholder")}
-                                    variant="bordered"
-                                    selectedKeys={
-                                        formik.values.stationId
-                                            ? (new Set([formik.values.stationId]) as Selection)
-                                            : (new Set() as Selection)
-                                    }
-                                    onSelectionChange={(keys) => {
-                                        const key = Array.from(keys)[0]
-                                        formik.setFieldValue("stationId", key?.toString() ?? "")
-                                        formik.setFieldTouched("stationId", true, true)
-                                    }}
-                                    onBlur={() => formik.setFieldTouched("stationId")}
-                                    isInvalid={!!stationError}
-                                    errorMessage={stationError ? formik.errors.stationId : undefined}
-                                    isDisabled={isMutating || stationOptions.length === 0}
-                                >
-                                    {stationOptions.map((option) => (
-                                        <SelectItem key={option.id} value={option.id}>
-                                            {option.label}
-                                        </SelectItem>
-                                    ))}
-                                </Select>
-                            </div>
                         </div>
 
                         <div className="grid gap-4 md:grid-cols-2">
@@ -396,5 +381,51 @@ export function EditStaffModal({
                 </ModalFooterStyled>
             </ModalContentStyled>
         </ModalStyled>
+            <ModalStyled
+                isOpen={isDeleteConfirmOpen}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        setIsDeleteConfirmOpen(false)
+                    }
+                }}
+                placement="center"
+                size="md"
+                className="max-w-md"
+            >
+                <ModalContentStyled>
+                    <ModalHeaderStyled>{t("common.delete")}</ModalHeaderStyled>
+                    <ModalBodyStyled className="space-y-3">
+                        <p className="text-sm text-gray-600">{t("staff_management.delete_confirm")}</p>
+                        {staff ? (
+                            <div className="rounded-md bg-gray-50 px-4 py-3 text-sm text-gray-700">
+                                <p className="font-semibold">
+                                    {staff.lastName} {staff.firstName}
+                                </p>
+                                <p>{staff.email}</p>
+                            </div>
+                        ) : null}
+                    </ModalBodyStyled>
+                    <ModalFooterStyled className="gap-3">
+                        <ButtonStyled
+                            type="button"
+                            className="border border-gray-300 bg-white text-gray-700 hover:bg-gray-100"
+                            onPress={() => setIsDeleteConfirmOpen(false)}
+                            isDisabled={deleteUserMutation.isPending}
+                        >
+                            {t("common.cancel")}
+                        </ButtonStyled>
+                        <ButtonStyled
+                            type="button"
+                            className="border border-red-200 bg-red-50 text-red-600 hover:bg-red-100"
+                            onPress={handleConfirmDelete}
+                            isLoading={deleteUserMutation.isPending}
+                            isDisabled={deleteUserMutation.isPending}
+                        >
+                            {t("common.delete")}
+                        </ButtonStyled>
+                    </ModalFooterStyled>
+                </ModalContentStyled>
+            </ModalStyled>
+        </>
     )
 }

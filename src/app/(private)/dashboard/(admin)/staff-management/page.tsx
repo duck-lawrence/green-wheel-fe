@@ -334,7 +334,6 @@ export default function StaffManagementPage() {
                 staff={selectedStaff}
                 isOpen={Boolean(selectedStaff)}
                 onClose={handleCloseEditStaff}
-                stations={stations}
             />
 
             {previewDocument && previewDocument.type === "citizen" ? (
