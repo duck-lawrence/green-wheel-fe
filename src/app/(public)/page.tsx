@@ -124,9 +124,9 @@ export default function HomePage() {
                 <h2 className="text-3xl text-primary font-bold text-center mb-8">
                     Khách hàng đánh giá
                 </h2>
-                <div className="max-w-6xl mx-auto">
-                    <div className="flex gap-4 overflow-x-auto px-4 py-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
-                        {[...Array(7)].map((_, i) => (
+                <div className="max-w-7xl mx-auto">
+                    <div className="flex gap-4 overflow-x-auto px-4 py-2 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-100">
+                        {[...Array(10)].map((_, i) => (
                             <CardReviewUser key={i} />
                         ))}
                     </div>
