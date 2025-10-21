@@ -34,6 +34,11 @@ export const userApi = {
             const res = await axiosInstance.post("/users", req)
             return res.data
         }),
+    createStaff: (req: CreateStaffReq) =>
+        requestWrapper<{ userId: string }>(async () => {
+            const res = await axiosInstance.post("/users/create-staff", req)
+            return res.data
+        }),
     update: ({ id, req }: { id: string; req: UserUpdateReq }) =>
         requestWrapper<void>(async () => {
             await axiosInstance.patch(`/users/${id}`, req)

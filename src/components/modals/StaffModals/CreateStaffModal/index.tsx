@@ -1,10 +1,7 @@
 "use client"
 
-import React, { useEffect, useMemo } from "react"
-import { useFormik } from "formik"
-import * as Yup from "yup"
-import { useTranslation } from "react-i18next"
 import {
+    AutocompleteStyle,
     ButtonStyled,
     DatePickerStyled,
     InputStyled,
@@ -14,14 +11,18 @@ import {
     ModalHeaderStyled,
     ModalStyled
 } from "@/components/styled"
-import { EnumPicker } from "@/components/modules/EnumPicker"
-import { Select, SelectItem } from "@heroui/react"
+import React, { useEffect, useMemo } from "react"
+import { useFormik } from "formik"
+import * as Yup from "yup"
+import { useTranslation } from "react-i18next"
+import { AutocompleteItem } from "@heroui/react"
 import { StationViewRes } from "@/models/station/schema/response"
 import { NAME_REGEX, PHONE_REGEX } from "@/constants/regex"
 import { useCreateStaff, useDay } from "@/hooks"
 import { Sex } from "@/constants/enum"
 import { SexLabels } from "@/constants/labels"
-import type { Selection } from "@heroui/react"
+import { EnumPicker } from "@/components/modules/EnumPicker"
+import { MapPinAreaIcon } from "@phosphor-icons/react"
 
 type NewStaffFormValues = {
     firstName: string
@@ -103,8 +104,7 @@ export function NewStaffModal({ isOpen, onClose, stations, onCreated }: NewStaff
                 email: values.email.trim(),
                 phone: values.phone.replace(/\s+/g, ""),
                 stationId: values.stationId,
-                dateOfBirth: values.dateOfBirth,
-                role: "staff"
+                dateOfBirth: values.dateOfBirth
             })
             resetForm()
         }
@@ -160,21 +160,18 @@ export function NewStaffModal({ isOpen, onClose, stations, onCreated }: NewStaff
                             />
                         </div>
 
-                        <div className="grid gap-4 md:grid-cols-3">
-                            <div className="md:col-span-2">
-                                <InputStyled
-                                    name="email"
-                                    label={t("staff_management.form_email")}
-                                    type="email"
-                                    value={formik.values.email}
-                                    onValueChange={(value) => formik.setFieldValue("email", value)}
-                                    onBlur={() => formik.setFieldTouched("email", true)}
-                                    isInvalid={!!(formik.touched.email && formik.errors.email)}
-                                    errorMessage={formik.errors.email}
-                                    isDisabled={isActionDisabled}
-                                />
-                            </div>
-
+                        <div className="grid gap-4 md:grid-cols-2">
+                            <InputStyled
+                                name="email"
+                                label={t("staff_management.form_email")}
+                                type="email"
+                                value={formik.values.email}
+                                onValueChange={(value) => formik.setFieldValue("email", value)}
+                                onBlur={() => formik.setFieldTouched("email", true)}
+                                isInvalid={!!(formik.touched.email && formik.errors.email)}
+                                errorMessage={formik.errors.email}
+                                isDisabled={isActionDisabled}
+                            />
                             <InputStyled
                                 name="phone"
                                 label={t("user.phone")}
@@ -247,39 +244,29 @@ export function NewStaffModal({ isOpen, onClose, stations, onCreated }: NewStaff
                                 errorMessage={formik.errors.dateOfBirth}
                                 isDisabled={isActionDisabled}
                             />
-
-                            <Select
+                            <AutocompleteStyle
                                 className="w-full"
                                 label={t("staff_management.form_station")}
                                 placeholder={t("staff_management.form_station_placeholder")}
-                                selectedKeys={
-                                    formik.values.stationId
-                                        ? (new Set([formik.values.stationId]) as Selection)
-                                        : (new Set() as Selection)
-                                }
-                                onSelectionChange={(keys) => {
-                                    if (keys === "all") {
-                                        formik.setFieldValue("stationId", "")
-                                        formik.setFieldTouched("stationId", true)
-                                        return
-                                    }
-                                    const key = Array.from(keys)[0]
-                                    formik.setFieldValue("stationId", key?.toString() ?? "")
+                                items={stationOptions}
+                                startContent={<MapPinAreaIcon className="text-xl" />}
+                                selectedKey={formik.values.stationId || undefined}
+                                onSelectionChange={(key) => {
+                                    const selected = key as string | undefined
+                                    formik.setFieldValue("stationId", selected ?? "")
                                     formik.setFieldTouched("stationId", true)
                                 }}
                                 onBlur={() => formik.setFieldTouched("stationId", true)}
-                                isInvalid={
-                                    !!(formik.touched.stationId && formik.errors.stationId)
-                                }
+                                isInvalid={!!(formik.touched.stationId && formik.errors.stationId)}
                                 errorMessage={formik.errors.stationId}
                                 isDisabled={isActionDisabled || stationOptions.length === 0}
                             >
                                 {stationOptions.map((option) => (
-                                    <SelectItem key={option.id} value={option.id}>
+                                    <AutocompleteItem key={option.id} textValue={option.label}>
                                         {option.label}
-                                    </SelectItem>
+                                    </AutocompleteItem>
                                 ))}
-                            </Select>
+                            </AutocompleteStyle>
                         </div>
                     </form>
                 </ModalBodyStyled>

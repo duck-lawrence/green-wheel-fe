@@ -17,7 +17,6 @@ export type CreateStaffReq = {
     phone: string
     stationId: string
     dateOfBirth: string
-    role: "staff"
 }
 
 export type UserUpdateReq = {

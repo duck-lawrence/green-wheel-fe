@@ -52,11 +52,7 @@ export const useCreateStaff = ({
     const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: (payload: Omit<CreateStaffReq, "role"> & { role?: "staff" }) =>
-            userApi.create({
-                ...payload,
-                role: "staff"
-            }),
+        mutationFn: (payload: CreateStaffReq) => userApi.createStaff(payload),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
             onSuccess?.()

@@ -89,7 +89,7 @@ export function VehicleEditModal({
                                 <FilterTypeOption key={option.id}>{option.label}</FilterTypeOption>
                             ))}
                         </FilterTypeStyle>
-                        <FilterTypeStyle
+                        {/* <FilterTypeStyle
                             label={t("vehicle.station_name")}
                             selectedKeys={
                                 formik.values.stationId ? new Set([formik.values.stationId]) : new Set([])
@@ -106,7 +106,7 @@ export function VehicleEditModal({
                             {stationOptions.map((option) => (
                                 <FilterTypeOption key={option.id}>{option.label}</FilterTypeOption>
                             ))}
-                        </FilterTypeStyle>
+                        </FilterTypeStyle> */}
                         <FilterTypeStyle
                             label={t("vehicle.status_label")}
                             selectedKeys={
