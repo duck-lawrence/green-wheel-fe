@@ -7,7 +7,7 @@ import { ButtonStyled, FilterTypeStyle, PaginationStyled, SearchStyle } from "@/
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 
 const DEFAULT_PAGE_SIZE = 10
-const TOTAL_VEHICLES = 11
+const TOTAL_VEHICLES = 3
 
 const BRAND_POOL = [
     {

@@ -80,7 +80,7 @@ export default function StaffManagementPage() {
 
             const matchesStation =
                 !stationFilter ||
-                stationFilter === (staff.station?.id ?? staff.stationId ?? "")
+                stationFilter === (staff.station?.id ?? "")
 
             if (!matchesStation) {
                 return false
@@ -91,7 +91,6 @@ export default function StaffManagementPage() {
             }
 
             const fullName = (
-                staff.name ??
                 [staff.firstName, staff.lastName].filter(Boolean).join(" ").trim()
             ).toLowerCase()
             const email = (staff.email ?? "").toLowerCase()
@@ -197,7 +196,6 @@ export default function StaffManagementPage() {
     const renderStaffName = useCallback(
         (staff: UserProfileViewRes) => {
             const displayName =
-                staff.name ??
                 [staff.firstName, staff.lastName].filter(Boolean).join(" ").trim() ??
                 ""
             return displayName || t("staff_management.unknown_name")
@@ -215,7 +213,7 @@ export default function StaffManagementPage() {
     const getStationName = useCallback(
         (staff: UserProfileViewRes) => {
             return (
-                stationMap[staff.station?.id ?? staff.stationId ?? ""]?.name ??
+                stationMap[staff.station?.id ??  ""]?.name ??
                 staff.station?.name ??
                 t("staff_management.unknown_station")
             )
@@ -258,7 +256,7 @@ export default function StaffManagementPage() {
                             isDisabled={isInitialLoading && staffList.length === 0}
                         />
 
-                        <FilterTypeStyle
+                        <FilterTypeStyle<string>
                             label={t("staff_management.filter_station")}
                             placeholder={t("staff_management.filter_station_placeholder")}
                             selectedKeys={
@@ -271,11 +269,11 @@ export default function StaffManagementPage() {
                             onSelectionChange={handleStationChange}
                             isDisabled={stations.length === 0}
                         >
-                            <FilterTypeOption key="all">
+                            <FilterTypeOption key="all" value="all">
                                 {t("staff_management.all_stations")}
                             </FilterTypeOption>
                             {stations.map((station) => (
-                                <FilterTypeOption key={station.id}>
+                                <FilterTypeOption key={station.id} value={station.id}>
                                     {station.name}
                                 </FilterTypeOption>
                             ))}
