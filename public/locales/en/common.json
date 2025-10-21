@@ -707,5 +707,8 @@
         "signed_by_customer": "Customer signature",
         "signed_by_staff_require": "Staff must sign",
         "signed_by_customer_require": "Customer must sign"
+    },
+    "reaview": {
+        "create": "Create feedback successful"
     }
 }

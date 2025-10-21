@@ -9,13 +9,14 @@ import {
     Stations,
     WhyChoose
 } from "@/components"
-import React, { useEffect, useRef } from "react"
+import React, { useCallback, useEffect, useRef } from "react"
 import { slides } from "@/../public/cars"
 import { useTranslation } from "react-i18next"
 import { useNavbarItemStore } from "@/hooks/singleton/store/useNavbarItemStore"
 import { useRouter, useSearchParams } from "next/navigation"
 import toast from "react-hot-toast"
 import CustomerReview from "@/components/modules/HomeItem/CustomerReview"
+import { useCreateFeedback } from "@/hooks"
 
 export default function HomePage() {
     const { t } = useTranslation()
@@ -46,6 +47,16 @@ export default function HomePage() {
             { scroll: false }
         )
     }, [params, t, router])
+
+    const createFeedback = useCreateFeedback({})
+
+    const handleCreateFeedback = useCallback(async () => {
+        await createFeedback.mutateAsync({
+            // content: string,
+            // rating,
+            // stationId
+        })
+    })
 
     const reviews = [
         {
@@ -89,6 +100,36 @@ export default function HomePage() {
         },
         {
             id: "5",
+            name: "Lê Hoàng",
+            avatar: "/images/users/user3.jpg",
+            rating: 5,
+            title: "Green Wheel xịn xò",
+            content:
+                "Rất thích cách Green Wheel tối ưu app thuê xe, mọi thứ trơn tru và thân thiện.",
+            createdAt: "2025-09-10"
+        },
+        {
+            id: "6",
+            name: "Lê Hoàng",
+            avatar: "/images/users/user3.jpg",
+            rating: 5,
+            title: "Green Wheel xịn xò",
+            content:
+                "Rất thích cách Green Wheel tối ưu app thuê xe, mọi thứ trơn tru và thân thiện.",
+            createdAt: "2025-09-10"
+        },
+        {
+            id: "7",
+            name: "Lê Hoàng",
+            avatar: "/images/users/user3.jpg",
+            rating: 5,
+            title: "Green Wheel xịn xò",
+            content:
+                "Rất thích cách Green Wheel tối ưu app thuê xe, mọi thứ trơn tru và thân thiện.",
+            createdAt: "2025-09-10"
+        },
+        {
+            id: "8",
             name: "Lê Hoàng",
             avatar: "/images/users/user3.jpg",
             rating: 5,

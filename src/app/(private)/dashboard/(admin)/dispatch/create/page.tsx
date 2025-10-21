@@ -42,11 +42,12 @@ export default function DispatchPage() {
     const handleCreateDispatch = useCallback(async () => {
         await createDispatch.mutateAsync({
             fromStationId: selecedSation,
+            toStationId: stationIdNow ?? "",
             description: textArea,
             staffIds: selectStaffs,
             vehicleIds: selectVehicles
         })
-    }, [createDispatch, selecedSation, selectStaffs, selectVehicles, textArea])
+    }, [createDispatch, selecedSation, selectStaffs, selectVehicles, stationIdNow, textArea])
 
     if (isLoading_1 && isLoading_2 && isLoading_3 && isLoading_4) return <SpinnerStyled />
     return (
