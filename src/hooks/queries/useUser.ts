@@ -1,7 +1,12 @@
 "use client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { QUERY_KEYS } from "@/constants/queryKey"
-import { UserFilterReq, UserUpdateReq } from "@/models/user/schema/request"
+import {
+    CreateStaffReq,
+    StaffReq,
+    UserFilterReq,
+    UserUpdateReq
+} from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { userApi } from "@/services/userApi"
 import { useTranslation } from "react-i18next"
@@ -21,9 +26,35 @@ export const useCreateNewUser = ({
     onError?: () => void
 } = {}) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
     return useMutation({
         mutationFn: userApi.create,
         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
+            onSuccess?.()
+            toast.success(t("success.create"))
+        },
+        onError: (error: BackendError) => {
+            onError?.()
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useCreateStaff = ({
+    onSuccess,
+    onError
+}: {
+    onSuccess?: () => void
+    onError?: () => void
+} = {}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (payload: CreateStaffReq) => userApi.createStaff(payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
             onSuccess?.()
             toast.success(t("success.create"))
         },
@@ -66,6 +97,7 @@ export const useGetAllUsers = ({
     enabled = true
 }: {
     params: UserFilterReq
+    // params: Record<string, unknown>
     enabled?: boolean
 }) => {
     const queryClient = useQueryClient()
@@ -77,6 +109,45 @@ export const useGetAllUsers = ({
             return queryClient.getQueryData<UserProfileViewRes[]>([...QUERY_KEYS.USERS, params])
         },
         enabled
+    })
+}
+
+export const useGetAllStaffs = ({
+    params,
+    enabled = true
+}: {
+    params: StaffReq
+    enabled?: boolean
+}) => {
+    const query = useQuery({
+        queryKey: [...QUERY_KEYS.USERS, params],
+        queryFn: () => userApi.getAllStafff(params),
+        enabled
+    })
+    return query
+}
+
+export const useDeleteUser = ({
+    onSuccess,
+    onError
+}: {
+    onSuccess?: () => void
+    onError?: () => void
+} = {}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: userApi.deleteById,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
+            onSuccess?.()
+            toast.success(t("success.delete"))
+        },
+        onError: (error: BackendError) => {
+            onError?.()
+            toast.error(translateWithFallback(t, error.detail))
+        }
     })
 }
 

@@ -53,3 +53,10 @@ export type VehicleFilterReq = {
     endDate: string
     segmentId?: string
 }
+
+export type GetVehicleParams = {
+    name?: string
+    stationId?: string
+    status?: number
+    licensePlate?: string
+}

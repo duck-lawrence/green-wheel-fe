@@ -30,8 +30,12 @@ import {
     useUpdateVehicle
 } from "@/hooks"
 import { VehicleCreateModal, VehicleEditModal } from "@/components/modals/VehicleModals"
-import { VehicleListParams } from "@/services/vehicleApi"
-import { CreateVehicleReq, UpdateVehicleReq } from "@/models/vehicle/schema/request"
+import {
+    CreateVehicleReq,
+    GetVehicleParams,
+    UpdateVehicleReq
+} from "@/models/vehicle/schema/request"
+import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 type VehicleWithStatus = VehicleViewRes & { status?: VehicleStatus; modelId?: string }
 type VehicleFilterFormValues = {
     licensePlate: string
@@ -50,7 +54,7 @@ const VEHICLE_STATUS_VALUES = Object.values(VehicleStatus).filter(
 )
 export default function AdminVehicleManagementPage() {
     const { t } = useTranslation()
-    const [filters, setFilters] = useState<VehicleListParams>({})
+    const [filters, setFilters] = useState<GetVehicleParams>({})
     const [page, setPage] = useState(1)
     const [vehicleToEdit, setVehicleToEdit] = useState<VehicleWithStatus | null>(null)
     const [vehicleToDelete, setVehicleToDelete] = useState<VehicleWithStatus | null>(null)
@@ -97,23 +101,23 @@ export default function AdminVehicleManagementPage() {
                 const statusKey = VehicleStatus[status]?.toString().toLowerCase() ?? "unknown"
                 return {
                     key: status.toString(),
-                    label: t(`vehicle.status_value_${statusKey}`)
+                    label: translateWithFallback(t, `vehicle.status_value_${statusKey}`)
                 }
             }),
         [t]
     )
-    const vehicleModelQuery = useMemo(
-        () => ({
-            stationId: "",
-            startDate: "",
-            endDate: ""
-        }),
-        []
-    )
-    const { data: vehicleModels = [], isFetching: isFetchingVehicleModels } = useGetAllVehicleModels({
-        query: vehicleModelQuery,
+    const { data: vehiclesData = [], isFetching: isFetchingVehicles } = useGetAllVehicles({
+        params: filters,
         enabled: true
     })
+    const vehicles = useMemo<VehicleWithStatus[]>(() => {
+        return (vehiclesData as VehicleWithStatus[]).map((vehicle) => ({
+            ...vehicle,
+            modelId: vehicle.modelId ?? vehicle.model?.id
+        }))
+    }, [vehiclesData])
+    const { data: vehicleModels = [], isFetching: isFetchingVehicleModels } =
+        useGetAllVehicleModels()
     const vehicleModelsById = useMemo(() => {
         return vehicleModels.reduce<Record<string, VehicleModelViewRes>>((acc, model) => {
             acc[model.id] = model
@@ -137,16 +141,6 @@ export default function AdminVehicleManagementPage() {
     //             label: [model.brand?.name, model.name].filter(Boolean).join(" ") || model.name
     //         })),
     // )
-    const { data: vehiclesData = [], isFetching: isFetchingVehicles } = useGetAllVehicles({
-        params: filters,
-        enabled: true
-    })
-    const vehicles = useMemo<VehicleWithStatus[]>(() => {
-        return (vehiclesData as VehicleWithStatus[]).map((vehicle) => ({
-            ...vehicle,
-            modelId: vehicle.modelId ?? vehicle.model?.id
-        }))
-    }, [vehiclesData])
     const filteredVehicles = useMemo(() => {
         return vehicles.filter((vehicle) => {
             if (filters.licensePlate) {
@@ -185,26 +179,25 @@ export default function AdminVehicleManagementPage() {
             stationId: Yup.string().trim().nullable(),
             status: Yup.string()
                 .nullable()
-                .oneOf(VEHICLE_STATUS_VALUES.map((status) => status.toString()).concat([null as any]))
+                .oneOf(
+                    VEHICLE_STATUS_VALUES.map((status) => status.toString()).concat([null as any])
+                )
         })
     }, [])
-    const handleFilterSubmit = useCallback(
-        (values: VehicleFilterFormValues) => {
-            const nextFilters: VehicleListParams = {}
-            const licensePlate = values.licensePlate.trim()
-            if (licensePlate) {
-                nextFilters.licensePlate = licensePlate
-            }
-            if (values.stationId) {
-                nextFilters.stationId = values.stationId
-            }
-            if (values.status) {
-                nextFilters.status = Number(values.status) as VehicleStatus
-            }
-            setFilters(nextFilters)
-        },
-        []
-    )
+    const handleFilterSubmit = useCallback((values: VehicleFilterFormValues) => {
+        const nextFilters: GetVehicleParams = {}
+        const licensePlate = values.licensePlate.trim()
+        if (licensePlate) {
+            nextFilters.licensePlate = licensePlate
+        }
+        if (values.stationId) {
+            nextFilters.stationId = values.stationId
+        }
+        if (values.status) {
+            nextFilters.status = Number(values.status) as VehicleStatus
+        }
+        setFilters(nextFilters)
+    }, [])
     const filterFormik = useFormik<VehicleFilterFormValues>({
         initialValues: {
             licensePlate: "",
@@ -221,10 +214,7 @@ export default function AdminVehicleManagementPage() {
                 return
             }
             const [value] = Array.from(keys)
-            filterFormik.setFieldValue(
-                "stationId",
-                value != null ? value.toString() : null
-            )
+            filterFormik.setFieldValue("stationId", value != null ? value.toString() : null)
         },
         [filterFormik]
     )
@@ -235,10 +225,7 @@ export default function AdminVehicleManagementPage() {
                 return
             }
             const [value] = Array.from(keys)
-            filterFormik.setFieldValue(
-                "status",
-                value != null ? value.toString() : null
-            )
+            filterFormik.setFieldValue("status", value != null ? value.toString() : null)
         },
         [filterFormik]
     )
@@ -282,7 +269,9 @@ export default function AdminVehicleManagementPage() {
             modelId: Yup.string().trim().required(requiredMsg),
             status: Yup.string()
                 .nullable()
-                .oneOf(VEHICLE_STATUS_VALUES.map((status) => status.toString()).concat([null as any]))
+                .oneOf(
+                    VEHICLE_STATUS_VALUES.map((status) => status.toString()).concat([null as any])
+                )
         })
     }, [t])
     const editFormik = useFormik<VehicleEditFormValues>({
@@ -291,8 +280,7 @@ export default function AdminVehicleManagementPage() {
             licensePlate: vehicleToEdit?.licensePlate ?? "",
             stationId: vehicleToEdit?.stationId ?? "",
             modelId: vehicleToEdit?.model?.id ?? vehicleToEdit?.modelId ?? "",
-            status:
-                vehicleToEdit?.status != null ? vehicleToEdit.status.toString() : null
+            status: vehicleToEdit?.status != null ? vehicleToEdit.status.toString() : null
         },
         validationSchema: editValidationSchema,
         onSubmit: (values, helpers) => {
@@ -382,9 +370,7 @@ export default function AdminVehicleManagementPage() {
                 <form onSubmit={filterFormik.handleSubmit} className="space-y-5">
                     <div className="flex items-center gap-2 text-slate-800">
                         <FunnelSimple size={22} className="text-primary" />
-                        <h3 className="text-lg font-semibold">
-                            {t("admin.vehicle_filter_title")}
-                        </h3>
+                        <h3 className="text-lg font-semibold">{t("admin.vehicle_filter_title")}</h3>
                     </div>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:items-end">
                         <InputStyled
@@ -491,24 +477,24 @@ export default function AdminVehicleManagementPage() {
                 formik={editFormik}
                 isSubmitting={updateVehicleMutation.isPending}
             />
-            <ModalStyled isOpen={isDeleteOpen} onOpenChange={onDeleteOpenChange} className="max-w-md">
+            <ModalStyled
+                isOpen={isDeleteOpen}
+                onOpenChange={onDeleteOpenChange}
+                className="max-w-md"
+            >
                 <ModalContentStyled>
-                    <ModalHeaderStyled>
-                        {t("admin.vehicle_delete_title")}
-                    </ModalHeaderStyled>
+                    <ModalHeaderStyled>{t("admin.vehicle_delete_title")}</ModalHeaderStyled>
                     <ModalBodyStyled>
-                        <p className="text-sm text-slate-600">{t("admin.vehicle_delete_confirm")}</p>
+                        <p className="text-sm text-slate-600">
+                            {t("admin.vehicle_delete_confirm")}
+                        </p>
                         <div className="rounded-md bg-slate-100 px-4 py-3 text-sm text-slate-700">
                             <p>
-                                <span className="font-semibold">
-                                    {t("vehicle.license_plate")}:
-                                </span>{" "}
+                                <span className="font-semibold">{t("vehicle.license_plate")}:</span>{" "}
                                 {vehicleToDelete?.licensePlate ?? "-"}
                             </p>
                             <p>
-                                <span className="font-semibold">
-                                    {t("vehicle.station_name")}:
-                                </span>{" "}
+                                <span className="font-semibold">{t("vehicle.station_name")}:</span>{" "}
                                 {vehicleToDelete
                                     ? stationNameById[vehicleToDelete.stationId] ??
                                       vehicleToDelete.stationId

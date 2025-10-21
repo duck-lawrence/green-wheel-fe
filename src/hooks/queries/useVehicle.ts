@@ -1,22 +1,19 @@
 "use client"
-
-// This file wires vehicle CRUD services into ready-to-use React Query hooks for dashboard features.
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import toast from "react-hot-toast"
-
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { BackendError } from "@/models/common/response"
-import { CreateVehicleReq, UpdateVehicleReq } from "@/models/vehicle/schema/request"
+import { GetVehicleParams, UpdateVehicleReq } from "@/models/vehicle/schema/request"
 import { VehicleViewRes } from "@/models/vehicle/schema/response"
-import { vehicleApi, VehicleListParams } from "@/services/vehicleApi"
+import { vehicleApi } from "@/services/vehicleApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 
 export const useGetAllVehicles = ({
     params = {},
     enabled = true
 }: {
-    params?: VehicleListParams
+    params?: GetVehicleParams
     enabled?: boolean
 } = {}) => {
     const queryClient = useQueryClient()
@@ -119,4 +116,3 @@ export const useDeleteVehicle = ({
         }
     })
 }
-

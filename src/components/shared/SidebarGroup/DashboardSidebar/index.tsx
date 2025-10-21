@@ -57,6 +57,11 @@ export function DashboardSidebar({ className }: { className?: string }) {
             href: "/dashboard/staff-management"
         },
         {
+            key: "/dashboard/dispatch",
+            label: t("admin.dispatch"),
+            href: "/dashboard/dispatch"
+        },
+        {
             key: "/dashboard/fleet",
             label: t("admin.sidebar_fleet", "Fleet"),
             href: "/dashboard/fleet"

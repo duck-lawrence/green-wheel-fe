@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import { FormikProps } from "formik"
 
 import {
+    AutocompleteStyle,
     ButtonStyled,
     FilterTypeOption,
     FilterTypeStyle,
@@ -15,6 +16,8 @@ import {
     ModalStyled
 } from "@/components"
 import { CreateVehicleReq } from "@/models/vehicle/schema/request"
+import { AutocompleteItem } from "@heroui/react"
+import { MapPinAreaIcon } from "@phosphor-icons/react"
 
 type SelectOption = {
     id: string
@@ -84,26 +87,30 @@ export function VehicleCreateModal({
                                 <FilterTypeOption key={option.id}>{option.label}</FilterTypeOption>
                             ))}
                         </FilterTypeStyle>
-                        <FilterTypeStyle
+                        <AutocompleteStyle
+                            className="w-full"
                             label={t("vehicle.station_name")}
                             placeholder={t("vehicle.station_placeholder")}
-                            selectedKeys={
-                                formik.values.stationId ? new Set([formik.values.stationId]) : new Set([])
-                            }
-                            disallowEmptySelection={false}
-                            isClearable={false}
-                            isRequired
-                            onSelectionChange={(keys) => {
-                                const [value] = Array.from(keys)
-                                formik.setFieldValue("stationId", value != null ? value.toString() : "")
+                            items={stationOptions}
+                            startContent={<MapPinAreaIcon className="text-xl" />}
+                            selectedKey={formik.values.stationId || undefined}
+                            onSelectionChange={(key) => {
+                                const nextValue = key as string | undefined
+                                formik.setFieldTouched("stationId", true, false)
+                                formik.setFieldValue("stationId", nextValue ?? "")
                             }}
+                            onBlur={() => formik.setFieldTouched("stationId", true, false)}
                             isInvalid={Boolean(formik.touched.stationId && formik.errors.stationId)}
                             errorMessage={formik.errors.stationId}
+                            isDisabled={isSubmitting || stationOptions.length === 0}
+                            isRequired
                         >
                             {stationOptions.map((option) => (
-                                <FilterTypeOption key={option.id}>{option.label}</FilterTypeOption>
+                                <AutocompleteItem key={option.id} textValue={option.label}>
+                                    {option.label}
+                                </AutocompleteItem>
                             ))}
-                        </FilterTypeStyle>
+                        </AutocompleteStyle>
                     </ModalBodyStyled>
                     <ModalFooterStyled className="gap-3">
                         <ButtonStyled

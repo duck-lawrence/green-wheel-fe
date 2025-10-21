@@ -2,10 +2,17 @@ import { UpdateCitizenIdentityReq } from "@/models/citizen-identity/schema/reque
 import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
 import { UpdateDriverLicenseReq } from "@/models/driver-license/schema/request"
 import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
-import { CreateUserReq, UserFilterReq, UserUpdateReq } from "@/models/user/schema/request"
+import {
+    CreateStaffReq,
+    CreateUserReq,
+    StaffReq,
+    UserFilterReq,
+    UserUpdateReq
+} from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import axiosInstance from "@/utils/axios"
 import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
+
 export const userApi = {
     getAll: (query: UserFilterReq) =>
         requestWrapper<UserProfileViewRes[]>(async () => {
@@ -13,9 +20,23 @@ export const userApi = {
             const res = await axiosInstance.get("/users", { params })
             return res.data
         }),
-    create: (req: CreateUserReq) =>
+
+    getAllStafff: (query: StaffReq) =>
+        requestWrapper<UserProfileViewRes[]>(async () => {
+            const params = buildQueryParams(query)
+            const res = await axiosInstance.get("/users/staffs", { params })
+            return res.data
+        }),
+
+    // create: (req: CreateUserReq) =>
+    create: (req: CreateUserReq | CreateStaffReq) =>
         requestWrapper<{ userId: string }>(async () => {
             const res = await axiosInstance.post("/users", req)
+            return res.data
+        }),
+    createStaff: (req: CreateStaffReq) =>
+        requestWrapper<{ userId: string }>(async () => {
+            const res = await axiosInstance.post("/users/create-staff", req)
             return res.data
         }),
     update: ({ id, req }: { id: string; req: UserUpdateReq }) =>
@@ -63,5 +84,9 @@ export const userApi = {
     deleteDriverLicenseById: (userId: string) =>
         requestWrapper<void>(async () => {
             await axiosInstance.delete(`/users/${userId}/driver-license`)
+        }),
+    deleteById: (userId: string) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.delete(`/users/${userId}`)
         })
 }

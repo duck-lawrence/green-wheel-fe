@@ -8,6 +8,8 @@ export * from "./CreateInvoiceModal"
 export * from "./CreateRentalContractModal"
 export * from "./DetailDamageModal"
 export * from "./EditUserModal"
+export * from "./DocumentPreview"
+
 export * from "./ImageUploaderModal"
 export * from "./VehicleModals"
 
