@@ -257,6 +257,8 @@
         "not_found": "Vehicle segment not found"
     },
     "vehicle_model": {
+        "information": "Vehicle information",
+        "specs": "Specifications",
         "station": "Station",
         "segment": "Segment",
         "pick_station": "Please select a pick-up location",
@@ -270,29 +272,38 @@
         "number_of_days": "Number of days",
         "deposit_fee": "Deposit fee",
         "temporary_total": "Total",
-        "create_rental_request": "Create rental request",
         "similar_vehicles": "Similar vehicles",
         "view_all": "View all",
         "out_of_stock": "Out of stock",
-        "seats": "Seats",
-        "battery_capacity": "Battery capacity",
-        "airbag": "Airbag",
         "not_include_tax": "Not include tax",
         "not_found": "Vehicle model not found",
         "rent_time_is_not_available": "Rent time is not available",
         "name_require": "Name is required",
+
+        "seating_capacity": "Seats",
         "seating_capacity_require": "Seating capacity is required",
         "seating_capacity_can_not_negative": "Seating capacity can not be negative",
+
+        "airbag": "Airbag",
         "airbag_require": "Ari bag is required",
         "airbag_can_not_negative": "Air bag can not be negative",
+
+        "motor_power": "Motor power",
         "motor_power_require": "Motor power is required",
         "motor_power_can_not_negative": "Motor power can not be negative",
+
+        "battery_capacity": "Battery capacity",
         "battery_capacity_require": "Battery capacity is required",
         "battery_capacity_can_not_negative": "Battery capacity can not be negative",
+
+        "eco_range_km": "Eco range km",
         "eco_range_km_require": "Eco range km is required",
         "eco_range_km_can_not_negative": "Eco range km can not be negative",
-        "sport_rang_km_require": "Sport range km is required",
-        "sport_rang_km_can_not_negative": "Sport range km can not be negative",
+
+        "sport_range_km": "Sport range km",
+        "sport_range_km_require": "Sport range km is required",
+        "sport_range_km_can_not_negative": "Sport range km can not be negative",
+
         "brand_id_require": "Brand id is required",
         "segment_id_require": "Segment id is required"
     },
@@ -545,11 +556,14 @@
     "rental_contract": {
         "id": "Contract ID",
         "back_to_rental_contract": "Back to rental contract",
+        "create": "Create rental request",
+        "create_manual": "Create rental request for customer",
         "update_success": "Update success",
         "update_failed": "Update failed",
         "no_action": "No action",
         "accept": "Accept",
         "reject": "Reject",
+        "cancel": "Cancel",
         "rental_contract": "Rental contract",
         "rental_contract_details_description": "Detailed information about the customer's electric vehicle rental contract.",
         "rental_contract_information": "Rental contract information",
@@ -614,7 +628,8 @@
         "item_type_require": "Invoice item type is required",
         "add_item": "Add new item",
         "create_refund": "Create refund invoice",
-        "subtotal": "Subtotal"
+        "subtotal": "Subtotal",
+        "temp": "Provisional invoice"
     },
     "momo": {
         "invalid_signature": "Invalid signature",

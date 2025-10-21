@@ -14,7 +14,7 @@ import {
     ModalHeaderStyled,
     ModalStyled
 } from "@/components"
-import { useDeleteCitizenIdById, useDeleteDriverLicense } from "@/hooks/queries/useUser"
+import { useDeleteCitizenIdById, useDeleteDriverLicenseById } from "@/hooks"
 import { QUERY_KEYS } from "@/constants/queryKey"
 
 type ImagePreviewModalProps = {
@@ -183,7 +183,7 @@ export function DriverLicensePreviewModal({
     const queryClient = useQueryClient()
     const [currentUrl, setCurrentUrl] = useState<string | null>(imageUrl ?? null)
 
-    const deleteDriverLicense = useDeleteDriverLicense({
+    const deleteDriverLicense = useDeleteDriverLicenseById({
         onSuccess: () => {
             setCurrentUrl(null)
             onUpdated?.(null)

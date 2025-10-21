@@ -10,6 +10,7 @@ import {
     useRegisterDiscloresureSingleton
 } from "@/hooks"
 import { Link } from "@heroui/react"
+import { EMAIL_REGEX } from "@/constants/regex"
 
 interface RegisterEmailProps {
     email: string
@@ -43,7 +44,7 @@ export function RegisterEmail({ email, setEmail, onSuccess }: RegisterEmailProps
         validationSchema: Yup.object({
             email: Yup.string()
                 .required(t("user.email_require"))
-                .matches(/^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/, t("user.invalid_email"))
+                .matches(EMAIL_REGEX, t("user.invalid_email"))
         }),
         onSubmit: handleRegister
     })

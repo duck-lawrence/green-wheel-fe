@@ -14,6 +14,7 @@ import {
     SignatureSection
 } from "@/components"
 import {
+    useCancelContract,
     useDay,
     useGetAllVehicleChecklists,
     useGetRentalContractById,
@@ -48,9 +49,11 @@ import { CreateInvoiceSection } from "./CreateInvoiceSection"
 
 export function RentalContractDetail({
     contractId,
+    isCustomer = false,
     isStaff = false
 }: {
     contractId: string
+    isCustomer?: boolean
     isStaff?: boolean
 }) {
     // const { id } = useParams()
@@ -170,6 +173,14 @@ export function RentalContractDetail({
     const handleReturn = useCallback(async () => {
         await returnMutation.mutateAsync()
     }, [returnMutation])
+
+    //=======================================//
+    // Cancel
+    //=======================================//
+    const cancelMutation = useCancelContract({ id: contractId })
+    const handleCancel = useCallback(async () => {
+        await cancelMutation.mutateAsync()
+    }, [cancelMutation])
 
     //=======================================//
     if (isLoading || !contract)
@@ -462,6 +473,19 @@ export function RentalContractDetail({
                         )}
                     </>
                 )}
+                {isCustomer &&
+                    (contract.status == RentalContractStatus.RequestPending ||
+                        contract.status == RentalContractStatus.PaymentPending) && (
+                        <ButtonStyled
+                            variant="bordered"
+                            color="primary"
+                            className="hover:text-white hover:bg-primary"
+                            isDisabled={cancelMutation.isPending}
+                            onPress={() => handleCancel()}
+                        >
+                            {cancelMutation.isPending ? <Spinner /> : t("rental_contract.cancel")}
+                        </ButtonStyled>
+                    )}
             </div>
         </motion.div>
     )

@@ -67,7 +67,7 @@ export function CardVehicalStyled({ vehicleModel }: { vehicleModel: VehicleModel
                     <div className="flex gap-2">
                         <Users className="h-6 w-6" />
                         <span>
-                            {vehicleModel.seatingCapacity} {t("vehicle_model.seats")}
+                            {vehicleModel.seatingCapacity} {t("vehicle_model.seating_capacity")}
                         </span>
                     </div>
 

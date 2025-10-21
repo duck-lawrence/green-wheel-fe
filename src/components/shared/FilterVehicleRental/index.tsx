@@ -1,8 +1,8 @@
 "use client"
-import React, { useCallback, useEffect, useMemo } from "react"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
-import { CalendarDateTime, fromDate } from "@internationalized/date"
+import { fromDate } from "@internationalized/date"
 import { useTranslation } from "react-i18next"
 import { AutocompleteItem, cn, Spinner } from "@heroui/react"
 import { MapPinAreaIcon } from "@phosphor-icons/react"
@@ -14,10 +14,30 @@ import toast from "react-hot-toast"
 import { DEFAULT_TIMEZONE, MAX_HOUR, MIN_HOUR } from "@/constants/constants"
 import dayjs from "dayjs"
 import { useSearchVehicleModels } from "@/hooks/queries/useVehicleModel"
+import { VehicleFilterReq } from "@/models/vehicle/schema/request"
 
 export function FilterVehicleRental({ className = "" }: { className?: string }) {
     const { t } = useTranslation()
     const { formatDateTime, toZonedDateTime } = useDay({})
+    // setup date time
+    const { minStartDate, minEndDate } = useMemo(() => {
+        const zonedNow = fromDate(new Date(), DEFAULT_TIMEZONE)
+
+        const isAfterMax = zonedNow.hour + 3 >= MAX_HOUR
+        const isBeforeMin = zonedNow.hour + 3 < MIN_HOUR
+
+        const initialStart =
+            isBeforeMin || isAfterMax
+                ? zonedNow
+                      .add({ days: isAfterMax ? 1 : 0 })
+                      .set({ hour: MIN_HOUR, minute: 0, second: 0, millisecond: 0 })
+                : zonedNow.set({ hour: zonedNow.hour + 3, second: 0, millisecond: 0 })
+        return {
+            minStartDate: initialStart,
+            minEndDate: initialStart.add({ days: 1 })
+        }
+    }, [])
+
     const {
         data: stations,
         isLoading: isGetStationsLoading,
@@ -43,57 +63,60 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
     const setEndDate = useBookingFilterStore((s) => s.setEndDate)
     const setFilteredVehicleModels = useBookingFilterStore((s) => s.setFilteredVehicleModels)
 
-    // setup date time
-    const { minStartDate, minEndDate } = useMemo(() => {
-        const zonedNow = fromDate(new Date(), DEFAULT_TIMEZONE)
-        const nowTime = new CalendarDateTime(
-            zonedNow.year,
-            zonedNow.month,
-            zonedNow.day,
-            zonedNow.hour,
-            zonedNow.minute
-        )
+    // filter
+    const [filter, setFilter] = useState<VehicleFilterReq>({
+        stationId: stationId || "",
+        startDate: startDate || formatDateTime({ date: minStartDate }),
+        endDate: endDate || formatDateTime({ date: minEndDate }),
+        segmentId
+    })
 
-        const isAfterMax = nowTime.hour + 3 >= MAX_HOUR
-        const isBeforeMin = nowTime.hour + 3 < MIN_HOUR
-
-        const initialStart =
-            isBeforeMin || isAfterMax
-                ? nowTime
-                      .add({ days: isAfterMax ? 1 : 0 })
-                      .set({ hour: MIN_HOUR, minute: 0, second: 0 })
-                : nowTime.set({ hour: nowTime.hour + 3, second: 0 })
-
-        return {
-            minStartDate: initialStart,
-            minEndDate: initialStart.add({ days: 1 })
+    // Load station
+    useEffect(() => {
+        if (stationId || (stations && !isGetStationsLoading && stations!?.length > 0)) {
+            setFilter((prev) => ({
+                ...prev,
+                stationId: stationId || stations![0].id
+            }))
+            setStationId(stationId || stations![0].id)
         }
-    }, [])
+        if (getStationsError) {
+            const error = getStationsError as BackendError
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    }, [getStationsError, isGetStationsLoading, setStationId, stationId, stations, t])
+
+    // Load segment
+    useEffect(() => {
+        if (getVehicleSegmentsError) {
+            const error = getVehicleSegmentsError as BackendError
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    }, [getVehicleSegmentsError, t])
 
     useEffect(() => {
         if (!startDate) setStartDate(formatDateTime({ date: minStartDate }))
         if (!endDate) setEndDate(formatDateTime({ date: minEndDate }))
     }, [endDate, formatDateTime, minEndDate, minStartDate, setEndDate, setStartDate, startDate])
 
-    // get models
-    const { getCachedOrFetch } = useSearchVehicleModels({
-        query: {
-            stationId: stationId || "",
-            startDate: startDate || formatDateTime({ date: minStartDate }),
-            endDate: endDate || formatDateTime({ date: minEndDate }),
-            segmentId
-        }
+    const { refetch } = useSearchVehicleModels({
+        query: filter
     })
 
-    const handleSearch = useCallback(async () => {
-        const data = await getCachedOrFetch()
-        setFilteredVehicleModels(data || [])
-    }, [getCachedOrFetch, setFilteredVehicleModels])
+    const handleSearch = useCallback(
+        async (params: VehicleFilterReq) => {
+            setFilter(params)
+            const { data } = await refetch()
+            setFilteredVehicleModels(data || [])
+        },
+        [refetch, setFilteredVehicleModels]
+    )
 
     //  Validation schema
     const bookingSchema = useMemo(
         () =>
             Yup.object().shape({
+                stationId: Yup.string().required(),
                 startDate: Yup.string()
                     .required(t("vehicle_filter.start_date_require"))
                     .test(
@@ -101,10 +124,6 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                         t("vehicle_filter.invalid_start_date"),
                         (value) => {
                             const valueDatetime = toZonedDateTime(value)
-                            console.log(valueDatetime?.toString())
-                            if (valueDatetime)
-                                console.log(`result: ${valueDatetime.compare(minStartDate)}`)
-
                             return (
                                 !!valueDatetime &&
                                 valueDatetime.compare(minStartDate) >= 0 &&
@@ -133,8 +152,10 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                         function (this: Yup.TestContext, value) {
                             const { startDate } = this.parent as { startDate?: string }
                             if (!startDate || !value) return true
+                            const startDateTmp = startDate.split("+")[0]
+                            value = value.split("+")[0]
 
-                            return dayjs(startDate).isBefore(
+                            return dayjs(startDateTmp).isBefore(
                                 dayjs(value).add(-1, "day").add(1, "minute")
                             )
                         }
@@ -144,13 +165,9 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
     )
 
     //  useFormik
-    const formik = useFormik({
-        initialValues: {
-            stationId: stationId,
-            segmentId: segmentId,
-            startDate: startDate || minStartDate.toString(),
-            endDate: endDate || minEndDate.toString()
-        },
+    const formik = useFormik<VehicleFilterReq>({
+        initialValues: filter,
+        enableReinitialize: filter.stationId !== "",
         validationSchema: bookingSchema,
         validateOnChange: false,
         validateOnBlur: false,
@@ -160,49 +177,23 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
             setSegmentId(formik.values.segmentId)
             setStartDate(formik.values.startDate)
             setEndDate(formik.values.endDate)
-            handleSearch()
+            handleSearch(formik.values)
             formik.setSubmitting(false)
         }
     })
 
-    // Load station
-    useEffect(() => {
-        if (!stationId && !isGetStationsLoading && stations!?.length > 0) {
-            formik.values.stationId = stations![0].id
-            setStationId(stations![0].id)
-        }
-        if (getStationsError) {
-            const error = getStationsError as BackendError
-            toast.error(translateWithFallback(t, error.detail))
-        }
-    }, [
-        formik.values,
-        getStationsError,
-        isGetStationsLoading,
-        setStationId,
-        stationId,
-        stations,
-        t
-    ])
-
-    // Load segment
-    useEffect(() => {
-        if (getVehicleSegmentsError) {
-            const error = getVehicleSegmentsError as BackendError
-            toast.error(translateWithFallback(t, error.detail))
-        }
-    }, [getVehicleSegmentsError, t])
-
     // load filtered vehicle when enter page and if form is valid
+    const hasLoadInit = useRef(false)
     useEffect(() => {
-        if (!formik.isValid) return
-
+        if (hasLoadInit.current) return
+        if (!formik.isValid || !filter.stationId) return
         const run = async () => {
-            await handleSearch()
+            await handleSearch(filter)
         }
         run()
+        hasLoadInit.current = true
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [formik.isValid, handleSearch])
 
     if (
         isGetStationsLoading ||
@@ -237,6 +228,7 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                                 formik.handleSubmit()
                             }}
                             isClearable={false}
+                            isRequired
                         >
                             {(stations ?? []).map((item) => (
                                 <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
@@ -281,6 +273,7 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                                 await formik.setFieldValue("startDate", date)
                                 formik.handleSubmit()
                             }}
+                            isRequired
                         />
 
                         {/* ENDDate */}
@@ -301,6 +294,7 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                                 await formik.setFieldValue("endDate", date)
                                 formik.handleSubmit()
                             }}
+                            isRequired
                         />
                     </div>
                     <div>
