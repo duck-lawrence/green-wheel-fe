@@ -8,7 +8,6 @@ import {
     InputStyled,
     TableContractStaff
 } from "@/components"
-import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { useGetAllRentalContracts, useGetAllStations } from "@/hooks"
 import { useFormik } from "formik"
 import { FunnelSimple, MapPinAreaIcon } from "@phosphor-icons/react"
@@ -22,26 +21,25 @@ import { AutocompleteItem } from "@heroui/react"
 export default function StaffContractsPage() {
     const { t } = useTranslation()
 
-    const [contracts, setContracts] = useState<RentalContractViewRes[]>([])
-    const { getCachedOrFetch, isFetching } = useGetAllRentalContracts()
+    const [filter, setFilter] = useState<ContractQueryParams>({})
+    const { data, isFetching, refetch } = useGetAllRentalContracts({ params: filter })
     const {
         data: stations,
         isLoading: isGetStationsLoading,
         error: getStationsError
     } = useGetAllStations()
 
-    const handleFilterChange = useCallback(
+    const handleSubmit = useCallback(
         async (params: ContractQueryParams) => {
-            const data = await getCachedOrFetch(params)
-            setContracts(data || [])
+            setFilter(params)
+            await refetch()
         },
-        [getCachedOrFetch]
+        [refetch]
     )
 
     const formik = useFormik<ContractQueryParams>({
         initialValues: {},
-        // validationSchema,
-        onSubmit: handleFilterChange
+        onSubmit: handleSubmit
     })
 
     // Load station
@@ -51,11 +49,6 @@ export default function StaffContractsPage() {
             toast.error(translateWithFallback(t, error.detail))
         }
     }, [getStationsError, isGetStationsLoading, stations, t])
-
-    useEffect(() => {
-        formik.submitForm()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     return (
         <div className="rounded-2xl bg-white shadow-sm px-6 py-6">
@@ -135,7 +128,7 @@ export default function StaffContractsPage() {
                 </form>
             </div>
             {/* Table */}
-            <TableContractStaff contracts={contracts} params={formik.values} />
+            <TableContractStaff contracts={data ?? []} params={formik.values} />
         </div>
     )
 }

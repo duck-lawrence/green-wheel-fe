@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next"
 import { ButtonStyled } from "../../styled/ButtonStyled"
 import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
-import { useConfirmContract, useDay, useName } from "@/hooks"
+import { useConfirmContract, useDay, useGetMe, useName } from "@/hooks"
 import { RentalContractStatusLabels, VehicleStatusLabels } from "@/constants/labels"
 import { DropdownStyled } from "../../styled/DropdownStyled"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
@@ -34,6 +34,8 @@ export function TableContractStaff({
     const router = useRouter()
     const { acceptContract, rejectContract } = useConfirmContract({ params })
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
+
+    const { data: staff } = useGetMe()
 
     const handleAccept = useCallback(
         (id: string) => {
@@ -75,10 +77,10 @@ export function TableContractStaff({
                     <TableColumn className="text-center text-gray-700 font-semibold">
                         {t("table.station")}
                     </TableColumn>
-                    <TableColumn className="text-center text-gray-700 font-semibold">
+                    <TableColumn className="text-center text-gray-700 font-semibold w-36">
                         {t("table.status")}
                     </TableColumn>
-                    <TableColumn className="text-center text-gray-700 font-semibold">
+                    <TableColumn className="text-center text-gray-700 font-semibold w-50">
                         {t("table.action")}
                     </TableColumn>
                 </TableHeader>
@@ -114,14 +116,15 @@ export function TableContractStaff({
 
                                 {/* status */}
                                 <TableCell className="text-center">
-                                    <span className="px-3 py-1 rounded-full text-xs">
+                                    <span className="py-1 rounded-full text-xs">
                                         {RentalContractStatusLabels[item.status]}
                                     </span>
                                 </TableCell>
 
                                 {/* action */}
                                 <TableCell className="text-center">
-                                    {item.status === RentalContractStatus.RequestPending ? (
+                                    {item.status === RentalContractStatus.RequestPending &&
+                                    staff?.station?.id === item.station.id ? (
                                         <div className="flex flex-col md:flex-row items-center justify-center gap-2">
                                             {/* Accept */}
                                             <ButtonStyled

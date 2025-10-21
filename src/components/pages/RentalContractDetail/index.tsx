@@ -63,7 +63,7 @@ export function RentalContractDetail({
     const router = useRouter()
 
     const { t } = useTranslation()
-    const { toCalenderDateTime } = useDay()
+    const { toZonedDateTime } = useDay()
     const { parseNumber } = useNumber()
     const { toFullName } = useName()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
@@ -289,27 +289,27 @@ export function RentalContractDetail({
 
             {/*Rental Dates */}
             <SectionStyled title={t("rental_contract.rental_duration")}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     <DateTimeStyled
-                        value={toCalenderDateTime(contract.startDate)}
+                        value={toZonedDateTime(contract.startDate)}
                         label={t("rental_contract.start_date")}
                         isReadOnly
                         endContent
                     />
                     <DateTimeStyled
-                        value={toCalenderDateTime(contract.actualStartDate)}
+                        value={toZonedDateTime(contract.actualStartDate)}
                         label={t("rental_contract.actual_start_date")}
                         isReadOnly
                         endContent
                     />
                     <DateTimeStyled
-                        value={toCalenderDateTime(contract.endDate)}
+                        value={toZonedDateTime(contract.endDate)}
                         label={t("rental_contract.end_date")}
                         isReadOnly
                         endContent
                     />
                     <DateTimeStyled
-                        value={toCalenderDateTime(contract.actualEndDate)}
+                        value={toZonedDateTime(contract.actualEndDate)}
                         label={t("rental_contract.actual_end_date")}
                         isReadOnly
                         endContent

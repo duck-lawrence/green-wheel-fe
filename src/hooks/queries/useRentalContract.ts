@@ -81,7 +81,7 @@ export const useConfirmContract = ({
         },
 
         onSuccess: () => {
-            queryClient.refetchQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, params] })
+            queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, params] })
             onSuccess?.()
             toast.success(t("rental_contract.update_success"))
         },
@@ -99,7 +99,7 @@ export const useConfirmContract = ({
         },
 
         onSuccess: () => {
-            queryClient.refetchQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, params] })
+            queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, params] })
             onSuccess?.()
             toast.success(t("rental_contract.update_success"))
         },
@@ -115,34 +115,36 @@ export const useConfirmContract = ({
 }
 
 export const useGetAllRentalContracts = ({
+    params = {},
     enabled = true
 }: {
+    params: ContractQueryParams
     enabled?: boolean
-} = {}) => {
+}) => {
     const queryClient = useQueryClient()
     // const key = [...QUERY_KEYS.RENTAL_CONTRACTS, params]
 
-    const query = useQuery({
-        queryKey: QUERY_KEYS.RENTAL_CONTRACTS,
-        queryFn: () => rentalContractApi.getAll({}),
+    return useQuery({
+        queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, params],
+        queryFn: async () => await rentalContractApi.getAll(params),
         initialData: () => {
             return queryClient.getQueryData<RentalContractViewRes[]>(QUERY_KEYS.RENTAL_CONTRACTS)
         },
         enabled
     })
 
-    const getCachedOrFetch = async (params: ContractQueryParams) => {
-        const key = [...QUERY_KEYS.RENTAL_CONTRACTS, params]
-        const cached = queryClient.getQueryData<RentalContractViewRes[]>(key)
-        if (cached) return cached
-        const data = await queryClient.fetchQuery({
-            queryKey: key,
-            queryFn: () => rentalContractApi.getAll(params)
-        })
-        return data
-    }
+    // const getCachedOrFetch = async (params: ContractQueryParams) => {
+    //     const key = [...QUERY_KEYS.RENTAL_CONTRACTS, params]
+    //     const cached = queryClient.getQueryData<RentalContractViewRes[]>(key)
+    //     if (cached) return cached
+    //     const data = await queryClient.fetchQuery({
+    //         queryKey: key,
+    //         queryFn: () => rentalContractApi.getAll(params)
+    //     })
+    //     return data
+    // }
 
-    return { ...query, getCachedOrFetch }
+    // return { ...query, getCachedOrFetch }
 }
 
 export const useGetRentalContractById = ({

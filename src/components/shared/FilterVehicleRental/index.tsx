@@ -17,7 +17,7 @@ import { useSearchVehicleModels } from "@/hooks/queries/useVehicleModel"
 
 export function FilterVehicleRental({ className = "" }: { className?: string }) {
     const { t } = useTranslation()
-    const { formatDateTime, toCalenderDateTime } = useDay({})
+    const { formatDateTime, toZonedDateTime } = useDay({})
     const {
         data: stations,
         isLoading: isGetStationsLoading,
@@ -100,7 +100,7 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                         "is-valid-start-date",
                         t("vehicle_filter.invalid_start_date"),
                         (value) => {
-                            const valueDatetime = toCalenderDateTime(value)
+                            const valueDatetime = toZonedDateTime(value)
                             console.log(valueDatetime?.toString())
                             if (valueDatetime)
                                 console.log(`result: ${valueDatetime.compare(minStartDate)}`)
@@ -119,7 +119,7 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                         "is-valid-end-date-range",
                         t("vehicle_filter.invalid_end_date_range"),
                         (value) => {
-                            const valueDatetime = toCalenderDateTime(value)
+                            const valueDatetime = toZonedDateTime(value)
                             return (
                                 !!valueDatetime &&
                                 valueDatetime.hour >= MIN_HOUR &&
@@ -140,7 +140,7 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                         }
                     )
             }),
-        [minStartDate, t, toCalenderDateTime]
+        [minStartDate, t, toZonedDateTime]
     )
 
     //  useFormik
@@ -269,7 +269,7 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                         {/* STARTDate */}
                         <DateTimeStyled
                             label={t("vehicle_model.start_date_time")}
-                            value={toCalenderDateTime(formik.values.startDate)}
+                            value={toZonedDateTime(formik.values.startDate)}
                             minValue={minStartDate}
                             isInvalid={!!formik.errors.startDate}
                             onChange={async (value) => {
@@ -286,9 +286,9 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
                         {/* ENDDate */}
                         <DateTimeStyled
                             label={t("vehicle_model.end_date_time")}
-                            value={toCalenderDateTime(formik.values.endDate)}
+                            value={toZonedDateTime(formik.values.endDate)}
                             minValue={
-                                toCalenderDateTime(formik.values.startDate)?.add({ days: 1 }) ||
+                                toZonedDateTime(formik.values.startDate)?.add({ days: 1 }) ||
                                 minEndDate
                             }
                             isInvalid={!!formik.errors.endDate}

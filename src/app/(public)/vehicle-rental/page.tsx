@@ -17,7 +17,7 @@ export default function VehicleModelsPage() {
         <div className="min-h-[80vh] h-fit max-w-screen p-4">
             <FilterVehicleRental />
 
-            <div className="mt-10 gap-8 grid grid-cols-2 sm:grid-cols-3 ">
+            <div className="mt-10 gap-8 grid gird-cols-1 sm:grid-cols-2 lg:grid-cols-3 ">
                 {vehicleModels ? (
                     vehicleModels.map((vehicleModel) => (
                         <Link key={vehicleModel.id} href={`/vehicle-rental/${vehicleModel.id}`}>

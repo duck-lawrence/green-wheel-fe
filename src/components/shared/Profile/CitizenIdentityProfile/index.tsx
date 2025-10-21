@@ -83,180 +83,171 @@ export function CitizenIdentityProfile() {
                         <CitizenIdentityUploader />
                     </div>
                 ) : (
-                    <div className="flex justify-between items-start">
+                    <div className="flex justify-between items-start gap-3">
                         <ImageStyled
                             alt={t("user.citizen_identity")}
                             src={citizenId?.imageUrl}
                             width={400}
                             height={250}
                         />
-                        <div>
-                            <div>
-                                <form
-                                    className="flex flex-col min-w-100 max-w-100 gap-2 mb-3"
-                                    onSubmit={formik.submitForm}
-                                >
-                                    <InputStyled
-                                        isRequired
+                        <div className="w-120">
+                            <form className="flex flex-col gap-2 mb-3" onSubmit={formik.submitForm}>
+                                <InputStyled
+                                    isRequired
+                                    isReadOnly={!editable}
+                                    label={t("user.no")}
+                                    variant="bordered"
+                                    value={formik.values.number}
+                                    onValueChange={(value) => formik.setFieldValue("number", value)}
+                                    isInvalid={
+                                        editable &&
+                                        !!(formik.touched.number && formik.errors.number)
+                                    }
+                                    errorMessage={formik.errors.number}
+                                    onBlur={() => {
+                                        formik.setFieldTouched("number")
+                                    }}
+                                />
+
+                                <InputStyled
+                                    isRequired
+                                    isReadOnly={!editable}
+                                    label={t("user.full_name")}
+                                    variant="bordered"
+                                    value={formik.values.fullName}
+                                    onValueChange={(value) =>
+                                        formik.setFieldValue("fullName", value)
+                                    }
+                                    isInvalid={
+                                        editable &&
+                                        !!(formik.touched.fullName && formik.errors.fullName)
+                                    }
+                                    errorMessage={formik.errors.fullName}
+                                    onBlur={() => {
+                                        formik.setFieldTouched("fullName")
+                                    }}
+                                />
+
+                                <div className="flex justify-between gap-2">
+                                    <EnumPicker
                                         isReadOnly={!editable}
-                                        label={t("user.no")}
-                                        variant="bordered"
-                                        value={formik.values.number}
-                                        onValueChange={(value) =>
-                                            formik.setFieldValue("number", value)
-                                        }
-                                        isInvalid={
-                                            editable &&
-                                            !!(formik.touched.number && formik.errors.number)
-                                        }
-                                        errorMessage={formik.errors.number}
-                                        onBlur={() => {
-                                            formik.setFieldTouched("number")
-                                        }}
+                                        label={t("user.sex")}
+                                        labels={SexLabels}
+                                        value={formik.values.sex}
+                                        onChange={(val) => formik.setFieldValue("sex", val)}
                                     />
 
                                     <InputStyled
                                         isRequired
                                         isReadOnly={!editable}
-                                        label={t("user.full_name")}
+                                        label={t("user.nationality")}
                                         variant="bordered"
-                                        value={formik.values.fullName}
+                                        value={formik.values.nationality}
                                         onValueChange={(value) =>
-                                            formik.setFieldValue("fullName", value)
+                                            formik.setFieldValue("nationality", value)
                                         }
                                         isInvalid={
                                             editable &&
-                                            !!(formik.touched.fullName && formik.errors.fullName)
+                                            !!(
+                                                formik.touched.nationality &&
+                                                formik.errors.nationality
+                                            )
                                         }
-                                        errorMessage={formik.errors.fullName}
+                                        errorMessage={formik.errors.nationality}
                                         onBlur={() => {
-                                            formik.setFieldTouched("fullName")
+                                            formik.setFieldTouched("nationality")
+                                        }}
+                                    />
+                                </div>
+
+                                <div className="flex justify-between gap-2">
+                                    <DatePickerStyled
+                                        isRequired
+                                        isReadOnly={!editable}
+                                        label={t("user.date_of_birth")}
+                                        isInvalid={
+                                            editable &&
+                                            !!(
+                                                formik.touched.dateOfBirth &&
+                                                formik.errors.dateOfBirth
+                                            )
+                                        }
+                                        errorMessage={formik.errors.dateOfBirth}
+                                        value={
+                                            formik.values.dateOfBirth
+                                                ? toDate(formik.values.dateOfBirth)
+                                                : null
+                                        }
+                                        onChange={(value) => {
+                                            if (!value) {
+                                                formik.setFieldValue("dateOfBirth", null)
+                                                return
+                                            }
+
+                                            const dob = formatDateTime({ date: value })
+
+                                            formik.setFieldValue("dateOfBirth", dob)
                                         }}
                                     />
 
-                                    <div className="flex justify-between gap-2">
-                                        <EnumPicker
-                                            isReadOnly={!editable}
-                                            label={t("user.sex")}
-                                            labels={SexLabels}
-                                            value={formik.values.sex}
-                                            onChange={(val) => formik.setFieldValue("sex", val)}
-                                        />
-
-                                        <InputStyled
-                                            isRequired
-                                            isReadOnly={!editable}
-                                            label={t("user.nationality")}
-                                            variant="bordered"
-                                            value={formik.values.nationality}
-                                            onValueChange={(value) =>
-                                                formik.setFieldValue("nationality", value)
+                                    <DatePickerStyled
+                                        isRequired
+                                        isReadOnly={!editable}
+                                        label={t("user.expires_at")}
+                                        isInvalid={
+                                            editable &&
+                                            !!(formik.touched.expiresAt && formik.errors.expiresAt)
+                                        }
+                                        errorMessage={formik.errors.expiresAt}
+                                        value={
+                                            formik.values.expiresAt
+                                                ? toDate(formik.values.expiresAt)
+                                                : null
+                                        }
+                                        onChange={(value) => {
+                                            if (!value) {
+                                                formik.setFieldValue("expiresAt", null)
+                                                return
                                             }
-                                            isInvalid={
-                                                editable &&
-                                                !!(
-                                                    formik.touched.nationality &&
-                                                    formik.errors.nationality
-                                                )
-                                            }
-                                            errorMessage={formik.errors.nationality}
-                                            onBlur={() => {
-                                                formik.setFieldTouched("nationality")
-                                            }}
-                                        />
-                                    </div>
 
-                                    <div className="flex justify-between gap-2">
-                                        <DatePickerStyled
-                                            isRequired
-                                            isReadOnly={!editable}
-                                            label={t("user.date_of_birth")}
-                                            isInvalid={
-                                                editable &&
-                                                !!(
-                                                    formik.touched.dateOfBirth &&
-                                                    formik.errors.dateOfBirth
-                                                )
-                                            }
-                                            errorMessage={formik.errors.dateOfBirth}
-                                            value={
-                                                formik.values.dateOfBirth
-                                                    ? toDate(formik.values.dateOfBirth)
-                                                    : null
-                                            }
-                                            onChange={(value) => {
-                                                if (!value) {
-                                                    formik.setFieldValue("dateOfBirth", null)
-                                                    return
-                                                }
+                                            const dob = formatDateTime({ date: value })
 
-                                                const dob = formatDateTime({ date: value })
+                                            formik.setFieldValue("expiresAt", dob)
+                                        }}
+                                    />
+                                </div>
+                            </form>
 
-                                                formik.setFieldValue("dateOfBirth", dob)
-                                            }}
-                                        />
-
-                                        <DatePickerStyled
-                                            isRequired
-                                            isReadOnly={!editable}
-                                            label={t("user.expires_at")}
-                                            isInvalid={
-                                                editable &&
-                                                !!(
-                                                    formik.touched.expiresAt &&
-                                                    formik.errors.expiresAt
-                                                )
-                                            }
-                                            errorMessage={formik.errors.expiresAt}
-                                            value={
-                                                formik.values.expiresAt
-                                                    ? toDate(formik.values.expiresAt)
-                                                    : null
-                                            }
-                                            onChange={(value) => {
-                                                if (!value) {
-                                                    formik.setFieldValue("expiresAt", null)
-                                                    return
-                                                }
-
-                                                const dob = formatDateTime({ date: value })
-
-                                                formik.setFieldValue("expiresAt", dob)
-                                            }}
-                                        />
-                                    </div>
-                                </form>
-
-                                {/* Button enable show change */}
-                                <div className="flex justify-end mb-3">
-                                    {!editable ? (
-                                        <ButtonStyled
-                                            className="border-primary
+                            {/* Button enable show change */}
+                            <div className="flex justify-end mb-3">
+                                {!editable ? (
+                                    <ButtonStyled
+                                        className="border-primary
                                             bg-white border text-primary   
                                             hover:text-white hover:bg-primary"
-                                            onPress={() => setEditable(!editable)}
-                                        >
-                                            <div>
-                                                <NotePencilIcon />
-                                            </div>
-                                            {t("common.edit")}
-                                        </ButtonStyled>
-                                    ) : formik.isSubmitting ? (
-                                        <Spinner />
-                                    ) : (
-                                        <div className="flex flex-col items-end gap-2">
-                                            <div className="flex gap-2">
-                                                <ButtonStyled
-                                                    className="border-primary 
+                                        onPress={() => setEditable(!editable)}
+                                    >
+                                        <div>
+                                            <NotePencilIcon />
+                                        </div>
+                                        {t("common.edit")}
+                                    </ButtonStyled>
+                                ) : formik.isSubmitting ? (
+                                    <Spinner />
+                                ) : (
+                                    <div className="flex flex-col items-end gap-2">
+                                        <div className="flex gap-2">
+                                            <ButtonStyled
+                                                className="border-primary 
                                                                                     bg-white border text-primary 
                                                                                     hover:text-white hover:bg-primary"
-                                                    isLoading={formik.isSubmitting}
-                                                    isDisabled={!formik.isValid || !formik.dirty}
-                                                    onPress={formik.submitForm}
-                                                >
-                                                    {t("common.save")}
-                                                </ButtonStyled>
-                                                {/* <ButtonStyled
+                                                isLoading={formik.isSubmitting}
+                                                isDisabled={!formik.isValid || !formik.dirty}
+                                                onPress={formik.submitForm}
+                                            >
+                                                {t("common.save")}
+                                            </ButtonStyled>
+                                            {/* <ButtonStyled
                                                     // className="border-primary
                                                     //     bg-white border text-primary
                                                     //     hover:text-white hover:bg-primary"
@@ -265,23 +256,22 @@ export function CitizenIdentityProfile() {
                                                 >
                                                     {t("common.delete")}
                                                 </ButtonStyled> */}
-                                                <ButtonStyled
-                                                    isDisabled={
-                                                        formik.isSubmitting
-                                                        // deleteMutation.isPending
-                                                    }
-                                                    onPress={() => {
-                                                        setEditable(!editable)
-                                                        formik.resetForm()
-                                                    }}
-                                                >
-                                                    {t("common.cancel")}
-                                                </ButtonStyled>
-                                            </div>
-                                            <CitizenIdentityUploader btnClassName="bg-secondary" />
+                                            <ButtonStyled
+                                                isDisabled={
+                                                    formik.isSubmitting
+                                                    // deleteMutation.isPending
+                                                }
+                                                onPress={() => {
+                                                    setEditable(!editable)
+                                                    formik.resetForm()
+                                                }}
+                                            >
+                                                {t("common.cancel")}
+                                            </ButtonStyled>
                                         </div>
-                                    )}
-                                </div>
+                                        <CitizenIdentityUploader btnClassName="bg-secondary" />
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
