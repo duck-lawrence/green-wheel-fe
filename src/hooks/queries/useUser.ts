@@ -1,7 +1,12 @@
 "use client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { QUERY_KEYS } from "@/constants/queryKey"
-import { CreateStaffReq, UserUpdateReq,UserFilterReq } from "@/models/user/schema/request"
+import {
+    CreateStaffReq,
+    StaffReq,
+    UserFilterReq,
+    UserUpdateReq
+} from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { userApi } from "@/services/userApi"
 import { useTranslation } from "react-i18next"
@@ -105,6 +110,21 @@ export const useGetAllUsers = ({
         },
         enabled
     })
+}
+
+export const useGetAllStaffs = ({
+    params,
+    enabled = true
+}: {
+    params: StaffReq
+    enabled?: boolean
+}) => {
+    const query = useQuery({
+        queryKey: [...QUERY_KEYS.USERS, params],
+        queryFn: () => userApi.getAllStafff(params),
+        enabled
+    })
+    return query
 }
 
 export const useDeleteUser = ({

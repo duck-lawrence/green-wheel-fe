@@ -34,3 +34,8 @@ export type UserFilterReq = {
     // role?: string // Để lọc bên staff, chỉ hiển thị staff thôi 
 
 }
+
+export type StaffReq = {
+    name?: string
+    stationId?: string
+}

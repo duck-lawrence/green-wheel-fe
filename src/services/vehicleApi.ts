@@ -1,18 +1,14 @@
-// This file encapsulates REST calls for vehicle CRUD endpoints so UI hooks stay declarative.
-import { VehicleStatus } from "@/constants/enum"
-import { CreateVehicleReq, UpdateVehicleReq } from "@/models/vehicle/schema/request"
+import {
+    CreateVehicleReq,
+    GetVehicleParams,
+    UpdateVehicleReq
+} from "@/models/vehicle/schema/request"
 import { VehicleViewRes } from "@/models/vehicle/schema/response"
 import axiosInstance from "@/utils/axios"
 import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 
-export type VehicleListParams = {
-    licensePlate?: string
-    stationId?: string
-    status?: VehicleStatus
-}
-
 export const vehicleApi = {
-    getAll: (params: VehicleListParams = {}) =>
+    getAll: (params: GetVehicleParams) =>
         requestWrapper<VehicleViewRes[]>(async () => {
             const query = buildQueryParams(params, true)
             const res = await axiosInstance.get("/vehicles", { params: query })
@@ -38,4 +34,3 @@ export const vehicleApi = {
             await axiosInstance.delete(`/vehicles/${vehicleId}`)
         })
 }
-
