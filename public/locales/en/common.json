@@ -647,7 +647,7 @@
         "page_title": "Staff Management",
         "page_subtitle": "Create, update, and monitor staff assignments across stations.",
         "filter_title": "Filters",
-        "filter_keyword": "Keyword",
+        "filter_keyword": "Search",
         "filter_keyword_placeholder": "Search by name or phone number",
         "filter_station": "Station",
         "filter_station_placeholder": "Select station",

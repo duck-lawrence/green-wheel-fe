@@ -10,13 +10,12 @@ import {
     DriverLicensePreviewModal,
     FilterTypeOption,
     FilterTypeStyle,
-    InputStyled,
     PaginationStyled,
+    InputStyled,
     StaffUserManagement
 } from "@/components"
 import type { Selection } from "@heroui/react"
-import { useGetAllStations, useGetAllUsers } from "@/hooks"
-import { ROLE_STAFF } from "@/constants/constants"
+import { useGetAllStaffs, useGetAllStations } from "@/hooks"
 import { StationViewRes } from "@/models/station/schema/response"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 
@@ -53,14 +52,15 @@ export default function StaffManagementPage() {
         return () => window.clearTimeout(timeoutId)
     }, [searchInput])
 
-    const staffQueryParams = useMemo(
-        () => ({
-            role: ROLE_STAFF.toLowerCase()
-        }),
-        []
-    )
+    const staffQueryParams = useMemo(() => {
+        const trimmedSearch = debouncedSearch.trim()
+        return {
+            name: trimmedSearch ? trimmedSearch : undefined,
+            stationId: stationFilter
+        }
+    }, [debouncedSearch, stationFilter])
 
-    const staffQuery = useGetAllUsers({
+    const staffQuery = useGetAllStaffs({
         params: staffQueryParams,
         enabled: true
     })
@@ -73,14 +73,8 @@ export default function StaffManagementPage() {
     const staffList = useMemo(() => {
         const items = staffQuery.data ?? []
         return items.filter((staff) => {
-            const roleName = staff.role?.name?.toLowerCase()
-            if (roleName !== ROLE_STAFF.toLowerCase()) {
-                return false
-            }
-
             const matchesStation =
-                !stationFilter ||
-                stationFilter === (staff.station?.id ?? "")
+                !stationFilter || stationFilter === (staff.station?.id ?? "")
 
             if (!matchesStation) {
                 return false
@@ -133,17 +127,9 @@ export default function StaffManagementPage() {
                 setPage(1)
                 return
             }
-
-            const values = Array.from(keys)
-            if (values.length === 0) {
-                setStationFilter(undefined)
-                setPage(1)
-                return
-            }
-
-            const selection = values[0]?.toString()
-            const nextStation = selection === "all" ? undefined : selection
-            setStationFilter(nextStation)
+            const [value] = Array.from(keys)
+            const nextStation = value != null ? value.toString() : undefined
+            setStationFilter(nextStation || undefined)
             setPage(1)
         },
         []
@@ -203,6 +189,15 @@ export default function StaffManagementPage() {
         [t]
     )
 
+    const stationOptions = useMemo(
+        () =>
+            stations.map((station) => ({
+                key: station.id,
+                label: station.name
+            })),
+        [stations]
+    )
+
     const stationMap = useMemo(() => {
         return stations.reduce<Record<string, StationViewRes>>((acc, station) => {
             acc[station.id] = station
@@ -213,7 +208,7 @@ export default function StaffManagementPage() {
     const getStationName = useCallback(
         (staff: UserProfileViewRes) => {
             return (
-                stationMap[staff.station?.id ??  ""]?.name ??
+                stationMap[staff.station?.id ?? ""]?.name ??
                 staff.station?.name ??
                 t("staff_management.unknown_station")
             )
@@ -227,9 +222,9 @@ export default function StaffManagementPage() {
                 <h1 className="text-3xl font-bold text-slate-900">
                     {t("staff_management.page_title")}
                 </h1>
-                <p className="text-sm text-slate-500">
+                {/* <p className="text-sm text-slate-500">
                     {t("staff_management.page_subtitle")}
-                </p>
+                </p> */}
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 shadow-sm">
@@ -242,7 +237,7 @@ export default function StaffManagementPage() {
 
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
                     <div className="flex flex-1 flex-col gap-3 sm:flex-row">
-                        <InputStyled
+                     <InputStyled
                             label={t("staff_management.filter_keyword")}
                             placeholder={t("staff_management.filter_keyword_placeholder")}
                             value={searchInput}
@@ -262,19 +257,16 @@ export default function StaffManagementPage() {
                             selectedKeys={
                                 stationFilter
                                     ? new Set([stationFilter])
-                                    : new Set<string>(["all"])
+                                    : new Set<string>()
                             }
                             disallowEmptySelection={false}
-                            showIcon={false}
+                            isClearable
                             onSelectionChange={handleStationChange}
                             isDisabled={stations.length === 0}
                         >
-                            <FilterTypeOption key="all" value="all">
-                                {t("staff_management.all_stations")}
-                            </FilterTypeOption>
-                            {stations.map((station) => (
-                                <FilterTypeOption key={station.id} value={station.id}>
-                                    {station.name}
+                            {stationOptions.map((option) => (
+                                <FilterTypeOption key={option.key}>
+                                    {option.label}
                                 </FilterTypeOption>
                             ))}
                         </FilterTypeStyle>
