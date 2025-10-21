@@ -20,6 +20,8 @@ export * from "./FieldStyled"
 export * from "./FilterTypeStyle"
 export * from "./FormStyled"
 
+export * from "./GrateStyled"
+
 export * from "./ImageStyled"
 export * from "./InputStyled"
 
