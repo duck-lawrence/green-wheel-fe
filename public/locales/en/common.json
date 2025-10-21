@@ -708,7 +708,16 @@
         "signed_by_staff_require": "Staff must sign",
         "signed_by_customer_require": "Customer must sign"
     },
-    "reaview": {
-        "create": "Create feedback successful"
+    "review": {
+        "create_successfull": "Create feedback successful",
+        "rating_required": "Rating required",
+        "create_feedback": "Create feedback",
+        "customer_review": "Customer reviews",
+        "station_required": "Station required",
+        "content_required": "content required",
+        "submit": "Submit review",
+        "content": "Content",
+        "rating": "Rating",
+        "create_title": "Create feedback"
     }
 }

@@ -2,21 +2,19 @@
 import {
     ButtonStyled,
     Carousel,
-    Footer,
+    CustomerReview,
     GreenWheelExperience,
     HowItWorks,
     ScrollToTopButton,
     Stations,
     WhyChoose
 } from "@/components"
-import React, { useCallback, useEffect, useRef } from "react"
+import React, { useEffect, useRef } from "react"
 import { slides } from "@/../public/cars"
 import { useTranslation } from "react-i18next"
 import { useNavbarItemStore } from "@/hooks/singleton/store/useNavbarItemStore"
 import { useRouter, useSearchParams } from "next/navigation"
 import toast from "react-hot-toast"
-import CustomerReview from "@/components/modules/HomeItem/CustomerReview"
-import { useCreateFeedback } from "@/hooks"
 
 export default function HomePage() {
     const { t } = useTranslation()
@@ -47,98 +45,6 @@ export default function HomePage() {
             { scroll: false }
         )
     }, [params, t, router])
-
-    const createFeedback = useCreateFeedback({})
-
-    const handleCreateFeedback = useCallback(async () => {
-        await createFeedback.mutateAsync({
-            // content: string,
-            // rating,
-            // stationId
-        })
-    })
-
-    const reviews = [
-        {
-            id: "1",
-            name: "Nguyễn Minh Hòa",
-            avatar: "/images/users/user1.jpg",
-            rating: 1,
-            title: "Trải nghiệm tuyệt vời!",
-            content:
-                "Xe chạy êm, nhân viên hỗ trợ nhiệt tình. Tôi rất hài lòng với dịch vụ của Green Wheel!",
-            createdAt: "2025-10-01"
-        },
-        {
-            id: "2",
-            name: "Trần Bảo Ngọc",
-            avatar: "/images/users/user2.jpg",
-            rating: 4,
-            title: "Dịch vụ ổn định",
-            content: "Quy trình thuê xe nhanh chóng, giá cả hợp lý. Sẽ quay lại lần tới!",
-            createdAt: "2025-09-20"
-        },
-        {
-            id: "3",
-            name: "Lê Hoàng",
-            avatar: "/images/users/user3.jpg",
-            rating: 5,
-            title: "Green Wheel xịn xò",
-            content:
-                "Rất thích cách Green Wheel tối ưu app thuê xe, mọi thứ trơn tru và thân thiện.",
-            createdAt: "2025-09-10"
-        },
-        {
-            id: "4",
-            name: "Lê Hoàng",
-            avatar: "/images/users/user3.jpg",
-            rating: 5,
-            title: "Green Wheel xịn xò",
-            content:
-                "Rất thích cách Green Wheel tối ưu app thuê xe, mọi thứ trơn tru và thân thiện.",
-            createdAt: "2025-09-10"
-        },
-        {
-            id: "5",
-            name: "Lê Hoàng",
-            avatar: "/images/users/user3.jpg",
-            rating: 5,
-            title: "Green Wheel xịn xò",
-            content:
-                "Rất thích cách Green Wheel tối ưu app thuê xe, mọi thứ trơn tru và thân thiện.",
-            createdAt: "2025-09-10"
-        },
-        {
-            id: "6",
-            name: "Lê Hoàng",
-            avatar: "/images/users/user3.jpg",
-            rating: 5,
-            title: "Green Wheel xịn xò",
-            content:
-                "Rất thích cách Green Wheel tối ưu app thuê xe, mọi thứ trơn tru và thân thiện.",
-            createdAt: "2025-09-10"
-        },
-        {
-            id: "7",
-            name: "Lê Hoàng",
-            avatar: "/images/users/user3.jpg",
-            rating: 5,
-            title: "Green Wheel xịn xò",
-            content:
-                "Rất thích cách Green Wheel tối ưu app thuê xe, mọi thứ trơn tru và thân thiện.",
-            createdAt: "2025-09-10"
-        },
-        {
-            id: "8",
-            name: "Lê Hoàng",
-            avatar: "/images/users/user3.jpg",
-            rating: 5,
-            title: "Green Wheel xịn xò",
-            content:
-                "Rất thích cách Green Wheel tối ưu app thuê xe, mọi thứ trơn tru và thân thiện.",
-            createdAt: "2025-09-10"
-        }
-    ]
 
     return (
         <>
@@ -207,10 +113,9 @@ export default function HomePage() {
             </div>
 
             {/* REVIEWS */}
-            <CustomerReview reviews={reviews} onAddReview={() => alert("Gửi phản hồi")} />
+            <CustomerReview />
 
             <ScrollToTopButton />
-            <Footer />
         </>
     )
 }

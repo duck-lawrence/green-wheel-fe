@@ -18,9 +18,10 @@ export default function DispatchDetailPage() {
     const { data: user } = useGetMe()
     const stationNow = user?.station?.id
     const { data: dispatchDetail } = useGetDispatchById({ id: dispatchId!, enabled: true })
-    const updateDispatch = useUpdateDispatch({})
 
+    console.log(dispatchDetail)
     // Update
+    const updateDispatch = useUpdateDispatch({})
     const handleUpdateDispatch = useCallback(
         async (status: DispatchRequestStatus) => {
             if (!dispatchDetail?.id) return
@@ -152,7 +153,7 @@ export default function DispatchDetailPage() {
 
                 <SectionStyled title={t("dispatch.assigned_vehicle")} icon={Car}>
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
-                        <TableSelectionVehicle vehicles={dispatchDetail?.vehicles ?? []} />
+                        <TableSelectionVehicle vehicles={dispatchDetail.vehicles ?? []} />
                     </div>
                 </SectionStyled>
             </div>
