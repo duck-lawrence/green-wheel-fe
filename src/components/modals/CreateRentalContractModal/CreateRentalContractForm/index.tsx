@@ -13,14 +13,13 @@ import {
     useCreateRentalContract,
     useDay
 } from "@/hooks"
-import { ButtonStyled, InputStyled, ImageStyled, TextareaStyled } from "@/components"
+import { ButtonStyled, InputStyled, ImageStyled, TextareaStyled, TempInvoice } from "@/components"
 import { Spinner } from "@heroui/react"
 import toast from "react-hot-toast"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { BackendError } from "@/models/common/response"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { StationViewRes } from "@/models/station/schema/response"
-import { formatCurrency } from "@/utils/helpers/currency"
 import { CheckboxStyled } from "@/components/styled/CheckboxStyled"
 
 type FormValues = {
@@ -133,11 +132,7 @@ export const CreateRentalContractForm = ({
         <div className="max-h-[95vh] px-4 sm:px-6 lg:px-8">
             {mounted ? (
                 <div className="mx-auto max-w-5xl bg-white rounded-lg ">
-                    <div className="text-center border-gray-100">
-                        <h2 className="text-3xl font-bold">{t("car_rental.register_title")}</h2>
-                    </div>
-
-                    <form onSubmit={formik.handleSubmit} className="px-6 py-4" noValidate>
+                    <form onSubmit={formik.handleSubmit} className="px-6" noValidate>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Cột trái */}
                             <div>
@@ -197,23 +192,6 @@ export const CreateRentalContractForm = ({
                                         }
                                         minRows={4}
                                     />
-
-                                    {/* Payment Method */}
-                                    {/* <EnumPicker<PaymentMethod>
-                                        value={formik.values.paymentMethod}
-                                        onChange={(v) => {
-                                            formik.setFieldValue("paymentMethod", v)
-                                            formik.setFieldTouched("paymentMethod", true)
-                                        }}
-                                        labels={PaymentMethodLabels}
-                                        label={t("car_rental.select_payment_method")}
-                                    />
-                                    {formik.touched.paymentMethod &&
-                                        formik.errors.paymentMethod && (
-                                            <p className="text-red-500 text-sm mt-1">
-                                                {formik.errors.paymentMethod as string}
-                                            </p>
-                                        )} */}
                                 </div>
 
                                 {/* Policy */}
@@ -303,74 +281,18 @@ export const CreateRentalContractForm = ({
                                                 })} → ${formatDateTime({ date: endDate! })}`}
                                             </span>
                                         </div>
-                                        {/* <div className="mt-1">
-                                            <span className="text-sm">
-                                                Hình thức thuê: Theo ngày
-                                            </span>
-                                        </div> */}
                                     </div>
 
                                     <div className="mt-4">
                                         <h4 className="font-medium text-center">
                                             {t("car_rental.detail_table")}
                                         </h4>
-                                        {/* <div className="mt-2 space-y-2">
-                                            <div className="flex justify-between">
-                                                <span>{t("car_rental.listed_fee")}</span>
-                                                <span>{formatCurrency(1)}</span>
-                                            </div>
-                                            <div className="border-t pt-2 flex justify-between font-medium">
-                                                <span>{t("car_rental.total")}</span>
-                                                <span>{formatCurrency(1)}</span>
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <span>{t("car_rental.deposit")}</span>
-                                                <span>{formatCurrency(1)}</span>
-                                            </div>
-                                        </div> */}
-                                        <div className="rounded-xl bg-neutral-50 p-4">
-                                            <div className="flex items-center justify-between text-sm">
-                                                <span>{t("vehicle_model.unit_price")}</span>
-                                                <span className="font-medium">
-                                                    {formatCurrency(modelViewRes.costPerDay)}
-                                                </span>
-                                            </div>
-                                            <div className="mt-2 flex items-center justify-between text-sm">
-                                                <span>{t("vehicle_model.number_of_days")}</span>
-                                                <span className="font-medium">{totalDays}</span>
-                                            </div>
-                                            <div className="mt-2 flex items-center justify-between text-sm">
-                                                <span>{t("vehicle_model.deposit_fee")}</span>
-                                                <span className="font-medium">
-                                                    {formatCurrency(modelViewRes.depositFee)}
-                                                </span>
-                                            </div>
-
-                                            <div className="mt-3 h-px bg-neutral-200" />
-                                            <div className="mt-3 flex items-center justify-between text-base font-semibold">
-                                                <span>{t("vehicle_model.temporary_total")}</span>
-                                                <span className="text-emerald-700">
-                                                    {formatCurrency(totalPrice)}
-                                                </span>
-                                            </div>
-                                        </div>
+                                        <TempInvoice
+                                            model={modelViewRes}
+                                            totalDays={totalDays}
+                                            totalPrice={totalPrice}
+                                        />
                                     </div>
-
-                                    {/* <div className="mt-6 border-t pt-4">
-                                        <div className="flex justify-between items-center">
-                                            <div>
-                                                <span className="font-medium">
-                                                    {t("car_rental.payment")}
-                                                </span>
-                                                <span className="text-xs text-gray-500 block">
-                                                    {t("car_rental.price_includes_vat")}
-                                                </span>
-                                            </div>
-                                            <span className="text-2xl font-bold text-green-500">
-                                                {formatCurrency(totalPayment)}
-                                            </span>
-                                        </div>
-                                    </div> */}
                                 </div>
                             </div>
                         </div>

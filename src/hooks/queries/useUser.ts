@@ -286,7 +286,7 @@ export const useUploadDriverLicenseById = ({
     })
 }
 
-export const useUpdateDriverLicense = ({
+export const useUpdateDriverLicenseById = ({
     onSuccess,
     onError
 }: {
@@ -319,7 +319,7 @@ export const useUpdateDriverLicense = ({
     })
 }
 
-export const useDeleteDriverLicense = ({
+export const useDeleteDriverLicenseById = ({
     onSuccess,
     onError
 }: {

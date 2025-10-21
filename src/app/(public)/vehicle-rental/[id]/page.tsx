@@ -1,7 +1,13 @@
 "use client"
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { motion } from "framer-motion"
-import { BreadCrumbsStyled, ButtonStyled, FieldStyled } from "@/components"
+import {
+    BreadCrumbsStyled,
+    ButtonStyled,
+    FieldStyled,
+    CreateRentalContractModal,
+    TempInvoice
+} from "@/components"
 import { GasPump, UsersFour, SteeringWheel, RoadHorizon } from "@phosphor-icons/react"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { useParams, useRouter } from "next/navigation"
@@ -13,7 +19,6 @@ import { ROLE_CUSTOMER } from "@/constants/constants"
 import toast from "react-hot-toast"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
-import { CreateRentalContractModal } from "@/components/modals/CreateRentalContractModal"
 
 export default function VehicleDetailPage() {
     const { id } = useParams()
@@ -139,15 +144,19 @@ export default function VehicleDetailPage() {
             <header className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-4">
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
                     <div>
-                        <h1 className="text-3xl/tight sm:text-4xl font-bold tracking-tight">
-                            {model.name}
-                        </h1>
-                        <p className="text-neutral-600">{model.description}</p>
+                        <div className="flex gap-2 items-center">
+                            <h1 className="text-3xl/tight sm:text-4xl font-bold tracking-tight">
+                                {model.name}
+                            </h1>
+                            <p className="text-3xl/tight sm:text-[2.1rem] font-semibold text-neutral-600">
+                                {`- ${model.description}`}
+                            </p>
+                        </div>
                         {/* <p className="mt-1 text-sm text-neutral-500">
                             Hãng xe: <span className="font-medium">{vehicle.brand_name}</span> •
                             Phân khúc: <span className="font-medium">{vehicle.segment_name}</span>
                         </p> */}
-                        <p className="text-lg text-neutral-500">
+                        <p className="text-lg text-neutral-500 font-semibold">
                             {t("vehicle_model.remaining_vehicle_count")} &nbsp;
                             <span className="font-extrabold text-emerald-600">
                                 {model.availableVehicleCount}
@@ -265,35 +274,11 @@ export default function VehicleDetailPage() {
                             </div>
 
                             {/* Đơn tạm tính */}
-                            <div className="rounded-xl bg-neutral-50 p-4">
-                                <div className="flex items-center justify-between text-sm">
-                                    <span>{t("vehicle_model.unit_price")}</span>
-                                    <span className="font-medium">
-                                        {formatCurrency(model.costPerDay)}
-                                    </span>
-                                </div>
-                                <div className="mt-2 flex items-center justify-between text-sm">
-                                    <span>{t("vehicle_model.number_of_days")}</span>
-                                    <span className="font-medium">{totalDays}</span>
-                                </div>
-                                <div className="mt-2 flex items-center justify-between text-sm">
-                                    <span>{t("vehicle_model.deposit_fee")}</span>
-                                    <span className="font-medium">
-                                        {formatCurrency(model.depositFee)}
-                                    </span>
-                                </div>
-
-                                <div className="mt-3 h-px bg-neutral-200" />
-                                <div className="mt-3 flex items-center justify-between text-base font-semibold">
-                                    <span>{t("vehicle_model.temporary_total")}</span>
-                                    <span className="text-emerald-700">
-                                        {formatCurrency(totalPrice)}
-                                    </span>
-                                </div>
-                                <div className="flex justify-end italic text-sm text-gray-400">
-                                    <span>{t("vehicle_model.not_include_tax")}</span>
-                                </div>
-                            </div>
+                            <TempInvoice
+                                model={model}
+                                totalDays={totalDays}
+                                totalPrice={totalPrice}
+                            />
 
                             <ButtonStyled
                                 isDisabled={!isCustomer}

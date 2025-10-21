@@ -13,9 +13,8 @@ export enum DispatchRequestStatus {
 
 export enum DepositStatus {
     Pending = 0,
-    Paid = 1,
-    Refunded = 2,
-    Forfeited = 3
+    Refunded = 1,
+    Forfeited = 2
 }
 
 export enum InvoiceStatus {
@@ -33,7 +32,7 @@ export enum InvoiceType {
 }
 
 export enum RentalContractStatus {
-    RequestPeding = 0,
+    RequestPending = 0,
     PaymentPending = 1,
     Active = 2,
     Returned = 3,
@@ -64,7 +63,8 @@ export enum InvoiceItemType {
     LateReturn = 2,
     Cleaning = 3,
     Penalty = 4, //PHẠT NGUỘI
-    Other = 5
+    Refund = 5,
+    Other = 6
 }
 
 export enum PaymentMethod {

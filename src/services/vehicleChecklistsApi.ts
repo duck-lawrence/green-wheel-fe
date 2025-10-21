@@ -1,6 +1,7 @@
 import {
     CreateVehicleChecklistReq,
     GetAllVehicleChecklistParams,
+    UpdateChecklistItemReq,
     UpdateVehicleChecklistReq
 } from "@/models/checklist/schema/request"
 import {
@@ -18,9 +19,8 @@ export const vehicleChecklistsApi = {
         }),
 
     update: ({ id, req }: { id: string; req: UpdateVehicleChecklistReq }) =>
-        requestWrapper<VehicleChecklistViewRes>(async () => {
-            const res = await axiosInstance.put(`/vehicle-checklists/${id}`, req)
-            return res.data
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/vehicle-checklists/${id}`, req)
         }),
 
     getAll: (query: GetAllVehicleChecklistParams) =>
@@ -36,8 +36,13 @@ export const vehicleChecklistsApi = {
             return res.data
         }),
 
+    updateItem: ({ id, req }: { id: string; req: UpdateChecklistItemReq }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/vehicle-checklists/items/${id}`, req)
+        }),
+
     uploadItemImage: ({ itemId, formData }: { itemId: string; formData: FormData }) =>
-        requestWrapper<VehicleChecklistItemViewRes>(async () => {
+        requestWrapper<string>(async () => {
             const res = await axiosInstance.post(
                 `/vehicle-checklists/items/${itemId}/image`,
                 formData,

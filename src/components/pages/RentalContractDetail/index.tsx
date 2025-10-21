@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react"
 import { motion } from "framer-motion"
 import {
+    AlertStyled,
     InvoiceAccordion,
     InputStyled,
     renderInvoiceForm,
@@ -41,8 +42,9 @@ import { Spinner } from "@heroui/react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { decodeJwt } from "@/utils/helpers/jwt"
-import { RentalContractStatus, VehicleChecklistType } from "@/constants/enum"
+import { InvoiceType, RentalContractStatus, VehicleChecklistType } from "@/constants/enum"
 import { ChecklistSection } from "./ChecklistSection"
+import { CreateInvoiceSection } from "./CreateInvoiceSection"
 
 export function RentalContractDetail({
     contractId,
@@ -61,7 +63,7 @@ export function RentalContractDetail({
     const router = useRouter()
 
     const { t } = useTranslation()
-    const { toCalenderDateTime } = useDay()
+    const { toZonedDateTime } = useDay()
     const { parseNumber } = useNumber()
     const { toFullName } = useName()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
@@ -178,88 +180,58 @@ export function RentalContractDetail({
         )
 
     return (
-        <div className="relative min-h-screen flex items-center justify-center dark:bg-gray-950 px-0">
-            <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="relative w-full max-w-6xl bg-white dark:bg-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-800 p-8 md:p-12"
+        <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="relative min-h-screen w-full max-w-6xl bg-white shadow-xl rounded-2xl border border-gray-200 px-4 py-3 md:p-12"
+        >
+            <Link
+                className="absolute top-3 left-5 hover:cursor-pointer text-gray-500 italic hidden sm:block"
+                href={returnPath}
             >
-                <Link
-                    className="absolute top-3 left-5 hover:cursor-pointer text-gray-500 italic"
-                    href={returnPath}
-                >
-                    {t("rental_contract.back_to_rental_contract")}
-                </Link>
-                {/* Header */}
-                <div className="text-center space-y-3 mb-12">
-                    <h1 className="text-4xl font-bold text-primary">
-                        {t("rental_contract.rental_contract")}
-                    </h1>
-                    <p className="text-gray-600 dark:text-gray-400 text-lg">
-                        {t("rental_contract.rental_contract_details_description")}
-                    </p>
-                </div>
+                {t("rental_contract.back_to_rental_contract")}
+            </Link>
+            {/* Header */}
+            <div className="text-center space-y-3 mb-12">
+                <h1 className="text-4xl font-bold text-primary">
+                    {t("rental_contract.rental_contract")}
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400 text-lg">
+                    {t("rental_contract.rental_contract_details_description")}
+                </p>
+            </div>
 
-                {/* Contract Info */}
-                <SectionStyled title={t("rental_contract.rental_contract_information")}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="sm:col-span-2">
-                            <div>
-                                {t("table.customer")}
-                                {": "}
-                                {toFullName({
-                                    firstName: contract.customer.firstName,
-                                    lastName: contract.customer.lastName
-                                })}
-                            </div>
-                            <div>
-                                {t("rental_contract.create_at")}
-                                {": "}
-                                {contract.createdAt && formatDateTime({ date: contract.createdAt })}
-                            </div>
+            {/* Contract Info */}
+            <SectionStyled title={t("rental_contract.rental_contract_information")}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="sm:col-span-2">
+                        <div>
+                            {t("table.customer")}
+                            {": "}
+                            {toFullName({
+                                firstName: contract.customer.firstName,
+                                lastName: contract.customer.lastName
+                            })}
                         </div>
-
-                        <InputStyled
-                            isReadOnly
-                            label={t("rental_contract.contract_code")}
-                            value={contract.id}
-                            startContent={
-                                <Invoice size={22} className="text-primary" weight="duotone" />
-                            }
-                            variant="bordered"
-                            // className="sm:col-span-2"
-                        />
-                        <div className="flex gap-4">
-                            <InputStyled
-                                isReadOnly
-                                label={t("rental_contract.contract_status")}
-                                className="w-68"
-                                value={RentalContractStatusLabels[contract.status]}
-                                startContent={
-                                    <ClipboardText
-                                        size={22}
-                                        className="text-primary"
-                                        weight="duotone"
-                                    />
-                                }
-                                variant="bordered"
-                            />
-                            <InputStyled
-                                isReadOnly
-                                label={t("station.station")}
-                                value={`${contract.station.name} - ${contract.station.address}`}
-                                startContent={
-                                    <ClipboardText
-                                        size={22}
-                                        className="text-primary"
-                                        weight="duotone"
-                                    />
-                                }
-                                variant="bordered"
-                            />
+                        <div>
+                            {t("rental_contract.create_at")}
+                            {": "}
+                            {contract.createdAt && formatDateTime({ date: contract.createdAt })}
                         </div>
+                    </div>
 
+                    <InputStyled
+                        isReadOnly
+                        label={t("rental_contract.contract_code")}
+                        value={contract.id}
+                        startContent={
+                            <Invoice size={22} className="text-primary" weight="duotone" />
+                        }
+                        variant="bordered"
+                        // className="sm:col-span-2"
+                    />
+                    <div className="flex gap-4">
                         <InputStyled
                             isReadOnly
                             label={t("rental_contract.vehicle_name")}
@@ -283,190 +255,214 @@ export function RentalContractDetail({
                             }
                             variant="bordered"
                         />
-                        <TextareaStyled
-                            isReadOnly
-                            label={t("rental_contract.contract_description")}
-                            value={contract.description}
-                            placeholder=". . . "
-                            variant="bordered"
-                            className="sm:col-span-2"
-                        />
                     </div>
-                </SectionStyled>
 
-                {/*Rental Dates */}
-                <SectionStyled title={t("rental_contract.rental_duration")}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <DateTimeStyled
-                            value={toCalenderDateTime(contract.startDate)}
-                            label={t("rental_contract.start_date")}
-                            isReadOnly
-                            endContent
-                        />
-                        <DateTimeStyled
-                            value={toCalenderDateTime(contract.actualStartDate)}
-                            label={t("rental_contract.actual_start_date")}
-                            isReadOnly
-                            endContent
-                        />
-                        <DateTimeStyled
-                            value={toCalenderDateTime(contract.endDate)}
-                            label={t("rental_contract.end_date")}
-                            isReadOnly
-                            endContent
-                        />
-                        <DateTimeStyled
-                            value={toCalenderDateTime(contract.actualEndDate)}
-                            label={t("rental_contract.actual_end_date")}
-                            isReadOnly
-                            endContent
-                        />
-                    </div>
-                </SectionStyled>
+                    <InputStyled
+                        isReadOnly
+                        label={t("rental_contract.contract_status")}
+                        value={RentalContractStatusLabels[contract.status]}
+                        startContent={
+                            <ClipboardText size={22} className="text-primary" weight="duotone" />
+                        }
+                        variant="bordered"
+                    />
+                    <InputStyled
+                        isReadOnly
+                        label={t("station.station")}
+                        value={`${contract.station.name} - ${contract.station.address}`}
+                        startContent={
+                            <ClipboardText size={22} className="text-primary" weight="duotone" />
+                        }
+                        variant="bordered"
+                    />
 
-                {/*Staff Info */}
-                <SectionStyled title={t("rental_contract.staff")}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <InputStyled
-                            isReadOnly
-                            label={t("rental_contract.vehicle_handover_staff")}
-                            value={toFullName({
-                                firstName: contract.handoverStaff?.firstName,
-                                lastName: contract.handoverStaff?.lastName
-                            })}
-                            startContent={
-                                <ArrowsLeftRight
-                                    size={22}
-                                    className="text-primary"
-                                    weight="duotone"
-                                />
-                            }
-                            variant="bordered"
-                        />
-                        <InputStyled
-                            isReadOnly
-                            label={t("rental_contract.vehicle_return_staff")}
-                            value={toFullName({
-                                firstName: contract.returnStaff?.firstName,
-                                lastName: contract.returnStaff?.lastName
-                            })}
-                            startContent={
-                                <ArrowsLeftRight
-                                    size={22}
-                                    className="text-primary"
-                                    weight="duotone"
-                                />
-                            }
-                            variant="bordered"
-                        />
-                    </div>
-                </SectionStyled>
+                    <TextareaStyled
+                        isReadOnly
+                        label={t("rental_contract.contract_description")}
+                        value={contract.description}
+                        placeholder=". . . "
+                        variant="bordered"
+                        className="sm:col-span-2"
+                    />
+                </div>
+            </SectionStyled>
 
-                {/* Vehicle checklists */}
-                <SectionStyled
-                    title={t("vehicle_checklist.vehicle_checklist")}
-                    childrenClassName="flex gap-2"
-                >
+            {/*Rental Dates */}
+            <SectionStyled title={t("rental_contract.rental_duration")}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <DateTimeStyled
+                        value={toZonedDateTime(contract.startDate)}
+                        label={t("rental_contract.start_date")}
+                        isReadOnly
+                        endContent
+                    />
+                    <DateTimeStyled
+                        value={toZonedDateTime(contract.actualStartDate)}
+                        label={t("rental_contract.actual_start_date")}
+                        isReadOnly
+                        endContent
+                    />
+                    <DateTimeStyled
+                        value={toZonedDateTime(contract.endDate)}
+                        label={t("rental_contract.end_date")}
+                        isReadOnly
+                        endContent
+                    />
+                    <DateTimeStyled
+                        value={toZonedDateTime(contract.actualEndDate)}
+                        label={t("rental_contract.actual_end_date")}
+                        isReadOnly
+                        endContent
+                    />
+                </div>
+            </SectionStyled>
+
+            {/*Staff Info */}
+            <SectionStyled title={t("rental_contract.staff")}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <InputStyled
+                        isReadOnly
+                        label={t("rental_contract.vehicle_handover_staff")}
+                        value={toFullName({
+                            firstName: contract.handoverStaff?.firstName,
+                            lastName: contract.handoverStaff?.lastName
+                        })}
+                        startContent={
+                            <ArrowsLeftRight size={22} className="text-primary" weight="duotone" />
+                        }
+                        variant="bordered"
+                    />
+                    <InputStyled
+                        isReadOnly
+                        label={t("rental_contract.vehicle_return_staff")}
+                        value={toFullName({
+                            firstName: contract.returnStaff?.firstName,
+                            lastName: contract.returnStaff?.lastName
+                        })}
+                        startContent={
+                            <ArrowsLeftRight size={22} className="text-primary" weight="duotone" />
+                        }
+                        variant="bordered"
+                    />
+                </div>
+            </SectionStyled>
+
+            {/* Vehicle checklists */}
+            <SectionStyled
+                title={t("vehicle_checklist.vehicle_checklist")}
+                childrenClassName="flex gap-2"
+            >
+                <ChecklistSection
+                    isStaff={isStaff}
+                    contract={contract}
+                    checklist={hanoverChecklist}
+                    type={VehicleChecklistType.Handover}
+                />
+                {contract.status >= RentalContractStatus.Returned && (
                     <ChecklistSection
                         isStaff={isStaff}
                         contract={contract}
-                        checklist={hanoverChecklist}
-                        type={VehicleChecklistType.Handover}
+                        checklist={returnChecklist}
+                        type={VehicleChecklistType.Return}
                     />
-                    {contract.status == RentalContractStatus.Returned && (
-                        <ChecklistSection
-                            isStaff={isStaff}
-                            contract={contract}
-                            checklist={returnChecklist}
-                            type={VehicleChecklistType.Return}
-                        />
-                    )}
-                </SectionStyled>
+                )}
+            </SectionStyled>
 
-                {/* Invoice Accordion  isLoading={isFetching}*/}
-                <SectionStyled title={t("rental_contract.payment_invoice_list")}>
-                    <div className="mt-[-1rem] mb-3 px-4 italic text-default-500 text-sm">
+            {/* Invoice Accordion  isLoading={isFetching}*/}
+            <SectionStyled title={t("rental_contract.payment_invoice_list")}>
+                <AlertStyled className="mb-3 mt-[-0.75rem] mx-2 max-w-fit italic">
+                    {t("rental_contract.fees_include_tax")}
+                </AlertStyled>
+                {/* <div className="mt-[-1rem] mb-3 px-4 italic text-default-500 text-sm">
                         {t("rental_contract.fees_include_tax")}
-                    </div>
-                    <InvoiceAccordion items={invoiceAccordion} contractStatus={contract.status} />
-                </SectionStyled>
-
-                {/* Signature */}
-                <SignatureSection
-                    // className="pt-10"
-                    sectionClassName="mt-8 mb-8"
-                    isReadOnly={!isStaff || !!contract.actualStartDate}
-                    staffSign={{
-                        id: "isSignedByStaff",
-                        name: "isSignedByStaff",
-                        checked: handoverFormik.values.isSignedByStaff,
-                        isInvalid: !!(
-                            handoverFormik.touched.isSignedByStaff &&
-                            handoverFormik.errors.isSignedByStaff
-                        ),
-                        isSelected: handoverFormik.values.isSignedByStaff,
-                        // onValueChange: (value) => handoverFormik.setFieldValue("isSignedByStaff", value)
-                        onChange: handoverFormik.handleChange,
-                        onBlur: handoverFormik.handleBlur
-                    }}
-                    customerSign={{
-                        id: "isSignedByCustomer",
-                        name: "isSignedByCustomer",
-                        checked: handoverFormik.values.isSignedByCustomer,
-                        isInvalid: !!(
-                            handoverFormik.touched.isSignedByCustomer &&
-                            handoverFormik.errors.isSignedByCustomer
-                        ),
-                        isSelected: handoverFormik.values.isSignedByCustomer,
-                        // onValueChange: (value) => handoverFormik.setFieldValue("isSignedByCustomer", value)
-                        onChange: handoverFormik.handleChange,
-                        onBlur: handoverFormik.handleBlur
-                    }}
+                    </div> */}
+                <InvoiceAccordion
+                    items={invoiceAccordion}
+                    contractStatus={contract.status}
+                    className="mb-3"
                 />
+                {isStaff &&
+                    contract.status == RentalContractStatus.Returned &&
+                    !contract.invoices.find((item) => item.type == InvoiceType.Refund) && (
+                        <CreateInvoiceSection contractId={contract.id} type={InvoiceType.Refund} />
+                    )}
+            </SectionStyled>
 
-                {/* Contract action button */}
-                <div className="text-center mb-10">
-                    {isStaff && (
-                        <>
-                            {!contract.actualStartDate ? (
+            {/* Signature */}
+            <SignatureSection
+                // className="pt-10"
+                sectionClassName="mt-8 mb-8"
+                isReadOnly={!isStaff || !!contract.actualStartDate}
+                staffSign={{
+                    id: "isSignedByStaff",
+                    name: "isSignedByStaff",
+                    checked: handoverFormik.values.isSignedByStaff,
+                    isInvalid: !!(
+                        handoverFormik.touched.isSignedByStaff &&
+                        handoverFormik.errors.isSignedByStaff
+                    ),
+                    isSelected: handoverFormik.values.isSignedByStaff,
+                    // onValueChange: (value) => handoverFormik.setFieldValue("isSignedByStaff", value)
+                    onChange: handoverFormik.handleChange,
+                    onBlur: handoverFormik.handleBlur
+                }}
+                customerSign={{
+                    id: "isSignedByCustomer",
+                    name: "isSignedByCustomer",
+                    checked: handoverFormik.values.isSignedByCustomer,
+                    isInvalid: !!(
+                        handoverFormik.touched.isSignedByCustomer &&
+                        handoverFormik.errors.isSignedByCustomer
+                    ),
+                    isSelected: handoverFormik.values.isSignedByCustomer,
+                    // onValueChange: (value) => handoverFormik.setFieldValue("isSignedByCustomer", value)
+                    onChange: handoverFormik.handleChange,
+                    onBlur: handoverFormik.handleBlur
+                }}
+            />
+
+            {/* Contract action button */}
+            <div className="text-center mb-10">
+                {isStaff && (
+                    <>
+                        {!contract.actualStartDate ? (
+                            <ButtonStyled
+                                variant="bordered"
+                                color="primary"
+                                className="hover:text-white hover:bg-primary"
+                                isDisabled={
+                                    !handoverFormik.isValid ||
+                                    handoverFormik.isSubmitting ||
+                                    !hanoverChecklist
+                                }
+                                onPress={() => handoverFormik.handleSubmit()}
+                            >
+                                {handoverFormik.isSubmitting ? (
+                                    <Spinner />
+                                ) : (
+                                    t("rental_contract.handover")
+                                )}
+                            </ButtonStyled>
+                        ) : (
+                            contract.status == RentalContractStatus.Active && (
                                 <ButtonStyled
                                     variant="bordered"
                                     color="primary"
                                     className="hover:text-white hover:bg-primary"
-                                    isDisabled={
-                                        !handoverFormik.isValid ||
-                                        handoverFormik.isSubmitting ||
-                                        !hanoverChecklist
-                                    }
-                                    onPress={() => handoverFormik.handleSubmit()}
+                                    isDisabled={returnMutation.isPending}
+                                    onPress={handleReturn}
                                 >
-                                    {handoverFormik.isSubmitting ? (
+                                    {returnMutation.isPending ? (
                                         <Spinner />
                                     ) : (
-                                        t("rental_contract.handover")
+                                        t("rental_contract.return")
                                     )}
                                 </ButtonStyled>
-                            ) : (
-                                contract.status == RentalContractStatus.Active && (
-                                    <ButtonStyled
-                                        variant="bordered"
-                                        color="primary"
-                                        className="hover:text-white hover:bg-primary"
-                                        isDisabled={returnMutation.isPending}
-                                        onPress={handleReturn}
-                                    >
-                                        {returnMutation.isPending ? (
-                                            <Spinner />
-                                        ) : (
-                                            t("rental_contract.return")
-                                        )}
-                                    </ButtonStyled>
-                                )
-                            )}
-                        </>
-                    )}
-                </div>
-            </motion.div>
-        </div>
+                            )
+                        )}
+                    </>
+                )}
+            </div>
+        </motion.div>
     )
 }

@@ -19,4 +19,5 @@ export type ContractQueryParams = {
     phone?: string
     citizenIdentityNumber?: string
     driverLicenseNumber?: string
+    stationId?: string
 }

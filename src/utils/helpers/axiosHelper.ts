@@ -27,3 +27,63 @@ export const buildQueryParams = (obj: Record<string, any>, ignoreFalsy = false) 
         Object.entries(obj).filter(([, v]) => (ignoreFalsy ? Boolean(v) : v != null && v !== ""))
     )
 }
+
+export const debouncedWrapper = <T extends (...args: any[]) => Promise<any>>(
+    fn: T,
+    delay = 800
+) => {
+    let timeoutRef: ReturnType<typeof setTimeout> | null = null
+    let abortController: AbortController | null = null
+
+    const debouncedFn = (
+        ...args: Parameters<T>
+    ): Promise<ReturnType<T> extends Promise<infer R> ? R : never> => {
+        return new Promise((resolve, reject) => {
+            // Huỷ các lần gọi trước
+            if (timeoutRef) {
+                clearTimeout(timeoutRef)
+                timeoutRef = null
+            }
+            if (abortController) {
+                abortController.abort()
+                abortController = null
+            }
+
+            // Tạo AbortController mới
+            abortController = new AbortController()
+            const signal = abortController.signal
+
+            // Đặt timeout để gọi hàm sau khi người dùng dừng thao tác
+            timeoutRef = setTimeout(async () => {
+                try {
+                    const result = await fn(...args)
+                    resolve(result)
+                } catch (error) {
+                    if (signal.aborted) {
+                        reject(new Error("Operation aborted"))
+                    } else {
+                        reject(error)
+                    }
+                } finally {
+                    // Reset
+                    timeoutRef = null
+                    abortController = null
+                }
+            }, delay)
+        })
+    }
+
+    // Thêm phương thức cancel để huỷ debounce
+    debouncedFn.cancel = () => {
+        if (timeoutRef) {
+            clearTimeout(timeoutRef)
+            timeoutRef = null
+        }
+        if (abortController) {
+            abortController.abort()
+            abortController = null
+        }
+    }
+
+    return debouncedFn
+}
