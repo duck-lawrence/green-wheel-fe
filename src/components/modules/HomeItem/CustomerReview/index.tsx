@@ -56,7 +56,8 @@ export function CustomerReview() {
                     </h2>
                     <ButtonStyled
                         onPress={onOpen}
-                        className="hover:scale-[1.03] transition-transform duration-300 shadow-md"
+                        className="hover:scale-[1.03] transition-transform duration-300 shadow-md border border-gray-400 "
+                        //  btn-gradient btn-gradient:hover btn-gradient:active
                     >
                         {t("review.create_feedback")}
                     </ButtonStyled>

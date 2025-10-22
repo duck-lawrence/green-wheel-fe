@@ -29,7 +29,6 @@ export default function HomePage() {
 
     useEffect(() => {
         if (hasShownToast.current) return
-
         const reason = params.get("reason")
         if (reason === "expired" || reason === "no_token") {
             toast.error(t("login.please_login"))
@@ -39,7 +38,6 @@ export default function HomePage() {
         // tạo URL mới không có param
         const newParams = new URLSearchParams(params.toString())
         newParams.delete("reason")
-
         router.replace(
             `${window.location.pathname}${newParams.toString() ? "?" + newParams.toString() : ""}`,
             { scroll: false }
@@ -47,36 +45,30 @@ export default function HomePage() {
     }, [params, t, router])
 
     return (
-        <>
-            {/* HERO SECTION */}
-
+        <main className="bg-[url('/images/texture-gray.png')] bg-fixed bg-cover">
+            {/* Nhịp 1: Hero + Carousel → high contrast */}
             <HeroSection />
-            {/* CAROUSEL */}
-            <section className="max-w-screen-xl mx-auto py-16 px-4">
+            <section className="bg-transparent py-20">
                 <Carousel slides={slides} />
             </section>
 
-            {/* CONTENT SECTIONS */}
-            <div>
+            {/* Nhịp 2: HowItWorks + WhyChoose → nền sáng nhẹ */}
+            <section className="bg-white/70 backdrop-blur-md py-24">
                 <HowItWorks />
-            </div>
-
-            <div>
                 <WhyChoose />
-            </div>
+            </section>
 
-            <div>
+            {/* Nhịp 3: Stations → nền mờ trong suốt */}
+            <section className="bg-gray-50/70 py-24">
                 <Stations />
-            </div>
+            </section>
 
-            <div>
+            {/* Nhịp 4: Experience + Review → gradient kết thúc */}
+            <section className="bg-gradient-to-b from-green-50/80 via-transparent to-transparent py-24">
                 <GreenWheelExperience />
-            </div>
-
-            {/* REVIEWS */}
-            <CustomerReview />
-
+                <CustomerReview />
+            </section>
             <ScrollToTopButton />
-        </>
+        </main>
     )
 }
