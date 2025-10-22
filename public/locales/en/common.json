@@ -224,6 +224,10 @@
         "create_dispatch": "Create Dispatch"
     },
     "contral_form": {
+        "full_name_require": "Full name is required",
+        "phone_require": "Phone is required",
+        "email_invalid": "Email is invalid",
+        "station_require": "Station is required",
         "payment_method_require": "Please select a payment method",
         "pickup_location_require": "Please select pickup location",
         "agree_terms_require": "You must agree to the payment terms",
@@ -402,7 +406,10 @@
         "escalated_to_admin": "Escalated to admin",
         "out_of_contract": "Out Of Contract",
         "return": "Return",
-        "handover": "Handover"
+        "handover": "Handover",
+        "admin": "Admin",
+        "staff": "Staff",
+        "customer": "Customer"
     },
     "car_rental": {
         "vehicle": "Vehicle",
@@ -414,7 +421,7 @@
         "phone_min_length": "Phone number must have at least 9 characters",
         "phone_verification": "Please verify your phone number to use Green Wheel services",
         "email": "Email",
-        "email_placeholder": "wheel@fpt.edu.vn",
+        "email_placeholder": "your.email@gmail.com",
         "pickup_location": "Pickup Location",
         "select_pickup_location": "Please select a pickup location",
         "note": "Note",
@@ -438,7 +445,8 @@
         "place2": "Place 2",
         "detail_table": "Detail table",
         "total": "Total",
-        "days": "day(s)"
+        "days": "day(s)",
+        "select_customer": "Select customer"
     },
     "cloudinary": {
         "file_not_found": "File not fount",

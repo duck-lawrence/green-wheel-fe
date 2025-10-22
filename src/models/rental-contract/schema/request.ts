@@ -5,6 +5,7 @@ export type CreateRentalContractReq = {
     startDate: string
     endDate: string
     stationId: string
+    notes: string
 }
 
 export type CreateRentalContractManualReq = CreateRentalContractReq & {

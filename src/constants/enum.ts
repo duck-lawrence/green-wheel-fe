@@ -1,3 +1,9 @@
+export enum RoleName {
+    Admin = "Admin",
+    Staff = "Staff",
+    Customer = "Customer"
+}
+
 export enum Sex {
     Male = 0,
     Female = 1

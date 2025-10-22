@@ -1,4 +1,4 @@
-import { Sex } from "@/constants/enum"
+import { RoleName, Sex } from "@/constants/enum"
 export type CreateUserReq = {
     email?: string
     phone: string
@@ -27,7 +27,9 @@ export type UserUpdateReq = {
     dateOfBirth?: string
     stationId?: string // Only for staff
 }
-export type UserFilterReq = {
+
+export type UserFilterParams = {
+    role?: RoleName
     phone?: string
     citizenIdNumber?: string
     driverLicenseNumber?: string
