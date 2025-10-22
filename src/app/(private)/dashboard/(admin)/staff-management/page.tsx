@@ -60,7 +60,7 @@ export default function StaffManagementPage() {
 
     const staffQueryParams = useMemo<UserFilterParams>(
         () => ({
-            role: RoleName.Staff
+            roleName: RoleName.Staff
         }),
         []
     )

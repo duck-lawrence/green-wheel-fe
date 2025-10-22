@@ -38,7 +38,9 @@
         "save": "Save",
         "delete": "Delete",
         "create": "Create",
-        "close": "Close"
+        "close": "Close",
+        "view_details": "View details",
+        "choose": "Choose"
     },
     "json": {
         "parsing_failed": "Failed to parse json"
@@ -126,6 +128,7 @@
         "upload_citizen_identity": "Upload Cititzen Identity",
         "please_upload_citizen_identity": "Please upload your Cititzen Identity",
         "citizen_identity_number_require": "Cititzen Identity number is required",
+        "citizen_identity_invalid": "Cititzen Identity number is invalid",
         "citizen_identity_expired_time_require": "Cititzen Identity expired time is required",
         "invalid_citizen_identity_data": "Invalid citizen identity data",
         "citizen_identity_not_found": "Citizen identity not found",
@@ -137,6 +140,7 @@
         "class": "Class",
         "driver_license_class_require": "Driver License class is required",
         "driver_license_number_require": "Driver License number is required",
+        "driver_license_invalid": "Driver License number is invalid",
         "driver_license_expired_time_require": "Driver License expired time is required",
         "invalid_driver_license_data": "Invalid driver license data",
         "driver_license_not_found": "Driver license not found",
@@ -216,7 +220,6 @@
         "unknown_brand": "Unknown brand",
         "unknown_model": "Unknown model",
         "notes": "Notes",
-        "description": "Description",
         "from_station": "From Station",
         "to_station": "To Station",
         "view_detail": "View Detail",

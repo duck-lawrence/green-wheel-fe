@@ -5,7 +5,7 @@ import type { Key } from "@react-types/shared"
 
 type EnumPickerProps<T extends number> = {
     value?: Key | null
-    onChange: (value: Key | null) => void
+    onChange?: (value: Key | null) => void
     onKeyDown?: () => void
     labels: Record<T, string> // map enum → label (ví dụ OrderStatusLabels)
     label?: string // nhãn hiển thị cho Autocomplete

@@ -29,7 +29,7 @@ export type UserUpdateReq = {
 }
 
 export type UserFilterParams = {
-    role?: RoleName
+    roleName?: RoleName
     phone?: string
     citizenIdNumber?: string
     driverLicenseNumber?: string

@@ -177,7 +177,12 @@ export const CreateRentalContractForm = ({
                 t("contral_form.agree_data_policy_require")
             )
         }),
-        onSubmit: handleSubmit
+        onSubmit: () => {
+            handleSubmit({
+                notes: formik.values.notes
+            })
+            formik.setSubmitting(false)
+        }
     })
 
     return (

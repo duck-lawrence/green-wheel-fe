@@ -3,7 +3,7 @@
 import React from "react"
 import { Avatar, AvatarProps } from "@heroui/react"
 
-export function AvaterStyled(props: AvatarProps) {
+export function AvatarStyled(props: AvatarProps) {
     return (
         <Avatar
             isBordered
