@@ -1,12 +1,12 @@
 import { DispatchRequestStatus } from "@/constants/enum"
 import { UserProfileViewRes } from "@/models/user/schema/response"
-import { VehicleViewRes } from "@/models/vehicle/schema/response"
+import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 
 export type DispatchViewRes = {
     id: string
     description?: string
-    staffs: UserProfileViewRes[]
-    vehicles: VehicleViewRes[]
+    dispatchRequestStaffs: UserProfileViewRes[]
+    dispatchRequestVehicles: DispatchVehicleRes[]
     fromStationId: string
     toStationId: string
     fromStationName: string
@@ -17,4 +17,10 @@ export type DispatchViewRes = {
     approvedAdminId: string
     approvedAdminName: string
     createdAt: string
+}
+
+export type DispatchVehicleRes = {
+    vehicleId: string
+    createdAt: string
+    vehicle: VehicleModelViewRes
 }

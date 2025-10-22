@@ -6,6 +6,7 @@ import TableSelectionVehicle from "@/components/modules/TableSelectionVehicle/in
 import { DispatchRequestStatus } from "@/constants/enum"
 import { DispatchRequestStatusLabels } from "@/constants/labels"
 import { useGetDispatchById, useGetMe, useUpdateDispatch } from "@/hooks"
+import { VehicleViewRes } from "@/models/vehicle/schema/response"
 import { UserSwitch, Car } from "@phosphor-icons/react"
 import { useParams } from "next/navigation"
 import React, { useCallback } from "react"
@@ -143,17 +144,27 @@ export default function DispatchDetailPage() {
                 </div>
             </SectionStyled>
 
-            {/* Staff & Vehicle Tables */}
+            {/* Tables */}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 mt-8">
                 <SectionStyled title={t("dispatch.assigned_staff")} icon={UserSwitch}>
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
-                        <TableSelectionStaff staffs={dispatchDetail?.staffs ?? []} />
+                        <TableSelectionStaff
+                            staffs={dispatchDetail?.dispatchRequestStaffs ?? []}
+                            selectionBehavior="replace"
+                        />
                     </div>
                 </SectionStyled>
 
                 <SectionStyled title={t("dispatch.assigned_vehicle")} icon={Car}>
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
-                        <TableSelectionVehicle vehicles={dispatchDetail.vehicles ?? []} />
+                        <TableSelectionVehicle
+                            vehicles={
+                                dispatchDetail.dispatchRequestVehicles.map(
+                                    (item) => item.vehicle
+                                ) ?? []
+                            }
+                            selectionBehavior="replace"
+                        />
                     </div>
                 </SectionStyled>
             </div>

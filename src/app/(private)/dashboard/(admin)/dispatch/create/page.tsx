@@ -24,11 +24,11 @@ export default function DispatchPage() {
     const [selecedSation, setSelecedSation] = useState("")
 
     //Staff && Vehicle
-    const { data: staffs, isLoading: isLoading_3 } = useGetAllStaffs({
+    const { data: dispatchRequestStaffs, isLoading: isLoading_3 } = useGetAllStaffs({
         params: { stationId: selecedSation },
         enabled: !!selecedSation
     })
-    const { data: vehicles, isLoading: isLoading_4 } = useGetAllVehicles({
+    const { data: dispatchRequestVehicles, isLoading: isLoading_4 } = useGetAllVehicles({
         params: { stationId: selecedSation },
         enabled: !!selecedSation
     })
@@ -94,7 +94,7 @@ export default function DispatchPage() {
                 <SectionStyled title={t("dispatch.list_staff")} icon={UserSwitchIcon}>
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
                         <TableSelectionStaff
-                            staffs={staffs ?? []}
+                            staffs={dispatchRequestStaffs ?? []}
                             onChangeSelected={setSelectStaffs}
                         />
                     </div>
@@ -103,7 +103,7 @@ export default function DispatchPage() {
                 <SectionStyled title={t("dispatch.list_vehicle")} icon={Car}>
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
                         <TableSelectionVehicle
-                            vehicles={vehicles ?? []}
+                            vehicles={dispatchRequestVehicles ?? []}
                             onChangeSelected={setSelectVehicles}
                         />
                     </div>
@@ -118,7 +118,7 @@ export default function DispatchPage() {
                         handleCreateDispatch?.(), router.push("/dashboard/dispatch")
                     }}
                 >
-                    {t("success.create")}
+                    {t("dispatch.create")}
                 </ButtonStyled>
             </div>
         </div>

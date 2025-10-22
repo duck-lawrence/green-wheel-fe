@@ -173,7 +173,8 @@
         "welcome": "Welcome to Green Wheel",
         "slogan": "Green Rides. Brighter Future.",
         "description": "Professional self-drive car rental service to meet all your personal travel needs",
-        "view_details": "View details"
+        "view_details": "View details",
+        "learn_more": "Learn more"
     },
     "navbar": {
         "home": "Home",
@@ -634,7 +635,8 @@
         "assigned_vehicle": "Assigned vehicles",
         "station": "Station",
         "description": "Description",
-        "dispatch_table": "Dispatch table"
+        "dispatch_table": "Dispatch table",
+        "create": "Create"
     },
     "document_preview": {
         "upload_image": "Upload image",
