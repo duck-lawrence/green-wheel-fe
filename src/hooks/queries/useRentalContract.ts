@@ -11,6 +11,38 @@ import { usePathname, useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 
+export const useCreateRentalContract = ({ onSuccess }: { onSuccess?: () => void }) => {
+    const { t } = useTranslation()
+
+    return useMutation({
+        mutationFn: rentalContractApi.create,
+        onSuccess: () => {
+            toast.success(t("contral_form.wait_for_confirm"), {
+                duration: 5000
+            })
+            onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useCreateContractManual = ({ onSuccess }: { onSuccess?: () => void }) => {
+    const { t } = useTranslation()
+
+    return useMutation({
+        mutationFn: rentalContractApi.createManual,
+        onSuccess: () => {
+            toast.success(t("success.create"))
+            onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
 export const useGetAllRentalContract = ({
     params,
     enabled = true
@@ -33,7 +65,30 @@ export const useGetAllRentalContract = ({
     return query
 }
 
-export const useGetMyContract = ({
+export const useGetRentalContractById = ({
+    id,
+    enabled = true
+}: {
+    id: string
+    enabled?: boolean
+}) => {
+    const queryClient = useQueryClient()
+
+    const query = useQuery({
+        queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id],
+        queryFn: () => rentalContractApi.getById(id),
+        initialData: () => {
+            return queryClient.getQueryData<RentalContractViewRes>([
+                ...QUERY_KEYS.RENTAL_CONTRACTS,
+                id
+            ])
+        },
+        enabled
+    })
+    return query
+}
+
+export const useGetMyContracts = ({
     status,
     enabled = true
 }: {
@@ -46,23 +101,6 @@ export const useGetMyContract = ({
         enabled
     })
     return query
-}
-
-export const useCreateRentalContract = ({ onSuccess }: { onSuccess?: () => void }) => {
-    const { t } = useTranslation()
-
-    return useMutation({
-        mutationFn: rentalContractApi.create,
-        onSuccess: () => {
-            toast.success(t("contral_form.wait_for_confirm"), {
-                duration: 5000
-            })
-            onSuccess?.()
-        },
-        onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
-        }
-    })
 }
 
 export const useConfirmContract = ({
@@ -147,29 +185,6 @@ export const useGetAllRentalContracts = ({
     // return { ...query, getCachedOrFetch }
 }
 
-export const useGetRentalContractById = ({
-    id,
-    enabled = true
-}: {
-    id: string
-    enabled?: boolean
-}) => {
-    const queryClient = useQueryClient()
-
-    const query = useQuery({
-        queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id],
-        queryFn: () => rentalContractApi.getById(id),
-        initialData: () => {
-            return queryClient.getQueryData<RentalContractViewRes>([
-                ...QUERY_KEYS.RENTAL_CONTRACTS,
-                id
-            ])
-        },
-        enabled
-    })
-    return query
-}
-
 export const useUpdateContractStatus = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
     const { t } = useTranslation()
     const pathName = usePathname()
@@ -179,25 +194,10 @@ export const useUpdateContractStatus = ({ onSuccess }: { onSuccess?: () => void 
     return useMutation({
         mutationFn: async ({ id }: { id: string }) => {
             await rentalContractApi.updateContractStatus({ id })
-            queryClient.refetchQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
+            queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
         },
         onSuccess: () => {
             router.replace(pathName)
-            onSuccess?.()
-        },
-        onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
-        }
-    })
-}
-
-export const useCreateContractManual = ({ onSuccess }: { onSuccess?: () => void }) => {
-    const { t } = useTranslation()
-
-    return useMutation({
-        mutationFn: rentalContractApi.createManual,
-        onSuccess: () => {
-            toast.success(t("success.create"))
             onSuccess?.()
         },
         onError: (error: BackendError) => {
@@ -215,7 +215,7 @@ export const useHandoverContract = ({ id, onSuccess }: { id: string; onSuccess?:
             await rentalContractApi.handover({ id, req })
         },
         onSuccess: () => {
-            queryClient.refetchQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
+            queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
             onSuccess?.()
             toast.success(t("success.handover"))
         },
@@ -235,7 +235,7 @@ export const useReturnContract = ({ id, onSuccess }: { id: string; onSuccess?: (
             await rentalContractApi.return({ id })
         },
         onSuccess: () => {
-            queryClient.refetchQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
+            queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
             onSuccess?.()
             toast.success(t("success.return"))
         },
@@ -245,12 +245,16 @@ export const useReturnContract = ({ id, onSuccess }: { id: string; onSuccess?: (
     })
 }
 
-export const useCancelContract = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useCancelContract = ({ id, onSuccess }: { id: string; onSuccess?: () => void }) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: rentalContractApi.cancel,
+        mutationFn: async () => {
+            await rentalContractApi.cancel({ id })
+        },
         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
             onSuccess?.()
             toast.success(t("success.cancel"))
         },

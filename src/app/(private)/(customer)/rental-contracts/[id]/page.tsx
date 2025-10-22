@@ -11,7 +11,7 @@ export default function RentalContractDetailPage() {
 
     return (
         <div className="max-w-screen md:max-w-3xl">
-            <RentalContractDetail contractId={contractId} />
+            <RentalContractDetail isCustomer={true} contractId={contractId} />
         </div>
     )
 }

@@ -6,7 +6,7 @@ import { Paperclip } from "@phosphor-icons/react"
 import { Skeleton } from "@heroui/react"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { ButtonStyled } from "../ButtonStyled"
-import { AvaterStyled } from "../AvatarStyled"
+import { AvatarStyled } from "../AvatarStyled"
 
 type DocumentKey = "citizen" | "driver"
 
@@ -24,7 +24,7 @@ type StaffUserManagementProps = {
 
 const defaultRenderName = (staff: UserProfileViewRes) => {
     const fallbackName = [staff.firstName, staff.lastName].filter(Boolean).join(" ").trim()
-    return  fallbackName ?? ""
+    return fallbackName ?? ""
 }
 
 const defaultGetStationName = (staff: UserProfileViewRes, fallback: string) =>
@@ -97,7 +97,7 @@ export function StaffUserManagement({
                 <tr key={item.id} className="transition hover:bg-slate-50">
                     <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                            <AvaterStyled
+                            <AvatarStyled
                                 src={item.avatarUrl ?? undefined}
                                 name={displayName}
                                 radius="full"

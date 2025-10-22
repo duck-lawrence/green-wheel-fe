@@ -16,6 +16,7 @@ import {
 } from "@/hooks"
 import { GoogleLoginButton } from "./GoogleLoginButton"
 import { ROLE_ADMIN, ROLE_STAFF } from "@/constants/constants"
+import { EMAIL_REGEX } from "@/constants/regex"
 
 export function LoginForm({ onSuccess }: { onSuccess?: () => void }) {
     const { t } = useTranslation()
@@ -69,7 +70,7 @@ export function LoginForm({ onSuccess }: { onSuccess?: () => void }) {
         validationSchema: Yup.object().shape({
             email: Yup.string()
                 .required(t("user.email_require"))
-                .matches(/^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/, t("user.invalid_email")),
+                .matches(EMAIL_REGEX, t("user.invalid_email")),
             password: Yup.string()
                 .required(t("user.password_can_not_empty"))
                 .min(8, t("user.password_too_short"))

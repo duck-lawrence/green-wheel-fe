@@ -1,6 +1,6 @@
 "use client"
 import {
-    AvaterStyled,
+    AvatarStyled,
     ButtonStyled,
     CitizenIdentityProfile,
     DatePickerStyled,
@@ -122,7 +122,7 @@ export default function ProfilePage() {
                     closeOnSelect={false}
                 >
                     <DropdownTrigger className="w-47 h-47 cursor-pointer">
-                        <AvaterStyled src={user?.avatarUrl || DEFAULT_AVATAR_URL} />
+                        <AvatarStyled src={user?.avatarUrl || DEFAULT_AVATAR_URL} />
                     </DropdownTrigger>
                     <DropdownMenu variant="flat" classNames={{ base: "p-0 w-fit" }}>
                         <DropdownItem key="upload_avatar" className="block p-0">

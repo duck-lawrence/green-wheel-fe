@@ -8,17 +8,18 @@ import {
     CreateRentalContractModal,
     TempInvoice
 } from "@/components"
-import { GasPump, UsersFour, SteeringWheel, RoadHorizon } from "@phosphor-icons/react"
+import { GasPump, UsersFour, RoadHorizon, BatteryChargingIcon } from "@phosphor-icons/react"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { useParams, useRouter } from "next/navigation"
 import { useBookingFilterStore, useGetVehicleModelById, useGetMe, useDay } from "@/hooks"
 import { useTranslation } from "react-i18next"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { Spinner, useDisclosure } from "@heroui/react"
-import { ROLE_CUSTOMER } from "@/constants/constants"
+import { ROLE_CUSTOMER, ROLE_STAFF } from "@/constants/constants"
 import toast from "react-hot-toast"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
+import { Icon } from "@iconify/react"
 
 export default function VehicleDetailPage() {
     const { id } = useParams()
@@ -31,6 +32,9 @@ export default function VehicleDetailPage() {
     const { data: user } = useGetMe()
     const isCustomer = useMemo(() => {
         return user?.role?.name === ROLE_CUSTOMER
+    }, [user])
+    const isStaff = useMemo(() => {
+        return user?.role?.name === ROLE_STAFF
     }, [user])
 
     // handle render picture
@@ -95,18 +99,43 @@ export default function VehicleDetailPage() {
 
     function mapSpecs(vehicle: VehicleModelViewRes) {
         return [
-            { key: "Số chỗ", value: vehicle.seatingCapacity },
-            { key: "Công suất", value: vehicle.motorPower + " kW" },
-            { key: "Dung lượng pin", value: vehicle.batteryCapacity + " kWh" },
-            { key: "Eco Range", value: vehicle.ecoRangeKm + " km" },
-            { key: "Sport Range", value: vehicle.sportRangeKm + " km" },
-            { key: "Hộp số", value: vehicle.numberOfAirbags }
+            {
+                icon: <UsersFour size={18} />,
+                key: t("vehicle_model.seating_capacity"),
+                value: vehicle.seatingCapacity.toString()
+            },
+            {
+                icon: <GasPump size={18} weight="duotone" />,
+                key: t("vehicle_model.motor_power"),
+                value: vehicle.motorPower + " kW"
+            },
+            {
+                icon: <BatteryChargingIcon size={18} />,
+                key: t("vehicle_model.battery_capacity"),
+                value: vehicle.batteryCapacity + " kWh"
+            },
+            {
+                icon: <RoadHorizon size={18} />,
+                key: t("vehicle_model.eco_range_km"),
+                value: vehicle.ecoRangeKm + " km"
+            },
+            {
+                icon: <RoadHorizon size={18} />,
+                key: t("vehicle_model.sport_range_km"),
+                value: vehicle.sportRangeKm + " km"
+            },
+            {
+                icon: <Icon icon="mdi:airbag" width="18" height="18" className="text-primary" />,
+                key: t("vehicle_model.airbag"),
+                value: vehicle.numberOfAirbags.toString()
+            }
         ]
     }
 
-    const basePolicies = (deposite: number) => [
+    // const basePolicies = (deposite: number) => [
+    const basePolicies = () => [
         { title: "Giấy tờ", text: "CCCD gắn chip + GPLX B1 trở lên." },
-        { title: "Cọc", text: `${deposite}đ hoặc xe máy giấy tờ chính chủ. ` },
+        // { title: "Cọc", text: `${deposite}đ hoặc xe máy giấy tờ chính chủ. ` },
         {
             title: "Phụ phí",
             text: "Phát sinh giờ: quá 45 phút tính phụ phí 10%/giờ, quá 5 giờ tính 1 ngày."
@@ -123,6 +152,8 @@ export default function VehicleDetailPage() {
         <div className="min-h-dvh bg-neutral-50 text-neutral-900 rounded">
             <CreateRentalContractModal
                 isOpen={isOpen}
+                isCustomer={isCustomer}
+                isStaff={isStaff}
                 onClose={onClose}
                 modelViewRes={model}
                 totalDays={totalDays}
@@ -216,15 +247,16 @@ export default function VehicleDetailPage() {
 
                     {/* Thông số */}
                     <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
-                        <h2 className="text-xl font-semibold mb-4">Thông số</h2>
+                        <h2 className="text-xl font-semibold mb-4">{t("vehicle_model.specs")}</h2>
                         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-                            {mapSpecs(model).map(({ key, value }) => (
-                                <div key={key} className="rounded-xl border border-neutral-200 p-4">
-                                    <p className="text-xs uppercase tracking-wide text-neutral-500">
-                                        {key}
-                                    </p>
-                                    <p className="mt-1 font-medium">{value}</p>
-                                </div>
+                            {mapSpecs(model).map(({ icon, key, value }) => (
+                                // <div key={key} className="rounded-xl border border-neutral-200 p-4">
+                                //     <p className="text-xs uppercase tracking-wide text-neutral-500">
+                                //         {key}
+                                //     </p>
+                                //     <p className="mt-1 font-medium">{value}</p>
+                                // </div>
+                                <FieldStyled key={key} label={key} value={value} icon={icon} />
                             ))}
                         </div>
                     </div>
@@ -232,7 +264,7 @@ export default function VehicleDetailPage() {
                     {/*================ Policies =======================*/}
                     <section className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
                         <div className="grid gap-4 md:grid-cols-2">
-                            {basePolicies(model.depositFee).map((p) => (
+                            {basePolicies().map((p) => (
                                 <div key={p.title} className="rounded-2xl bg-white p-5 shadow-sm">
                                     <h3 className="font-semibold">{p.title}</h3>
                                     <p className="mt-1 text-sm text-neutral-600">{p.text}</p>
@@ -244,15 +276,13 @@ export default function VehicleDetailPage() {
                 {/* ========================================================= */}
                 {/* Booking Card (sticky on desktop) */}
                 {/* lỗi nên chưa làm en chỗ này */}
-                <aside className="self-start lg:col-span-4 lg:sticky lg:top-20 space-y-6">
+                <aside className="self-start lg:col-span-4 lg:sticky lg:top-30 space-y-6">
                     <div className="rounded-2xl bg-white p-5 shadow-sm border border-neutral-100">
-                        <h2 className="text-lg font-semibold">
-                            {t("vehicle_model.vehicle_information")}
-                        </h2>
+                        <h2 className="text-lg font-semibold">{t("invoice.temp")}</h2>
                         <div className="mt-4 grid gap-4">
-                            <div className="grid grid-cols-2 gap-3">
+                            {/* <div className="grid grid-cols-2 gap-3">
                                 <FieldStyled
-                                    label="Nhiên liệu"
+                                    label={"Nhiên liệu"}
                                     value="Điện"
                                     icon={<GasPump size={18} weight="duotone" />}
                                 />
@@ -271,7 +301,7 @@ export default function VehicleDetailPage() {
                                     value={`~${model.ecoRangeKm} km`}
                                     icon={<RoadHorizon size={18} />}
                                 />
-                            </div>
+                            </div> */}
 
                             {/* Đơn tạm tính */}
                             <TempInvoice
@@ -281,11 +311,11 @@ export default function VehicleDetailPage() {
                             />
 
                             <ButtonStyled
-                                isDisabled={!isCustomer}
+                                isDisabled={!isCustomer && !isStaff}
                                 className="w-full rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 onPress={handleClickBooking}
                             >
-                                {t("vehicle_model.create_rental_request")}
+                                {t("rental_contract.create")}
                             </ButtonStyled>
                         </div>
                     </div>

@@ -5,7 +5,7 @@ import { EnumPicker, TableStyled } from "@/components"
 import { useTranslation } from "react-i18next"
 import { Spinner, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { useRouter } from "next/navigation"
-import { useDay, useGetMyContract } from "@/hooks"
+import { useDay, useGetMyContracts } from "@/hooks"
 import { RentalContractStatus } from "@/constants/enum"
 import { BackendError } from "@/models/common/response"
 import toast from "react-hot-toast"
@@ -24,7 +24,7 @@ export default function RentalContractPage() {
         isLoading: isContractsLoading,
         error: contractsError,
         refetch: refetchContracts
-    } = useGetMyContract(filters)
+    } = useGetMyContracts(filters)
 
     useEffect(() => {
         if (contractsError) {

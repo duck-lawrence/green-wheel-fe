@@ -11,72 +11,131 @@ import {
     useGetAllStations,
     useGetMe,
     useCreateRentalContract,
-    useDay
+    useDay,
+    useCreateContractManual,
+    useName
 } from "@/hooks"
 import { ButtonStyled, InputStyled, ImageStyled, TextareaStyled, TempInvoice } from "@/components"
-import { Spinner } from "@heroui/react"
+import { Spinner, useDisclosure } from "@heroui/react"
 import toast from "react-hot-toast"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { BackendError } from "@/models/common/response"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
-import { StationViewRes } from "@/models/station/schema/response"
-import { CheckboxStyled } from "@/components/styled/CheckboxStyled"
+import { CheckboxStyled, SelectUserModal } from "@/components"
+import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
+import { UserProfileViewRes } from "@/models/user/schema/response"
 
 type FormValues = {
     fullName: string
     phone: string
     email: string
     stationId: string
-    note: string
+    notes: string
     // paymentMethod: PaymentMethod
     agreeTerms: boolean
     agreeDataPolicy: boolean
 }
 
 export const CreateRentalContractForm = ({
+    isCustomer = false,
+    isStaff = false,
     onSuccess,
     totalDays,
     totalPrice,
     modelViewRes
 }: {
+    isCustomer: boolean
+    isStaff: boolean
     onSuccess?: () => void
     totalDays: number
     totalPrice: number
     modelViewRes: VehicleModelViewRes
 }) => {
     const { t } = useTranslation()
-    const { formatDateTime } = useDay({ defaultFormat: "DD-MM-YYYY HH:mm" })
+    const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
+    const { toFullName } = useName()
     const [mounted, setMounted] = useState(false)
     const createContract = useCreateRentalContract({ onSuccess })
-    const { data: user, isLoading: isUserLoading, error: userError } = useGetMe()
+    const createContractManual = useCreateContractManual({ onSuccess })
+
+    const {
+        data: userMe,
+        isLoading: isUserLoading,
+        error: userError
+    } = useGetMe({ enabled: isCustomer })
+
     const {
         data: stations,
         isLoading: isStationsLoading,
         error: stationsError
     } = useGetAllStations()
+
     const stationId = useBookingFilterStore((s) => s.stationId)
     const startDate = useBookingFilterStore((s) => s.startDate)
     const endDate = useBookingFilterStore((s) => s.endDate)
 
-    const stationMap = useMemo(() => {
-        const map = new Map<string, StationViewRes>()
-        stations?.forEach((s) => map.set(s.id, s))
-        return map
-    }, [stations])
+    const station = useMemo(() => {
+        return stations?.filter((s) => s.id === stationId)[0]
+    }, [stationId, stations])
 
-    const station = stationMap.get(stationId!)
+    // =========================
+    // Handle create
+    // =========================
+    const {
+        isOpen: isSelectUserOpen,
+        onOpen: onOpenSelectUser,
+        onOpenChange: onOpenChangeSelectUser,
+        onClose: onCloseSelectUser
+    } = useDisclosure()
+    const [user, setUser] = useState<UserProfileViewRes | undefined>(
+        isCustomer ? userMe : undefined
+    )
 
-    const handleCreateContract = useCallback(async () => {
-        await createContract.mutateAsync({
-            customerId: undefined,
-            modelId: modelViewRes.id,
-            stationId: stationId!,
-            startDate: startDate!,
-            endDate: endDate!
-        })
-    }, [createContract, endDate, modelViewRes.id, startDate, stationId])
+    const handleCreateContract = useCallback(
+        async ({ notes }: { notes: string }) => {
+            await createContract.mutateAsync({
+                modelId: modelViewRes.id,
+                stationId: stationId!,
+                startDate: startDate!,
+                endDate: endDate!,
+                notes
+            })
+        },
+        [createContract, endDate, modelViewRes.id, startDate, stationId]
+    )
+    const handleCreateManual = useCallback(
+        async ({ notes }: { notes: string }) => {
+            if (!user) return
+            await createContractManual.mutateAsync({
+                customerId: user.id,
+                modelId: modelViewRes.id,
+                stationId: stationId!,
+                startDate: startDate!,
+                endDate: endDate!,
+                notes
+            })
+        },
+        [createContractManual, endDate, modelViewRes.id, startDate, stationId, user]
+    )
 
-    // handle moute
+    const handleSubmit = useCallback(
+        ({ notes }: { notes: string }) => {
+            if (
+                !user?.phone
+                // || !user.citizenUrl || !user.licenseUrl
+            ) {
+                toast.error(t("user.enter_required_info"))
+                return
+            }
+            if (isStaff) handleCreateManual({ notes })
+            if (isCustomer) handleCreateContract({ notes })
+        },
+        [handleCreateContract, handleCreateManual, isCustomer, isStaff, t, user?.phone]
+    )
+
+    // =========================
+    // Handle moute
+    // =========================
     useEffect(() => {
         setMounted(!isUserLoading && !isStationsLoading)
     }, [isStationsLoading, isUserLoading])
@@ -90,43 +149,41 @@ export const CreateRentalContractForm = ({
     }, [onSuccess, stationsError, t, userError])
 
     const initialValues: FormValues = {
-        fullName: `${user?.lastName ?? ""} ${user?.firstName ?? ""}`,
+        fullName: toFullName({
+            firstName: user?.firstName,
+            lastName: user?.lastName
+        }),
         phone: user?.phone ?? "",
         email: user?.email ?? "",
         stationId: stationId || "",
-        note: "",
-        // paymentMethod: PaymentMethod.Cash,
+        notes: "",
         agreeTerms: false,
         agreeDataPolicy: false
     }
 
     const formik = useFormik<FormValues>({
+        initialValues,
         enableReinitialize: true,
         validateOnMount: true,
-        initialValues,
         validationSchema: Yup.object().shape({
-            // fullName: Yup.string().required(t("user.full_name_require")),
-            // phone: Yup.string()
-            //     .matches(PHONE_REGEX, t("user.invalid_phone"))
-            //     .required(t("user.phone_require")),
-            // email: Yup.string().email(t("user.invalid_email")).required(t("user.email_require")),
-            // pickupLocation: Yup.string().required(t("contral_form.pickup_location_require")),
-            // stationId: Yup.string().required(t("vehicle_model.pick_station")),
-            // note: Yup.string(),
-            // paymentMethod: Yup.mixed<PaymentMethod>()
-            //     .oneOf(Object.values(PaymentMethod) as PaymentMethod[])
-            //     .required(t("contral_form.payment_method_require")),
+            fullName: Yup.string().trim().required(t("contral_form.full_name_require")),
+            phone: Yup.string().trim().required(t("contral_form.phone_require")),
+            email: Yup.string().trim().email(t("contral_form.email_invalid")),
+            stationId: Yup.string().trim().required(t("contral_form.station_require")),
+            notes: Yup.string().trim(),
             agreeTerms: Yup.boolean().oneOf([true], t("contral_form.agree_terms_require")),
             agreeDataPolicy: Yup.boolean().oneOf(
                 [true],
                 t("contral_form.agree_data_policy_require")
             )
         }),
-        onSubmit: handleCreateContract
+        onSubmit: () => {
+            handleSubmit({
+                notes: formik.values.notes
+            })
+            formik.setSubmitting(false)
+        }
     })
-
-    // const renterFilled = !!formik.values.fullName?.trim()
-    // const emailFilled = !!formik.values.email?.trim()
 
     return (
         <div className="max-h-[95vh] px-4 sm:px-6 lg:px-8">
@@ -136,6 +193,23 @@ export const CreateRentalContractForm = ({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Cột trái */}
                             <div>
+                                {isStaff && (
+                                    <>
+                                        <SelectUserModal
+                                            isOpen={isSelectUserOpen}
+                                            onOpenChange={onOpenChangeSelectUser}
+                                            onClose={onCloseSelectUser}
+                                            setUser={setUser}
+                                        />
+                                        <ButtonStyled
+                                            onPress={onOpenSelectUser}
+                                            className="mb-3 text-black"
+                                        >
+                                            {t("car_rental.select_customer")}
+                                        </ButtonStyled>
+                                    </>
+                                )}
+
                                 <div className="space-y-4">
                                     <div className="grid grid-cols-2 gap-2">
                                         {/* Họ tên */}
@@ -144,6 +218,8 @@ export const CreateRentalContractForm = ({
                                             label={t("car_rental.renter_name")}
                                             placeholder={t("car_rental.renter_name_placeholder")}
                                             value={formik.values.fullName}
+                                            isInvalid={!!formik.errors.fullName}
+                                            errorMessage={formik.errors.fullName}
                                             readOnly={true}
                                         />
 
@@ -155,6 +231,8 @@ export const CreateRentalContractForm = ({
                                             type="tel"
                                             inputMode="numeric"
                                             value={formik.values.phone}
+                                            isInvalid={!!formik.errors.phone}
+                                            errorMessage={formik.errors.phone}
                                             readOnly={true}
                                         />
 
@@ -175,20 +253,22 @@ export const CreateRentalContractForm = ({
                                             placeholder={t("car_rental.email_placeholder")}
                                             type="email"
                                             value={formik.values.email}
+                                            isInvalid={!!formik.errors.email}
+                                            errorMessage={formik.errors.email}
                                             readOnly={true}
                                         />
                                     </div>
 
-                                    {/* Note */}
+                                    {/* notes */}
                                     <TextareaStyled
                                         label={t("car_rental.note")}
                                         placeholder=""
-                                        value={formik.values.note}
-                                        onValueChange={(v) => formik.setFieldValue("note", v)}
-                                        onBlur={() => formik.setFieldTouched("note", true)}
-                                        isInvalid={!!(formik.touched.note && formik.errors.note)}
+                                        value={formik.values.notes}
+                                        onValueChange={(v) => formik.setFieldValue("notes", v)}
+                                        onBlur={() => formik.setFieldTouched("notes", true)}
+                                        isInvalid={!!(formik.touched.notes && formik.errors.notes)}
                                         errorMessage={
-                                            formik.touched.note ? formik.errors.note : undefined
+                                            formik.touched.notes ? formik.errors.notes : undefined
                                         }
                                         minRows={4}
                                     />
@@ -285,7 +365,7 @@ export const CreateRentalContractForm = ({
 
                                     <div className="mt-4">
                                         <h4 className="font-medium text-center">
-                                            {t("car_rental.detail_table")}
+                                            {t("invoice.temp")}
                                         </h4>
                                         <TempInvoice
                                             model={modelViewRes}
@@ -309,7 +389,7 @@ export const CreateRentalContractForm = ({
                                 variant={!formik.isValid || formik.isSubmitting ? "flat" : "solid"}
                                 className="px-8 py-2 rounded-md"
                             >
-                                {t("vehicle_model.create_rental_request")}
+                                {t("rental_contract.create")}
                             </ButtonStyled>
                         </div>
                     </form>

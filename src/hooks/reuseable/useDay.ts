@@ -11,8 +11,14 @@ export const useDay = ({
 } = {}) => {
     const toZonedDateTime = (dateTime: string | number | Date | dayjs.Dayjs | null | undefined) => {
         if (!dateTime) return null
+
+        if (typeof dateTime === "string") {
+            dateTime = dateTime.split("+")[0]
+        }
+
         const d = dayjs(dateTime)
-        const str = `${d.format(defaultFormat)}[${timeZone}]`
+
+        const str = `${d.format(defaultFormat).split("+")[0]}[${timeZone}]`
         return parseZonedDateTime(str)
     }
 

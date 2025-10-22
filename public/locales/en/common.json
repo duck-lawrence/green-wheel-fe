@@ -38,7 +38,9 @@
         "save": "Save",
         "delete": "Delete",
         "create": "Create",
-        "close": "Close"
+        "close": "Close",
+        "view_details": "View details",
+        "choose": "Choose"
     },
     "json": {
         "parsing_failed": "Failed to parse json"
@@ -126,6 +128,7 @@
         "upload_citizen_identity": "Upload Cititzen Identity",
         "please_upload_citizen_identity": "Please upload your Cititzen Identity",
         "citizen_identity_number_require": "Cititzen Identity number is required",
+        "citizen_identity_invalid": "Cititzen Identity number is invalid",
         "citizen_identity_expired_time_require": "Cititzen Identity expired time is required",
         "invalid_citizen_identity_data": "Invalid citizen identity data",
         "citizen_identity_not_found": "Citizen identity not found",
@@ -137,6 +140,7 @@
         "class": "Class",
         "driver_license_class_require": "Driver License class is required",
         "driver_license_number_require": "Driver License number is required",
+        "driver_license_invalid": "Driver License number is invalid",
         "driver_license_expired_time_require": "Driver License expired time is required",
         "invalid_driver_license_data": "Invalid driver license data",
         "driver_license_not_found": "Driver license not found",
@@ -216,7 +220,6 @@
         "unknown_brand": "Unknown brand",
         "unknown_model": "Unknown model",
         "notes": "Notes",
-        "description": "Description",
         "from_station": "From Station",
         "to_station": "To Station",
         "view_detail": "View Detail",
@@ -224,6 +227,10 @@
         "create_dispatch": "Create Dispatch"
     },
     "contral_form": {
+        "full_name_require": "Full name is required",
+        "phone_require": "Phone is required",
+        "email_invalid": "Email is invalid",
+        "station_require": "Station is required",
         "payment_method_require": "Please select a payment method",
         "pickup_location_require": "Please select pickup location",
         "agree_terms_require": "You must agree to the payment terms",
@@ -257,6 +264,8 @@
         "not_found": "Vehicle segment not found"
     },
     "vehicle_model": {
+        "information": "Vehicle information",
+        "specs": "Specifications",
         "station": "Station",
         "segment": "Segment",
         "pick_station": "Please select a pick-up location",
@@ -270,29 +279,38 @@
         "number_of_days": "Number of days",
         "deposit_fee": "Deposit fee",
         "temporary_total": "Total",
-        "create_rental_request": "Create rental request",
         "similar_vehicles": "Similar vehicles",
         "view_all": "View all",
         "out_of_stock": "Out of stock",
-        "seats": "Seats",
-        "battery_capacity": "Battery capacity",
-        "airbag": "Airbag",
         "not_include_tax": "Not include tax",
         "not_found": "Vehicle model not found",
         "rent_time_is_not_available": "Rent time is not available",
         "name_require": "Name is required",
+
+        "seating_capacity": "Seats",
         "seating_capacity_require": "Seating capacity is required",
         "seating_capacity_can_not_negative": "Seating capacity can not be negative",
+
+        "airbag": "Airbag",
         "airbag_require": "Ari bag is required",
         "airbag_can_not_negative": "Air bag can not be negative",
+
+        "motor_power": "Motor power",
         "motor_power_require": "Motor power is required",
         "motor_power_can_not_negative": "Motor power can not be negative",
+
+        "battery_capacity": "Battery capacity",
         "battery_capacity_require": "Battery capacity is required",
         "battery_capacity_can_not_negative": "Battery capacity can not be negative",
+
+        "eco_range_km": "Eco range km",
         "eco_range_km_require": "Eco range km is required",
         "eco_range_km_can_not_negative": "Eco range km can not be negative",
-        "sport_rang_km_require": "Sport range km is required",
-        "sport_rang_km_can_not_negative": "Sport range km can not be negative",
+
+        "sport_range_km": "Sport range km",
+        "sport_range_km_require": "Sport range km is required",
+        "sport_range_km_can_not_negative": "Sport range km can not be negative",
+
         "brand_id_require": "Brand id is required",
         "segment_id_require": "Segment id is required"
     },
@@ -391,7 +409,10 @@
         "escalated_to_admin": "Escalated to admin",
         "out_of_contract": "Out Of Contract",
         "return": "Return",
-        "handover": "Handover"
+        "handover": "Handover",
+        "admin": "Admin",
+        "staff": "Staff",
+        "customer": "Customer"
     },
     "car_rental": {
         "vehicle": "Vehicle",
@@ -403,7 +424,7 @@
         "phone_min_length": "Phone number must have at least 9 characters",
         "phone_verification": "Please verify your phone number to use Green Wheel services",
         "email": "Email",
-        "email_placeholder": "wheel@fpt.edu.vn",
+        "email_placeholder": "your.email@gmail.com",
         "pickup_location": "Pickup Location",
         "select_pickup_location": "Please select a pickup location",
         "note": "Note",
@@ -427,7 +448,8 @@
         "place2": "Place 2",
         "detail_table": "Detail table",
         "total": "Total",
-        "days": "day(s)"
+        "days": "day(s)",
+        "select_customer": "Select customer"
     },
     "cloudinary": {
         "file_not_found": "File not fount",
@@ -545,11 +567,14 @@
     "rental_contract": {
         "id": "Contract ID",
         "back_to_rental_contract": "Back to rental contract",
+        "create": "Create rental request",
+        "create_manual": "Create rental request for customer",
         "update_success": "Update success",
         "update_failed": "Update failed",
         "no_action": "No action",
         "accept": "Accept",
         "reject": "Reject",
+        "cancel": "Cancel",
         "rental_contract": "Rental contract",
         "rental_contract_details_description": "Detailed information about the customer's electric vehicle rental contract.",
         "rental_contract_information": "Rental contract information",
@@ -614,7 +639,8 @@
         "item_type_require": "Invoice item type is required",
         "add_item": "Add new item",
         "create_refund": "Create refund invoice",
-        "subtotal": "Subtotal"
+        "subtotal": "Subtotal",
+        "temp": "Provisional invoice"
     },
     "momo": {
         "invalid_signature": "Invalid signature",
