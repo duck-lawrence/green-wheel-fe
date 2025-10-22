@@ -118,7 +118,7 @@ export function CreateFeedback({ onClose }: { onClose: () => void }) {
                 isLoading={createFeedback.isPending}
                 className="mt-6 py-3 text-base font-semibold tracking-wide rounded-xl hover:scale-[1.02] transition-transform"
             >
-                {t("review.submit") || "Gửi đánh giá"}
+                {t("review.submit")}
             </ButtonStyled>
         </motion.form>
     )

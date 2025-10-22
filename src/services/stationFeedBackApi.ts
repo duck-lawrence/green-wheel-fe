@@ -10,7 +10,7 @@ export const stationFeedbackApi = {
         }),
 
     getAll: () =>
-        requestWrapper<StationFeedbackRes>(async () => {
+        requestWrapper<StationFeedbackRes[]>(async () => {
             const res = await axiosInstance.get("/station-feedbacks")
             return res.data
         })

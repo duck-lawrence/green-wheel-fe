@@ -4,7 +4,7 @@ import { cn } from "@heroui/react"
 
 type CardReviewProps = {
     name: string
-    avatar: string
+    avatar?: string
     rating: number
     station: string
     content: string

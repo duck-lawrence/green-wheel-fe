@@ -6,7 +6,6 @@ import TableSelectionVehicle from "@/components/modules/TableSelectionVehicle/in
 import { DispatchRequestStatus } from "@/constants/enum"
 import { DispatchRequestStatusLabels } from "@/constants/labels"
 import { useGetDispatchById, useGetMe, useUpdateDispatch } from "@/hooks"
-import { VehicleViewRes } from "@/models/vehicle/schema/response"
 import { UserSwitch, Car } from "@phosphor-icons/react"
 import { useParams } from "next/navigation"
 import React, { useCallback } from "react"
@@ -30,6 +29,11 @@ export default function DispatchDetailPage() {
         },
         [dispatchDetail?.id, updateDispatch]
     )
+
+    //data dispatch
+    const dispatchStaff = dispatchDetail?.dispatchRequestStaffs.map(({ staff }) => staff) ?? []
+    const dispatchVehicle =
+        dispatchDetail?.dispatchRequestVehicles.map(({ vehicle }) => vehicle) ?? []
 
     // Display conditions
     const display1 =
@@ -149,7 +153,7 @@ export default function DispatchDetailPage() {
                 <SectionStyled title={t("dispatch.assigned_staff")} icon={UserSwitch}>
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
                         <TableSelectionStaff
-                            staffs={dispatchDetail?.dispatchRequestStaffs ?? []}
+                            staffs={dispatchStaff ?? []}
                             selectionBehavior="replace"
                         />
                     </div>
@@ -158,11 +162,7 @@ export default function DispatchDetailPage() {
                 <SectionStyled title={t("dispatch.assigned_vehicle")} icon={Car}>
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
                         <TableSelectionVehicle
-                            vehicles={
-                                dispatchDetail.dispatchRequestVehicles.map(
-                                    (item) => item.vehicle
-                                ) ?? []
-                            }
+                            vehicles={dispatchVehicle ?? []}
                             selectionBehavior="replace"
                         />
                     </div>
