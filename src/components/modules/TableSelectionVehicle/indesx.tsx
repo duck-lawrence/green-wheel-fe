@@ -14,9 +14,9 @@ export default function TableSelectionVehicle({
     onChangeSelected
 }: TableSelectionVehicleProps) {
     const [selectedKeys, setSelectedKeys] = useState<Key[]>([])
-    const rows = vehicles.map((item) => ({
+    const rows = vehicles.map((item, index) => ({
         key: item.id,
-        id: item.id,
+        id: index + 1,
         model: item.model.name,
         licensePlate: item.licensePlate
     }))
@@ -24,7 +24,7 @@ export default function TableSelectionVehicle({
     const columns = [
         {
             key: "id",
-            label: "ID"
+            label: "STT"
         },
         {
             key: "model",

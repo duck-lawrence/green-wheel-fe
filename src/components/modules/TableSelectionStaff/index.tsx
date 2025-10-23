@@ -15,9 +15,9 @@ export default function TableSelectionStaff({
 }: TableSelectionStaffProps) {
     const [selectedSatffIds, setSelectedStaffIds] = useState<string[]>([])
 
-    const rows = staffs.map((item) => ({
+    const rows = staffs.map((item, index) => ({
         key: item.id,
-        id: item.id,
+        id: index + 1,
         name: `${item.firstName} ${item.lastName}`,
         station: item.station?.name
     }))
