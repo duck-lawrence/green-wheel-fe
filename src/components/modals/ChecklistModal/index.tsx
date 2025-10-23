@@ -3,14 +3,14 @@ import React from "react"
 import { ModalBody, ModalContent } from "@heroui/react"
 import { ModalStyled, VehicleChecklistDetail } from "@/components/"
 
-interface HandOverChecklistModalProps {
+interface ChecklistModalProps {
     id: string
     isOpen: boolean
     onOpenChange: () => void
     onClose: () => void
 }
 
-export function ChecklistModal({ id, isOpen, onOpenChange, onClose }: HandOverChecklistModalProps) {
+export function ChecklistModal({ id, isOpen, onOpenChange, onClose }: ChecklistModalProps) {
     return (
         <ModalStyled
             isOpen={isOpen}

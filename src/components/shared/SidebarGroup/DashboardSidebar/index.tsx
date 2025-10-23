@@ -13,6 +13,11 @@ export function DashboardSidebar({ className }: { className?: string }) {
 
     const staffTabs: SidebarItem[] = [
         {
+            key: "/dashboard/rental-contracts",
+            label: t("staff.sidebar_contracts"),
+            href: "/dashboard/rental-contracts"
+        },
+        {
             key: "/dashboard/vehicle-checklists",
             label: t("staff.sidebar_vehicle_checklists"),
             href: "/dashboard/vehicle-checklists"
@@ -21,11 +26,6 @@ export function DashboardSidebar({ className }: { className?: string }) {
             key: "/dashboard/user-management",
             label: t("staff.sidebar_user_management"),
             href: "/dashboard/user-management"
-        },
-        {
-            key: "/dashboard/rental-contracts",
-            label: t("staff.sidebar_contracts"),
-            href: "/dashboard/rental-contracts"
         },
 
         {

@@ -1,23 +1,30 @@
+"use client"
 import { ModalStyled } from "@/components/"
-import { ModalBody, ModalContent } from "@heroui/react"
+import { ModalBody, ModalContent, ModalHeader } from "@heroui/react"
 import React, { useCallback } from "react"
 import { CreateRentalContractForm } from "./CreateRentalContractForm"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { useRouter } from "next/navigation"
+import { useTranslation } from "react-i18next"
 
 export function CreateRentalContractModal({
     isOpen,
+    isCustomer = false,
+    isStaff = false,
     onClose,
     totalDays,
     totalPrice,
     modelViewRes
 }: {
     isOpen: boolean
+    isCustomer: boolean
+    isStaff: boolean
     onClose: () => void
     totalDays: number
     totalPrice: number
     modelViewRes: VehicleModelViewRes
 }) {
+    const { t } = useTranslation()
     const router = useRouter()
     const handleSuccess = useCallback(() => {
         router.push("/vehicle-rental")
@@ -25,11 +32,15 @@ export function CreateRentalContractModal({
     }, [onClose, router])
 
     return (
-        <ModalStyled isOpen={isOpen} onClose={onClose} isKeyboardDismissDisabled>
+        <ModalStyled isOpen={isOpen} onClose={onClose} isDismissable={true}>
             <ModalContent className="min-w-fit px-3 py-2">
-                {/* <ModalHeader className=" self-center">{t("car_rental.register_title")}</ModalHeader> */}
+                <ModalHeader className="self-center font-bold text-3xl">
+                    {t("car_rental.register_title")}
+                </ModalHeader>
                 <ModalBody>
                     <CreateRentalContractForm
+                        isCustomer={isCustomer}
+                        isStaff={isStaff}
                         onSuccess={handleSuccess}
                         totalDays={totalDays}
                         totalPrice={totalPrice}

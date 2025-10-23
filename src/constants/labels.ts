@@ -14,8 +14,15 @@ import {
     InvoiceType,
     TicketType,
     TicketStatus,
-    VehicleChecklistType
+    VehicleChecklistType,
+    RoleName
 } from "./enum"
+
+export const RoleNameLabels: Record<RoleName, string> = {
+    [RoleName.Admin]: i18n.t("enum.admin"),
+    [RoleName.Staff]: i18n.t("enum.staff"),
+    [RoleName.Customer]: i18n.t("enum.customer")
+}
 
 export const SexLabels: Record<Sex, string> = {
     [Sex.Male]: i18n.t("enum.male"),
@@ -32,7 +39,6 @@ export const DispatchRequestStatusLabels: Record<DispatchRequestStatus, string> 
 
 export const DepositStatusLabels: Record<DepositStatus, string> = {
     [DepositStatus.Pending]: i18n.t("enum.pending"),
-    [DepositStatus.Paid]: i18n.t("enum.paid"),
     [DepositStatus.Refunded]: i18n.t("enum.refunded"),
     [DepositStatus.Forfeited]: i18n.t("enum.forfeited")
 }
@@ -44,7 +50,7 @@ export const InvoiceStatusLabels: Record<InvoiceStatus, string> = {
 }
 
 export const RentalContractStatusLabels: Record<RentalContractStatus, string> = {
-    [RentalContractStatus.RequestPeding]: i18n.t("enum.request_pending"),
+    [RentalContractStatus.RequestPending]: i18n.t("enum.request_pending"),
     [RentalContractStatus.PaymentPending]: i18n.t("enum.payment_pending"),
     [RentalContractStatus.Active]: i18n.t("enum.active"),
     [RentalContractStatus.Returned]: i18n.t("enum.returned"),
@@ -75,6 +81,7 @@ export const InvoiceItemTypeLabels: Record<InvoiceItemType, string> = {
     [InvoiceItemType.LateReturn]: i18n.t("enum.late_return"),
     [InvoiceItemType.Cleaning]: i18n.t("enum.cleaning"),
     [InvoiceItemType.Penalty]: i18n.t("enum.penalty"),
+    [InvoiceItemType.Refund]: i18n.t("enum.refund"),
     [InvoiceItemType.Other]: i18n.t("enum.other")
 }
 

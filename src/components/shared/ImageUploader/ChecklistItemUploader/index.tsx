@@ -1,43 +1,59 @@
 "use client"
 
-import React from "react"
-import { useImageUploadModal, useUploadChecklistItem } from "@/hooks"
-import { ImageUploadButton, ImageUploaderModal } from "@/components/"
+import React, { useState } from "react"
+import { useImageUploadModal, useUploadChecklistItemImage } from "@/hooks"
+import { ImageStyled, ImageUploadButton, ImageUploaderModal } from "@/components/"
 import { useTranslation } from "react-i18next"
 
 export function ChecklistItemUploader({
     btnClassName = "",
-    checklistId,
-    itemId
+    isEditable,
+    itemId,
+    itemImg
 }: {
     btnClassName?: string
-    checklistId: string
+    isEditable: boolean
     itemId: string
+    itemImg?: string
 }) {
     const { t } = useTranslation()
+    const [displayImg, setDisplayImg] = useState<string | undefined>(itemImg)
     const { imgSrc, setImgSrc, isOpen, onOpenChange, onClose, onFileSelect } = useImageUploadModal()
-    const upload = useUploadChecklistItem({ checklistId, itemId, onError: onClose })
+    const upload = useUploadChecklistItemImage({ itemId, onError: onClose })
 
     return (
         <>
-            <ImageUploadButton
-                color="primary"
-                label={t("common.upload")}
-                onFileSelect={onFileSelect}
-                btnClassName={btnClassName}
-            />
-            <ImageUploaderModal
-                label={t("common.upload")}
-                imgSrc={imgSrc}
-                setImgSrc={setImgSrc}
-                isOpen={isOpen}
-                onOpenChange={onOpenChange}
-                onClose={onClose}
-                uploadFn={upload.mutateAsync}
-                isUploadPending={upload.isPending}
-                cropShape="rect"
-                cropSize={{ width: 700, height: 437.5 }}
-            />
+            {isEditable && (
+                <>
+                    <ImageUploadButton
+                        color="primary"
+                        label={t("common.upload")}
+                        onFileSelect={onFileSelect}
+                        btnClassName={btnClassName}
+                    />
+                    <ImageUploaderModal
+                        label={t("common.upload")}
+                        imgSrc={imgSrc}
+                        setImgSrc={setImgSrc}
+                        isOpen={isOpen}
+                        onOpenChange={onOpenChange}
+                        onClose={onClose}
+                        uploadFn={upload.mutateAsync}
+                        setDisplayImg={setDisplayImg}
+                        isUploadPending={upload.isPending}
+                        cropShape="rect"
+                        cropSize={{ width: 700, height: 437.5 }}
+                    />
+                </>
+            )}
+            {displayImg && (
+                <ImageStyled
+                    alt={t("vehicle_checklist.item_image")}
+                    src={displayImg}
+                    width={200}
+                    height={125}
+                />
+            )}
         </>
     )
 }

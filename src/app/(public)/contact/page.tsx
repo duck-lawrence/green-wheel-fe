@@ -6,6 +6,8 @@ import { motion } from "framer-motion"
 import { useTranslation } from "react-i18next"
 import { MapPin, Phone, EnvelopeSimple, PaperPlaneTilt } from "@phosphor-icons/react"
 import { ButtonStyled, InputStyled, TextareaStyled } from "@/components"
+import { GREENWHEEL_ADDRESS, GREENWHEEL_EMAIL, GREENWHEEL_PHONE } from "@/constants/constants"
+import { EMAIL_REGEX, PHONE_REGEX } from "@/constants/regex"
 
 export default function Contact() {
     const { t } = useTranslation()
@@ -17,11 +19,14 @@ export default function Contact() {
 
     const validationSchema = useMemo(() => {
         return Yup.object({
-            lastName: Yup.string().required(t("user.last_name")),
-            firstName: Yup.string().required(t("user.first_name")),
+            lastName: Yup.string().required(t("user.last_name_require")),
+            firstName: Yup.string().required(t("user.first_name_require")),
             email: Yup.string()
                 .required(t("user.email_require"))
-                .matches(/^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/, t("user.invalid_email")),
+                .matches(EMAIL_REGEX, t("user.invalid_email")),
+            phone: Yup.string()
+                .required(t("user.phone_require"))
+                .matches(PHONE_REGEX, t("user.invalid_phone")),
             message: Yup.string()
         })
     }, [t])
@@ -63,9 +68,9 @@ export default function Contact() {
                         initial={{ opacity: 0, x: -40 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="flex-1 space-y-6"
+                        className="flex-1 space-y-3"
                     >
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <InputStyled
                                 isClearable
                                 variant="bordered"
@@ -128,22 +133,22 @@ export default function Contact() {
                             <p className="flex items-center gap-3">
                                 <MapPin size={22} weight="fill" className="text-primary" />
                                 <span>
-                                    <span className="font-bold text-primary">Address:</span> TP HCM,
-                                    Việt Nam
+                                    <span className="font-bold text-primary">Address:</span>{" "}
+                                    {GREENWHEEL_ADDRESS}
                                 </span>
                             </p>
                             <p className="flex items-center gap-3">
                                 <Phone size={22} weight="fill" className="text-primary" />
                                 <span>
-                                    <span className="font-bold text-primary">Phone:</span> 0900 123
-                                    432
+                                    <span className="font-bold text-primary">Phone:</span>{" "}
+                                    {GREENWHEEL_PHONE}
                                 </span>
                             </p>
                             <p className="flex items-center gap-3">
                                 <EnvelopeSimple size={22} weight="fill" className="text-primary" />
                                 <span>
                                     <span className="font-bold text-primary">Email:</span>{" "}
-                                    greenwheel@gmail.com
+                                    {GREENWHEEL_EMAIL}
                                 </span>
                             </p>
                             <p className="text-gray-400 text-sm mt-2">
