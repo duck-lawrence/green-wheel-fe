@@ -4,7 +4,7 @@ import { authApi } from "@/services/authApi"
 import { useMutation } from "@tanstack/react-query"
 import { BackendError } from "@/models/common/response"
 // import { UserProfileViewRes } from "@/models/user/schema/response"
-import { useInvalidateMeQuery, useTokenStore } from "@/hooks"
+import { useInvalidateMeQuery, useRemoveMeQuery, useTokenStore } from "@/hooks"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 // ===== Login and logout =====
 export const useLogin = ({
@@ -35,14 +35,14 @@ export const useLogin = ({
 export const useLogout = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
     const removeAccessToken = useTokenStore((s) => s.removeAccessToken)
-    const invalidateAuthQuery = useInvalidateMeQuery()
+    const removeMeQuery = useRemoveMeQuery()
 
     return useMutation({
         mutationFn: authApi.logout,
         onSuccess: () => {
             onSuccess?.()
             removeAccessToken()
-            invalidateAuthQuery()
+            removeMeQuery()
             toast.success(t("success.logout"))
         },
         onError: (error: BackendError) => {
@@ -163,13 +163,13 @@ export const useResetPassword = ({ onSuccess }: { onSuccess?: () => void }) => {
 export const useChangePassword = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
     const removeAccessToken = useTokenStore((s) => s.removeAccessToken)
-    const invalidateAuthQuery = useInvalidateMeQuery()
+    const removeMeQuery = useRemoveMeQuery()
 
     return useMutation({
         mutationFn: authApi.changePassword,
         onSuccess: () => {
             removeAccessToken()
-            invalidateAuthQuery()
+            removeMeQuery()
             onSuccess?.()
             toast.success(t("success.change_password"))
         },

@@ -81,18 +81,6 @@ export function RegisterInFo({ onSuccess }: RegisterInfoProps) {
             {/* Input InFo */}
             <div className="flex mx-auto w-110 gap-5">
                 <InputStyled
-                    label={t("user.last_name")}
-                    variant="bordered"
-                    value={formik.values.lastName}
-                    onValueChange={(value) => formik.setFieldValue("lastName", value)}
-                    isInvalid={!!(formik.touched.lastName && formik.errors.lastName)}
-                    errorMessage={formik.errors.lastName}
-                    onBlur={() => {
-                        formik.setFieldTouched("lastName")
-                    }}
-                />
-
-                <InputStyled
                     label={t("user.first_name")}
                     variant="bordered"
                     value={formik.values.firstName}
@@ -101,6 +89,18 @@ export function RegisterInFo({ onSuccess }: RegisterInfoProps) {
                     errorMessage={formik.errors.firstName}
                     onBlur={() => {
                         formik.setFieldTouched("firstName")
+                    }}
+                />
+
+                <InputStyled
+                    label={t("user.last_name")}
+                    variant="bordered"
+                    value={formik.values.lastName}
+                    onValueChange={(value) => formik.setFieldValue("lastName", value)}
+                    isInvalid={!!(formik.touched.lastName && formik.errors.lastName)}
+                    errorMessage={formik.errors.lastName}
+                    onBlur={() => {
+                        formik.setFieldTouched("lastName")
                     }}
                 />
             </div>

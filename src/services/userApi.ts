@@ -1,9 +1,10 @@
 import { UpdateCitizenIdentityReq } from "@/models/citizen-identity/schema/request"
 import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
+import { PaginationParams } from "@/models/common/request"
+import { PageResult } from "@/models/common/response"
 import { UpdateDriverLicenseReq } from "@/models/driver-license/schema/request"
 import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
 import {
-    CreateStaffReq,
     CreateUserReq,
     StaffReq,
     UserFilterParams,
@@ -14,9 +15,12 @@ import axiosInstance from "@/utils/axios"
 import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 
 export const userApi = {
-    getAll: (query: UserFilterParams) =>
-        requestWrapper<UserProfileViewRes[]>(async () => {
-            const params = buildQueryParams(query)
+    getAll: ({ query, pagination }: { query: UserFilterParams; pagination: PaginationParams }) =>
+        requestWrapper<PageResult<UserProfileViewRes>>(async () => {
+            const params = {
+                ...buildQueryParams(query),
+                ...buildQueryParams(pagination)
+            }
             const res = await axiosInstance.get("/users", { params })
             return res.data
         }),
@@ -29,16 +33,14 @@ export const userApi = {
         }),
 
     // create: (req: CreateUserReq) =>
-    create: (req: CreateUserReq | CreateStaffReq) =>
+    create: (req: CreateUserReq) =>
         requestWrapper<{ userId: string }>(async () => {
+            console.log(req)
+
             const res = await axiosInstance.post("/users", req)
             return res.data
         }),
-    createStaff: (req: CreateStaffReq) =>
-        requestWrapper<{ userId: string }>(async () => {
-            const res = await axiosInstance.post("/users/create-staff", req)
-            return res.data
-        }),
+
     update: ({ id, req }: { id: string; req: UserUpdateReq }) =>
         requestWrapper<void>(async () => {
             await axiosInstance.patch(`/users/${id}`, req)

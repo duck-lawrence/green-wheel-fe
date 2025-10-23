@@ -14,20 +14,20 @@ export default function VehicleModelsPage() {
     }, [setActiveMenuKey])
 
     return (
-        <div className="min-h-[80vh] h-fit max-w-screen p-4">
+        <div className="min-h-[80vh] h-fit max-w-screen p-4 text-center">
             <FilterVehicleRental />
 
-            <div className="mt-10 gap-8 grid gird-cols-1 sm:grid-cols-2 lg:grid-cols-3 ">
-                {vehicleModels ? (
-                    vehicleModels.map((vehicleModel) => (
+            {vehicleModels ? (
+                <div className="mt-10 gap-8 grid gird-cols-1 sm:grid-cols-2 lg:grid-cols-3 ">
+                    {vehicleModels.map((vehicleModel) => (
                         <Link key={vehicleModel.id} href={`/vehicle-rental/${vehicleModel.id}`}>
                             <CardVehicalStyled vehicleModel={vehicleModel} />
                         </Link>
-                    ))
-                ) : (
-                    <Spinner />
-                )}
-            </div>
+                    ))}
+                </div>
+            ) : (
+                <Spinner className="mt-6" />
+            )}
         </div>
     )
 }

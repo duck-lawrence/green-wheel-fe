@@ -13,7 +13,6 @@ import {
     EnumPicker,
     ImageStyled,
     InputStyled,
-    ModalBodyStyled,
     ModalContentStyled,
     ModalFooterStyled,
     ModalHeaderStyled,
@@ -29,6 +28,7 @@ import { UserUpdateReq } from "@/models/user/schema/request"
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
 import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
+import { ModalBody } from "@heroui/react"
 
 type EditUserModalProps = {
     user: UserProfileViewRes | null
@@ -119,8 +119,10 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
             className="max-w-140"
         >
             <ModalContentStyled>
-                <ModalHeaderStyled>{t("common.edit_user")}</ModalHeaderStyled>
-                <ModalBodyStyled className="max-h-[70vh] overflow-y-auto pr-1">
+                <ModalHeaderStyled className="flex flex-col items-center font-semibold text-3xl">
+                    {t("common.edit_user")}
+                </ModalHeaderStyled>
+                <ModalBody className="max-h-[70vh] overflow-y-auto">
                     <form onSubmit={formik.handleSubmit} className="flex flex-col gap-6">
                         {/* // === Name === */}
                         <div className="grid gap-4 md:grid-cols-2">
@@ -145,7 +147,7 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
                             />
                         </div>
 
-                         {/* ==== Contact ==== */}
+                        {/* ==== Contact ==== */}
                         <InputStyled
                             label={t("user.phone")}
                             variant="bordered"
@@ -243,8 +245,8 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
                                         <ImageStyled
                                             src={citizenUrl}
                                             alt={t("user.citizen_identity")}
-                                            width={360}
-                                            height={220}
+                                            width={400}
+                                            height={250}
                                             className="max-h-60 w-full rounded-lg border border-dashed border-gray-200 object-cover"
                                         />
                                     ) : null}
@@ -275,8 +277,8 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
                                         <ImageStyled
                                             src={licenseUrl}
                                             alt={t("user.driver_license")}
-                                            width={360}
-                                            height={220}
+                                            width={400}
+                                            height={250}
                                             className="max-h-60 w-full rounded-lg border border-dashed border-gray-200 object-cover"
                                         />
                                     ) : null}
@@ -284,7 +286,7 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
                             </div>
                         </div>
                     ) : null}
-                </ModalBodyStyled>
+                </ModalBody>
                 <ModalFooterStyled>
                     <ButtonStyled
                         className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"

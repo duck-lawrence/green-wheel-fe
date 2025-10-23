@@ -41,15 +41,13 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
     const {
         data: stations,
         isLoading: isGetStationsLoading,
-        error: getStationsError,
-        isError: isGetStationsError
+        error: getStationsError
     } = useGetAllStations()
 
     const {
         data: vehicleSegments,
         isLoading: isGetVehicleSegmentsLoading,
-        error: getVehicleSegmentsError,
-        isError: isGetVehicleSegmentsError
+        error: getVehicleSegmentsError
     } = useGetAllVehicleSegments()
 
     // manage filter store
@@ -102,7 +100,6 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
     const { refetch } = useSearchVehicleModels({
         query: filter
     })
-
     const handleSearch = useCallback(
         async (params: VehicleFilterReq) => {
             setFilter(params)
@@ -172,12 +169,12 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
         validateOnChange: false,
         validateOnBlur: false,
         validateOnMount: true,
-        onSubmit: () => {
+        onSubmit: async () => {
             setStationId(formik.values.stationId)
             setSegmentId(formik.values.segmentId)
             setStartDate(formik.values.startDate)
             setEndDate(formik.values.endDate)
-            handleSearch(formik.values)
+            await handleSearch(formik.values)
             formik.setSubmitting(false)
         }
     })
@@ -197,9 +194,9 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
 
     if (
         isGetStationsLoading ||
-        isGetStationsError ||
+        getStationsError ||
         isGetVehicleSegmentsLoading ||
-        isGetVehicleSegmentsError
+        getVehicleSegmentsError
     )
         return <Spinner />
 

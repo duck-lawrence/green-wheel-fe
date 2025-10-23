@@ -16,6 +16,12 @@ export const useInvalidateMeQuery = () => {
     return () => queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ME })
 }
 
+export const useRemoveMeQuery = () => {
+    const queryClient = useQueryClient()
+
+    return () => queryClient.removeQueries({ queryKey: QUERY_KEYS.ME })
+}
+
 export const useGetMe = ({ enabled = true }: { enabled?: boolean } = {}) => {
     const query = useQuery({
         queryKey: QUERY_KEYS.ME,

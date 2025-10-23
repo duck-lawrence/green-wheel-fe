@@ -146,6 +146,8 @@
         "driver_license_not_found": "Driver license not found",
         "driver_license_duplicate": "This driver license already exists",
 
+        "station_require": "Station is required",
+
         "unauthorized": "Unauthorized",
         "do_not_have_permission": "Permission denied",
         "invalid_token": "Invalid token",
@@ -157,6 +159,8 @@
         "profile": "Profile",
         "rental_contracts": "Rental Contract",
         "my_profile": "My Profile",
+        "create_staff": "Create new staff",
+        "create_anonymous": "Create anonymous user",
         "edit_information": "Edit Information",
         "enter_required_info": "Please enter required information in profile to continue booking"
     },

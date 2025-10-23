@@ -15,12 +15,17 @@ interface BookingActions {
     setSegmentId: (id?: string) => void
     setStartDate: (date?: string) => void
     setEndDate: (date?: string) => void
-    setBookingFilter: (
-        station?: string,
-        segment?: string,
-        startDate?: string,
+    setBookingFilter: ({
+        stationId,
+        segmentId,
+        startDate,
+        endDate
+    }: {
+        stationId?: string
+        segmentId?: string
+        startDate?: string
         endDate?: string
-    ) => void
+    }) => void
     clearBookingFilter: () => void
     setFilteredVehicleModels: (filteredVehicleModels: VehicleModelViewRes[]) => void
 }
@@ -41,10 +46,20 @@ export const useBookingFilterStore = create<BookingState & BookingActions>()(
             setStartDate: (date) => set({ startDate: date }),
             setEndDate: (date) => set({ endDate: date }),
 
-            setBookingFilter: (station, segment, startDate, endDate) =>
+            setBookingFilter: ({
+                stationId,
+                segmentId,
+                startDate,
+                endDate
+            }: {
+                stationId?: string
+                segmentId?: string
+                startDate?: string
+                endDate?: string
+            }) =>
                 set({
-                    stationId: station,
-                    segmentId: segment,
+                    stationId: stationId,
+                    segmentId: segmentId,
                     startDate: startDate,
                     endDate: endDate
                 }),

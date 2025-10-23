@@ -1,4 +1,6 @@
 import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
+import { PaginationParams } from "@/models/common/request"
+import { PageResult } from "@/models/common/response"
 import {
     ContractQueryParams,
     CreateRentalContractManualReq,
@@ -20,17 +22,37 @@ export const rentalContractApi = {
             await axiosInstance.post("/rental-contracts/manual", req)
         }),
 
-    getAll: (query: ContractQueryParams) =>
-        requestWrapper<RentalContractViewRes[]>(async () => {
-            const params = buildQueryParams(query)
+    getAll: ({
+        query,
+        pagination = {}
+    }: {
+        query: ContractQueryParams
+        pagination: PaginationParams
+    }) =>
+        requestWrapper<PageResult<RentalContractViewRes>>(async () => {
+            const params = {
+                ...buildQueryParams(query),
+                ...buildQueryParams(pagination)
+            }
 
             const res = await axiosInstance.get("/rental-contracts", { params })
             return res.data
         }),
 
-    getMyContract: ({ status }: { status?: RentalContractStatus }) =>
-        requestWrapper<RentalContractViewRes[]>(async () => {
-            const res = await axiosInstance.get("/rental-contracts/me", { params: { status } })
+    getMyContract: ({
+        status,
+        pagination = {}
+    }: {
+        status?: RentalContractStatus
+        pagination: PaginationParams
+    }) =>
+        requestWrapper<PageResult<RentalContractViewRes>>(async () => {
+            const params = {
+                status,
+                ...buildQueryParams(pagination)
+            }
+
+            const res = await axiosInstance.get("/rental-contracts/me", { params })
             return res.data
         }),
 

@@ -1,60 +1,36 @@
 "use client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { QUERY_KEYS } from "@/constants/queryKey"
-import {
-    CreateStaffReq,
-    StaffReq,
-    UserFilterParams,
-    UserUpdateReq
-} from "@/models/user/schema/request"
+import { StaffReq, UserFilterParams, UserUpdateReq } from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { userApi } from "@/services/userApi"
 import { useTranslation } from "react-i18next"
 import toast from "react-hot-toast"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
-import { BackendError } from "@/models/common/response"
+import { BackendError, PageResult } from "@/models/common/response"
 import axiosInstance from "@/utils/axios"
 import { requestWrapper } from "@/utils/helpers/axiosHelper"
 import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
 import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
+import { PaginationParams } from "@/models/common/request"
 
 export const useCreateNewUser = ({
+    params,
+    pagination = {},
     onSuccess,
     onError
 }: {
+    params: UserFilterParams
+    pagination: PaginationParams
     onSuccess?: () => void
     onError?: () => void
-} = {}) => {
+}) => {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: userApi.create,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
-            onSuccess?.()
-            toast.success(t("success.create"))
-        },
-        onError: (error: BackendError) => {
-            onError?.()
-            toast.error(translateWithFallback(t, error.detail))
-        }
-    })
-}
-
-export const useCreateStaff = ({
-    onSuccess,
-    onError
-}: {
-    onSuccess?: () => void
-    onError?: () => void
-} = {}) => {
-    const { t } = useTranslation()
-    const queryClient = useQueryClient()
-
-    return useMutation({
-        mutationFn: (payload: CreateStaffReq) => userApi.createStaff(payload),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
+            queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.USERS, params, pagination] })
             onSuccess?.()
             toast.success(t("success.create"))
         },
@@ -94,19 +70,24 @@ export const useUpdateUser = ({
 
 export const useGetAllUsers = ({
     params,
+    pagination = {},
     enabled = true
 }: {
     params: UserFilterParams
-    // params: Record<string, unknown>
+    pagination: PaginationParams
     enabled?: boolean
 }) => {
     const queryClient = useQueryClient()
 
     return useQuery({
-        queryKey: [...QUERY_KEYS.USERS, params],
-        queryFn: () => userApi.getAll(params),
+        queryKey: [...QUERY_KEYS.USERS, params, pagination],
+        queryFn: () => userApi.getAll({ query: params, pagination }),
         initialData: () => {
-            return queryClient.getQueryData<UserProfileViewRes[]>([...QUERY_KEYS.USERS, params])
+            return queryClient.getQueryData<PageResult<UserProfileViewRes>>([
+                ...QUERY_KEYS.USERS,
+                params,
+                pagination
+            ])
         },
         enabled
     })

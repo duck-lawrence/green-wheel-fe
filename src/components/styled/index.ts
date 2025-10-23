@@ -42,8 +42,5 @@ export * from "./SliderStyled"
 export * from "./SpinnerStyled"
 
 export * from "./TableStyled"
-export * from "./TableUserManagement"
-export * from "./TableVehicleManagement"
-export * from "./TableStaffManagement"
 export * from "./TextareaStyled"
 export * from "./TrendCardStyled"
