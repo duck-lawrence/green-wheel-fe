@@ -1,11 +1,15 @@
 import { RentalContractStatus } from "@/constants/enum"
 
 export type CreateRentalContractReq = {
-    customerId?: string
     modelId: string
     startDate: string
     endDate: string
     stationId: string
+    notes: string
+}
+
+export type CreateRentalContractManualReq = CreateRentalContractReq & {
+    customerId: string
 }
 
 export type HandoverContractReq = {
@@ -19,4 +23,5 @@ export type ContractQueryParams = {
     phone?: string
     citizenIdentityNumber?: string
     driverLicenseNumber?: string
+    stationId?: string
 }

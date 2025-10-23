@@ -112,7 +112,7 @@ export function Sidebar({ tabs, selectedKey, className = "" }: SidebarProps) {
 
     return (
         <LayoutGroup id="account-sidebar">
-            <div className="flex w-full flex-col pr-4 md:w-auto md:flex-shrink-0">
+            <div className="flex w-full flex-col md:w-auto md:flex-shrink-0">
                 <div
                     className={cn(
                         "relative flex w-full flex-col gap-2 rounded-2xl bg-white p-3 shadow-lg shadow-slate-200/70 md:min-w-3xs",

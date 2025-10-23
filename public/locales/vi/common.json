@@ -47,7 +47,7 @@
         "phone_verification": "Vui lòng xác thực số điện thoại để sử dụng các dịch vụ của Green Wheel",
 
         "email": "Email",
-        "email_placeholder": "wheel@fpt.edu.vn",
+        "email_placeholder": "your.email@gmail.com",
 
         "pickup_location": "Nơi nhận xe",
         "select_pickup_location": "Chọn địa chỉ chi tiết",
@@ -81,5 +81,5 @@
         "payment": "Thanh toán",
         "price_includes_vat": "*Giá thuê xe đã bao gồm VAT.",
         "pay": "Thanh toán"
-  }
+    }
 }

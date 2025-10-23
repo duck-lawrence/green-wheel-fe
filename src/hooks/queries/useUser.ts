@@ -4,7 +4,7 @@ import { QUERY_KEYS } from "@/constants/queryKey"
 import {
     CreateStaffReq,
     StaffReq,
-    UserFilterReq,
+    UserFilterParams,
     UserUpdateReq
 } from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
@@ -96,7 +96,7 @@ export const useGetAllUsers = ({
     params,
     enabled = true
 }: {
-    params: UserFilterReq
+    params: UserFilterParams
     // params: Record<string, unknown>
     enabled?: boolean
 }) => {
@@ -286,7 +286,7 @@ export const useUploadDriverLicenseById = ({
     })
 }
 
-export const useUpdateDriverLicense = ({
+export const useUpdateDriverLicenseById = ({
     onSuccess,
     onError
 }: {
@@ -319,7 +319,7 @@ export const useUpdateDriverLicense = ({
     })
 }
 
-export const useDeleteDriverLicense = ({
+export const useDeleteDriverLicenseById = ({
     onSuccess,
     onError
 }: {

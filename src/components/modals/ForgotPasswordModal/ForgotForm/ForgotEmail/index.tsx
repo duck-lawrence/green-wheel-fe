@@ -10,6 +10,7 @@ import {
     useLoginDiscloresureSingleton
 } from "@/hooks"
 import { Link } from "@heroui/react"
+import { EMAIL_REGEX } from "@/constants/regex"
 
 interface FortgotEmailProps {
     email: string
@@ -43,7 +44,7 @@ export function FortgotEmail({ email, setEmail, onSuccess }: FortgotEmailProps) 
         validationSchema: Yup.object({
             email: Yup.string()
                 .required(t("user.email_require"))
-                .matches(/^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/, t("user.invalid_email"))
+                .matches(EMAIL_REGEX, t("user.invalid_email"))
         }),
         onSubmit: handleForgot
     })

@@ -3,22 +3,24 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { FunnelSimple } from "@phosphor-icons/react"
-import {EditStaffModal, NewStaffModal} from "@/components/modals/StaffModals"
+import { EditStaffModal, NewStaffModal } from "@/components/modals/StaffModals"
 import {
     ButtonStyled,
     CitizenIdentityPreviewModal,
     DriverLicensePreviewModal,
     FilterTypeOption,
     FilterTypeStyle,
-    InputStyled,
     PaginationStyled,
+    InputStyled,
     StaffUserManagement
 } from "@/components"
 import type { Selection } from "@heroui/react"
-import { useGetAllStations, useGetAllUsers } from "@/hooks"
-import { ROLE_STAFF } from "@/constants/constants"
+import { useGetAllStaffs, useGetAllStations } from "@/hooks"
 import { StationViewRes } from "@/models/station/schema/response"
 import { UserProfileViewRes } from "@/models/user/schema/response"
+import { UserFilterParams } from "@/models/user/schema/request"
+import { RoleName } from "@/constants/enum"
+import { P } from "node_modules/framer-motion/dist/types.d-DsEeKk6G"
 
 const PAGE_SIZE = 10
 
@@ -29,6 +31,8 @@ type DocumentPreviewState = {
 
 export default function StaffManagementPage() {
     const { t } = useTranslation()
+    const { toFullName } = useName()
+
     const [searchInput, setSearchInput] = useState("")
     const [debouncedSearch, setDebouncedSearch] = useState("")
     const [stationFilter, setStationFilter] = useState<string | undefined>()
@@ -53,34 +57,26 @@ export default function StaffManagementPage() {
         return () => window.clearTimeout(timeoutId)
     }, [searchInput])
 
-    const staffQueryParams = useMemo(
-        () => ({
-            role: ROLE_STAFF.toLowerCase()
-        }),
-        []
-    )
+    const staffQueryParams = useMemo(() => {
+        const trimmedSearch = debouncedSearch.trim()
+        return {
+            name: trimmedSearch ? trimmedSearch : undefined,
+            stationId: stationFilter
+        }
+    }, [debouncedSearch, stationFilter])
 
-    const staffQuery = useGetAllUsers({
+    const staffQuery = useGetAllStaffs({
         params: staffQueryParams,
         enabled: true
     })
 
-    const normalizedSearch = useMemo(
-        () => debouncedSearch.trim().toLowerCase(),
-        [debouncedSearch]
-    )
+    const normalizedSearch = useMemo(() => debouncedSearch.trim().toLowerCase(), [debouncedSearch])
 
     const staffList = useMemo(() => {
         const items = staffQuery.data ?? []
         return items.filter((staff) => {
-            const roleName = staff.role?.name?.toLowerCase()
-            if (roleName !== ROLE_STAFF.toLowerCase()) {
-                return false
-            }
-
             const matchesStation =
-                !stationFilter ||
-                stationFilter === (staff.station?.id ?? staff.stationId ?? "")
+                !stationFilter || stationFilter === (staff.station?.id ?? "")
 
             if (!matchesStation) {
                 return false
@@ -91,17 +87,14 @@ export default function StaffManagementPage() {
             }
 
             const fullName = (
-                staff.name ??
                 [staff.firstName, staff.lastName].filter(Boolean).join(" ").trim()
             ).toLowerCase()
             const email = (staff.email ?? "").toLowerCase()
             const phone = (staff.phone ?? "").toLowerCase()
 
-            return [fullName, email, phone].some((value) =>
-                value.includes(normalizedSearch)
-            )
+            return [fullName, email, phone].some((value) => value.includes(normalizedSearch))
         })
-    }, [normalizedSearch, staffQuery.data, stationFilter])
+    }, [normalizedSearch, staffQuery.data, stationFilter, toFullName])
 
     const totalItems = staffList.length
 
@@ -134,21 +127,18 @@ export default function StaffManagementPage() {
                 setPage(1)
                 return
             }
-
-            const values = Array.from(keys)
-            if (values.length === 0) {
-                setStationFilter(undefined)
-                setPage(1)
-                return
-            }
-
-            const selection = values[0]?.toString()
-            const nextStation = selection === "all" ? undefined : selection
-            setStationFilter(nextStation)
+            const [value] = Array.from(keys)
+            const nextStation = value != null ? value.toString() : undefined
+            setStationFilter(nextStation || undefined)
             setPage(1)
-        },
-        []
-    )
+            return
+        }
+
+        const selection = values[0]?.toString()
+        const nextStation = selection === "all" ? undefined : selection
+        setStationFilter(nextStation)
+        setPage(1)
+    }, [])
 
     const handlePreviewDocument = useCallback((payload: DocumentPreviewState) => {
         setPreviewDocument(payload)
@@ -197,12 +187,20 @@ export default function StaffManagementPage() {
     const renderStaffName = useCallback(
         (staff: UserProfileViewRes) => {
             const displayName =
-                staff.name ??
                 [staff.firstName, staff.lastName].filter(Boolean).join(" ").trim() ??
                 ""
             return displayName || t("staff_management.unknown_name")
         },
-        [t]
+        [t, toFullName]
+    )
+
+    const stationOptions = useMemo(
+        () =>
+            stations.map((station) => ({
+                key: station.id,
+                label: station.name
+            })),
+        [stations]
     )
 
     const stationMap = useMemo(() => {
@@ -215,7 +213,7 @@ export default function StaffManagementPage() {
     const getStationName = useCallback(
         (staff: UserProfileViewRes) => {
             return (
-                stationMap[staff.station?.id ?? staff.stationId ?? ""]?.name ??
+                stationMap[staff.station?.id ?? ""]?.name ??
                 staff.station?.name ??
                 t("staff_management.unknown_station")
             )
@@ -229,22 +227,20 @@ export default function StaffManagementPage() {
                 <h1 className="text-3xl font-bold text-slate-900">
                     {t("staff_management.page_title")}
                 </h1>
-                <p className="text-sm text-slate-500">
+                {/* <p className="text-sm text-slate-500">
                     {t("staff_management.page_subtitle")}
-                </p>
+                </p> */}
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 shadow-sm">
                 <div className="mb-4 flex items-center gap-2 text-slate-700">
-                    <FunnelSimple size={22}  className="text-primary" />
-                    <h2 className="text-lg font-semibold">
-                        {t("staff_management.filter_title")}
-                    </h2>
+                    <FunnelSimple size={22} className="text-primary" />
+                    <h2 className="text-lg font-semibold">{t("staff_management.filter_title")}</h2>
                 </div>
 
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
                     <div className="flex flex-1 flex-col gap-3 sm:flex-row">
-                        <InputStyled
+                     <InputStyled
                             label={t("staff_management.filter_keyword")}
                             placeholder={t("staff_management.filter_keyword_placeholder")}
                             value={searchInput}
@@ -258,25 +254,22 @@ export default function StaffManagementPage() {
                             isDisabled={isInitialLoading && staffList.length === 0}
                         />
 
-                        <FilterTypeStyle
+                        <FilterTypeStyle<string>
                             label={t("staff_management.filter_station")}
                             placeholder={t("staff_management.filter_station_placeholder")}
                             selectedKeys={
                                 stationFilter
                                     ? new Set([stationFilter])
-                                    : new Set<string>(["all"])
+                                    : new Set<string>()
                             }
                             disallowEmptySelection={false}
-                            showIcon={false}
+                            isClearable
                             onSelectionChange={handleStationChange}
                             isDisabled={stations.length === 0}
                         >
-                            <FilterTypeOption key="all">
-                                {t("staff_management.all_stations")}
-                            </FilterTypeOption>
-                            {stations.map((station) => (
-                                <FilterTypeOption key={station.id}>
-                                    {station.name}
+                            {stationOptions.map((option) => (
+                                <FilterTypeOption key={option.key}>
+                                    {option.label}
                                 </FilterTypeOption>
                             ))}
                         </FilterTypeStyle>

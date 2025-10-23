@@ -17,7 +17,7 @@ import * as Yup from "yup"
 import { useTranslation } from "react-i18next"
 import { AutocompleteItem } from "@heroui/react"
 import { StationViewRes } from "@/models/station/schema/response"
-import { NAME_REGEX, PHONE_REGEX } from "@/constants/regex"
+import { EMAIL_REGEX, NAME_REGEX, PHONE_REGEX } from "@/constants/regex"
 import { useCreateStaff, useDay } from "@/hooks"
 import { Sex } from "@/constants/enum"
 import { SexLabels } from "@/constants/labels"
@@ -40,8 +40,6 @@ type NewStaffModalProps = {
     stations: StationViewRes[]
     onCreated?: () => void
 }
-
-const EMAIL_REGEX = /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
 
 const INITIAL_VALUES: NewStaffFormValues = {
     firstName: "",
@@ -88,9 +86,7 @@ export function NewStaffModal({ isOpen, onClose, stations, onCreated }: NewStaff
             phone: Yup.string()
                 .required(t("staff_management.form_phone_required"))
                 .matches(PHONE_REGEX, t("staff_management.form_phone_invalid")),
-            sex: Yup.number()
-                .nullable()
-                .required(t("user.sex_require")),
+            sex: Yup.number().nullable().required(t("user.sex_require")),
             dateOfBirth: Yup.string().required(t("user.date_of_birth_require")),
             stationId: Yup.string().required(t("staff_management.form_station_required"))
         }),

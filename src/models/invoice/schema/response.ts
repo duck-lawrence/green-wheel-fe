@@ -19,9 +19,10 @@ export type InvoiceViewRes = {
 
 export type InvoiceItemViewRes = {
     id: string
+    description?: string
     quantity: number
     unitPrice: number
     subTotal: number
     type: InvoiceItemType
-    checkListItem?: VehicleChecklistItemViewRes
+    checklistItem?: VehicleChecklistItemViewRes
 }

@@ -1,6 +1,6 @@
 "use client"
-import React, { useCallback, useMemo } from "react"
-import { Accordion, AccordionItem, Chip } from "@heroui/react"
+import React, { useCallback, useMemo, useState } from "react"
+import { Accordion, AccordionItem, Chip, cn } from "@heroui/react"
 import { InvoiceStatus, InvoiceType, PaymentMethod, RentalContractStatus } from "@/constants/enum"
 import { InvoiceStatusLabels } from "@/constants/labels"
 import { useGetMe, usePayInvoice } from "@/hooks"
@@ -8,13 +8,15 @@ import { useTranslation } from "react-i18next"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { FRONTEND_API_URL } from "@/constants/env"
 import { usePathname } from "next/navigation"
-import { ROLE_CUSTOMER } from "@/constants/constants"
-import { ButtonStyled } from "@/components"
+import { ROLE_CUSTOMER, ROLE_STAFF } from "@/constants/constants"
+import { ButtonStyled, NumberInputStyled } from "@/components"
 
 export function InvoiceAccordion({
+    className = "",
     items,
     contractStatus
 }: {
+    className?: string
     items: {
         key: string
         ariaLabel: string
@@ -25,39 +27,29 @@ export function InvoiceAccordion({
     }[]
     contractStatus: RentalContractStatus
 }) {
-    // const renderStatusChip = (status: InvoiceStatus) => {
-    //     switch (status) {
-    //         case InvoiceStatus.Paid:
-    //             return (
-    //                 <Chip color="success" variant="flat" className="font-medium">
-    //                     {InvoiceStatusLabels[status]}
-    //                 </Chip>
-    //             )
-    //         case InvoiceStatus.Pending:
-    //             return (
-    //                 <Chip color="warning" variant="flat" className="font-medium">
-    //                     {InvoiceStatusLabels[status]}
-    //                 </Chip>
-    //             )
-    //         case InvoiceStatus.Cancelled:
-    //             return (
-    //                 <Chip color="danger" variant="flat" className="font-medium">
-    //                     {InvoiceStatusLabels[status]}
-    //                 </Chip>
-    //             )
-    //         default:
-    //             return null
-    //     }
-    // }
-
     const { t } = useTranslation()
     const pathName = usePathname()
     const payInvoiceMutation = usePayInvoice()
+    const [cashAmounts, setCashAmounts] = useState<Record<string, number | undefined>>({})
 
     const { data: user } = useGetMe()
-    const isCustomer = useMemo(() => {
-        return user?.role?.name === ROLE_CUSTOMER
+    const { isCustomer, isStaff } = useMemo(() => {
+        return {
+            isCustomer: user?.role?.name === ROLE_CUSTOMER,
+            isStaff: user?.role?.name === ROLE_STAFF
+        }
     }, [user])
+
+    const paymentButtons = useMemo(() => {
+        const buttons = []
+        if (isStaff) {
+            buttons.push({ method: PaymentMethod.Cash, label: t("enum.cash") })
+        }
+        if (isCustomer || isStaff) {
+            buttons.push({ method: PaymentMethod.MomoWallet, label: t("enum.momo_wallet") })
+        }
+        return buttons
+    }, [isCustomer, isStaff, t])
 
     const isPaidable = useCallback(
         ({
@@ -67,8 +59,6 @@ export function InvoiceAccordion({
             invoice: InvoiceViewRes
             contractStatus: RentalContractStatus
         }) => {
-            if (!isCustomer) return false
-
             const isPending = invoice.status === InvoiceStatus.Pending
 
             const isPaymentPendingType =
@@ -91,15 +81,24 @@ export function InvoiceAccordion({
                 isPending && (isPaymentPendingType || isActiveType || isOtherType || isReturnType)
             )
         },
-        [isCustomer]
+        []
     )
 
-    const handlePayment = async (invoiceId: string) => {
+    const handlePayment = async ({
+        id,
+        paymentMethod,
+        amount
+    }: {
+        id: string
+        paymentMethod: PaymentMethod
+        amount?: number
+    }) => {
         await payInvoiceMutation.mutateAsync({
-            invoiceId: invoiceId,
+            invoiceId: id,
             req: {
-                paymentMethod: PaymentMethod.MomoWallet,
-                fallbackUrl: FRONTEND_API_URL!.concat(pathName)
+                paymentMethod: paymentMethod,
+                fallbackUrl: FRONTEND_API_URL!.concat(pathName),
+                amount
             }
         })
     }
@@ -118,7 +117,7 @@ export function InvoiceAccordion({
         )
     }
     return (
-        <Accordion variant="splitted" className="w-full">
+        <Accordion variant="splitted" className={cn("w-full", className)}>
             {items
                 .sort((a, b) => a.invoice.type - b.invoice.type)
                 .map((val) => (
@@ -133,24 +132,50 @@ export function InvoiceAccordion({
                         }
                     >
                         {val.content}
-                        {val.invoice.total >= 0 &&
-                            isPaidable({
-                                invoice: val.invoice,
-                                contractStatus: contractStatus
-                            }) && (
-                                <div className="flex justify-end items-center gap-2 p-2">
-                                    <div className="mt-0 flex justify-center">
+                        <div className="flex flex-wrap gap-2 my-2 justify-end items-center">
+                            {val.invoice.total >= 0 &&
+                                isPaidable({
+                                    invoice: val.invoice,
+                                    contractStatus: contractStatus
+                                }) &&
+                                paymentButtons.map((button) => (
+                                    <div key={button.method} className="flex items-center gap-2">
+                                        {button.method === PaymentMethod.Cash && (
+                                            <NumberInputStyled
+                                                label={t("rental_contract.amount")}
+                                                minValue={val.invoice.total}
+                                                value={cashAmounts[val.invoice.id]}
+                                                onValueChange={(value) =>
+                                                    setCashAmounts((prev) => ({
+                                                        ...prev,
+                                                        [val.invoice.id]: value
+                                                    }))
+                                                }
+                                                labelPlacement="outside-left"
+                                                className="w-50 h-10"
+                                                hideStepper
+                                            />
+                                        )}
                                         <ButtonStyled
-                                            onPress={() => handlePayment(val.invoice.id)}
-                                            size="lg"
+                                            onPress={() =>
+                                                handlePayment({
+                                                    id: val.invoice.id,
+                                                    paymentMethod: button.method,
+                                                    amount:
+                                                        button.method === PaymentMethod.Cash
+                                                            ? cashAmounts[val.invoice.id]
+                                                            : undefined
+                                                })
+                                            }
+                                            size="md"
                                             color="primary"
-                                            className="btn-gradient px-12 py-3"
+                                            className="btn-gradient px-6 py-3"
                                         >
-                                            {t("enum.payment")}
+                                            {t("car_rental.pay")} {button.label}
                                         </ButtonStyled>
                                     </div>
-                                </div>
-                            )}
+                                ))}
+                        </div>
                     </AccordionItem>
                 ))}
         </Accordion>

@@ -1,3 +1,4 @@
+export * from "./AlertStyled"
 export * from "./AutocompleteStyle"
 export * from "./AvatarStyled"
 
@@ -30,6 +31,7 @@ export * from "./LogoStyled"
 export * from "./ModalStyled"
 
 export * from "./NavbarStyled"
+export * from "./NumberInputStyled"
 
 export * from "./PaginationStyle"
 
