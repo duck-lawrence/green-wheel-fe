@@ -33,6 +33,8 @@ export type UserFilterParams = {
     phone?: string
     citizenIdNumber?: string
     driverLicenseNumber?: string
+    // role?: string // Để lọc bên staff, chỉ hiển thị staff thôi 
+
 }
 
 export type StaffReq = {

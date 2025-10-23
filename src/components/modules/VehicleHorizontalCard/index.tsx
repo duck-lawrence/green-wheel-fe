@@ -2,7 +2,7 @@
 
 import React from "react"
 import { Button, Chip, Image, cn } from "@heroui/react"
-import { SteeringWheel, UsersThree } from "@phosphor-icons/react"
+import { SteeringWheel, UsersFour } from "@phosphor-icons/react"
 import { useTranslation } from "react-i18next"
 import { CardStyled } from "@/components"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
@@ -47,25 +47,15 @@ export function VehicleHorizontalCard({
     const unitLabel = t("vehicle_model.unit", "Unit")
 
     const typeSpec: SpecItem = {
-        icon: (
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
-                <SteeringWheel className="h-6 w-6" weight="duotone" />
-            </div>
-        ),
+        icon: <SteeringWheel className="h-5 w-5" weight="bold" />,
         label: t("vehicle_model.type_car_label", "Type car"),
-        value: segmentName,
-        className: "lg:items-start lg:text-left"
+        value: segmentName
     }
 
     const capacitySpec: SpecItem = {
-        icon: (
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
-                <UsersThree className="h-6 w-6" weight="duotone" />
-            </div>
-        ),
+        icon: <UsersFour className="h-5 w-5" weight="bold" />,
         label: t("vehicle_model.capacity_label", "Capacity"),
-        value: `${seatingCapacity} ${t("vehicle_model.seats", "seats")}`,
-        className: "lg:items-start lg:text-left"
+        value: `${seatingCapacity} ${t("vehicle_model.seats", "seats")}`
     }
 
     return (
@@ -123,20 +113,20 @@ export function VehicleHorizontalCard({
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-3">
+                <div className="flex flex-1 flex-col gap-4 lg:flex-row lg:items-center lg:gap-6">
                     <SpecColumn {...typeSpec} />
                     <SpecColumn {...capacitySpec} />
-                    <div className="flex min-w-[120px] flex-col items-center gap-2 text-center lg:items-start lg:text-left">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                            {t("vehicle_model.price_label", "Price")}
-                        </p>
-                        <p className="text-2xl font-bold text-slate-900">
-                            {formatCurrency(costPerDay)}
-                            <span className="ml-1 text-sm font-medium text-slate-500">
-                                /{t("vehicle_model.vnd_per_day", "days")}
-                            </span>
-                        </p>
-                    </div>
+                </div>
+                <div className="flex w-full max-w-[160px] flex-col items-center gap-2 text-center lg:ml-auto lg:items-end lg:text-right">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                        {t("vehicle_model.price_label", "Price")}
+                    </p>
+                    <p className="text-2xl font-bold text-slate-900">
+                        {formatCurrency(costPerDay)}
+                        <span className="ml-1 text-sm font-medium text-slate-500">
+                            /{t("vehicle_model.vnd_per_day", "days")}
+                        </span>
+                    </p>
                 </div>
 
                 {!readOnly && (
@@ -159,9 +149,14 @@ export default VehicleHorizontalCard
 function SpecColumn({ icon, label, value, className }: SpecItem) {
     return (
         <div
-            className={cn("min-w-[120px] flex flex-col items-center gap-2 text-center", className)}
+            className={cn(
+                "flex flex-1 flex-col items-center gap-2 text-center lg:items-start lg:text-left",
+                className
+            )}
         >
-            {icon}
+            <div className="flex h-10 w-10 items-center justify-center text-emerald-600">
+                {icon}
+            </div>
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{label}</p>
             <p className="text-sm font-semibold text-slate-900">{value}</p>
         </div>

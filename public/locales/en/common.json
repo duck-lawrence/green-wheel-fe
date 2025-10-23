@@ -691,7 +691,7 @@
         "page_title": "Staff Management",
         "page_subtitle": "Create, update, and monitor staff assignments across stations.",
         "filter_title": "Filters",
-        "filter_keyword": "Keyword",
+        "filter_keyword": "Search",
         "filter_keyword_placeholder": "Search by name or phone number",
         "filter_station": "Station",
         "filter_station_placeholder": "Select station",
@@ -750,6 +750,19 @@
         "signed_by_customer": "Customer signature",
         "signed_by_staff_require": "Staff must sign",
         "signed_by_customer_require": "Customer must sign"
+    },
+    "fleet": {
+        "page_title": "Fleet Management",
+        "page_subtitle": "Browse, filter, and manage vehicle models available in the fleet.",
+        "filter_title": "Filters",
+        "search_placeholder": "Search vehicle model, brand, etc",
+        "filter_car_type": "Segment",
+        "filter_status": "Status",
+        "status_available": "Available",
+        "status_out_of_stock": "Out of stock",
+        "add_unit_button": "Add unit",
+        "loading": "Loading vehicle models...",
+        "empty_state": "No vehicles found."
     },
     "reaview": {
         "create": "Create feedback successful"

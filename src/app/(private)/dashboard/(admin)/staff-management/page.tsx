@@ -10,13 +10,12 @@ import {
     DriverLicensePreviewModal,
     FilterTypeOption,
     FilterTypeStyle,
-    InputStyled,
     PaginationStyled,
+    InputStyled,
     StaffUserManagement
 } from "@/components"
 import type { Selection } from "@heroui/react"
-import { useGetAllStations, useGetAllUsers, useName } from "@/hooks"
-import { ROLE_STAFF } from "@/constants/constants"
+import { useGetAllStaffs, useGetAllStations } from "@/hooks"
 import { StationViewRes } from "@/models/station/schema/response"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { UserFilterParams } from "@/models/user/schema/request"
@@ -58,14 +57,15 @@ export default function StaffManagementPage() {
         return () => window.clearTimeout(timeoutId)
     }, [searchInput])
 
-    const staffQueryParams = useMemo<UserFilterParams>(
-        () => ({
-            roleName: RoleName.Staff
-        }),
-        []
-    )
+    const staffQueryParams = useMemo(() => {
+        const trimmedSearch = debouncedSearch.trim()
+        return {
+            name: trimmedSearch ? trimmedSearch : undefined,
+            stationId: stationFilter
+        }
+    }, [debouncedSearch, stationFilter])
 
-    const staffQuery = useGetAllUsers({
+    const staffQuery = useGetAllStaffs({
         params: staffQueryParams,
         enabled: true
     })
@@ -75,12 +75,8 @@ export default function StaffManagementPage() {
     const staffList = useMemo(() => {
         const items = staffQuery.data ?? []
         return items.filter((staff) => {
-            const roleName = staff.role?.name?.toLowerCase()
-            if (roleName !== ROLE_STAFF.toLowerCase()) {
-                return false
-            }
-
-            const matchesStation = !stationFilter || stationFilter === (staff.station?.id ?? "")
+            const matchesStation =
+                !stationFilter || stationFilter === (staff.station?.id ?? "")
 
             if (!matchesStation) {
                 return false
@@ -90,10 +86,9 @@ export default function StaffManagementPage() {
                 return true
             }
 
-            const fullName = toFullName({
-                firstName: staff.firstName,
-                lastName: staff.lastName
-            })
+            const fullName = (
+                [staff.firstName, staff.lastName].filter(Boolean).join(" ").trim()
+            ).toLowerCase()
             const email = (staff.email ?? "").toLowerCase()
             const phone = (staff.phone ?? "").toLowerCase()
 
@@ -125,16 +120,16 @@ export default function StaffManagementPage() {
         })
     }, [searchInput])
 
-    const handleStationChange = useCallback((keys: Selection) => {
-        if (keys === "all") {
-            setStationFilter(undefined)
-            setPage(1)
-            return
-        }
-
-        const values = Array.from(keys)
-        if (values.length === 0) {
-            setStationFilter(undefined)
+    const handleStationChange = useCallback(
+        (keys: Selection) => {
+            if (keys === "all") {
+                setStationFilter(undefined)
+                setPage(1)
+                return
+            }
+            const [value] = Array.from(keys)
+            const nextStation = value != null ? value.toString() : undefined
+            setStationFilter(nextStation || undefined)
             setPage(1)
             return
         }
@@ -191,13 +186,21 @@ export default function StaffManagementPage() {
 
     const renderStaffName = useCallback(
         (staff: UserProfileViewRes) => {
-            const displayName = toFullName({
-                firstName: staff.firstName,
-                lastName: staff.lastName
-            })
+            const displayName =
+                [staff.firstName, staff.lastName].filter(Boolean).join(" ").trim() ??
+                ""
             return displayName || t("staff_management.unknown_name")
         },
         [t, toFullName]
+    )
+
+    const stationOptions = useMemo(
+        () =>
+            stations.map((station) => ({
+                key: station.id,
+                label: station.name
+            })),
+        [stations]
     )
 
     const stationMap = useMemo(() => {
@@ -224,7 +227,9 @@ export default function StaffManagementPage() {
                 <h1 className="text-3xl font-bold text-slate-900">
                     {t("staff_management.page_title")}
                 </h1>
-                <p className="text-sm text-slate-500">{t("staff_management.page_subtitle")}</p>
+                {/* <p className="text-sm text-slate-500">
+                    {t("staff_management.page_subtitle")}
+                </p> */}
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 shadow-sm">
@@ -235,7 +240,7 @@ export default function StaffManagementPage() {
 
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
                     <div className="flex flex-1 flex-col gap-3 sm:flex-row">
-                        <InputStyled
+                     <InputStyled
                             label={t("staff_management.filter_keyword")}
                             placeholder={t("staff_management.filter_keyword_placeholder")}
                             value={searchInput}
@@ -249,22 +254,23 @@ export default function StaffManagementPage() {
                             isDisabled={isInitialLoading && staffList.length === 0}
                         />
 
-                        <FilterTypeStyle
+                        <FilterTypeStyle<string>
                             label={t("staff_management.filter_station")}
                             placeholder={t("staff_management.filter_station_placeholder")}
                             selectedKeys={
-                                stationFilter ? new Set([stationFilter]) : new Set<string>(["all"])
+                                stationFilter
+                                    ? new Set([stationFilter])
+                                    : new Set<string>()
                             }
                             disallowEmptySelection={false}
-                            showIcon={false}
+                            isClearable
                             onSelectionChange={handleStationChange}
                             isDisabled={stations.length === 0}
                         >
-                            <FilterTypeOption key="all">
-                                {t("staff_management.all_stations")}
-                            </FilterTypeOption>
-                            {stations.map((station) => (
-                                <FilterTypeOption key={station.id}>{station.name}</FilterTypeOption>
+                            {stationOptions.map((option) => (
+                                <FilterTypeOption key={option.key}>
+                                    {option.label}
+                                </FilterTypeOption>
                             ))}
                         </FilterTypeStyle>
                     </div>
