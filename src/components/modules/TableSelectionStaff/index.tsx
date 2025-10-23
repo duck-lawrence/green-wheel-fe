@@ -2,14 +2,19 @@ import TableSelectionStyled from "@/components/styled/TableSelectionStyled"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import React, { useState } from "react"
 
-export default function TableSelectionStaff({
-    staffs,
-    onChangeSelected
-}: {
+type TableSelectionStaffProps = {
+    selectionBehavior?: "toggle" | "replace"
     staffs: UserProfileViewRes[]
     onChangeSelected?: (selected: string[]) => void
-}) {
+}
+
+export default function TableSelectionStaff({
+    selectionBehavior,
+    staffs,
+    onChangeSelected
+}: TableSelectionStaffProps) {
     const [selectedSatffIds, setSelectedStaffIds] = useState<string[]>([])
+
     const rows = staffs.map((item) => ({
         key: item.id,
         id: item.id,
@@ -45,6 +50,7 @@ export default function TableSelectionStaff({
                 columns={columns}
                 selectedKeys={selectedSatffIds}
                 onSelectionChange={handleSelectionChange}
+                selectionBehavior={selectionBehavior}
             ></TableSelectionStyled>
         </>
     )

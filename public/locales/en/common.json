@@ -177,7 +177,8 @@
         "welcome": "Welcome to Green Wheel",
         "slogan": "Green Rides. Brighter Future.",
         "description": "Professional self-drive car rental service to meet all your personal travel needs",
-        "view_details": "View details"
+        "view_details": "View details",
+        "learn_more": "Learn more"
     },
     "navbar": {
         "home": "Home",
@@ -678,7 +679,8 @@
         "assigned_vehicle": "Assigned vehicles",
         "station": "Station",
         "description": "Description",
-        "dispatch_table": "Dispatch table"
+        "dispatch_table": "Dispatch table",
+        "create": "Create"
     },
     "document_preview": {
         "upload_image": "Upload image",
@@ -751,6 +753,17 @@
         "signed_by_staff_require": "Staff must sign",
         "signed_by_customer_require": "Customer must sign"
     },
+    "review": {
+        "create_successfull": "Create feedback successful",
+        "rating_required": "Rating required",
+        "create_feedback": "Create feedback",
+        "customer_review": "Customer reviews",
+        "station_required": "Station required",
+        "content_required": "content required",
+        "submit": "Submit review",
+        "content": "Content",
+        "rating": "Rating",
+        "create_title": "Create feedback"
     "fleet": {
         "page_title": "Fleet Management",
         "page_subtitle": "Browse, filter, and manage vehicle models available in the fleet.",

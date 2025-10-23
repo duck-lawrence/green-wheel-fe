@@ -2,13 +2,17 @@ import TableSelectionStyled from "@/components/styled/TableSelectionStyled"
 import { VehicleViewRes } from "@/models/vehicle/schema/response"
 import React, { Key, useState } from "react"
 
-export default function TableSelectionVehicle({
-    vehicles,
-    onChangeSelected
-}: {
+type TableSelectionVehicleProps = {
+    selectionBehavior?: "toggle" | "replace"
     vehicles: VehicleViewRes[]
     onChangeSelected?: (selected: string[]) => void
-}) {
+}
+
+export default function TableSelectionVehicle({
+    selectionBehavior,
+    vehicles,
+    onChangeSelected
+}: TableSelectionVehicleProps) {
     const [selectedKeys, setSelectedKeys] = useState<Key[]>([])
     const rows = vehicles.map((item) => ({
         key: item.id,
@@ -44,6 +48,7 @@ export default function TableSelectionVehicle({
                 columns={columns}
                 selectedKeys={selectedKeys as any}
                 onSelectionChange={handleSelectionChange}
+                selectionBehavior={selectionBehavior}
             ></TableSelectionStyled>
         </>
     )
