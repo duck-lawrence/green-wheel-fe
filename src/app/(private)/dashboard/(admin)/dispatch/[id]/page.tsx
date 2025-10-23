@@ -31,7 +31,7 @@ export default function DispatchDetailPage() {
     )
 
     //data dispatch
-    const dispatchStaff = dispatchDetail?.dispatchRequestStaffs.map(({ staff }) => staff) ?? []
+    const dispatchStaff = dispatchDetail?.dispatchRequestStaffs.map((item) => item.staff) ?? []
     const dispatchVehicle =
         dispatchDetail?.dispatchRequestVehicles.map(({ vehicle }) => vehicle) ?? []
 
@@ -90,6 +90,16 @@ export default function DispatchDetailPage() {
                             readOnly
                         />
                     </div>
+                </div>
+            </SectionStyled>
+
+            <SectionStyled title={t("dispatch.description")}>
+                <div className="flex flex-col gap-3">
+                    <InputStyled
+                        label={t("dispatch.description")}
+                        value={dispatchDetail?.description}
+                        readOnly
+                    />
                 </div>
             </SectionStyled>
 

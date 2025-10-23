@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation"
 import React from "react"
 import { useTranslation } from "react-i18next"
 
-export default function DispatchAllPage() {
+export default function DispatchPage() {
     const router = useRouter()
     const { t } = useTranslation()
     const { data: user } = useGetMe()
