@@ -764,6 +764,7 @@
         "content": "Content",
         "rating": "Rating",
         "create_title": "Create feedback"
+    },
     "fleet": {
         "page_title": "Fleet Management",
         "page_subtitle": "Browse, filter, and manage vehicle models available in the fleet.",
