@@ -45,30 +45,38 @@ export default function HomePage() {
     }, [params, t, router])
 
     return (
-        <main className="bg-[url('/images/texture-gray.png')] bg-fixed bg-cover">
-            {/* Nhịp 1: Hero + Carousel → high contrast */}
-            <HeroSection />
-            <section className="bg-transparent py-20">
-                <Carousel slides={slides} />
-            </section>
+        <main className="relative antialiased bg-secondary diamondBackground min-w-xs">
+            <div className="relative z-10">
+                <HeroSection />
 
-            {/* Nhịp 2: HowItWorks + WhyChoose → nền sáng nhẹ */}
-            <section className="bg-white/70 backdrop-blur-md py-24">
-                <HowItWorks />
-                <WhyChoose />
-            </section>
+                {/* Carousel */}
+                <section className="bg-gradient-to-b from-green-100/70 via-white/80 to-transparent py-20">
+                    <Carousel slides={slides} />
+                </section>
 
-            {/* Nhịp 3: Stations → nền mờ trong suốt */}
-            <section className="bg-gray-50/70 py-24">
-                <Stations />
-            </section>
+                {/* HowItWorks + WhyChoose */}
+                <section className="bg-white/70 backdrop-blur-md border-y border-green-100 py-24">
+                    <HowItWorks />
+                    <WhyChoose />
+                </section>
 
-            {/* Nhịp 4: Experience + Review → gradient kết thúc */}
-            <section className="bg-gradient-to-b from-green-50/80 via-transparent to-transparent py-24">
-                <GreenWheelExperience />
-                <CustomerReview />
-            </section>
-            <ScrollToTopButton />
+                {/* Stations */}
+                <section className="bg-gradient-to-b from-green-100/70 via-white/80 to-transparent py-24">
+                    <Stations />
+                </section>
+
+                {/* Experience + Review */}
+                <section className="bg-white/70 backdrop-blur-md border-y border-green-100 py-24">
+                    <GreenWheelExperience />
+                </section>
+
+                {/* <CustomerReview /> */}
+                <section className="bg-gradient-to-b from-green-100/70 via-white/80 to-transparent py-24">
+                    <CustomerReview />
+                </section>
+
+                <ScrollToTopButton />
+            </div>
         </main>
     )
 }

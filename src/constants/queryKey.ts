@@ -10,7 +10,7 @@ export const QUERY_KEYS = {
     RENTAL_CONTRACTS: ["rentalContracts"] as const,
     USERS: ["users"] as const,
     DISPATCH_REQUESTS: ["dispatchRequests"] as const,
-    STATION_FEEDBACKS: ["stationFeedbacks"] as const
+    STATION_FEEDBACKS: ["stationFeedbacks"] as const,
     INVOICES: ["invoices"] as const
     // VEHICLE: {
     //     ALL: ["vehicles"] as const,

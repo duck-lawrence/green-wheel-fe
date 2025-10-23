@@ -4,7 +4,7 @@ import { ButtonStyled, FeedbackModal } from "@/components"
 import React from "react"
 import CardReviewUser from "@/components/styled/GrateStyled"
 import { useTranslation } from "react-i18next"
-import { useDisclosure } from "@heroui/react"
+import { Spinner, useDisclosure } from "@heroui/react"
 import { useGetAllFeedback, useGetAllStations } from "@/hooks"
 
 export function CustomerReview() {
@@ -17,7 +17,7 @@ export function CustomerReview() {
     //===========ANIMATION==================
 
     //===========ANIMATION==================
-    if (isLoading && isFetching) return "Loading..."
+    if (isLoading && isFetching) return <Spinner />
 
     return (
         <motion.section
@@ -110,7 +110,7 @@ export function CustomerReview() {
                             >
                                 <CardReviewUser
                                     name={item.customerName}
-                                    // avatar={item.avatar}
+                                    avatar={item.avartarUrl}
                                     rating={item.rating}
                                     station={
                                         (item.stationId == station?.[0].id

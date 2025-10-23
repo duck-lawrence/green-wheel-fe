@@ -658,7 +658,20 @@
         "not_found": "Station feedback not found"
     },
     "about_us": {
-        "": ""
+        "green_wheel_description": "Green Wheel — Vietnam’s leading electric car rental platform, delivering an eco-friendly, affordable, and seamless driving experience.",
+        "about_us": "About Us",
+        "towards_a_greener_future": "Towards a Greener Future",
+        "ev_sustainability_belief": "We believe electric vehicles are the key to sustainable and environmentally friendly mobility.",
+        "customer_centric_approach": "Customer-Centric Approach",
+        "customer_experience_focus": "Green Wheel prioritizes customer experience above all — ensuring convenience, transparency, and safety in every ride.",
+        "continuous_innovation": "Continuous Innovation",
+        "innovation_description": "We constantly improve our technology and expand our fleet with the latest electric vehicles to offer the best options available.",
+        "our_mission": "Our Mission",
+        "green_wheel_mission": "Green Wheel was founded to accelerate the transition to clean, sustainable transportation. We provide modern electric vehicles that are environmentally friendly, helping customers enjoy smooth, cost-effective, and eco-conscious journeys.",
+        "learn_more": "Learn more",
+        "vision_and_core_values": "Vision & Core Values",
+        "join_us_greener_future": "Ready to join us on the road to a greener future?",
+        "contact_us": "Contact Us"
     },
     "dispatch": {
         "create_success": "Create dispatch successfully",
@@ -764,6 +777,7 @@
         "content": "Content",
         "rating": "Rating",
         "create_title": "Create feedback"
+    },
     "fleet": {
         "page_title": "Fleet Management",
         "page_subtitle": "Browse, filter, and manage vehicle models available in the fleet.",
