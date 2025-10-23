@@ -708,6 +708,19 @@
         "signed_by_staff_require": "Staff must sign",
         "signed_by_customer_require": "Customer must sign"
     },
+    "fleet": {
+        "page_title": "Fleet Management",
+        "page_subtitle": "Browse, filter, and manage vehicle models available in the fleet.",
+        "filter_title": "Filters",
+        "search_placeholder": "Search vehicle model, brand, etc",
+        "filter_car_type": "Segment",
+        "filter_status": "Status",
+        "status_available": "Available",
+        "status_out_of_stock": "Out of stock",
+        "add_unit_button": "Add unit",
+        "loading": "Loading vehicle models...",
+        "empty_state": "No vehicles found."
+    },
     "reaview": {
         "create": "Create feedback successful"
     }
