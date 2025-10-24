@@ -43,7 +43,8 @@ export enum RentalContractStatus {
     Active = 2,
     Returned = 3,
     Completed = 4,
-    Cancelled = 5
+    Cancelled = 5,
+    UnavailableVehicle = 6
 }
 
 export enum DamageStatus {

@@ -148,6 +148,15 @@
 
         "station_require": "Station is required",
 
+        "bank_account_info": "Bank account info",
+        "bank_name": "Bank name",
+        "bank_name_require": "Bank name is required",
+        "bank_account_number": "Bank account number",
+        "bank_account_number_require": "Bank account number is required",
+        "invalid_bank_account_number": "Invalid bank account number",
+        "bank_account_name": "Bank account name",
+        "bank_account_name_require": "Bank account name is required",
+
         "unauthorized": "Unauthorized",
         "do_not_have_permission": "Permission denied",
         "invalid_token": "Invalid token",
@@ -351,6 +360,7 @@
         "refunded": "Refunded",
         "forfeited": "Forfeited",
         "cancelled": "Cancelled",
+        "unavailable_vehicle": "Unavailable vehicle",
         "request_pending": "Request Pending",
         "confirm_change_station_pending": "Confirm Change Station Pending",
         "payment_pending": "Payment Pending",

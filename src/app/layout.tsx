@@ -39,7 +39,7 @@ export default async function RootLayout({
             <body className="antialiased bg-secondary diamond-background min-w-xs">
                 <AppProviders locale={locale}>
                     <ClientHydration>
-                        <div className="min-h-screen flex flex-col items-center pt-25 mb-10">
+                        <div className="min-h-screen flex flex-col items-center pt-25">
                             <Navbar />
                             {children}
                             <ScrollToTopButton />
