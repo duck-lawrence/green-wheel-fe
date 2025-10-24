@@ -1,7 +1,8 @@
 "use client"
-import { Autocomplete, AutocompleteItem } from "@heroui/react"
+import { AutocompleteItem } from "@heroui/react"
 import React from "react"
 import type { Key } from "@react-types/shared"
+import { AutocompleteStyled } from "@/components"
 
 type EnumPickerProps<T extends number> = {
     value?: Key | null
@@ -33,14 +34,12 @@ export function EnumPicker<T extends number>({
     }))
 
     return (
-        <Autocomplete
+        <AutocompleteStyled
             label={label}
-            items={items}
             isReadOnly={isReadOnly}
             isClearable={isClearable}
             variant="bordered"
             className={className}
-            // className="max-w-55 h-14"
             selectedKey={value !== null ? String(value) : null}
             onSelectionChange={onChange}
             onKeyDown={onKeyDown}
@@ -49,9 +48,9 @@ export function EnumPicker<T extends number>({
             }}
             isRequired={isRequired}
         >
-            {(item) => (
+            {items.map((item) => (
                 <AutocompleteItem key={item.key}>{item.label as React.ReactNode}</AutocompleteItem>
-            )}
-        </Autocomplete>
+            ))}
+        </AutocompleteStyled>
     )
 }

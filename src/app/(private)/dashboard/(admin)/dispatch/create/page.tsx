@@ -1,5 +1,5 @@
 "use client"
-import { AutocompleteStyle, ButtonStyled, SectionStyled, SpinnerStyled } from "@/components"
+import { AutocompleteStyled, ButtonStyled, SectionStyled, SpinnerStyled } from "@/components"
 import TableSelectionStaff from "@/components/modules/TableSelectionStaff"
 import TableSelectionVehicle from "@/components/modules/TableSelectionVehicle/indesx"
 import { useGetAllStaffs, useGetAllStations, useGetAllVehicles, useGetMe } from "@/hooks"
@@ -62,7 +62,7 @@ export default function DispatchCreatePage() {
             {/* Station - Description */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                 <SectionStyled title={t("dispatch.station")}>
-                    <AutocompleteStyle
+                    <AutocompleteStyled
                         label={t("vehicle_model.station")}
                         items={stationDispatch ?? []}
                         startContent={<MapPinAreaIcon className="text-xl" />}
@@ -75,7 +75,7 @@ export default function DispatchCreatePage() {
                         {(stationDispatch ?? []).map((item) => (
                             <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
                         ))}
-                    </AutocompleteStyle>
+                    </AutocompleteStyled>
                 </SectionStyled>
                 <SectionStyled title={t("dispatch.description")}>
                     <Textarea

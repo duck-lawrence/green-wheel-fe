@@ -6,7 +6,7 @@ import { fromDate } from "@internationalized/date"
 import { useTranslation } from "react-i18next"
 import { AutocompleteItem, cn, Spinner } from "@heroui/react"
 import { MapPinAreaIcon } from "@phosphor-icons/react"
-import { AutocompleteStyle, DateTimeStyled } from "@/components"
+import { AutocompleteStyled, DateTimeStyled } from "@/components"
 import { useBookingFilterStore, useDay, useGetAllStations, useGetAllVehicleSegments } from "@/hooks"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
@@ -240,7 +240,7 @@ export function FilterVehicleRental({
                 {/* Left section */}
                 <div>
                     <div className="grid md:flex gap-4">
-                        <AutocompleteStyle
+                        <AutocompleteStyled
                             className="md:w-50"
                             label={t("vehicle_model.station")}
                             items={stations}
@@ -256,9 +256,9 @@ export function FilterVehicleRental({
                             {(stations ?? []).map((item) => (
                                 <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
                             ))}
-                        </AutocompleteStyle>
+                        </AutocompleteStyled>
 
-                        <AutocompleteStyle
+                        <AutocompleteStyled
                             className="md:w-36"
                             label={t("vehicle_model.segment")}
                             items={vehicleSegments}
@@ -271,7 +271,7 @@ export function FilterVehicleRental({
                             {(vehicleSegments ?? []).map((item) => (
                                 <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
                             ))}
-                        </AutocompleteStyle>
+                        </AutocompleteStyled>
                     </div>
                     <div className="hidden md:block">{`${t("station.address")}: ${
                         stations?.find((station) => station.id === formik.values.stationId)?.address

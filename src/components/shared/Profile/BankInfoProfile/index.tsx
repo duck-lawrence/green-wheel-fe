@@ -71,6 +71,7 @@ export function BankInfoProfile({ user }: { user: UserProfileViewRes }) {
                                 <ButtonStyled
                                     color="primary"
                                     variant="ghost"
+                                    isDisabled={!formik.isValid || !formik.dirty}
                                     onPress={formik.submitForm}
                                 >
                                     {t("common.save")}

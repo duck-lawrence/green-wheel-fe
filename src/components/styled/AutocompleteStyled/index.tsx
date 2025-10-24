@@ -9,9 +9,9 @@ import React from "react"
 //     className?: string
 // }
 // cần truyền fetch data vào đang hard code
-// export function AutocompleteStyle({ value, onChange, className }: AutocompleteStyleProps) {
+// export function AutocompleteStyled({ value, onChange, className }: AutocompleteStyleProps) {
 
-export function AutocompleteStyle(props: AutocompleteProps) {
+export function AutocompleteStyled(props: AutocompleteProps) {
     return (
         <Autocomplete
             // defaultItems={locals}
@@ -24,11 +24,17 @@ export function AutocompleteStyle(props: AutocompleteProps) {
             // }}
             {...props}
             className={cn(props.className)}
-            // classNames={{
-            //     base: "h-25", // toàn bộ khung
-            //     selectorButton: "min-h-20 h-20 py-3", // ✅ phần hiển thị input
-            //     listbox: "text-xl" // menu list
-            // }}
+            inputProps={{
+                ...props.inputProps,
+                classNames: {
+                    label: cn("text-gray-700", props.inputProps?.classNames?.label),
+                    input: cn("text-gray-900", props.inputProps?.classNames?.input),
+                    inputWrapper: cn(
+                        "border-2 border-gray-200 data-[hover=true]:border-primary data-[focus=true]:border-primary",
+                        props.inputProps?.classNames?.inputWrapper
+                    )
+                }
+            }}
         />
     )
 }

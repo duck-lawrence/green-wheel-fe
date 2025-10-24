@@ -1,7 +1,7 @@
 "use client"
 
 import {
-    AutocompleteStyle,
+    AutocompleteStyled,
     ButtonStyled,
     DatePickerStyled,
     InputStyled,
@@ -240,7 +240,7 @@ export function NewStaffModal({ isOpen, onClose, stations, onCreated }: NewStaff
                                 errorMessage={formik.errors.dateOfBirth}
                                 isDisabled={isActionDisabled}
                             />
-                            <AutocompleteStyle
+                            <AutocompleteStyled
                                 className="w-full"
                                 label={t("staff_management.form_station")}
                                 placeholder={t("staff_management.form_station_placeholder")}
@@ -262,7 +262,7 @@ export function NewStaffModal({ isOpen, onClose, stations, onCreated }: NewStaff
                                         {option.label}
                                     </AutocompleteItem>
                                 ))}
-                            </AutocompleteStyle>
+                            </AutocompleteStyled>
                         </div>
                     </form>
                 </ModalBodyStyled>
