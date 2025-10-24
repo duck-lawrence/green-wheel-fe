@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import type { Selection } from "@heroui/react"
 import { useTranslation } from "react-i18next"
 import VehicleHorizontalCard from "@/components/modules/VehicleHorizontalCard"
@@ -17,11 +17,13 @@ import {
 } from "@/models/vehicle/schema/response"
 import { useGetAllVehicleModels, useGetAllVehicleSegments } from "@/hooks"
 import { FunnelSimple } from "@phosphor-icons/react"
+import { useRouter } from "next/navigation"
 
 const DEFAULT_PAGE_SIZE = 10
 
 export default function AdminFleetPage() {
     const { t } = useTranslation()
+    const router = useRouter()
     const [page, setPage] = useState(1)
     const [searchTerm, setSearchTerm] = useState("")
     const [carType, setCarType] = useState<string | undefined>()
@@ -152,6 +154,13 @@ export default function AdminFleetPage() {
         setStatus(value != null ? value.toString() : undefined)
     }
 
+    const handleVehicleSelect = useCallback(
+        (vehicleModel: VehicleModelViewRes) => {
+            router.push(`/dashboard/fleet/${vehicleModel.id}`)
+        },
+        [router]
+    )
+
     const handlePageChange = (nextPage: number) => {
         setPage(Math.min(Math.max(nextPage, 1), totalPages))
     }
@@ -237,6 +246,7 @@ export default function AdminFleetPage() {
                                     key={vehicle.id}
                                     vehicleModel={vehicle}
                                     readOnly={false}
+                                    onSelect={handleVehicleSelect}
                                 />
                             ))}
                         </div>
