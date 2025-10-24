@@ -22,6 +22,7 @@ import {
 import { ROLE_ADMIN, ROLE_STAFF } from "@/constants/constants"
 import { useGetAllUsers } from "@/hooks"
 import { UserProfileViewRes } from "@/models/user/schema/response"
+import { RoleName } from "@/constants/enum"
 
 type UserFilterFormValues = {
     name: string
@@ -51,7 +52,7 @@ export default function StaffUserManagementPage() {
     const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useModalDisclosure()
 
     const { data, isFetching } = useGetAllUsers({
-        params: {},
+        params: { role: RoleName.Customer },
         enabled: true
     })
 

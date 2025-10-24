@@ -12,6 +12,7 @@ import {
     IconProps
 } from "@phosphor-icons/react"
 import { LogoStyle } from "@/components/styled"
+import { GREENWHEEL_ADDRESS, GREENWHEEL_EMAIL, GREENWHEEL_PHONE } from "@/constants/constants"
 
 export function Footer() {
     const { t } = useTranslation()
@@ -34,7 +35,7 @@ export function Footer() {
 
                     <div className="flex items-center gap-2 text-sm text-gray-400">
                         <MapPin size={18} weight="fill" className="text-primary" />
-                        <span>TP Hồ Chí Minh, Việt Nam</span>
+                        <span>{GREENWHEEL_ADDRESS}</span>
                     </div>
                 </div>
 
@@ -49,11 +50,11 @@ export function Footer() {
                                 {t("footer.about_us")}
                             </Link>
                         </li>
-                        <li>
+                        {/* <li>
                             <Link href="/services" className="hover:text-primary duration-200">
                                 {t("footer.services")}
                             </Link>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
 
@@ -90,11 +91,11 @@ export function Footer() {
                     <ul className="space-y-3 text-sm">
                         <li className="flex items-center gap-2">
                             <Phone size={18} weight="fill" className="text-primary" />
-                            <span>0797 123 432</span>
+                            <span>{GREENWHEEL_PHONE}</span>
                         </li>
                         <li className="flex items-center gap-2">
                             <EnvelopeSimple size={18} weight="fill" className="text-primary" />
-                            <span>greenwheel.work@gmail.com</span>
+                            <span>{GREENWHEEL_EMAIL}</span>
                         </li>
                     </ul>
 

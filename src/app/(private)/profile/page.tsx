@@ -1,6 +1,6 @@
 "use client"
 import {
-    AvaterStyled,
+    AvatarStyled,
     ButtonStyled,
     CitizenIdentityProfile,
     DatePickerStyled,
@@ -15,6 +15,7 @@ import {
     useDeleteAvatar,
     useGetMe,
     useImageUploadModal,
+    useName,
     useUpdateMe,
     useUploadAvatar
 } from "@/hooks"
@@ -35,6 +36,7 @@ export default function ProfilePage() {
     const { t } = useTranslation()
     const [editable, setEditable] = useState(false)
     const { toDate, formatDateTime } = useDay({ defaultFormat: "YYYY-MM-DD" })
+    const { toFullName } = useName()
     const { data: user } = useGetMe()
     const updateMeMutation = useUpdateMe({ onSuccess: undefined })
     // avatar
@@ -120,7 +122,7 @@ export default function ProfilePage() {
                     closeOnSelect={false}
                 >
                     <DropdownTrigger className="w-47 h-47 cursor-pointer">
-                        <AvaterStyled src={user?.avatarUrl || DEFAULT_AVATAR_URL} />
+                        <AvatarStyled src={user?.avatarUrl || DEFAULT_AVATAR_URL} />
                     </DropdownTrigger>
                     <DropdownMenu variant="flat" classNames={{ base: "p-0 w-fit" }}>
                         <DropdownItem key="upload_avatar" className="block p-0">
@@ -147,9 +149,12 @@ export default function ProfilePage() {
                         {/* user full name */}
                         <div
                             className="text-3xl" //
-                        >{
-                            `${user?.lastName.trim() || ""} ${user?.firstName.trim() || ""}` //
-                        }</div>
+                        >
+                            {`${toFullName({
+                                firstName: user?.firstName,
+                                lastName: user?.lastName
+                            })} ${user?.station && `- ${user?.station?.name}`}`}
+                        </div>
 
                         {/* Button enable show change */}
                         <div>

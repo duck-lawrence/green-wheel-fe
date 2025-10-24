@@ -6,7 +6,7 @@ import {
     CreateStaffReq,
     CreateUserReq,
     StaffReq,
-    UserFilterReq,
+    UserFilterParams,
     UserUpdateReq
 } from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
@@ -14,7 +14,7 @@ import axiosInstance from "@/utils/axios"
 import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 
 export const userApi = {
-    getAll: (query: UserFilterReq) =>
+    getAll: (query: UserFilterParams) =>
         requestWrapper<UserProfileViewRes[]>(async () => {
             const params = buildQueryParams(query)
             const res = await axiosInstance.get("/users", { params })

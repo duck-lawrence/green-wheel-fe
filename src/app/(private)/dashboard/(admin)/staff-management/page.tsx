@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { FunnelSimple } from "@phosphor-icons/react"
-import {EditStaffModal, NewStaffModal} from "@/components/modals/StaffModals"
+import { EditStaffModal, NewStaffModal } from "@/components/modals/StaffModals"
 import {
     ButtonStyled,
     CitizenIdentityPreviewModal,
@@ -18,6 +18,9 @@ import type { Selection } from "@heroui/react"
 import { useGetAllStaffs, useGetAllStations } from "@/hooks"
 import { StationViewRes } from "@/models/station/schema/response"
 import { UserProfileViewRes } from "@/models/user/schema/response"
+import { UserFilterParams } from "@/models/user/schema/request"
+import { RoleName } from "@/constants/enum"
+import { P } from "node_modules/framer-motion/dist/types.d-DsEeKk6G"
 
 const PAGE_SIZE = 10
 
@@ -28,6 +31,8 @@ type DocumentPreviewState = {
 
 export default function StaffManagementPage() {
     const { t } = useTranslation()
+    const { toFullName } = useName()
+
     const [searchInput, setSearchInput] = useState("")
     const [debouncedSearch, setDebouncedSearch] = useState("")
     const [stationFilter, setStationFilter] = useState<string | undefined>()
@@ -65,10 +70,7 @@ export default function StaffManagementPage() {
         enabled: true
     })
 
-    const normalizedSearch = useMemo(
-        () => debouncedSearch.trim().toLowerCase(),
-        [debouncedSearch]
-    )
+    const normalizedSearch = useMemo(() => debouncedSearch.trim().toLowerCase(), [debouncedSearch])
 
     const staffList = useMemo(() => {
         const items = staffQuery.data ?? []
@@ -90,11 +92,9 @@ export default function StaffManagementPage() {
             const email = (staff.email ?? "").toLowerCase()
             const phone = (staff.phone ?? "").toLowerCase()
 
-            return [fullName, email, phone].some((value) =>
-                value.includes(normalizedSearch)
-            )
+            return [fullName, email, phone].some((value) => value.includes(normalizedSearch))
         })
-    }, [normalizedSearch, staffQuery.data, stationFilter])
+    }, [normalizedSearch, staffQuery.data, stationFilter, toFullName])
 
     const totalItems = staffList.length
 
@@ -131,9 +131,14 @@ export default function StaffManagementPage() {
             const nextStation = value != null ? value.toString() : undefined
             setStationFilter(nextStation || undefined)
             setPage(1)
-        },
-        []
-    )
+            return
+        }
+
+        const selection = values[0]?.toString()
+        const nextStation = selection === "all" ? undefined : selection
+        setStationFilter(nextStation)
+        setPage(1)
+    }, [])
 
     const handlePreviewDocument = useCallback((payload: DocumentPreviewState) => {
         setPreviewDocument(payload)
@@ -186,7 +191,7 @@ export default function StaffManagementPage() {
                 ""
             return displayName || t("staff_management.unknown_name")
         },
-        [t]
+        [t, toFullName]
     )
 
     const stationOptions = useMemo(
@@ -229,10 +234,8 @@ export default function StaffManagementPage() {
 
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 shadow-sm">
                 <div className="mb-4 flex items-center gap-2 text-slate-700">
-                    <FunnelSimple size={22}  className="text-primary" />
-                    <h2 className="text-lg font-semibold">
-                        {t("staff_management.filter_title")}
-                    </h2>
+                    <FunnelSimple size={22} className="text-primary" />
+                    <h2 className="text-lg font-semibold">{t("staff_management.filter_title")}</h2>
                 </div>
 
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-end">

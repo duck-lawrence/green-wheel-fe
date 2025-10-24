@@ -1,17 +1,16 @@
 "use client"
 
-import { InvoiceViewRes } from "@/models/invoice/schema/response"
+import { InvoiceItemViewRes } from "@/models/invoice/schema/response"
 import { InvoiceItemType } from "@/constants/enum"
 import React from "react"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { Wrench, Note, CurrencyCircleDollar, HashStraight } from "@phosphor-icons/react"
 import { useTranslation } from "react-i18next"
 
-export function DetailDamage({ invoice }: { invoice: InvoiceViewRes }) {
+export function DetailDamage({ invoiceItems }: { invoiceItems: InvoiceItemViewRes[] }) {
     const { t } = useTranslation()
 
-    const itemDamage =
-        invoice.invoiceItems?.filter((item) => item.type === InvoiceItemType.Damage) ?? []
+    const itemDamage = invoiceItems?.filter((item) => item.type === InvoiceItemType.Damage) ?? []
 
     return (
         <div className="space-y-4">
@@ -27,7 +26,7 @@ export function DetailDamage({ invoice }: { invoice: InvoiceViewRes }) {
                         <div className="flex items-center justify-between mb-2">
                             <p className="font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
                                 <Wrench size={20} className="text-primary" />
-                                {value.checkListItem?.component?.name || ""}
+                                {value.checklistItem?.component?.name}
                             </p>
                             {/* Thông tin số lượng + chi phí */}
                             <div className="flex items-center gap-6 sm:gap-8">
@@ -48,7 +47,7 @@ export function DetailDamage({ invoice }: { invoice: InvoiceViewRes }) {
                         {/* Mô tả */}
                         <p className="text-sm text-gray-600 dark:text-gray-300 flex items-start gap-2">
                             <Note size={16} className="text-teal-500 mt-[2px]" />
-                            {value.checkListItem?.notes ||
+                            {value.checklistItem?.notes ||
                                 t("rental_contract.no_detailed_description")}
                         </p>
                     </div>

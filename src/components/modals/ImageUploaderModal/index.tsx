@@ -13,6 +13,7 @@ type ImageUploaderModalProps = {
     onClose: () => void
     imgSrc: string | null
     setImgSrc: (src: string | null) => void
+    setDisplayImg?: (src: string | undefined) => void
     aspect?: number
     cropShape?: "rect" | "round"
     cropSize: { width: number; height: number }
@@ -28,6 +29,7 @@ export function ImageUploaderModal({
     imgSrc,
     setImgSrc,
     uploadFn,
+    setDisplayImg,
     isUploadPending,
     aspect = 1,
     cropShape = "rect",
@@ -41,14 +43,18 @@ export function ImageUploaderModal({
         if (!imgSrc || !croppedAreaPixels) return
 
         const blob = await getCroppedImage(imgSrc, croppedAreaPixels)
+
         const formData = new FormData()
         formData.append("file", blob, "image.jpg")
 
-        await uploadFn(formData)
+        const res = await uploadFn(formData)
+        if (typeof res.img === "string" && !!setDisplayImg) {
+            setDisplayImg(res.img)
+        }
 
         setImgSrc(null)
         onClose()
-    }, [croppedAreaPixels, imgSrc, onClose, setImgSrc, uploadFn])
+    }, [croppedAreaPixels, imgSrc, onClose, setDisplayImg, setImgSrc, uploadFn])
 
     return (
         <ModalStyled

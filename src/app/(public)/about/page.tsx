@@ -68,7 +68,8 @@ export default function AboutPage() {
                     </p>
                 </motion.div>
             </div>
-            <section className="min-h-screen bg-white dark:bg-gray-950 ">
+            {/* <section className="min-h-screen bg-white dark:bg-gray-950 "> */}
+            <section>
                 {/* Hero section */}
 
                 {/* Introduction */}
@@ -111,7 +112,8 @@ export default function AboutPage() {
                 </div>
 
                 {/* Vision & Values */}
-                <div className="bg-gray-50 dark:bg-gray-900 py-20">
+                {/* <div className="bg-gray-50 dark:bg-gray-900 py-20"> */}
+                <div className="py-20">
                     <div className="max-w-6xl mx-auto px-6">
                         <motion.div
                             initial={{ opacity: 0, y: 40 }}
