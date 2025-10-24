@@ -19,7 +19,6 @@ export default function DispatchDetailPage() {
     const stationNow = user?.station?.id
     const { data: dispatchDetail } = useGetDispatchById({ id: dispatchId!, enabled: true })
 
-    console.log(dispatchDetail)
     // Update
     const updateDispatch = useUpdateDispatch({})
     const handleUpdateDispatch = useCallback(

@@ -1,27 +1,19 @@
 "use client"
-import {
-    TableHeader,
-    TableColumn,
-    TableBody,
-    TableRow,
-    TableCell,
-    DropdownTrigger,
-    DropdownMenu,
-    DropdownItem
-} from "@heroui/react"
+import { TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react"
 import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { ButtonStyled } from "../../styled/ButtonStyled"
-import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { useConfirmContract, useDay, useGetMe, useName } from "@/hooks"
-import { RentalContractStatusLabels, VehicleStatusLabels } from "@/constants/labels"
-import { DropdownStyled } from "../../styled/DropdownStyled"
+import { RentalContractStatusLabels } from "@/constants/labels"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { useRouter } from "next/navigation"
 import { TableStyled } from "@/components/styled"
 import { ContractQueryParams } from "@/models/rental-contract/schema/request"
 import { PaginationParams } from "@/models/common/request"
+import { RentalContractStatus } from "@/constants/enum"
+import { Check } from "@phosphor-icons/react"
+import { STATUS_STYLES } from "@/constants/statusStyled"
 
 export function TableContractStaff({
     contracts,
@@ -35,31 +27,41 @@ export function TableContractStaff({
     const { t } = useTranslation()
     const { toFullName } = useName()
     const router = useRouter()
-    const { acceptContract, rejectContract } = useConfirmContract({ params, pagination })
+    // const { acceptContract, rejectContract } = useConfirmContract({ params, pagination })
+    const confirmContract = useConfirmContract({ params, pagination })
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
 
     const { data: staff } = useGetMe()
 
+    // ======= Action =======
+    // const handleAccept = useCallback(
+    //     (id: string) => {
+    //         acceptContract.mutateAsync({ id })
+    //     },
+    //     [acceptContract]
+    // )
+
+    // const handleReject = useCallback(
+    //     (id: string, status: VehicleStatus) => {
+    //         rejectContract.mutateAsync({ id, vehicalStatus: status })
+    //     },
+    //     [rejectContract]
+    // )
+
+    // const isLoading = (id: string) => {
+    //     return (
+    //         (acceptContract.isPending && acceptContract.variables?.id === id) ||
+    //         (rejectContract.isPending && rejectContract.variables?.id === id)
+    //     )
+    // }
+    // const [hasVehicle, setHasVehicle] = useState<boolean>(false)
+
     const handleAccept = useCallback(
-        (id: string) => {
-            acceptContract.mutateAsync({ id })
+        (id: string, hasVehicle: boolean) => {
+            confirmContract.mutateAsync({ id, hasVehicle })
         },
-        [acceptContract]
+        [confirmContract]
     )
-
-    const handleReject = useCallback(
-        (id: string, status: VehicleStatus) => {
-            rejectContract.mutateAsync({ id, vehicalStatus: status })
-        },
-        [rejectContract]
-    )
-
-    const isLoading = (id: string) => {
-        return (
-            (acceptContract.isPending && acceptContract.variables?.id === id) ||
-            (rejectContract.isPending && rejectContract.variables?.id === id)
-        )
-    }
 
     return (
         <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -86,7 +88,7 @@ export function TableContractStaff({
                     <TableColumn className="text-center text-gray-700 font-semibold w-36">
                         {t("table.status")}
                     </TableColumn>
-                    <TableColumn className="text-center text-gray-700 font-semibold w-50">
+                    <TableColumn className="text-center text-gray-700 font-semibold w-30">
                         {t("table.action")}
                     </TableColumn>
                 </TableHeader>
@@ -118,7 +120,10 @@ export function TableContractStaff({
 
                             {/* status */}
                             <TableCell className="text-center">
-                                <span className="py-1 rounded-full text-xs">
+                                <span
+                                    className={`inline-block px-3 py-1 rounded-full text-xs font-semibold 
+                                        ${STATUS_STYLES[item.status]}`}
+                                >
                                     {RentalContractStatusLabels[item.status]}
                                 </span>
                             </TableCell>
@@ -127,55 +132,28 @@ export function TableContractStaff({
                             <TableCell className="text-center">
                                 {item.status === RentalContractStatus.RequestPending &&
                                 staff?.station?.id === item.station.id ? (
-                                    <div className="flex flex-col md:flex-row items-center justify-center gap-2">
-                                        {/* Accept */}
+                                    <div className="flex flex-row md:flex-row items-center justify-center gap-2">
                                         <ButtonStyled
                                             color="primary"
                                             variant="bordered"
                                             className="h-7 w-20 border-1 border-primary hover:text-white hover:bg-primary font-semibold px-5 py-2 rounded-lg"
-                                            onPress={() => handleAccept(item.id)}
-                                            isLoading={
-                                                acceptContract.isPending &&
-                                                acceptContract.variables?.id === item.id
-                                            }
-                                            hidden={isLoading(item.id)}
+                                            onPress={() => {
+                                                handleAccept(item.id, true)
+                                                console.log("data id :" + item.id)
+                                            }}
                                         >
-                                            {t("rental_contract.accept")}
+                                            <Check size={20} weight="bold" />
                                         </ButtonStyled>
-
-                                        {/* Reject */}
-                                        <DropdownStyled
-                                            placement="bottom-end"
-                                            isDisabled={isLoading(item.id)}
+                                        <ButtonStyled
+                                            color="primary"
+                                            variant="bordered"
+                                            className="h-7 w-20 border-1 border-primary hover:text-white hover:bg-primary font-semibold px-5 py-2 rounded-lg"
+                                            onPress={() => {
+                                                handleAccept(item.id, false)
+                                            }}
                                         >
-                                            <DropdownTrigger>
-                                                <ButtonStyled
-                                                    className="h-7 w-20 bg-white border-1 border-danger text-danger hover:bg-red-600 hover:text-white font-semibold rounded-lg"
-                                                    isLoading={
-                                                        rejectContract.isPending &&
-                                                        rejectContract.variables?.id === item.id
-                                                    }
-                                                    hidden={isLoading(item.id)}
-                                                >
-                                                    {t("rental_contract.reject")}
-                                                </ButtonStyled>
-                                            </DropdownTrigger>
-
-                                            <DropdownMenu
-                                                onAction={(key) => {
-                                                    const selected = Number(key)
-                                                    handleReject(item.id, selected)
-                                                }}
-                                            >
-                                                {Object.entries(VehicleStatusLabels).map(
-                                                    ([key, label]) => (
-                                                        <DropdownItem key={key}>
-                                                            {label}
-                                                        </DropdownItem>
-                                                    )
-                                                )}
-                                            </DropdownMenu>
-                                        </DropdownStyled>
+                                            X
+                                        </ButtonStyled>
                                     </div>
                                 ) : (
                                     <span className="text-gray-400 text-sm">

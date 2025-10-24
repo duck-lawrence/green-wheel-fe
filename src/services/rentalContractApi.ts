@@ -91,5 +91,10 @@ export const rentalContractApi = {
     cancel: ({ id }: { id: string }) =>
         requestWrapper<void>(async () => {
             await axiosInstance.put(`/rental-contracts/${id}/cancel`)
+        }),
+
+    confirmContract: ({ id, hasVehicle }: { id: string; hasVehicle: boolean }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/rental-contracts/${id}/confirm`, { hasVehicle })
         })
 }
