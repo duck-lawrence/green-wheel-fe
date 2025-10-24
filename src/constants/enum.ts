@@ -80,7 +80,8 @@ export enum PaymentMethod {
 
 export enum TicketType {
     CustomerSupport = 0,
-    StaffReport = 1
+    StaffReport = 1,
+    Contact = 2
 }
 
 export enum TicketStatus {

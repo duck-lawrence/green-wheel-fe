@@ -6,6 +6,7 @@ import {
     ButtonStyled,
     EnumPicker,
     InputStyled,
+    PaginationStyled,
     TableContractStaff
 } from "@/components"
 import { useGetAllRentalContracts, useGetAllStations } from "@/hooks"
@@ -17,12 +18,15 @@ import { BackendError } from "@/models/common/response"
 import toast from "react-hot-toast"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { AutocompleteItem } from "@heroui/react"
+import { PaginationParams } from "@/models/common/request"
 
 export default function StaffContractsPage() {
     const { t } = useTranslation()
 
     const [filter, setFilter] = useState<ContractQueryParams>({})
-    const { data, isFetching, refetch } = useGetAllRentalContracts({ params: filter })
+    const [pagination, setPagination] = useState<PaginationParams>({ pageSize: 5 })
+    const { data, isFetching, refetch } = useGetAllRentalContracts({ params: filter, pagination })
+
     const {
         data: stations,
         isLoading: isGetStationsLoading,
@@ -33,6 +37,12 @@ export default function StaffContractsPage() {
         async (params: ContractQueryParams) => {
             setFilter(params)
             await refetch()
+            setPagination((prev) => {
+                return {
+                    ...prev,
+                    pageNumber: 1
+                }
+            })
         },
         [refetch]
     )
@@ -128,7 +138,26 @@ export default function StaffContractsPage() {
                 </form>
             </div>
             {/* Table */}
-            <TableContractStaff contracts={data ?? []} params={formik.values} />
+            <TableContractStaff
+                contracts={data?.items ?? []}
+                params={formik.values}
+                pagination={pagination}
+            />
+            <div className="mt-6 flex justify-center">
+                <PaginationStyled
+                    page={data?.pageNumber ?? 1}
+                    total={data?.totalPages ?? 10}
+                    onChange={(page: number) =>
+                        setPagination((prev) => {
+                            return {
+                                ...prev,
+                                pageNumber: page
+                            }
+                        })
+                    }
+                    showControls
+                />
+            </div>
         </div>
     )
 }

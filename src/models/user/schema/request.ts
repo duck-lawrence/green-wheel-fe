@@ -1,4 +1,5 @@
 import { RoleName, Sex } from "@/constants/enum"
+
 export type CreateUserReq = {
     email?: string
     phone: string
@@ -6,17 +7,8 @@ export type CreateUserReq = {
     lastName: string
     sex: Sex
     dateOfBirth: string
-    roleId: string
-}
-
-export type CreateStaffReq = {
-    email: string
-    firstName: string
-    lastName: string
-    sex: Sex
-    phone: string
-    stationId: string
-    dateOfBirth: string
+    stationId?: string
+    roleName?: RoleName
 }
 
 export type UserUpdateReq = {

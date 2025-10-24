@@ -69,7 +69,6 @@ export function RegisterEmail({ email, setEmail, onSuccess }: RegisterEmailProps
                     onBlur={() => {
                         formik.setFieldTouched("email")
                     }}
-                    onClear={() => {}}
                 />
             </div>
             {/* Button submit */}

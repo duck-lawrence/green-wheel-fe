@@ -20,27 +20,35 @@ export const useSearchVehicleModels = ({
     enabled?: boolean
 }) => {
     const key = [QUERY_KEYS.VEHICLE_MODELS, query]
+    const queryClient = useQueryClient()
 
-    return useQuery({
+    const queryResult = useQuery({
         queryKey: key,
-        queryFn: async () => await vehicleModelApi.search(query),
+        queryFn: async () => {
+            const data = await vehicleModelApi.search(query)
+            queryClient.setQueryData(key, data)
+            return data
+        },
+        initialData: () => {
+            return queryClient.getQueryData<VehicleModelViewRes[]>(key)
+        },
         enabled
     })
 
-    // const getCachedOrFetch = async () => {
-    //     const cached = queryClient.getQueryData<VehicleModelViewRes[]>(key)
-    //     if (cached) return cached
-    //     const data = await queryClient.fetchQuery({
-    //         queryKey: key,
-    //         queryFn: () => vehicleModelApi.search(query)
-    //     })
-    //     return data
-    // }
+    const getCachedOrFetch = async () => {
+        const cached = queryClient.getQueryData<VehicleModelViewRes[]>(key)
+        if (cached) return cached
+        const data = await queryClient.fetchQuery({
+            queryKey: key,
+            queryFn: () => vehicleModelApi.search(query)
+        })
+        return data
+    }
 
-    // return {
-    //     ...queryResult,
-    //     getCachedOrFetch
-    // }
+    return {
+        ...queryResult,
+        getCachedOrFetch
+    }
 }
 
 export const useGetVehicleModelById = ({

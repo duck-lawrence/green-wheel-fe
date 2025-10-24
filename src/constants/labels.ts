@@ -116,7 +116,8 @@ export const PaymentMethodLabels: Record<PaymentMethod, string> = {
 
 export const TicketTypeLabels: Record<TicketType, string> = {
     [TicketType.CustomerSupport]: i18n.t("enum.customer_support"),
-    [TicketType.StaffReport]: i18n.t("enum.staff_report")
+    [TicketType.StaffReport]: i18n.t("enum.staff_report"),
+    [TicketType.Contact]: i18n.t("enum.contact")
 }
 
 export const TicketStatusLabels: Record<TicketStatus, string> = {
