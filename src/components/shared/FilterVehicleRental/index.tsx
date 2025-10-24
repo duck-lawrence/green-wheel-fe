@@ -15,8 +15,15 @@ import { DEFAULT_TIMEZONE, MAX_HOUR, MIN_HOUR } from "@/constants/constants"
 import dayjs from "dayjs"
 import { useSearchVehicleModels } from "@/hooks/queries/useVehicleModel"
 import { VehicleFilterReq } from "@/models/vehicle/schema/request"
+import { debouncedWrapper } from "@/utils/helpers/axiosHelper"
 
-export function FilterVehicleRental({ className = "" }: { className?: string }) {
+export function FilterVehicleRental({
+    className = "",
+    setIsSearching
+}: {
+    className?: string
+    setIsSearching: (isSearching: boolean) => void
+}) {
     const { t } = useTranslation()
     const { formatDateTime, toZonedDateTime } = useDay({})
     // setup date time
@@ -97,18 +104,37 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
         if (!endDate) setEndDate(formatDateTime({ date: minEndDate }))
     }, [endDate, formatDateTime, minEndDate, minStartDate, setEndDate, setStartDate, startDate])
 
+    // =========================
+    // Handle submit filter
+    // =========================
     const { refetch } = useSearchVehicleModels({
         query: filter
     })
-    const handleSearch = useCallback(
-        async (params: VehicleFilterReq) => {
-            setFilter(params)
+    const handleSearch = useCallback(async (params: VehicleFilterReq) => {
+        setFilter(params)
+    }, [])
+    const debouncedSearch = useMemo(
+        () =>
+            debouncedWrapper(
+                handleSearch,
+                800,
+                () => setIsSearching(true),
+                () => setIsSearching(false)
+            ),
+        [handleSearch, setIsSearching]
+    )
+    useEffect(() => {
+        if (!filter.stationId) return
+        const run = async () => {
             const { data } = await refetch()
             setFilteredVehicleModels(data || [])
-        },
-        [refetch, setFilteredVehicleModels]
-    )
+        }
+        run()
+    }, [filter, refetch, setFilteredVehicleModels])
 
+    // =========================
+    // Declare formik
+    // =========================
     //  Validation schema
     const bookingSchema = useMemo(
         () =>
@@ -174,7 +200,7 @@ export function FilterVehicleRental({ className = "" }: { className?: string }) 
             setSegmentId(formik.values.segmentId)
             setStartDate(formik.values.startDate)
             setEndDate(formik.values.endDate)
-            await handleSearch(formik.values)
+            await debouncedSearch(formik.values)
             formik.setSubmitting(false)
         }
     })
