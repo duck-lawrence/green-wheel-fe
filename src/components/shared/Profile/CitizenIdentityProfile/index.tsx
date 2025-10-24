@@ -9,13 +9,7 @@ import {
     CitizenIdentityUploader
 } from "@/components/"
 import { Sex } from "@/constants/enum"
-import {
-    useDay,
-    // useDeleteCitizenId,
-    useGetMe,
-    useGetMyCitizenId,
-    useUpdateCitizenId
-} from "@/hooks"
+import { useDay, useGetMyCitizenId, useUpdateCitizenId } from "@/hooks"
 import { Spinner } from "@heroui/react"
 import { NotePencilIcon } from "@phosphor-icons/react"
 import { useFormik } from "formik"
@@ -24,12 +18,12 @@ import { useTranslation } from "react-i18next"
 import * as Yup from "yup"
 import { SexLabels } from "@/constants/labels"
 import { UpdateCitizenIdentityReq } from "@/models/citizen-identity/schema/request"
+import { UserProfileViewRes } from "@/models/user/schema/response"
 
-export function CitizenIdentityProfile() {
+export function CitizenIdentityProfile({ user }: { user: UserProfileViewRes }) {
     const { t } = useTranslation()
     const { toDate, formatDateTime } = useDay({ defaultFormat: "YYYY-MM-DD" })
     const [editable, setEditable] = useState(false)
-    const { data: user } = useGetMe()
     const updateMutation = useUpdateCitizenId()
     // const deleteMutation = useDeleteCitizenId()
 
@@ -73,12 +67,65 @@ export function CitizenIdentityProfile() {
 
     return (
         <>
-            <div className="text-2xl mb-4 font-bold">{t("user.citizen_identity")}</div>
+            <div className="flex flex-wrap justify-between text-2xl mb-2 font-bold">
+                {t("user.citizen_identity")}
+                {/* Button enable show change */}
+                <div className="flex justify-end">
+                    {!editable ? (
+                        <ButtonStyled
+                            color="primary"
+                            variant="ghost"
+                            className="p-3 min-w-fit"
+                            onPress={() => setEditable(!editable)}
+                        >
+                            <div>
+                                <NotePencilIcon />
+                            </div>
+                        </ButtonStyled>
+                    ) : formik.isSubmitting ? (
+                        <Spinner />
+                    ) : (
+                        <div className="flex items-end gap-2">
+                            <CitizenIdentityUploader btnClassName="bg-secondary" />
+                            <ButtonStyled
+                                color="primary"
+                                variant="ghost"
+                                isLoading={formik.isSubmitting}
+                                isDisabled={!formik.isValid || !formik.dirty}
+                                onPress={formik.submitForm}
+                            >
+                                {t("common.save")}
+                            </ButtonStyled>
+                            {/* <ButtonStyled
+                                // className="border-primary
+                                //     bg-white border text-primary
+                                //     hover:text-white hover:bg-primary"
+                                isLoading={deleteMutation.isPending}
+                                onPress={handleDelete}
+                            >
+                                {t("common.delete")}
+                            </ButtonStyled> */}
+                            <ButtonStyled
+                                isDisabled={
+                                    formik.isSubmitting
+                                    // deleteMutation.isPending
+                                }
+                                onPress={() => {
+                                    setEditable(!editable)
+                                    formik.resetForm()
+                                }}
+                            >
+                                {t("common.cancel")}
+                            </ButtonStyled>
+                        </div>
+                    )}
+                </div>
+            </div>
             <div className="mb-8">
                 {isLoading ? (
                     <Spinner />
                 ) : !citizenId ? (
-                    <div className="flex justify-between items-center text-md pr-4 italic mt-[-0.75rem]">
+                    <div className="flex justify-between items-center text-md pr-4 mt-[-0.75rem]">
                         <p>{t("user.please_upload_citizen_identity")}</p>
                         <CitizenIdentityUploader />
                     </div>
@@ -217,62 +264,6 @@ export function CitizenIdentityProfile() {
                                     />
                                 </div>
                             </form>
-
-                            {/* Button enable show change */}
-                            <div className="flex justify-end mb-3">
-                                {!editable ? (
-                                    <ButtonStyled
-                                        className="border-primary
-                                            bg-white border text-primary   
-                                            hover:text-white hover:bg-primary"
-                                        onPress={() => setEditable(!editable)}
-                                    >
-                                        <div>
-                                            <NotePencilIcon />
-                                        </div>
-                                        {t("common.edit")}
-                                    </ButtonStyled>
-                                ) : formik.isSubmitting ? (
-                                    <Spinner />
-                                ) : (
-                                    <div className="flex flex-col items-end gap-2">
-                                        <div className="flex gap-2">
-                                            <ButtonStyled
-                                                className="border-primary 
-                                                                                    bg-white border text-primary 
-                                                                                    hover:text-white hover:bg-primary"
-                                                isLoading={formik.isSubmitting}
-                                                isDisabled={!formik.isValid || !formik.dirty}
-                                                onPress={formik.submitForm}
-                                            >
-                                                {t("common.save")}
-                                            </ButtonStyled>
-                                            {/* <ButtonStyled
-                                                    // className="border-primary
-                                                    //     bg-white border text-primary
-                                                    //     hover:text-white hover:bg-primary"
-                                                    isLoading={deleteMutation.isPending}
-                                                    onPress={handleDelete}
-                                                >
-                                                    {t("common.delete")}
-                                                </ButtonStyled> */}
-                                            <ButtonStyled
-                                                isDisabled={
-                                                    formik.isSubmitting
-                                                    // deleteMutation.isPending
-                                                }
-                                                onPress={() => {
-                                                    setEditable(!editable)
-                                                    formik.resetForm()
-                                                }}
-                                            >
-                                                {t("common.cancel")}
-                                            </ButtonStyled>
-                                        </div>
-                                        <CitizenIdentityUploader btnClassName="bg-secondary" />
-                                    </div>
-                                )}
-                            </div>
                         </div>
                     </div>
                 )}

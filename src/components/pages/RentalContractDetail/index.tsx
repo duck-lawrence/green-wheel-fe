@@ -291,7 +291,7 @@ export function RentalContractDetail({
                         isReadOnly
                         label={t("rental_contract.contract_description")}
                         value={contract.description}
-                        placeholder=". . . "
+                        placeholder=". . ."
                         variant="bordered"
                         className="sm:col-span-2"
                     />

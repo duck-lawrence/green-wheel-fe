@@ -1,6 +1,7 @@
 "use client"
 import {
     AvatarStyled,
+    BankInfoProfile,
     ButtonStyled,
     CitizenIdentityProfile,
     DatePickerStyled,
@@ -8,7 +9,8 @@ import {
     EnumPicker,
     ImageUploadButton,
     ImageUploaderModal,
-    InputStyled
+    InputStyled,
+    SpinnerStyled
 } from "@/components"
 import {
     useDay,
@@ -92,6 +94,8 @@ export default function ProfilePage() {
         onSubmit: handleUpdateMe
     })
 
+    if (!user) return <SpinnerStyled />
+
     return (
         <div className="px-4">
             {/* Title */}
@@ -122,7 +126,7 @@ export default function ProfilePage() {
                     closeOnSelect={false}
                 >
                     <DropdownTrigger className="w-47 h-47 cursor-pointer">
-                        <AvatarStyled src={user?.avatarUrl || DEFAULT_AVATAR_URL} />
+                        <AvatarStyled src={user.avatarUrl || DEFAULT_AVATAR_URL} />
                     </DropdownTrigger>
                     <DropdownMenu variant="flat" classNames={{ base: "p-0 w-fit" }}>
                         <DropdownItem key="upload_avatar" className="block p-0">
@@ -151,31 +155,29 @@ export default function ProfilePage() {
                             className="text-3xl" //
                         >
                             {`${toFullName({
-                                firstName: user?.firstName,
-                                lastName: user?.lastName
-                            })} ${user?.station && `- ${user?.station?.name}`}`}
+                                firstName: user.firstName,
+                                lastName: user.lastName
+                            })} ${user.station != null ? `- ${user.station?.name}` : ""}`}
                         </div>
 
                         {/* Button enable show change */}
                         <div>
                             {!editable ? (
                                 <ButtonStyled
-                                    className="border-primary
-                                    bg-white border text-primary   
-                                    hover:text-white hover:bg-primary"
+                                    color="primary"
+                                    variant="ghost"
+                                    className="p-3 min-w-fit"
                                     onPress={() => setEditable(!editable)}
                                 >
                                     <div>
                                         <NotePencilIcon />
                                     </div>
-                                    {t("common.edit")}
                                 </ButtonStyled>
                             ) : (
                                 <div className="flex gap-2">
                                     <ButtonStyled
-                                        className="border-primary 
-                                            bg-white border text-primary 
-                                            hover:text-white hover:bg-primary"
+                                        color="primary"
+                                        variant="ghost"
                                         isLoading={updateMeFormik.isSubmitting}
                                         isDisabled={
                                             !updateMeFormik.isValid || !updateMeFormik.dirty
@@ -310,8 +312,9 @@ export default function ProfilePage() {
                 </div>
             </div>
 
-            <CitizenIdentityProfile />
-            <DriverLicenseProfile />
+            <CitizenIdentityProfile user={user} />
+            <DriverLicenseProfile user={user} />
+            <BankInfoProfile user={user} />
         </div>
     )
 }
