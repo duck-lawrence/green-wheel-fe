@@ -1,5 +1,6 @@
 export * from "./Carousel"
 export * from "./ClientHydration"
+export * from "./CreateFeedback"
 export * from "./DashBoard"
 export * from "./FilterVehicleRental"
 export * from "./ImageUploader"

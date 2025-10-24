@@ -181,7 +181,8 @@
         "welcome": "Welcome to Green Wheel",
         "slogan": "Green Rides. Brighter Future.",
         "description": "Professional self-drive car rental service to meet all your personal travel needs",
-        "view_details": "View details"
+        "view_details": "View details",
+        "learn_more": "Learn more"
     },
     "navbar": {
         "home": "Home",
@@ -662,7 +663,20 @@
         "not_found": "Station feedback not found"
     },
     "about_us": {
-        "": ""
+        "green_wheel_description": "Green Wheel — Vietnam’s leading electric car rental platform, delivering an eco-friendly, affordable, and seamless driving experience.",
+        "about_us": "About Us",
+        "towards_a_greener_future": "Towards a Greener Future",
+        "ev_sustainability_belief": "We believe electric vehicles are the key to sustainable and environmentally friendly mobility.",
+        "customer_centric_approach": "Customer-Centric Approach",
+        "customer_experience_focus": "Green Wheel prioritizes customer experience above all — ensuring convenience, transparency, and safety in every ride.",
+        "continuous_innovation": "Continuous Innovation",
+        "innovation_description": "We constantly improve our technology and expand our fleet with the latest electric vehicles to offer the best options available.",
+        "our_mission": "Our Mission",
+        "green_wheel_mission": "Green Wheel was founded to accelerate the transition to clean, sustainable transportation. We provide modern electric vehicles that are environmentally friendly, helping customers enjoy smooth, cost-effective, and eco-conscious journeys.",
+        "learn_more": "Learn more",
+        "vision_and_core_values": "Vision & Core Values",
+        "join_us_greener_future": "Ready to join us on the road to a greener future?",
+        "contact_us": "Contact Us"
     },
     "dispatch": {
         "create_success": "Create dispatch successfully",
@@ -683,7 +697,8 @@
         "assigned_vehicle": "Assigned vehicles",
         "station": "Station",
         "description": "Description",
-        "dispatch_table": "Dispatch table"
+        "dispatch_table": "Dispatch table",
+        "create": "Create"
     },
     "document_preview": {
         "upload_image": "Upload image",
@@ -696,7 +711,7 @@
         "page_title": "Staff Management",
         "page_subtitle": "Create, update, and monitor staff assignments across stations.",
         "filter_title": "Filters",
-        "filter_keyword": "Keyword",
+        "filter_keyword": "Search",
         "filter_keyword_placeholder": "Search by name or phone number",
         "filter_station": "Station",
         "filter_station_placeholder": "Select station",
@@ -755,6 +770,31 @@
         "signed_by_customer": "Customer signature",
         "signed_by_staff_require": "Staff must sign",
         "signed_by_customer_require": "Customer must sign"
+    },
+    "review": {
+        "create_successfull": "Create feedback successful",
+        "rating_required": "Rating required",
+        "create_feedback": "Create feedback",
+        "customer_review": "Customer reviews",
+        "station_required": "Station required",
+        "content_required": "content required",
+        "submit": "Submit review",
+        "content": "Content",
+        "rating": "Rating",
+        "create_title": "Create feedback"
+    },
+    "fleet": {
+        "page_title": "Fleet Management",
+        "page_subtitle": "Browse, filter, and manage vehicle models available in the fleet.",
+        "filter_title": "Filters",
+        "search_placeholder": "Search vehicle model, brand, etc",
+        "filter_car_type": "Segment",
+        "filter_status": "Status",
+        "status_available": "Available",
+        "status_out_of_stock": "Out of stock",
+        "add_unit_button": "Add unit",
+        "loading": "Loading vehicle models...",
+        "empty_state": "No vehicles found."
     },
     "reaview": {
         "create": "Create feedback successful"

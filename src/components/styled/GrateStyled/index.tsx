@@ -4,9 +4,9 @@ import { cn } from "@heroui/react"
 
 type CardReviewProps = {
     name: string
-    avatar: string
+    avatar?: string
     rating: number
-    title: string
+    station: string
     content: string
     createdAt: string
     className?: string
@@ -16,7 +16,7 @@ export default function CardReviewUser({
     name,
     avatar,
     rating,
-    title,
+    station,
     content,
     createdAt,
     className
@@ -27,7 +27,7 @@ export default function CardReviewUser({
                 content={content}
                 createdAt={createdAt}
                 rating={rating}
-                title={title}
+                title={station}
                 user={{
                     name,
                     avatar

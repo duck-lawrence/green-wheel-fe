@@ -19,6 +19,7 @@ export type TableSelectionStyledProps = {
     rows: Row[]
     className?: string
     selectedKeys?: "all" | Iterable<Key>
+    selectionBehavior?: "toggle" | "replace"
     onSelectionChange?: (keys: Key[]) => void
 }
 
@@ -27,13 +28,14 @@ export default function TableSelectionStyled({
     rows,
     className,
     selectedKeys,
+    selectionBehavior,
     onSelectionChange
 }: TableSelectionStyledProps) {
     return (
         <div className={cn("flex flex-col gap-3", className)}>
             <Table
                 aria-label="Selection behavior table"
-                selectionBehavior="toggle"
+                selectionBehavior={selectionBehavior}
                 selectionMode="multiple"
                 selectedKeys={selectedKeys}
                 onSelectionChange={(keys) => {

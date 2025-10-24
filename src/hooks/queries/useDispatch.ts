@@ -5,16 +5,20 @@ import { DispatchViewRes } from "@/models/dispatch/schema/response"
 import { dispatchApi } from "@/services/dispathApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 
 export const useCreateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
-
+    const router = useRouter()
+    const queryClient = useQueryClient()
     return useMutation({
         mutationFn: dispatchApi.create,
-        onSuccess: () => {
+        onSuccess: async () => {
             toast.success(t("dispatch.create_success"))
+            await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.DISPATCH_REQUESTS })
+            router.push("/dashboard/dispatch")
             onSuccess?.()
         },
         onError: (error: BackendError) => {
@@ -25,12 +29,18 @@ export const useCreateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => 
 
 export const useUpdateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
 
     return useMutation({
         mutationFn: async ({ id, req }: { id: string; req: UpdateDispatchReq }) => {
             await dispatchApi.update({ id, req })
         },
-        onSuccess: () => {
+        onSuccess: async (_data, variables) => {
+            const { id } = variables
+            await queryClient.invalidateQueries({
+                queryKey: [...QUERY_KEYS.DISPATCH_REQUESTS, id]
+            })
+
             onSuccess?.()
             toast.success(t("dispatch.update_success"))
         },

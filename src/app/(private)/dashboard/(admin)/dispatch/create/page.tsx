@@ -6,13 +6,12 @@ import { useGetAllStaffs, useGetAllStations, useGetAllVehicles, useGetMe } from 
 import { useCreateDispatch } from "@/hooks/queries/useDispatch"
 import { AutocompleteItem, Textarea } from "@heroui/react"
 import { Car, MapPinAreaIcon, UserSwitchIcon } from "@phosphor-icons/react"
-import { useRouter } from "next/navigation"
 import React, { useCallback, useState } from "react"
 import { useTranslation } from "react-i18next"
 
-export default function DispatchPage() {
+export default function DispatchCreatePage() {
     const { t } = useTranslation()
-    const router = useRouter()
+    // const router = useRouter()
     const { data: user, isLoading: isLoading_1 } = useGetMe()
     const stationIdNow = user?.station?.id
 
@@ -24,11 +23,11 @@ export default function DispatchPage() {
     const [selecedSation, setSelecedSation] = useState("")
 
     //Staff && Vehicle
-    const { data: staffs, isLoading: isLoading_3 } = useGetAllStaffs({
+    const { data: dispatchRequestStaffs, isLoading: isLoading_3 } = useGetAllStaffs({
         params: { stationId: selecedSation },
         enabled: !!selecedSation
     })
-    const { data: vehicles, isLoading: isLoading_4 } = useGetAllVehicles({
+    const { data: dispatchRequestVehicles, isLoading: isLoading_4 } = useGetAllVehicles({
         params: { stationId: selecedSation },
         enabled: !!selecedSation
     })
@@ -94,7 +93,7 @@ export default function DispatchPage() {
                 <SectionStyled title={t("dispatch.list_staff")} icon={UserSwitchIcon}>
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
                         <TableSelectionStaff
-                            staffs={staffs ?? []}
+                            staffs={dispatchRequestStaffs ?? []}
                             onChangeSelected={setSelectStaffs}
                         />
                     </div>
@@ -103,7 +102,7 @@ export default function DispatchPage() {
                 <SectionStyled title={t("dispatch.list_vehicle")} icon={Car}>
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
                         <TableSelectionVehicle
-                            vehicles={vehicles ?? []}
+                            vehicles={dispatchRequestVehicles ?? []}
                             onChangeSelected={setSelectVehicles}
                         />
                     </div>
@@ -114,11 +113,9 @@ export default function DispatchPage() {
                 <ButtonStyled
                     color="primary"
                     className="p-6 btn-gradient btn-gradient:hover btn-gradient:active"
-                    onPress={() => {
-                        handleCreateDispatch?.(), router.push("/dashboard/dispatch")
-                    }}
+                    onPress={handleCreateDispatch}
                 >
-                    {t("success.create")}
+                    {t("dispatch.create")}
                 </ButtonStyled>
             </div>
         </div>
