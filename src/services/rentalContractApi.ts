@@ -2,6 +2,7 @@ import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 import { PaginationParams } from "@/models/common/request"
 import { PageResult } from "@/models/common/response"
 import {
+    ConfirmContractReq,
     ContractQueryParams,
     CreateRentalContractManualReq,
     CreateRentalContractReq,
@@ -93,8 +94,8 @@ export const rentalContractApi = {
             await axiosInstance.put(`/rental-contracts/${id}/cancel`)
         }),
 
-    confirmContract: ({ id, hasVehicle }: { id: string; hasVehicle: boolean }) =>
+    confirmContract: ({ id, req }: { id: string; req: ConfirmContractReq }) =>
         requestWrapper<void>(async () => {
-            await axiosInstance.put(`/rental-contracts/${id}/confirm`, { hasVehicle })
+            await axiosInstance.put(`/rental-contracts/${id}/confirm`, { req })
         })
 }

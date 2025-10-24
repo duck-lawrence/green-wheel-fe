@@ -1,18 +1,28 @@
 "use client"
-import { TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react"
+import {
+    TableHeader,
+    TableColumn,
+    TableBody,
+    TableRow,
+    TableCell,
+    DropdownTrigger,
+    DropdownMenu,
+    DropdownItem,
+    Spinner
+} from "@heroui/react"
 import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { ButtonStyled } from "../../styled/ButtonStyled"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { useConfirmContract, useDay, useGetMe, useName } from "@/hooks"
-import { RentalContractStatusLabels } from "@/constants/labels"
+import { RentalContractStatusLabels, VehicleStatusLabels } from "@/constants/labels"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { useRouter } from "next/navigation"
-import { TableStyled } from "@/components/styled"
-import { ContractQueryParams } from "@/models/rental-contract/schema/request"
+import { DropdownStyled, TableStyled } from "@/components/styled"
+import { ConfirmContractReq, ContractQueryParams } from "@/models/rental-contract/schema/request"
 import { PaginationParams } from "@/models/common/request"
 import { RentalContractStatus } from "@/constants/enum"
-import { Check } from "@phosphor-icons/react"
+import { Check, X } from "@phosphor-icons/react"
 import { STATUS_STYLES } from "@/constants/statusStyled"
 
 export function TableContractStaff({
@@ -56,9 +66,9 @@ export function TableContractStaff({
     // }
     // const [hasVehicle, setHasVehicle] = useState<boolean>(false)
 
-    const handleAccept = useCallback(
-        (id: string, hasVehicle: boolean) => {
-            confirmContract.mutateAsync({ id, hasVehicle })
+    const handleConfirm = useCallback(
+        (id: string, req: ConfirmContractReq) => {
+            confirmContract.mutateAsync({ id, req })
         },
         [confirmContract]
     )
@@ -88,7 +98,7 @@ export function TableContractStaff({
                     <TableColumn className="text-center text-gray-700 font-semibold w-36">
                         {t("table.status")}
                     </TableColumn>
-                    <TableColumn className="text-center text-gray-700 font-semibold w-30">
+                    <TableColumn className="text-center text-gray-700 font-semibold w-28">
                         {t("table.action")}
                     </TableColumn>
                 </TableHeader>
@@ -132,28 +142,55 @@ export function TableContractStaff({
                             <TableCell className="text-center">
                                 {item.status === RentalContractStatus.RequestPending &&
                                 staff?.station?.id === item.station.id ? (
-                                    <div className="flex flex-row md:flex-row items-center justify-center gap-2">
-                                        <ButtonStyled
-                                            color="primary"
-                                            variant="bordered"
-                                            className="h-7 w-20 border-1 border-primary hover:text-white hover:bg-primary font-semibold px-5 py-2 rounded-lg"
-                                            onPress={() => {
-                                                handleAccept(item.id, true)
-                                                console.log("data id :" + item.id)
-                                            }}
-                                        >
-                                            <Check size={20} weight="bold" />
-                                        </ButtonStyled>
-                                        <ButtonStyled
-                                            color="primary"
-                                            variant="bordered"
-                                            className="h-7 w-20 border-1 border-primary hover:text-white hover:bg-primary font-semibold px-5 py-2 rounded-lg"
-                                            onPress={() => {
-                                                handleAccept(item.id, false)
-                                            }}
-                                        >
-                                            X
-                                        </ButtonStyled>
+                                    <div className="flex items-center justify-center gap-2">
+                                        {confirmContract.isPending ? (
+                                            <Spinner />
+                                        ) : (
+                                            <>
+                                                {/* Accept */}
+                                                <ButtonStyled
+                                                    color="primary"
+                                                    variant="ghost"
+                                                    className="font-semibold p-2 min-w-fit"
+                                                    onPress={() => {
+                                                        handleConfirm(item.id, { hasVehicle: true })
+                                                    }}
+                                                >
+                                                    <Check size={20} weight="bold" />
+                                                </ButtonStyled>
+
+                                                {/* Reject */}
+                                                <DropdownStyled placement="bottom-end">
+                                                    <DropdownTrigger>
+                                                        <ButtonStyled
+                                                            color="danger"
+                                                            variant="ghost"
+                                                            className="font-semibold p-2 min-w-fit"
+                                                        >
+                                                            <X size={20} weight="bold" />
+                                                        </ButtonStyled>
+                                                    </DropdownTrigger>
+
+                                                    <DropdownMenu
+                                                        onAction={(key) => {
+                                                            const selected = Number(key)
+                                                            handleConfirm(item.id, {
+                                                                hasVehicle: false,
+                                                                vehicleStatus: selected
+                                                            })
+                                                        }}
+                                                    >
+                                                        {Object.entries(VehicleStatusLabels).map(
+                                                            ([key, label]) => (
+                                                                <DropdownItem key={key}>
+                                                                    {label}
+                                                                </DropdownItem>
+                                                            )
+                                                        )}
+                                                    </DropdownMenu>
+                                                </DropdownStyled>
+                                            </>
+                                        )}
                                     </div>
                                 ) : (
                                     <span className="text-gray-400 text-sm">

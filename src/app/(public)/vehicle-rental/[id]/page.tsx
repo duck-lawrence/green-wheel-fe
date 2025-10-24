@@ -311,7 +311,9 @@ export default function VehicleDetailPage() {
                             />
 
                             <ButtonStyled
-                                isDisabled={!isCustomer && !isStaff}
+                                isDisabled={
+                                    model.availableVehicleCount == 0 || (!isCustomer && !isStaff)
+                                }
                                 className="w-full rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 onPress={handleClickBooking}
                             >

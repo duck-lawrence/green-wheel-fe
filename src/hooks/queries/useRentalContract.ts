@@ -2,7 +2,11 @@ import { RentalContractStatus } from "@/constants/enum"
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { PaginationParams } from "@/models/common/request"
 import { BackendError, PageResult } from "@/models/common/response"
-import { ContractQueryParams, HandoverContractReq } from "@/models/rental-contract/schema/request"
+import {
+    ConfirmContractReq,
+    ContractQueryParams,
+    HandoverContractReq
+} from "@/models/rental-contract/schema/request"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { rentalContractApi } from "@/services/rentalContractApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
@@ -175,14 +179,13 @@ export const useConfirmContract = ({
     const queryClient = useQueryClient()
     const key = [...QUERY_KEYS.RENTAL_CONTRACTS, params, pagination]
     return useMutation({
-        mutationFn: async ({ id, hasVehicle }: { id: string; hasVehicle: boolean }) => {
-            await rentalContractApi.confirmContract({ id, hasVehicle })
+        mutationFn: async ({ id, req }: { id: string; req: ConfirmContractReq }) => {
+            await rentalContractApi.confirmContract({ id, req })
         },
         onSuccess: () => {
             toast.success(t("success.update"))
             onSuccess?.()
             queryClient.invalidateQueries({ queryKey: key })
-            // queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))
