@@ -70,33 +70,34 @@ export function CitizenIdentityProfile({ user }: { user: UserProfileViewRes }) {
             <div className="flex flex-wrap justify-between text-2xl mb-2 font-bold">
                 {t("user.citizen_identity")}
                 {/* Button enable show change */}
-                <div className="flex justify-end">
-                    {!editable ? (
-                        <ButtonStyled
-                            color="primary"
-                            variant="ghost"
-                            className="p-3 min-w-fit"
-                            onPress={() => setEditable(!editable)}
-                        >
-                            <div>
-                                <NotePencilIcon />
-                            </div>
-                        </ButtonStyled>
-                    ) : formik.isSubmitting ? (
-                        <Spinner />
-                    ) : (
-                        <div className="flex items-end gap-2">
-                            <CitizenIdentityUploader btnClassName="bg-secondary" />
+                {citizenId && (
+                    <div className="flex justify-end">
+                        {!editable ? (
                             <ButtonStyled
                                 color="primary"
                                 variant="ghost"
-                                isLoading={formik.isSubmitting}
-                                isDisabled={!formik.isValid || !formik.dirty}
-                                onPress={formik.submitForm}
+                                className="p-3 min-w-fit"
+                                onPress={() => setEditable(!editable)}
                             >
-                                {t("common.save")}
+                                <div>
+                                    <NotePencilIcon />
+                                </div>
                             </ButtonStyled>
-                            {/* <ButtonStyled
+                        ) : formik.isSubmitting ? (
+                            <Spinner />
+                        ) : (
+                            <div className="flex items-end gap-2">
+                                <CitizenIdentityUploader btnClassName="bg-secondary" />
+                                <ButtonStyled
+                                    color="primary"
+                                    variant="ghost"
+                                    isLoading={formik.isSubmitting}
+                                    isDisabled={!formik.isValid || !formik.dirty}
+                                    onPress={formik.submitForm}
+                                >
+                                    {t("common.save")}
+                                </ButtonStyled>
+                                {/* <ButtonStyled
                                 // className="border-primary
                                 //     bg-white border text-primary
                                 //     hover:text-white hover:bg-primary"
@@ -105,27 +106,28 @@ export function CitizenIdentityProfile({ user }: { user: UserProfileViewRes }) {
                             >
                                 {t("common.delete")}
                             </ButtonStyled> */}
-                            <ButtonStyled
-                                isDisabled={
-                                    formik.isSubmitting
-                                    // deleteMutation.isPending
-                                }
-                                onPress={() => {
-                                    setEditable(!editable)
-                                    formik.resetForm()
-                                }}
-                            >
-                                {t("common.cancel")}
-                            </ButtonStyled>
-                        </div>
-                    )}
-                </div>
+                                <ButtonStyled
+                                    isDisabled={
+                                        formik.isSubmitting
+                                        // deleteMutation.isPending
+                                    }
+                                    onPress={() => {
+                                        setEditable(!editable)
+                                        formik.resetForm()
+                                    }}
+                                >
+                                    {t("common.cancel")}
+                                </ButtonStyled>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
             <div className="mb-8">
                 {isLoading ? (
                     <Spinner />
                 ) : !citizenId ? (
-                    <div className="flex justify-between items-center text-md pr-4 mt-[-0.75rem]">
+                    <div className="flex justify-between items-center text-md mt-[-0.75rem]">
                         <p>{t("user.please_upload_citizen_identity")}</p>
                         <CitizenIdentityUploader />
                     </div>

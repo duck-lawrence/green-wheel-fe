@@ -6,15 +6,50 @@ import { motion } from "framer-motion"
 import { useTranslation } from "react-i18next"
 import { MapPin, Phone, EnvelopeSimple, PaperPlaneTilt } from "@phosphor-icons/react"
 import { ButtonStyled, InputStyled, TextareaStyled } from "@/components"
-import { GREENWHEEL_ADDRESS, GREENWHEEL_EMAIL, GREENWHEEL_PHONE } from "@/constants/constants"
+import {
+    GREENWHEEL_ADDRESS,
+    GREENWHEEL_ADDRESS_URL,
+    GREENWHEEL_EMAIL,
+    GREENWHEEL_PHONE
+} from "@/constants/constants"
 import { EMAIL_REGEX, PHONE_REGEX } from "@/constants/regex"
+import { useCreateTicket, useName } from "@/hooks"
+import { TicketType } from "@/constants/enum"
+
+type FormikValues = {
+    lastName: string
+    firstName: string
+    email: string
+    phone: string
+    description?: string
+}
 
 export default function Contact() {
     const { t } = useTranslation()
+    const { toFullName } = useName()
 
-    const initialValues = useMemo(
-        () => ({ lastName: "", firstName: "", email: "", message: "" }),
-        []
+    const createMutation = useCreateTicket({ onSuccess: undefined })
+    const handleCreate = useCallback(
+        async (values: FormikValues) => {
+            const description = [
+                `Name: ${toFullName({
+                    firstName: values.firstName,
+                    lastName: values.lastName
+                })}`,
+                `Email: ${values.email}`,
+                `Phone: ${values.phone}`,
+                values.description && `Description: ${values.description}`
+            ]
+                .filter(Boolean)
+                .join("\n")
+
+            await createMutation.mutateAsync({
+                title: "Contact",
+                description,
+                type: TicketType.Contact
+            })
+        },
+        [createMutation, toFullName]
     )
 
     const validationSchema = useMemo(() => {
@@ -27,25 +62,24 @@ export default function Contact() {
             phone: Yup.string()
                 .required(t("user.phone_require"))
                 .matches(PHONE_REGEX, t("user.invalid_phone")),
-            message: Yup.string()
+            description: Yup.string()
         })
     }, [t])
 
-    const handlesubmit = useCallback(
-        async (values: { lastName: string; firstName: string; email: string; message: string }) => {
-            await console.log(values)
+    const formik = useFormik<FormikValues>({
+        initialValues: {
+            lastName: "",
+            firstName: "",
+            email: "",
+            phone: "",
+            description: undefined
         },
-        []
-    )
-
-    const formik = useFormik({
-        initialValues,
         validationSchema,
-        onSubmit: handlesubmit
+        onSubmit: handleCreate
     })
 
     return (
-        <div className="min-h-screen flex items-center justify-center py-20  px-4 mt-[-6rem]">
+        <div className="min-h-screen flex items-center justify-center py-24 px-4 mt-[-6rem]">
             <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -54,11 +88,8 @@ export default function Contact() {
             >
                 {/* Header */}
                 <div className="text-center space-y-3">
-                    <h2 className="text-4xl font-bold text-primary">Contact Us</h2>
-                    <p className="text-gray-600 text-lg">
-                        We’d love to hear from you. Fill out the form or reach us via the
-                        information below.
-                    </p>
+                    <h2 className="text-4xl font-bold text-primary">{t("contact.title")}</h2>
+                    <p className="text-gray-600 text-lg">{t("contact.des")}</p>
                 </div>
 
                 {/* Content */}
@@ -68,9 +99,9 @@ export default function Contact() {
                         initial={{ opacity: 0, x: -40 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="flex-1 space-y-3"
+                        className="flex-1 space-y-4"
                     >
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <InputStyled
                                 isClearable
                                 variant="bordered"
@@ -105,23 +136,24 @@ export default function Contact() {
                         <InputStyled
                             isClearable
                             variant="bordered"
-                            label={t("auth.email")}
-                            value={formik.values.email}
-                            onValueChange={(value) => formik.setFieldValue("email", value)}
-                            onBlur={() => formik.setFieldTouched("email")}
-                            isInvalid={!!(formik.touched.email && formik.errors.email)}
-                            errorMessage={formik.errors.email}
+                            label={t("user.phone")}
+                            value={formik.values.phone}
+                            onValueChange={(value) => formik.setFieldValue("phone", value)}
+                            onBlur={() => formik.setFieldTouched("phone")}
+                            isInvalid={!!(formik.touched.phone && formik.errors.phone)}
+                            errorMessage={formik.errors.phone}
                         />
                         <TextareaStyled
                             isClearable
-                            label="Message"
-                            placeholder="Type your message here..."
+                            label={t("contact.further_description")}
+                            placeholder={t("contact.further_description_placeholder")}
                             variant="bordered"
-                            onValueChange={(value) => formik.setFieldValue("message", value)}
+                            onValueChange={(value) => formik.setFieldValue("description", value)}
+                            className="min-h-28"
                         />
 
                         <ButtonStyled
-                            className="btn-gradient w-full py-3 rounded-lg
+                            className="btn-gradient w-full rounded-lg
                             flex justify-center items-center gap-2"
                             type="submit"
                             isDisabled={!formik.isValid}
@@ -143,33 +175,36 @@ export default function Contact() {
                             <p className="flex items-center gap-3">
                                 <MapPin size={22} weight="fill" className="text-primary" />
                                 <span>
-                                    <span className="font-bold text-primary">Address:</span>{" "}
+                                    <span className="font-bold text-primary">{`${t(
+                                        "contact.address"
+                                    )}: `}</span>
                                     {GREENWHEEL_ADDRESS}
                                 </span>
                             </p>
                             <p className="flex items-center gap-3">
                                 <Phone size={22} weight="fill" className="text-primary" />
                                 <span>
-                                    <span className="font-bold text-primary">Phone:</span>{" "}
+                                    <span className="font-bold text-primary">{`${t(
+                                        "contact.phone"
+                                    )}: `}</span>
                                     {GREENWHEEL_PHONE}
                                 </span>
                             </p>
                             <p className="flex items-center gap-3">
                                 <EnvelopeSimple size={22} weight="fill" className="text-primary" />
                                 <span>
-                                    <span className="font-bold text-primary">Email:</span>{" "}
+                                    <span className="font-bold text-primary">{`${t(
+                                        "contact.email"
+                                    )}: `}</span>
                                     {GREENWHEEL_EMAIL}
                                 </span>
                             </p>
-                            <p className="text-gray-400 text-sm mt-2">
-                                Our team will get back to you as soon as possible. For urgent
-                                matters, please call our hotline.
-                            </p>
+                            <p className="text-gray-400 text-sm mt-2">{t("contact.sub")}</p>
                         </div>
 
                         {/* MAP */}
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4648.246948872786!2d106.80730807570384!3d10.841132857995563!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752731176b07b1%3A0xb752b24b379bae5e!2sFPT%20University%20HCMC!5e1!3m2!1sen!2s!4v1759778136466!5m2!1sen!2s"
+                            src={GREENWHEEL_ADDRESS_URL}
                             width="100%"
                             height="200"
                             className="rounded-lg shadow-sm mt-6"

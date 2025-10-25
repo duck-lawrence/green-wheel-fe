@@ -152,3 +152,10 @@
 //         </section>
 //     )
 // }
+
+import { ModelImagesUploader } from "@/components"
+import React from "react"
+
+export default function page() {
+    return <ModelImagesUploader id="123" />
+}

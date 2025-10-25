@@ -1,6 +1,6 @@
 "use client"
 
-import { AutocompleteStyle, ButtonStyled, InputStyled } from "@/components/styled"
+import { AutocompleteStyled, ButtonStyled, InputStyled } from "@/components/styled"
 import { useCreateFeedback, useGetAllStations } from "@/hooks"
 import { AutocompleteItem } from "@heroui/react"
 import { MapPinAreaIcon, Star } from "@phosphor-icons/react"
@@ -57,7 +57,7 @@ export function CreateFeedback({ onClose }: { onClose: () => void }) {
 
             <div className="grid gap-6">
                 {/* Station picker */}
-                <AutocompleteStyle
+                <AutocompleteStyled
                     label={t("vehicle_model.station")}
                     items={stations ?? []}
                     startContent={<MapPinAreaIcon className="text-xl" />}
@@ -68,7 +68,7 @@ export function CreateFeedback({ onClose }: { onClose: () => void }) {
                     {(stations ?? []).map((item) => (
                         <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
                     ))}
-                </AutocompleteStyle>
+                </AutocompleteStyled>
 
                 {/* Feedback content */}
                 <InputStyled

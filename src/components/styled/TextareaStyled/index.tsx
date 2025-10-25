@@ -11,8 +11,13 @@ export const TextareaStyled = React.forwardRef<React.ElementRef<typeof Textarea>
             {...rest}
             className={cn("w-full", className)}
             classNames={{
-                inputWrapper: "min-h-[88px]",
-                ...classNames
+                ...classNames,
+                inputWrapper: cn(
+                    "border-2 border-gray-200 data-[hover=true]:border-primary data-[focus=true]:border-primary",
+                    classNames?.inputWrapper
+                ),
+                label: cn("text-gray-700", classNames?.label),
+                input: cn("text-gray-900", classNames?.input)
             }}
         />
     )

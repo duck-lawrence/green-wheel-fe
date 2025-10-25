@@ -77,17 +77,13 @@ export const useGetAllRentalContracts = ({
     enabled?: boolean
 }) => {
     const queryClient = useQueryClient()
-    // const key = [...QUERY_KEYS.RENTAL_CONTRACTS, params]
+    const key = [...QUERY_KEYS.RENTAL_CONTRACTS, params, pagination]
 
     return useQuery({
-        queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, params, pagination],
+        queryKey: key,
         queryFn: async () => await rentalContractApi.getAll({ query: params, pagination }),
         initialData: () => {
-            return queryClient.getQueryData<PageResult<RentalContractViewRes>>([
-                ...QUERY_KEYS.RENTAL_CONTRACTS,
-                params,
-                pagination
-            ])
+            return queryClient.getQueryData<PageResult<RentalContractViewRes>>(key)
         },
         enabled
     })

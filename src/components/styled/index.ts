@@ -1,5 +1,5 @@
 export * from "./AlertStyled"
-export * from "./AutocompleteStyle"
+export * from "./AutocompleteStyled"
 export * from "./AvatarStyled"
 
 export * from "./BreadcrumbsStyled"

@@ -1,5 +1,5 @@
-import { StationFeedbackCreateReq } from "@/models/stationFeedback/schema/request"
-import { StationFeedbackRes } from "@/models/stationFeedback/schema/response"
+import { StationFeedbackCreateReq } from "@/models/station-feedback/schema/request"
+import { StationFeedbackRes } from "@/models/station-feedback/schema/response"
 import axiosInstance from "@/utils/axios"
 import { requestWrapper } from "@/utils/helpers/axiosHelper"
 

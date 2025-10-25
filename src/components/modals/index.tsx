@@ -12,7 +12,7 @@ export * from "./DocumentPreview"
 export * from "./EditUserModal"
 export * from "./FeedbackModal"
 
-export * from "./ImageUploaderModal"
+export * from "./ImagesUploaderModal"
 export * from "./ImageUploaderModal"
 export * from "./SelectUserModal"
 export * from "./VehicleModals"

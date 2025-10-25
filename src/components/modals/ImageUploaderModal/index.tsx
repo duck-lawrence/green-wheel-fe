@@ -1,11 +1,10 @@
 "use client"
 
 import React, { useCallback, useState } from "react"
-import { ModalStyled, ButtonStyled } from "@/components/"
+import { ModalStyled, ButtonStyled, ImageCropper } from "@/components/"
 import { ModalContent, ModalBody, ModalHeader, Spinner } from "@heroui/react"
 import { getCroppedImage } from "@/utils/helpers/image"
 import { useTranslation } from "react-i18next"
-import { ImageCropper } from "./ImageCropper"
 
 type ImageUploaderModalProps = {
     isOpen: boolean
