@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
     AutocompleteStyled,
-    ButtonStyled,
+    ButtonIconStyled,
     EnumPicker,
     InputStyled,
     PaginationStyled,
@@ -19,6 +19,7 @@ import toast from "react-hot-toast"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { AutocompleteItem } from "@heroui/react"
 import { PaginationParams } from "@/models/common/request"
+import { SearchIcon } from "lucide-react"
 
 export default function StaffContractsPage() {
     const { t } = useTranslation()
@@ -78,13 +79,13 @@ export default function StaffContractsPage() {
                             <FunnelSimple size={22} className="text-primary" />
                             {t("staff.contract_filter")}
                         </h3>
-                        <ButtonStyled
+                        <ButtonIconStyled
                             type="submit"
                             isLoading={isFetching}
-                            className="btn-gradient px-6 py-2 rounded-lg"
+                            className="btn-gradient rounded-lg"
                         >
-                            {t("staff.handovers_filters_search")}
-                        </ButtonStyled>
+                            <SearchIcon />
+                        </ButtonIconStyled>
                     </div>
 
                     {/* Filter inputs */}

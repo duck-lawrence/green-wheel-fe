@@ -6,7 +6,8 @@ import {
     EnumPicker,
     ImageStyled,
     InputStyled,
-    CitizenIdentityUploader
+    CitizenIdentityUploader,
+    ButtonIconStyled
 } from "@/components/"
 import { Sex } from "@/constants/enum"
 import { useDay, useGetMyCitizenId, useUpdateCitizenId } from "@/hooks"
@@ -73,16 +74,13 @@ export function CitizenIdentityProfile({ user }: { user: UserProfileViewRes }) {
                 {citizenId && (
                     <div className="flex justify-end">
                         {!editable ? (
-                            <ButtonStyled
+                            <ButtonIconStyled
                                 color="primary"
                                 variant="ghost"
-                                className="p-3 min-w-fit"
                                 onPress={() => setEditable(!editable)}
                             >
-                                <div>
-                                    <NotePencilIcon />
-                                </div>
-                            </ButtonStyled>
+                                <NotePencilIcon />
+                            </ButtonIconStyled>
                         ) : formik.isSubmitting ? (
                             <Spinner />
                         ) : (

@@ -1,6 +1,6 @@
 "use client"
 
-import { ButtonStyled, InputStyled } from "@/components/"
+import { ButtonIconStyled, ButtonStyled, InputStyled } from "@/components/"
 import { useDeleteBankAccount, useUpdateBankAccount } from "@/hooks"
 import { Spinner } from "@heroui/react"
 import { NotePencilIcon } from "@phosphor-icons/react"
@@ -53,16 +53,13 @@ export function BankInfoProfile({ user }: { user: UserProfileViewRes }) {
                 {t("user.bank_account_info")}
                 <div className="flex justify-end">
                     {!editable ? (
-                        <ButtonStyled
+                        <ButtonIconStyled
                             color="primary"
                             variant="ghost"
-                            className="p-3 min-w-fit"
                             onPress={() => setEditable(!editable)}
                         >
-                            <div>
-                                <NotePencilIcon />
-                            </div>
-                        </ButtonStyled>
+                            <NotePencilIcon />
+                        </ButtonIconStyled>
                     ) : formik.isSubmitting || deleteMutation.isPending ? (
                         <Spinner />
                     ) : (

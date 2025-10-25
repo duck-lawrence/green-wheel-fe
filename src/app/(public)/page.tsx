@@ -12,20 +12,14 @@ import {
 import React, { useEffect, useRef } from "react"
 import { slides } from "@/../public/cars"
 import { useTranslation } from "react-i18next"
-import { useNavbarItemStore } from "@/hooks/singleton/store/useNavbarItemStore"
 import { useRouter, useSearchParams } from "next/navigation"
 import toast from "react-hot-toast"
 
 export default function HomePage() {
     const { t } = useTranslation()
-    const setActiveMenuKey = useNavbarItemStore((s) => s.setActiveMenuKey)
     const router = useRouter()
     const params = useSearchParams()
     const hasShownToast = useRef(false)
-
-    useEffect(() => {
-        setActiveMenuKey("home")
-    }, [setActiveMenuKey])
 
     useEffect(() => {
         if (hasShownToast.current) return

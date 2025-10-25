@@ -11,10 +11,10 @@ export function DatePickerStyled(props: DatePickerProps) {
             classNames={{
                 ...props.classNames,
                 inputWrapper: cn(
-                    "border-2 border-gray-200 data-[hover=true]:border-primary data-[focus=true]:border-primary",
+                    "hover:border-primary focus-within:border-primary focus-within:hover:border-primary",
                     props.classNames?.inputWrapper
                 ),
-                label: cn("text-gray-700", props.classNames?.label),
+                label: cn("text-gray-700 text-left", props.classNames?.label),
                 input: cn("text-gray-900", props.classNames?.input)
             }}
         />

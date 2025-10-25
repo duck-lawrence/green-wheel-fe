@@ -1,7 +1,13 @@
 "use client"
 
 import React, { useCallback, useState } from "react"
-import { ModalStyled, ButtonStyled, ImageCropper, ImageUploadButton } from "@/components/"
+import {
+    ModalStyled,
+    ButtonStyled,
+    ImageCropper,
+    ImageUploadButton,
+    ButtonIconStyled
+} from "@/components/"
 import { ModalContent, ModalBody, ModalHeader, Spinner } from "@heroui/react"
 import { getCroppedImage } from "@/utils/helpers/image"
 import { useTranslation } from "react-i18next"
@@ -87,20 +93,20 @@ export function ImagesUploaderModal({
                                 cropSize={cropSize}
                             />
                             <div className="flex gap-3">
-                                <ButtonStyled
+                                <ButtonIconStyled
                                     color="primary"
                                     variant="ghost"
                                     onPress={handleCropDone}
                                     isDisabled={isUploadPending}
                                 >
                                     <Check size={18} />
-                                </ButtonStyled>
-                                <ButtonStyled
+                                </ButtonIconStyled>
+                                <ButtonIconStyled
                                     onPress={() => setImgSrc(null)}
                                     isDisabled={isUploadPending}
                                 >
                                     <X size={18} />
-                                </ButtonStyled>
+                                </ButtonIconStyled>
                             </div>
                         </div>
                     ) : (

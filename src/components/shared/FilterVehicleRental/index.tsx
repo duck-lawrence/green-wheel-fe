@@ -273,7 +273,7 @@ export function FilterVehicleRental({
                             ))}
                         </AutocompleteStyled>
                     </div>
-                    <div className="hidden md:block">{`${t("station.address")}: ${
+                    <div className="hidden md:block text-left">{`${t("station.address")}: ${
                         stations?.find((station) => station.id === formik.values.stationId)?.address
                     }`}</div>
                 </div>
@@ -321,8 +321,12 @@ export function FilterVehicleRental({
                         />
                     </div>
                     <div>
-                        <div className="text-danger-500 text-small">{formik.errors.startDate}</div>
-                        <div className="text-danger-500 text-small">{formik.errors.endDate}</div>
+                        <div className="text-danger-500 text-small text-left">
+                            {formik.errors.startDate}
+                        </div>
+                        <div className="text-danger-500 text-small text-left">
+                            {formik.errors.endDate}
+                        </div>
                     </div>
                 </div>
             </form>

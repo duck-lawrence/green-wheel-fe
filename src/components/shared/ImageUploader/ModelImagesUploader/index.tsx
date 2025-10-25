@@ -2,7 +2,7 @@
 
 import React, { useCallback } from "react"
 import { useImageUploadModal, useUploadModelImages } from "@/hooks"
-import { ButtonStyled, ImagesUploaderModal } from "@/components/"
+import { ButtonIconStyled, ImagesUploaderModal } from "@/components/"
 import { useTranslation } from "react-i18next"
 import { cn } from "@heroui/react"
 import { Camera } from "lucide-react"
@@ -29,7 +29,7 @@ export function ModelImagesUploader({
 
     return (
         <>
-            <ButtonStyled
+            <ButtonIconStyled
                 color="primary"
                 variant="ghost"
                 isDisabled={uploadModelImages.isPending}
@@ -40,7 +40,7 @@ export function ModelImagesUploader({
                 onPress={onOpen}
             >
                 <Camera size={18} fontWeight="fill" />
-            </ButtonStyled>
+            </ButtonIconStyled>
             <ImagesUploaderModal
                 key={isOpen ? "open" : "closed"}
                 label={t("vehicle_model.upload_images")}

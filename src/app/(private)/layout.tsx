@@ -1,7 +1,7 @@
 "use client"
 
 import { SpinnerStyled } from "@/components"
-import { useNavbarItemStore, useTokenStore } from "@/hooks"
+import { useTokenStore } from "@/hooks"
 import { usePathname, useRouter } from "next/navigation"
 import React, { useEffect } from "react"
 import toast from "react-hot-toast"
@@ -11,12 +11,7 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
     const router = useRouter()
     const pathName = usePathname()
     const { t } = useTranslation()
-    const setActiveMenuKey = useNavbarItemStore((s) => s.setActiveMenuKey)
     const isLogined = useTokenStore((s) => !!s.accessToken)
-
-    useEffect(() => {
-        setActiveMenuKey(undefined)
-    }, [setActiveMenuKey])
 
     //Vấn đề là router.replace đang chạy trong UseEffect,
     //  vốn chỉ kích hoạt sau lần render đầu tiên, vì vậy layout vẫn kịp vẽ children

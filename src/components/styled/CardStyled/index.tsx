@@ -9,8 +9,8 @@ type CardStyledProps = CardProps & {
 }
 
 const COLOR_MAP = {
-    primary: "bg-[#00A63E]",
-    secondary: "bg-[#f4f4f4]",
+    primary: "bg-primary",
+    secondary: "bg-secondary",
     danger: "bg-[#FF6B6B]",
     sage: "bg-[#BBDEA4]",
     cream: "bg-[#F0EBD6]",
@@ -19,6 +19,9 @@ const COLOR_MAP = {
 
 export function CardStyled({ color, className, ...rest }: CardStyledProps) {
     return (
-        <Card {...rest} className={cn("p-4 space-y-2 text-black", color && COLOR_MAP[color], className)} />
+        <Card
+            {...rest}
+            className={cn("p-4 space-y-2 text-black", color && COLOR_MAP[color], className)}
+        />
     )
 }

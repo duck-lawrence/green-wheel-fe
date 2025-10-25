@@ -1,17 +1,15 @@
 import { TicketStatus, TicketType } from "@/constants/enum"
+import { UserProfileViewRes } from "@/models/user/schema/response"
 
-export type CreateTicketReq = {
+export type TicketViewRes = {
+    id: string
     title: string
     description: string
-    type: TicketType
-}
-
-export type UpdateTicketReq = {
     reply?: string
-    status?: TicketStatus
-}
+    status: TicketStatus
+    type: TicketType
+    createdAt: string
 
-export type TicketFilterParams = {
-    status?: TicketStatus
-    type?: TicketType
+    requester?: UserProfileViewRes
+    assignee?: UserProfileViewRes
 }

@@ -17,10 +17,10 @@ button {
         transition: transform 0.3s ease-in-out;
     }
     .interactive-scale:hover {
-        transform: scale(1.05);
+        transform: scale(1.03);
     }
     .interactive-scale:active {
-        transform: scale(0.95);
+        transform: scale(0.99);
     }
 
     /* --- Button gradient --- */
