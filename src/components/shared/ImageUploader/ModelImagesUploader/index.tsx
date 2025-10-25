@@ -31,6 +31,7 @@ export function ModelImagesUploader({
         <>
             <ButtonStyled
                 color="primary"
+                variant="ghost"
                 isDisabled={uploadModelImages.isPending}
                 className={cn(
                     "w-fit px-4 py-2 rounded-lg flex items-center justify-center",
@@ -43,7 +44,7 @@ export function ModelImagesUploader({
             <ImagesUploaderModal
                 key={isOpen ? "open" : "closed"}
                 label={t("vehicle_model.upload_images")}
-                isOpen={true}
+                isOpen={isOpen}
                 onOpenChange={onOpenChange}
                 onClose={onClose}
                 uploadFn={handleUpload}

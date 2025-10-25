@@ -14,7 +14,7 @@ export const PreviewList = memo(function PreviewList({
     onRemove: (index: number) => void
 }) {
     return (
-        <div className="grid grid-cols-3 gap-3 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full">
             {images.map((img, idx) => (
                 <div key={idx} className="relative group">
                     <ImageStyled
