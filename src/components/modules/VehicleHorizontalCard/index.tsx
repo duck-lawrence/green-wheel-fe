@@ -63,7 +63,7 @@ export function VehicleHorizontalCard({
             shadow="sm"
             className={cn(
                 "space-y-0 bg-white p-6 sm:p-8",
-                "hover:shadow-xl interactive-scale active:transform active:scale-1",
+                "hover:shadow-xl interactive-scale",
                 className
             )}
         >
