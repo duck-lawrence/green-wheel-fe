@@ -13,7 +13,7 @@ export const TextareaStyled = React.forwardRef<React.ElementRef<typeof Textarea>
             classNames={{
                 ...classNames,
                 inputWrapper: cn(
-                    "border-2 border-gray-200 data-[hover=true]:border-primary data-[focus=true]:border-primary",
+                    "data-[hover=true]:border-primary data-[focus=true]:border-primary",
                     classNames?.inputWrapper
                 ),
                 label: cn("text-gray-700", classNames?.label),

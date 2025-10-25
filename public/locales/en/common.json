@@ -40,7 +40,8 @@
         "create": "Create",
         "close": "Close",
         "view_details": "View details",
-        "choose": "Choose"
+        "choose": "Choose",
+        "send": "Send"
     },
     "json": {
         "parsing_failed": "Failed to parse json"
@@ -483,6 +484,7 @@
         "sidebar_fleet": "Fleet",
         "sidebar_notifications": "Notifications",
         "sidebar_reports": "Reports",
+        "sidebar_customer_supports": "Customer Supports",
         "sidebar_user_management": "User Management",
         "sidebar_profile": "Profile",
         "sidebar_logout": "Sign out",
@@ -587,7 +589,8 @@
     "rental_contract": {
         "id": "Contract ID",
         "back_to_rental_contract": "Back to rental contract",
-        "create": "Create rental request",
+        "please_login": "Please login to rent",
+        "rent": "Rent this vehicle",
         "create_manual": "Create rental request for customer",
         "update_success": "Update success",
         "update_failed": "Update failed",
@@ -670,8 +673,22 @@
         "failed_to_create_momo_payment": "Failed to create momo payment"
     },
     "ticket": {
+        "customer_support": "Customer support",
+        "send_customer_support": "Send customer support request",
+        "staff_report": "Staff report",
+        "title": "Title",
+        "title_require": "Title is required",
+        "description": "Description",
+        "description_placeholder": "Describe your problem in detail...",
+        "description_require": "Description is required",
+        "reply": "Reply",
+        "reply_placeholder": "Enter your reply here...",
+        "wait_for_reply": "Please wait for reply...",
+        "reply_require": "Reply is required",
         "not_found": "Ticket not found",
-        "already_escalated": "This ticket already escalated to admin"
+        "already_escalated": "This ticket already escalated to admin",
+        "requester": "Requester",
+        "assignee": "Assignee"
     },
     "station_feedback": {
         "not_found": "Station feedback not found"

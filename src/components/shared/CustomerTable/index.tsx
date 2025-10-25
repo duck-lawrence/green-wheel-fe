@@ -5,10 +5,9 @@ import { useTranslation } from "react-i18next"
 import { EyeIcon, Paperclip } from "@phosphor-icons/react"
 import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 
-import { ButtonStyled } from "../../styled/ButtonStyled"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { useName } from "@/hooks"
-import { TableStyled } from "@/components/styled"
+import { ButtonIconStyled, TableStyled } from "@/components"
 
 type CustomerTableProps = {
     users: UserProfileViewRes[]
@@ -82,12 +81,9 @@ export function CustomerTable({ users, onPreviewDocument, onEditUser }: Customer
                         </div>
                     </TableCell>
                     <TableCell className="text-center">
-                        <ButtonStyled
-                            className="p-4 min-w-fit max-w-fit"
-                            onPress={() => onEditUser?.(user)}
-                        >
+                        <ButtonIconStyled className="p-4" onPress={() => onEditUser?.(user)}>
                             <EyeIcon />
-                        </ButtonStyled>
+                        </ButtonIconStyled>
                     </TableCell>
                 </TableRow>
             )

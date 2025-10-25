@@ -11,7 +11,6 @@ export function LoginModal() {
     return (
         <ModalStyled isOpen={isOpen} onOpenChange={onOpenChange}>
             <ModalContent className="max-w-150 w-full p-14">
-                {/* <ModalHeader className="flex flex-col gap-1">{t("login.login")}</ModalHeader> */}
                 <ModalBody>
                     <LoginForm onSuccess={onClose} />
                 </ModalBody>

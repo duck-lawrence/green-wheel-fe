@@ -1,12 +1,12 @@
 import { TicketStatus } from "@/constants/enum"
 import { PaginationParams } from "@/models/common/request"
 import { PageResult } from "@/models/common/response"
-import { TicketViewRes } from "@/models/ticket/schema/request"
+import { TicketViewRes } from "@/models/ticket/schema/response"
 import {
     CreateTicketReq,
     TicketFilterParams,
     UpdateTicketReq
-} from "@/models/ticket/schema/response"
+} from "@/models/ticket/schema/request"
 import axiosInstance from "@/utils/axios"
 import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 

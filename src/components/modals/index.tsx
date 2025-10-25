@@ -1,21 +1,19 @@
 import React from "react"
-import { LoginModal } from "./LoginModal"
-import { RegisterModal } from "./RegisterModal"
-import { ForgotPasswordModal } from "./ForgotPasswordModal"
+
+import { ForgotPasswordModal, LoginModal, RegisterModal } from "./Auth"
 
 export * from "./ChecklistModal"
 export * from "./CreateInvoiceModal"
 export * from "./CreateRentalContractModal"
-export * from "./CreateUserModal"
 export * from "./DetailDamageModal"
 export * from "./DocumentPreview"
-export * from "./EditUserModal"
 export * from "./FeedbackModal"
 
-export * from "./ImagesUploaderModal"
-export * from "./ImageUploaderModal"
-export * from "./SelectUserModal"
-export * from "./VehicleModals"
+export * from "./Image"
+export * from "./Staff"
+export * from "./Ticket"
+export * from "./User"
+export * from "./Vehicle"
 
 export const Modals = () => {
     return (

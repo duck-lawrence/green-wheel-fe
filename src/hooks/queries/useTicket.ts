@@ -2,22 +2,33 @@ import { TicketStatus } from "@/constants/enum"
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { PaginationParams } from "@/models/common/request"
 import { BackendError, PageResult } from "@/models/common/response"
-import { TicketViewRes } from "@/models/ticket/schema/request"
-import { TicketFilterParams } from "@/models/ticket/schema/response"
+import { TicketViewRes } from "@/models/ticket/schema/response"
+import { TicketFilterParams } from "@/models/ticket/schema/request"
 import { ticketApi } from "@/services/ticketApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 
-export const useCreateTicket = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useCreateTicket = ({
+    status,
+    pagination = {},
+    onSuccess
+}: {
+    status?: TicketStatus
+    pagination?: PaginationParams
+    onSuccess?: () => void
+}) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
+    const key = [...QUERY_KEYS.TICKETS, ...QUERY_KEYS.ME, status, pagination]
 
     return useMutation({
         mutationFn: ticketApi.create,
-        onSuccess: () => {
+        onSuccess: async () => {
             toast.success(t("success.create"))
             onSuccess?.()
+            await queryClient.invalidateQueries({ queryKey: key })
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))
@@ -69,14 +80,25 @@ export const useGetMyTickets = ({
     })
 }
 
-export const useUpdateTicket = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useUpdateTicket = ({
+    query = {},
+    pagination = {},
+    onSuccess
+}: {
+    query: TicketFilterParams
+    pagination: PaginationParams
+    onSuccess?: () => void
+}) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
+    const key = [...QUERY_KEYS.TICKETS, query, pagination]
 
     return useMutation({
         mutationFn: ticketApi.update,
-        onSuccess: () => {
+        onSuccess: async () => {
             toast.success(t("success.update"))
             onSuccess?.()
+            await queryClient.invalidateQueries({ queryKey: key })
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))
@@ -84,14 +106,25 @@ export const useUpdateTicket = ({ onSuccess }: { onSuccess?: () => void }) => {
     })
 }
 
-export const useEscalteTicketToAdmin = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useEscalateTicketToAdmin = ({
+    query = {},
+    pagination = {},
+    onSuccess
+}: {
+    query: TicketFilterParams
+    pagination: PaginationParams
+    onSuccess?: () => void
+}) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
+    const key = [...QUERY_KEYS.TICKETS, query, pagination]
 
     return useMutation({
         mutationFn: ticketApi.escalateToAdmin,
-        onSuccess: () => {
+        onSuccess: async () => {
             toast.success(t("success.update"))
             onSuccess?.()
+            await queryClient.invalidateQueries({ queryKey: key })
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))

@@ -15,6 +15,7 @@ import {
 import { EMAIL_REGEX, PHONE_REGEX } from "@/constants/regex"
 import { useCreateTicket, useName } from "@/hooks"
 import { TicketType } from "@/constants/enum"
+import { Spinner } from "@heroui/react"
 
 type FormikValues = {
     lastName: string
@@ -147,6 +148,7 @@ export default function Contact() {
                             isClearable
                             label={t("contact.further_description")}
                             placeholder={t("contact.further_description_placeholder")}
+                            value={formik.values.description}
                             variant="bordered"
                             onValueChange={(value) => formik.setFieldValue("description", value)}
                             className="min-h-28"
@@ -156,11 +158,21 @@ export default function Contact() {
                             className="btn-gradient w-full rounded-lg
                             flex justify-center items-center gap-2"
                             type="submit"
-                            isDisabled={!formik.isValid}
+                            isDisabled={!formik.isValid || formik.isSubmitting}
                             onPress={() => formik.submitForm()}
                         >
-                            {t("contact.send_message")}
-                            <PaperPlaneTilt size={22} weight="fill" className="animate-pulse" />
+                            {formik.isSubmitting ? (
+                                <Spinner color="white" />
+                            ) : (
+                                <>
+                                    <PaperPlaneTilt
+                                        size={22}
+                                        weight="fill"
+                                        className="animate-pulse"
+                                    />
+                                    {t("contact.send_message")}
+                                </>
+                            )}
                         </ButtonStyled>
                     </motion.div>
 

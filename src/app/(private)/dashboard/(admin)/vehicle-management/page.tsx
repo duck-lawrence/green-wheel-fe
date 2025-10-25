@@ -29,7 +29,7 @@ import {
     useGetAllVehicles,
     useUpdateVehicle
 } from "@/hooks"
-import { VehicleCreateModal, VehicleEditModal } from "@/components/modals/VehicleModals"
+import { VehicleCreateModal, VehicleEditModal } from "@/components/modals/Vehicle"
 import {
     CreateVehicleReq,
     GetVehicleParams,

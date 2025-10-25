@@ -6,7 +6,8 @@ import {
     EnumPicker,
     ImageStyled,
     InputStyled,
-    DriverLicenseUploader
+    DriverLicenseUploader,
+    ButtonIconStyled
 } from "@/components/"
 import { LicenseClass, Sex } from "@/constants/enum"
 import { useDay, useGetMyDriverLicense, useUpdateDriverLicense } from "@/hooks"
@@ -74,16 +75,13 @@ export function DriverLicenseProfile({ user }: { user: UserProfileViewRes }) {
                 {driverLicense && (
                     <div className="flex justify-end">
                         {!editable ? (
-                            <ButtonStyled
+                            <ButtonIconStyled
                                 color="primary"
                                 variant="ghost"
-                                className="p-3 min-w-fit"
                                 onPress={() => setEditable(!editable)}
                             >
-                                <div>
-                                    <NotePencilIcon />
-                                </div>
-                            </ButtonStyled>
+                                <NotePencilIcon />
+                            </ButtonIconStyled>
                         ) : formik.isSubmitting ? (
                             <Spinner />
                         ) : (

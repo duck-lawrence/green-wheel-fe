@@ -61,7 +61,7 @@ export function InputStyled(props: InputStyledPropes) {
             classNames={{
                 ...props.classNames,
                 inputWrapper: cn(
-                    "border-2 border-gray-200 data-[hover=true]:border-primary data-[focus=true]:border-primary",
+                    "data-[hover=true]:border-primary data-[focus=true]:border-primary",
                     props.classNames?.inputWrapper
                 ),
                 label: cn("text-gray-700", props.classNames?.label),
