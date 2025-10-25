@@ -6,7 +6,7 @@ import { Camera } from "lucide-react"
 
 type ImageUploadButtonProps = {
     onFileSelect: (file: File) => void
-    label: string
+    label?: string
     accept?: string
     color?: "default" | "primary" | "secondary" | "success" | "warning" | "danger"
     className?: string
@@ -15,7 +15,7 @@ type ImageUploadButtonProps = {
 
 export function ImageUploadButton({
     onFileSelect,
-    label,
+    label = "",
     accept = "image/*",
     color = "secondary",
     className = "",

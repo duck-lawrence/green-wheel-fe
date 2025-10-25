@@ -1,58 +1,48 @@
 "use client"
 
 import React, { useEffect, useMemo, useState } from "react"
-import type { Selection } from "@heroui/react"
+import { AutocompleteItem, type Selection } from "@heroui/react"
 import { useTranslation } from "react-i18next"
 import VehicleHorizontalCard from "@/components/modules/VehicleHorizontalCard"
 import {
+    AutocompleteStyled,
     ButtonStyled,
     FilterTypeOption,
     FilterTypeStyle,
-    PaginationStyled,
-    SearchStyle
+    SearchStyle,
+    SpinnerStyled
 } from "@/components"
-import {
-    VehicleModelImageRes,
-    VehicleModelViewRes
-} from "@/models/vehicle/schema/response"
 import { useGetAllVehicleModels, useGetAllVehicleSegments } from "@/hooks"
 import { FunnelSimple } from "@phosphor-icons/react"
-
-const DEFAULT_PAGE_SIZE = 10
+import { GetAllModelParams } from "@/models/vehicle/schema/request"
+import toast from "react-hot-toast"
+import { BackendError } from "@/models/common/response"
+import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
+import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 
 export default function AdminFleetPage() {
     const { t } = useTranslation()
-    const [page, setPage] = useState(1)
+    // const [page, setPage] = useState(1)
     const [searchTerm, setSearchTerm] = useState("")
-    const [carType, setCarType] = useState<string | undefined>()
+    // filter
+    const [filter, setFilter] = useState<GetAllModelParams>({
+        name: undefined,
+        segmentId: undefined
+    })
+    // const [carType, setCarType] = useState<string | undefined>()
     const [status, setStatus] = useState<string | undefined>()
+    const [vehicleModels, setVehicleModels] = useState<VehicleModelViewRes[]>([])
 
     const {
-        data: vehicleModelsData,
         isLoading: isModelsLoading,
-        isFetching: isModelsFetching
-    } = useGetAllVehicleModels()
-    const { data: segmentData = [] } = useGetAllVehicleSegments()
-
-    const vehicleModels = useMemo<VehicleModelViewRes[]>(() => {
-        return (vehicleModelsData ?? []).map((model) => {
-            const rawModel = model as VehicleModelViewRes & {
-                vehicleModelImages?: VehicleModelImageRes[]
-            }
-            const fallbackImages = Array.isArray(rawModel.vehicleModelImages)
-                ? rawModel.vehicleModelImages.map((image) => image.imageUrl)
-                : []
-            const imageUrls =
-                model.imageUrls && model.imageUrls.length > 0 ? model.imageUrls : fallbackImages
-            const imageUrl = model.imageUrl ?? imageUrls[0]
-
-            return {
-                ...model,
-                imageUrls,
-                imageUrl
-            }
-        })
-    }, [vehicleModelsData])
+        isFetching: isModelsFetching,
+        refetch: refetchModels
+    } = useGetAllVehicleModels({ query: filter })
+    const {
+        data: vehicleSegments,
+        isLoading: isGetVehicleSegmentsLoading,
+        error: getVehicleSegmentsError
+    } = useGetAllVehicleSegments()
 
     const statusOptions = useMemo(
         () => [
@@ -62,46 +52,38 @@ export default function AdminFleetPage() {
         [t]
     )
 
-    const carTypeOptions = useMemo(() => {
-        if (segmentData.length > 0) {
-            return segmentData.map((segment) => ({
-                key: segment.id,
-                label: segment.name
-            }))
-        }
+    // const carTypeOptions = useMemo(() => {
+    //     if (segmentData.length > 0) {
+    //         return segmentData.map((segment) => ({
+    //             key: segment.id,
+    //             label: segment.name
+    //         }))
+    //     }
 
-        const uniqueSegments = new Map<string, string>()
-        vehicleModels.forEach((model) => {
-            const segmentId = model.segment?.id
-            if (segmentId) {
-                uniqueSegments.set(segmentId, model.segment.name)
-            }
-        })
+    //     const uniqueSegments = new Map<string, string>()
 
-        return Array.from(uniqueSegments.entries()).map(([key, label]) => ({
-            key,
-            label
-        }))
-    }, [segmentData, vehicleModels])
+    //     ;(vehicleModels ?? []).forEach((model) => {
+    //         const segmentId = model.segment?.id
+    //         if (segmentId) {
+    //             uniqueSegments.set(segmentId, model.segment.name)
+    //         }
+    //     })
 
-    const normalizedSearch = useMemo(
-        () => searchTerm.trim().toLowerCase(),
-        [searchTerm]
-    )
+    //     return Array.from(uniqueSegments.entries()).map(([key, label]) => ({
+    //         key,
+    //         label
+    //     }))
+    // }, [segmentData, vehicleModels])
+
+    const normalizedSearch = useMemo(() => searchTerm.trim().toLowerCase(), [searchTerm])
 
     const filteredVehicles = useMemo(() => {
-        return vehicleModels.filter((model) => {
+        return (vehicleModels ?? []).filter((model) => {
             const matchesSearch =
                 !normalizedSearch ||
-                [
-                    model.name,
-                    model.brand?.name ?? "",
-                    model.segment?.name ?? ""
-                ]
+                [model.name, model.brand?.name ?? "", model.segment?.name ?? ""]
                     .filter(Boolean)
                     .some((value) => value.toLowerCase().includes(normalizedSearch))
-
-            const matchesCarType = !carType || model.segment?.id === carType
 
             const matchesStatus =
                 !status ||
@@ -109,39 +91,39 @@ export default function AdminFleetPage() {
                     ? model.availableVehicleCount > 0
                     : model.availableVehicleCount === 0)
 
-            return matchesSearch && matchesCarType && matchesStatus
+            return matchesSearch && matchesStatus
         })
-    }, [vehicleModels, normalizedSearch, carType, status])
+    }, [vehicleModels, normalizedSearch, status])
 
-    const totalVehicles = filteredVehicles.length
-    const totalPages = Math.max(1, Math.ceil(totalVehicles / DEFAULT_PAGE_SIZE))
+    // const totalVehicles = filteredVehicles.length
+    // const totalPages = Math.max(1, Math.ceil(totalVehicles / DEFAULT_PAGE_SIZE))
 
-    useEffect(() => {
-        setPage(1)
-    }, [normalizedSearch, carType, status])
+    // useEffect(() => {
+    //     setPage(1)
+    // }, [normalizedSearch, carType, status])
 
-    useEffect(() => {
-        if (page > totalPages) {
-            setPage(totalPages)
-        }
-    }, [page, totalPages])
+    // useEffect(() => {
+    //     if (page > totalPages) {
+    //         setPage(totalPages)
+    //     }
+    // }, [page, totalPages])
 
-    const currentPage = Math.min(Math.max(page, 1), totalPages)
+    // const currentPage = Math.min(Math.max(page, 1), totalPages)
 
-    const currentVehicles = useMemo(() => {
-        if (totalVehicles === 0) return []
-        const start = (currentPage - 1) * DEFAULT_PAGE_SIZE
-        return filteredVehicles.slice(start, start + DEFAULT_PAGE_SIZE)
-    }, [filteredVehicles, currentPage, totalVehicles])
+    // const currentVehicles = useMemo(() => {
+    //     if (totalVehicles === 0) return []
+    //     const start = (currentPage - 1) * DEFAULT_PAGE_SIZE
+    //     return filteredVehicles.slice(start, start + DEFAULT_PAGE_SIZE)
+    // }, [filteredVehicles, currentPage, totalVehicles])
 
-    const handleCarTypeChange = (keys: Selection) => {
-        if (keys === "all") {
-            setCarType(undefined)
-            return
-        }
-        const [value] = Array.from(keys)
-        setCarType(value != null ? value.toString() : undefined)
-    }
+    // const handleCarTypeChange = (keys: Selection) => {
+    //     if (keys === "all") {
+    //         setCarType(undefined)
+    //         return
+    //     }
+    //     const [value] = Array.from(keys)
+    //     setCarType(value != null ? value.toString() : undefined)
+    // }
 
     const handleStatusChange = (keys: Selection) => {
         if (keys === "all") {
@@ -152,21 +134,36 @@ export default function AdminFleetPage() {
         setStatus(value != null ? value.toString() : undefined)
     }
 
-    const handlePageChange = (nextPage: number) => {
-        setPage(Math.min(Math.max(nextPage, 1), totalPages))
-    }
+    // const handlePageChange = (nextPage: number) => {
+    //     setPage(Math.min(Math.max(nextPage, 1), totalPages))
+    // }
+
+    // Load segment
+    useEffect(() => {
+        if (getVehicleSegmentsError) {
+            const error = getVehicleSegmentsError as BackendError
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    }, [getVehicleSegmentsError, t])
+
+    // load models
+    useEffect(() => {
+        const run = async () => {
+            const { data } = await refetchModels()
+            setVehicleModels(data || [])
+        }
+        run()
+    }, [filter, refetchModels])
 
     const isLoading = isModelsLoading || isModelsFetching
+
+    if (isGetVehicleSegmentsLoading || getVehicleSegmentsError) return <SpinnerStyled />
 
     return (
         <div className="flex flex-col gap-6 rounded-3xl bg-white p-6 shadow-sm mb-6">
             <div className="space-y-2">
-                <h1 className="text-3xl font-bold text-slate-900">
-                    {t("fleet.page_title")}
-                </h1>
-                <p className="text-sm text-slate-500">
-                    {t("fleet.page_subtitle")}
-                </p>
+                <h1 className="text-3xl font-bold text-slate-900">{t("fleet.page_title")}</h1>
+                <p className="text-sm text-slate-500">{t("fleet.page_subtitle")}</p>
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 shadow-sm">
@@ -175,7 +172,7 @@ export default function AdminFleetPage() {
                     <h2 className="text-lg font-semibold">{t("fleet.filter_title")}</h2>
                 </div>
 
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
                     <div className="flex flex-1 flex-col gap-3 sm:flex-row">
                         <SearchStyle
                             placeholder={t("fleet.search_placeholder")}
@@ -184,20 +181,27 @@ export default function AdminFleetPage() {
                             className="sm:w-60 lg:w-72"
                             isClearable
                         />
-                        <FilterTypeStyle
-                            placeholder={t("fleet.filter_car_type")}
-                            selectedKeys={carType ? new Set([carType]) : new Set<string>()}
-                            onSelectionChange={handleCarTypeChange}
-                            className="sm:w-44"
-                            isDisabled={carTypeOptions.length === 0}
-                            isClearable
+
+                        <AutocompleteStyled
+                            placeholder={t("vehicle_model.segment")}
+                            variant="bordered"
+                            items={vehicleSegments}
+                            selectedKey={filter.segmentId}
+                            onSelectionChange={async (id) => {
+                                setFilter({ ...filter, segmentId: id as string | undefined })
+                            }}
+                            className="sm:w-44 bg-white"
+                            inputProps={{
+                                classNames: {
+                                    inputWrapper: "min-h-12"
+                                }
+                            }}
                         >
-                            {carTypeOptions.map((option) => (
-                                <FilterTypeOption key={option.key}>
-                                    {option.label}
-                                </FilterTypeOption>
+                            {(vehicleSegments ?? []).map((item) => (
+                                <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
                             ))}
-                        </FilterTypeStyle>
+                        </AutocompleteStyled>
+
                         <FilterTypeStyle
                             placeholder={t("fleet.filter_status")}
                             selectedKeys={status ? new Set([status]) : new Set<string>()}
@@ -206,9 +210,7 @@ export default function AdminFleetPage() {
                             isClearable
                         >
                             {statusOptions.map((option) => (
-                                <FilterTypeOption key={option.key}>
-                                    {option.label}
-                                </FilterTypeOption>
+                                <FilterTypeOption key={option.key}>{option.label}</FilterTypeOption>
                             ))}
                         </FilterTypeStyle>
                     </div>
@@ -225,14 +227,14 @@ export default function AdminFleetPage() {
             </div>
 
             <section className="space-y-4">
-                {isLoading ? (
+                {isLoading || !filteredVehicles ? (
                     <div className="rounded-2xl bg-white p-6 text-center text-sm text-slate-500">
                         {t("fleet.loading")}
                     </div>
-                ) : currentVehicles.length > 0 ? (
+                ) : filteredVehicles.length > 0 ? (
                     <>
                         <div className="flex flex-col gap-4">
-                            {currentVehicles.map((vehicle) => (
+                            {filteredVehicles.map((vehicle) => (
                                 <VehicleHorizontalCard
                                     key={vehicle.id}
                                     vehicleModel={vehicle}
@@ -241,7 +243,7 @@ export default function AdminFleetPage() {
                             ))}
                         </div>
 
-                        {totalVehicles > DEFAULT_PAGE_SIZE ? (
+                        {/* {totalVehicles > DEFAULT_PAGE_SIZE ? (
                             <div className="flex justify-center pt-2">
                                 <PaginationStyled
                                     pageNumber={currentPage}
@@ -251,7 +253,7 @@ export default function AdminFleetPage() {
                                     showControls
                                 />
                             </div>
-                        ) : null}
+                        ) : null} */}
                     </>
                 ) : (
                     <div className="rounded-2xl bg-white p-6 text-center text-sm text-slate-500">

@@ -326,7 +326,9 @@
         "sport_range_km_can_not_negative": "Sport range km can not be negative",
 
         "brand_id_require": "Brand id is required",
-        "segment_id_require": "Segment id is required"
+        "segment_id_require": "Segment id is required",
+
+        "upload_images": "Upload vehicle model images"
     },
     "vehicle_model_image": {
         "main_image_not_found": "Main image not found"

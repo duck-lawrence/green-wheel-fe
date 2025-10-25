@@ -27,6 +27,7 @@ export function AutocompleteStyled(props: AutocompleteProps) {
             inputProps={{
                 ...props.inputProps,
                 classNames: {
+                    ...props.inputProps?.classNames,
                     label: cn("text-gray-700", props.inputProps?.classNames?.label),
                     input: cn("text-gray-900", props.inputProps?.classNames?.input),
                     inputWrapper: cn(

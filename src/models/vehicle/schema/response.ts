@@ -20,9 +20,10 @@ export type VehicleModelViewRes = {
     availableVehicleCount: number
 }
 
-export type VehicleModelImageRes = {
-    modelId: string
-    imageUrl: string
+export type VehicleModelImagesRes = {
+    id: string
+    imageUrl?: string
+    imageUrls: string[]
 }
 
 export type VehicleComponentViewRes = {

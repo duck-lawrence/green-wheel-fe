@@ -2,7 +2,7 @@
 
 import React from "react"
 import { Button, Chip, Image, cn } from "@heroui/react"
-import { SteeringWheel, UsersFour } from "@phosphor-icons/react"
+import { EyeIcon, SteeringWheel, UsersFour } from "@phosphor-icons/react"
 import { useTranslation } from "react-i18next"
 import { CardStyled } from "@/components"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
@@ -48,7 +48,7 @@ export function VehicleHorizontalCard({
 
     const typeSpec: SpecItem = {
         icon: <SteeringWheel className="h-5 w-5" weight="bold" />,
-        label: t("vehicle_model.type_car_label", "Type car"),
+        label: t("vehicle_model.segment", "Type car"),
         value: segmentName
     }
 
@@ -63,7 +63,7 @@ export function VehicleHorizontalCard({
             shadow="sm"
             className={cn(
                 "space-y-0 bg-white p-6 sm:p-8",
-                "hover:shadow-xl interactive-scale",
+                "hover:shadow-xl interactive-scale active:transform active:scale-1",
                 className
             )}
         >
@@ -131,12 +131,14 @@ export function VehicleHorizontalCard({
 
                 {!readOnly && (
                     <Button
-                        color="danger"
-                        className="h-12 px-6 font-semibold self-center lg:ml-6 lg:self-auto"
+                        // color="danger"
+                        color="primary"
+                        variant="ghost"
+                        className="border-none p-3 min-w-fit"
                         isDisabled={!isAvailable}
                         onPress={() => onSelect?.(vehicleModel)}
                     >
-                        {t("vehicle_model.select", "Select")}
+                        <EyeIcon size={24} />
                     </Button>
                 )}
             </div>

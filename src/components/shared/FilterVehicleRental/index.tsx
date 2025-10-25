@@ -14,7 +14,7 @@ import toast from "react-hot-toast"
 import { DEFAULT_TIMEZONE, MAX_HOUR, MIN_HOUR } from "@/constants/constants"
 import dayjs from "dayjs"
 import { useSearchVehicleModels } from "@/hooks/queries/useVehicleModel"
-import { VehicleFilterReq } from "@/models/vehicle/schema/request"
+import { SearchModelParams } from "@/models/vehicle/schema/request"
 import { debouncedWrapper } from "@/utils/helpers/axiosHelper"
 
 export function FilterVehicleRental({
@@ -69,7 +69,7 @@ export function FilterVehicleRental({
     const setFilteredVehicleModels = useBookingFilterStore((s) => s.setFilteredVehicleModels)
 
     // filter
-    const [filter, setFilter] = useState<VehicleFilterReq>({
+    const [filter, setFilter] = useState<SearchModelParams>({
         stationId: stationId || "",
         startDate: startDate || formatDateTime({ date: minStartDate }),
         endDate: endDate || formatDateTime({ date: minEndDate }),
@@ -110,7 +110,7 @@ export function FilterVehicleRental({
     const { refetch } = useSearchVehicleModels({
         query: filter
     })
-    const handleSearch = useCallback(async (params: VehicleFilterReq) => {
+    const handleSearch = useCallback(async (params: SearchModelParams) => {
         setFilter(params)
     }, [])
     const debouncedSearch = useMemo(
@@ -188,7 +188,7 @@ export function FilterVehicleRental({
     )
 
     //  useFormik
-    const formik = useFormik<VehicleFilterReq>({
+    const formik = useFormik<SearchModelParams>({
         initialValues: filter,
         enableReinitialize: filter.stationId !== "",
         validationSchema: bookingSchema,
