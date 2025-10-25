@@ -5,17 +5,25 @@ import { useDay, useName } from "@/hooks"
 import { TicketViewRes } from "@/models/ticket/schema/response"
 import React from "react"
 import { useTranslation } from "react-i18next"
-import { TicketStatusLabels, TicketTypeLabels } from "@/constants/labels"
+import { TicketStatusLabels } from "@/constants/labels"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { TicketStatusColorMap } from "@/constants/colorMap"
 import { EditTicketModal, CardStyled } from "@/components/"
+import { TicketFilterParams } from "@/models/ticket/schema/request"
+import { PaginationParams } from "@/models/common/request"
 
 export function TicketCard({
-    isStaff = false,
-    ticket
+    isEditable = false,
+    isAdmin = false,
+    ticket,
+    filter,
+    pagination
 }: {
-    isStaff: boolean
+    isEditable: boolean
+    isAdmin?: boolean
     ticket: TicketViewRes
+    filter: TicketFilterParams
+    pagination: PaginationParams
 }) {
     const { t } = useTranslation()
     const { toFullName } = useName()
@@ -26,14 +34,17 @@ export function TicketCard({
     return (
         <>
             <EditTicketModal
-                isStaff={isStaff}
+                isEditable={isEditable}
+                isAdmin={isAdmin}
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
                 onClose={onClose}
                 ticket={ticket}
+                filter={filter}
+                pagination={pagination}
             />
             <CardStyled
-                className="w-[22rem] max-w-[22rem] max-h-fit interactive-scale px-2 py-0"
+                className="w-[17rem] max-w-[17rem] max-h-fit interactive-scale px-2 py-0"
                 onPress={onOpen}
                 isPressable
             >
@@ -42,9 +53,9 @@ export function TicketCard({
                         {ticket.title}
                     </h4>
                     <div className="flex flex-col items-end">
-                        <Chip size="sm" variant="solid">
+                        {/* <Chip size="sm" variant="solid">
                             {TicketTypeLabels[ticket.type]}
-                        </Chip>
+                        </Chip> */}
                         <Chip color={TicketStatusColorMap[ticket.status]} size="sm" variant="solid">
                             {TicketStatusLabels[ticket.status]}
                         </Chip>

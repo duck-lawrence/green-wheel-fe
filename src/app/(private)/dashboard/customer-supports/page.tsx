@@ -1,8 +1,8 @@
 "use client"
 
 import TicketManagement from "@/components/pages/TicketManagement"
-import { TicketType } from "@/constants/enum"
-import { useGetMyTickets } from "@/hooks"
+import { RoleName, TicketType } from "@/constants/enum"
+import { useGetAllTickets, useGetMe } from "@/hooks"
 import { PaginationParams } from "@/models/common/request"
 import { BackendError } from "@/models/common/response"
 import { TicketFilterParams } from "@/models/ticket/schema/request"
@@ -13,10 +13,13 @@ import { useTranslation } from "react-i18next"
 
 export default function CustomerSupportsPage() {
     const { t } = useTranslation()
-    const [filter, setFilter] = useState<TicketFilterParams>({})
+    const { data: user } = useGetMe()
+    const isAdmin = user?.role?.name === RoleName.Admin
+
+    const [filter, setFilter] = useState<TicketFilterParams>({ type: TicketType.CustomerSupport })
     const [pagination, setPagination] = useState<PaginationParams>({ pageSize: 9 })
-    const queryResult = useGetMyTickets({
-        status: filter.status,
+    const queryResult = useGetAllTickets({
+        query: filter,
         pagination
     })
 
@@ -29,14 +32,13 @@ export default function CustomerSupportsPage() {
     }, [queryResult.error, t])
 
     return (
-        <div className="md:min-w-3xl lg:min-w-5xl max-w-screen">
-            <TicketManagement
-                isEditable={false}
-                filterState={[filter, setFilter]}
-                paginations={[pagination, setPagination]}
-                queryResult={queryResult}
-                createType={TicketType.CustomerSupport}
-            />
-        </div>
+        <TicketManagement
+            isEditable={true}
+            isAdmin={isAdmin}
+            filterState={[filter, setFilter]}
+            paginations={[pagination, setPagination]}
+            queryResult={queryResult}
+            createType={undefined}
+        />
     )
 }

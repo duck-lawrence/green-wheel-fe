@@ -27,17 +27,16 @@ export function DashboardSidebar({ className }: { className?: string }) {
             label: t("staff.sidebar_user_management"),
             href: "/dashboard/user-management"
         },
-
+        {
+            key: "/dashboard/customer-supports",
+            label: t("staff.sidebar_customer_supports"),
+            href: "/dashboard/customer-supports"
+        },
         {
             key: "/dashboard/reports",
             label: t("staff.sidebar_reports"),
             href: "/dashboard/reports"
         }
-        // {
-        //     key: "/dashboard/test",
-        //     label: t("staff.sidebar_test"),
-        //     href: "/dashboard/test"
-        // }
     ]
 
     const adminTabs: SidebarItem[] = [
@@ -65,6 +64,16 @@ export function DashboardSidebar({ className }: { className?: string }) {
             key: "/dashboard/fleet",
             label: t("admin.sidebar_fleet", "Fleet"),
             href: "/dashboard/fleet"
+        },
+        {
+            key: "/dashboard/customer-supports",
+            label: t("staff.sidebar_customer_supports"),
+            href: "/dashboard/customer-supports"
+        },
+        {
+            key: "/dashboard/reports",
+            label: t("staff.sidebar_reports"),
+            href: "/dashboard/reports"
         }
     ]
 

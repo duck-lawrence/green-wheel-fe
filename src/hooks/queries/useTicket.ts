@@ -25,10 +25,10 @@ export const useCreateTicket = ({
 
     return useMutation({
         mutationFn: ticketApi.create,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: key })
+        onSuccess: async () => {
             toast.success(t("success.create"))
             onSuccess?.()
+            await queryClient.invalidateQueries({ queryKey: key })
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))
@@ -80,14 +80,25 @@ export const useGetMyTickets = ({
     })
 }
 
-export const useUpdateTicket = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useUpdateTicket = ({
+    query = {},
+    pagination = {},
+    onSuccess
+}: {
+    query: TicketFilterParams
+    pagination: PaginationParams
+    onSuccess?: () => void
+}) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
+    const key = [...QUERY_KEYS.TICKETS, query, pagination]
 
     return useMutation({
         mutationFn: ticketApi.update,
-        onSuccess: () => {
+        onSuccess: async () => {
             toast.success(t("success.update"))
             onSuccess?.()
+            await queryClient.invalidateQueries({ queryKey: key })
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))
@@ -95,14 +106,25 @@ export const useUpdateTicket = ({ onSuccess }: { onSuccess?: () => void }) => {
     })
 }
 
-export const useEscalateTicketToAdmin = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useEscalateTicketToAdmin = ({
+    query = {},
+    pagination = {},
+    onSuccess
+}: {
+    query: TicketFilterParams
+    pagination: PaginationParams
+    onSuccess?: () => void
+}) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
+    const key = [...QUERY_KEYS.TICKETS, query, pagination]
 
     return useMutation({
         mutationFn: ticketApi.escalateToAdmin,
-        onSuccess: () => {
+        onSuccess: async () => {
             toast.success(t("success.update"))
             onSuccess?.()
+            await queryClient.invalidateQueries({ queryKey: key })
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))

@@ -9,9 +9,9 @@ import {
     ModalStyled,
     TextareaStyled
 } from "@/components"
-import { TicketStatus } from "@/constants/enum"
+import { TicketStatus, TicketType } from "@/constants/enum"
 import { useDay, useEscalateTicketToAdmin, useName, useUpdateTicket } from "@/hooks"
-import { UpdateTicketReq } from "@/models/ticket/schema/request"
+import { TicketFilterParams, UpdateTicketReq } from "@/models/ticket/schema/request"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import React, { useCallback, useMemo } from "react"
@@ -22,32 +22,54 @@ import { TicketViewRes } from "@/models/ticket/schema/response"
 import { TicketStatusLabels, TicketTypeLabels } from "@/constants/labels"
 import { TicketStatusColorMap } from "@/constants/colorMap"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
+import { PaginationParams } from "@/models/common/request"
 
 interface EditTicketModalProps {
     isOpen: boolean
     onOpenChange: (isOpen: boolean) => void
     onClose: () => void
-    isStaff: boolean
+    isEditable: boolean
+    isAdmin?: boolean
     ticket: TicketViewRes
+    filter: TicketFilterParams
+    pagination: PaginationParams
 }
 
 export function EditTicketModal({
     isOpen,
     onOpenChange,
     onClose,
-    isStaff = false,
-    ticket
+    isEditable = false,
+    isAdmin = false,
+    ticket,
+    filter,
+    pagination
 }: EditTicketModalProps) {
     const { t } = useTranslation()
     const { toFullName } = useName()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
-    const updateMutation = useUpdateTicket({ onSuccess: onClose })
-    const escalateMutation = useEscalateTicketToAdmin({ onSuccess: onClose })
+    const updateMutation = useUpdateTicket({ query: filter, pagination, onSuccess: onClose })
+    const escalateMutation = useEscalateTicketToAdmin({
+        query: filter,
+        pagination,
+        onSuccess: onClose
+    })
 
-    const isEditable = useMemo(
-        () => isStaff && ticket.status === TicketStatus.Pending,
-        [isStaff, ticket.status]
-    )
+    const canEdit = useMemo(() => {
+        if (!isEditable || ticket.status === TicketStatus.Resolve) return false
+
+        switch (ticket.type) {
+            case TicketType.CustomerSupport: {
+                return !isAdmin || ticket.status === TicketStatus.EscalatedToAdmin
+            }
+            case TicketType.StaffReport: {
+                return isAdmin
+            }
+            default: {
+                return false
+            }
+        }
+    }, [isAdmin, isEditable, ticket.status, ticket.type])
 
     const hanldeUpdate = useCallback(
         async (req: UpdateTicketReq) => {
@@ -129,22 +151,18 @@ export function EditTicketModal({
                         <TextareaStyled
                             label={t("ticket.reply")}
                             placeholder={
-                                isEditable
-                                    ? t("ticket.reply_placeholder")
-                                    : t("ticket.wait_for_reply")
+                                canEdit ? t("ticket.reply_placeholder") : t("ticket.wait_for_reply")
                             }
                             variant="bordered"
                             value={formik.values.reply}
                             onValueChange={(value) => formik.setFieldValue("reply", value)}
                             onBlur={() => formik.setFieldTouched("reply")}
-                            isInvalid={
-                                !!(formik.touched.reply && formik.errors.reply) && isEditable
-                            }
+                            isInvalid={!!(formik.touched.reply && formik.errors.reply) && canEdit}
                             errorMessage={formik.errors.reply}
-                            readOnly={!isEditable}
+                            readOnly={!canEdit}
                             required
                         />
-                        {isEditable && (
+                        {canEdit && (
                             <div className="flex gap-2">
                                 <ButtonStyled
                                     className="btn-gradient w-full rounded-lg
@@ -166,16 +184,19 @@ export function EditTicketModal({
                                         </>
                                     )}
                                 </ButtonStyled>
-                                <ButtonStyled
-                                    className="w-full rounded-lg"
-                                    onPress={handleEscalate}
-                                    isDisabled={
-                                        escalateMutation.isPending ||
-                                        ticket.status === TicketStatus.EscalatedToAdmin
-                                    }
-                                >
-                                    {t("enum.escalated_to_admin")}
-                                </ButtonStyled>
+                                {ticket.type === TicketType.CustomerSupport && !isAdmin && (
+                                    <ButtonStyled
+                                        className="w-full rounded-lg"
+                                        onPress={handleEscalate}
+                                        isDisabled={
+                                            escalateMutation.isPending ||
+                                            ticket.status === TicketStatus.EscalatedToAdmin ||
+                                            ticket.status === TicketStatus.Resolve
+                                        }
+                                    >
+                                        {t("enum.escalated_to_admin")}
+                                    </ButtonStyled>
+                                )}
                             </div>
                         )}
                     </form>

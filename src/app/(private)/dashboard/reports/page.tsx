@@ -1,0 +1,53 @@
+"use client"
+
+import TicketManagement from "@/components/pages/TicketManagement"
+import { RoleName, TicketType } from "@/constants/enum"
+import { useGetAllTickets, useGetMe, useGetMyTickets } from "@/hooks"
+import { PaginationParams } from "@/models/common/request"
+import { BackendError } from "@/models/common/response"
+import { TicketFilterParams } from "@/models/ticket/schema/request"
+import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
+import React, { useEffect, useState } from "react"
+import toast from "react-hot-toast"
+import { useTranslation } from "react-i18next"
+
+export default function ReportsPage() {
+    const { t } = useTranslation()
+    const { data: user } = useGetMe()
+    const isAdmin = user?.role?.name === RoleName.Admin
+
+    const [filter, setFilter] = useState<TicketFilterParams>({ type: TicketType.StaffReport })
+    const [pagination, setPagination] = useState<PaginationParams>({ pageSize: 9 })
+    const meQuery = useGetMyTickets({
+        status: filter.status,
+        pagination,
+        enabled: user !== undefined && !isAdmin
+    })
+
+    const allQuery = useGetAllTickets({
+        query: filter,
+        pagination,
+        enabled: user !== undefined && isAdmin
+    })
+
+    const queryResult = isAdmin ? allQuery : meQuery
+
+    // check error
+    useEffect(() => {
+        if (queryResult.error) {
+            const backendErr = queryResult.error as BackendError
+            toast.error(translateWithFallback(t, backendErr.detail))
+        }
+    }, [queryResult.error, t])
+
+    return (
+        <TicketManagement
+            isEditable={isAdmin}
+            isAdmin={isAdmin}
+            filterState={[filter, setFilter]}
+            paginations={[pagination, setPagination]}
+            queryResult={queryResult}
+            createType={isAdmin ? undefined : TicketType.StaffReport}
+        />
+    )
+}

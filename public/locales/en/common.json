@@ -484,6 +484,7 @@
         "sidebar_fleet": "Fleet",
         "sidebar_notifications": "Notifications",
         "sidebar_reports": "Reports",
+        "sidebar_customer_supports": "Customer Supports",
         "sidebar_user_management": "User Management",
         "sidebar_profile": "Profile",
         "sidebar_logout": "Sign out",
@@ -674,6 +675,7 @@
     "ticket": {
         "customer_support": "Customer support",
         "send_customer_support": "Send customer support request",
+        "staff_report": "Staff report",
         "title": "Title",
         "title_require": "Title is required",
         "description": "Description",
