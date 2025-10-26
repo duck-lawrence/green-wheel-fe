@@ -673,9 +673,13 @@
         "failed_to_create_momo_payment": "Failed to create momo payment"
     },
     "ticket": {
-        "customer_support": "Customer support",
+        "not_found": "Ticket not found",
+        "already_escalated": "This ticket already escalated to admin",
+        "already_resolved": "This ticket has already been resolved",
+
+        "customer_support": "Customer Support",
         "send_customer_support": "Send customer support request",
-        "staff_report": "Staff report",
+        "staff_report": "Staff Report",
         "title": "Title",
         "title_require": "Title is required",
         "description": "Description",
@@ -685,8 +689,6 @@
         "reply_placeholder": "Enter your reply here...",
         "wait_for_reply": "Please wait for reply...",
         "reply_require": "Reply is required",
-        "not_found": "Ticket not found",
-        "already_escalated": "This ticket already escalated to admin",
         "requester": "Requester",
         "assignee": "Assignee"
     },
