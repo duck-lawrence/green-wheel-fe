@@ -12,13 +12,12 @@ import {
 } from "@heroui/react"
 import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
-import { ButtonStyled } from "../../styled/ButtonStyled"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { useConfirmContract, useDay, useGetMe, useName } from "@/hooks"
 import { RentalContractStatusLabels, VehicleStatusLabels } from "@/constants/labels"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { useRouter } from "next/navigation"
-import { DropdownStyled, TableStyled } from "@/components/styled"
+import { ButtonIconStyled, DropdownStyled, TableStyled } from "@/components/styled"
 import { ConfirmContractReq, ContractQueryParams } from "@/models/rental-contract/schema/request"
 import { PaginationParams } from "@/models/common/request"
 import { RentalContractStatus } from "@/constants/enum"
@@ -148,27 +147,27 @@ export function TableContractStaff({
                                         ) : (
                                             <>
                                                 {/* Accept */}
-                                                <ButtonStyled
+                                                <ButtonIconStyled
                                                     color="primary"
                                                     variant="ghost"
-                                                    className="font-semibold p-2 min-w-fit"
+                                                    className="py-2 px-4"
                                                     onPress={() => {
                                                         handleConfirm(item.id, { hasVehicle: true })
                                                     }}
                                                 >
-                                                    <Check size={20} weight="bold" />
-                                                </ButtonStyled>
+                                                    <Check size={16} weight="bold" />
+                                                </ButtonIconStyled>
 
                                                 {/* Reject */}
                                                 <DropdownStyled placement="bottom-end">
                                                     <DropdownTrigger>
-                                                        <ButtonStyled
+                                                        <ButtonIconStyled
                                                             color="danger"
                                                             variant="ghost"
-                                                            className="font-semibold p-2 min-w-fit"
+                                                            className="py-2 px-4"
                                                         >
-                                                            <X size={20} weight="bold" />
-                                                        </ButtonStyled>
+                                                            <X size={16} weight="bold" />
+                                                        </ButtonIconStyled>
                                                     </DropdownTrigger>
 
                                                     <DropdownMenu

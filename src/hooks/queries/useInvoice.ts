@@ -19,17 +19,19 @@ export const useGetInvoiceById = ({ id, enabled = true }: { id: string; enabled?
     return query
 }
 
-export const usePayInvoice = () => {
+export const usePayInvoice = ({ contractId }: { contractId: string }) => {
     const { t } = useTranslation()
     // const QueryClient = useQueryClient()
     const router = useRouter()
+    const { invalidateById } = useInvalidateContractQueries()
+
     return useMutation({
         mutationFn: invoiceApi.createPayment,
         onSuccess: (data) => {
             if (data && typeof data.link === "string") {
                 router.push(data.link)
             } else {
-                router.refresh()
+                invalidateById(contractId)
                 toast.success(t("success.payment"))
             }
         },

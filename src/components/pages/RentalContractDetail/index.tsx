@@ -1,5 +1,5 @@
 "use client"
-import React, { useCallback, useEffect, useMemo, useRef } from "react"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import {
     AlertStyled,
@@ -11,7 +11,8 @@ import {
     TextareaStyled,
     DateTimeStyled,
     ButtonStyled,
-    SignatureSection
+    SignatureSection,
+    CheckboxStyled
 } from "@/components"
 import {
     useCancelContract,
@@ -70,6 +71,8 @@ export function RentalContractDetail({
     const { parseNumber } = useNumber()
     const { toFullName } = useName()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
+
+    const [isReturnChecked, setIsReturnChecked] = useState(false)
 
     const payload = decodeJwt(useTokenStore((s) => s.accessToken!))
     const { data: contract, isLoading } = useGetRentalContractById({
@@ -454,19 +457,27 @@ export function RentalContractDetail({
                             </ButtonStyled>
                         ) : (
                             contract.status == RentalContractStatus.Active && (
-                                <ButtonStyled
-                                    variant="bordered"
-                                    color="primary"
-                                    className="hover:text-white hover:bg-primary"
-                                    isDisabled={returnMutation.isPending}
-                                    onPress={handleReturn}
-                                >
-                                    {returnMutation.isPending ? (
-                                        <Spinner />
-                                    ) : (
-                                        t("rental_contract.return")
-                                    )}
-                                </ButtonStyled>
+                                <div className="flex justify-center gap-2">
+                                    <CheckboxStyled
+                                        checked={isReturnChecked}
+                                        onChange={(e) => setIsReturnChecked(e.target.checked)}
+                                    >
+                                        {t("rental_contract.return_comfirm")}
+                                    </CheckboxStyled>
+                                    <ButtonStyled
+                                        variant="bordered"
+                                        color="primary"
+                                        className="hover:text-white hover:bg-primary"
+                                        isDisabled={!isReturnChecked || returnMutation.isPending}
+                                        onPress={handleReturn}
+                                    >
+                                        {returnMutation.isPending ? (
+                                            <Spinner />
+                                        ) : (
+                                            t("rental_contract.return")
+                                        )}
+                                    </ButtonStyled>
+                                </div>
                             )
                         )}
                     </>

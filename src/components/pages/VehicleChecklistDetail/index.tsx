@@ -1,7 +1,7 @@
 "use client"
 import {
     ButtonStyled,
-    DateTimeStyled,
+    DatePickerStyled,
     InputStyled,
     SignatureSection,
     SpinnerStyled
@@ -11,18 +11,22 @@ import { useDay, useGetVehicleChecklistById, useName, useUpdateVehicleChecklist 
 import { UpdateVehicleChecklistReq } from "@/models/checklist/schema/request"
 import { useFormik } from "formik"
 import * as Yup from "yup"
-import React, { useCallback, useMemo } from "react"
+import React, { useCallback, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { TableCheckListItems } from "./TableCheckListItems"
 import { Spinner } from "@heroui/react"
 import { DamageStatus, VehicleChecklistType } from "@/constants/enum"
 import Link from "next/link"
 import { fromDate } from "@internationalized/date"
-import { DEFAULT_TIMEZONE } from "@/constants/constants"
+import { DEFAULT_DATE_FORMAT, DEFAULT_TIMEZONE } from "@/constants/constants"
 
 export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; isStaff?: boolean }) {
     const { t } = useTranslation()
     const { toFullName } = useName()
+    const { formatDateTime: formatDate, toDate } = useDay({
+        defaultFormat: DEFAULT_DATE_FORMAT
+    })
+
     const { formatDateTime, toZonedDateTime } = useDay()
 
     const { data: checklist, isLoading } = useGetVehicleChecklistById({
@@ -40,17 +44,31 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
             : `/rental-contracts/${checklist?.contractId}`
     }, [checklist?.contractId, isStaff])
 
+    const [hasItemsDamaged, setHasItemsDamaged] = useState<boolean>(
+        (checklist?.type !== VehicleChecklistType.Handover &&
+            checklist?.vehicleChecklistItems?.some((item) => item.status > DamageStatus.Good)) ??
+            false
+    )
+
     const updateChecklist = useUpdateVehicleChecklist({ id })
     const handleUpdate = useCallback(
         async (value: UpdateVehicleChecklistReq) => {
+            const maintainDateTimeZoned = toZonedDateTime(value.maintainedUntil)
+            const formatMaintainDate =
+                maintainDateTimeZoned && hasItemsDamaged
+                    ? formatDateTime({
+                          date: maintainDateTimeZoned.set({ hour: 23, minute: 59, second: 59 })
+                      })
+                    : undefined
+
             await updateChecklist.mutateAsync({
                 checklistItems: value.checklistItems,
                 isSignedByCustomer: value.isSignedByCustomer,
                 isSignedByStaff: value.isSignedByStaff,
-                maintainUntil: value.maintainUntil
+                maintainedUntil: formatMaintainDate
             })
         },
-        [updateChecklist]
+        [formatDate, hasItemsDamaged, toZonedDateTime, updateChecklist]
     )
 
     const formik = useFormik({
@@ -58,7 +76,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
             isSignedByStaff: checklist?.isSignedByStaff ?? false,
             isSignedByCustomer: checklist?.isSignedByCustomer ?? false,
             checklistItems: checklist?.vehicleChecklistItems || [],
-            maintainUntil: undefined
+            maintainedUntil: checklist?.maintainedUntil || undefined
         },
         enableReinitialize: true,
         validationSchema: Yup.object().shape({
@@ -67,30 +85,28 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                 checklist?.type == VehicleChecklistType.OutOfContract
                     ? Yup.boolean().notRequired()
                     : Yup.boolean().oneOf([true], t("signature.signed_by_customer_require")),
-            maintainUntil: Yup.string()
-                .required(t("vehicle_checklist.maintain_until_require"))
-                .test(
-                    "is-valid-maintain-date",
-                    t("vehicle_checklist.invalid_maintain_until"),
-                    (value) => {
-                        const valueDatetime = toZonedDateTime(value)
-                        return (
-                            !!valueDatetime &&
-                            valueDatetime.compare(
-                                fromDate(new Date(), DEFAULT_TIMEZONE).add({ minutes: 30 })
-                            ) >= 0
-                        )
-                    }
-                )
+            maintainedUntil: hasItemsDamaged
+                ? Yup.string()
+                      .required(t("vehicle_checklist.maintain_until_require"))
+                      .test(
+                          "is-valid-maintain-date",
+                          t("vehicle_checklist.invalid_maintain_until"),
+                          (value) => {
+                              const valueDatetime = toDate(value)
+                              return (
+                                  !!valueDatetime &&
+                                  valueDatetime.compare(
+                                      fromDate(new Date(), DEFAULT_TIMEZONE).add({ minutes: 30 })
+                                  ) >= 0
+                              )
+                          }
+                      )
+                : Yup.string().notRequired()
         }),
         onSubmit: handleUpdate
     })
 
-    const hasItemsDamaged =
-        checklist?.type !== VehicleChecklistType.Handover &&
-        formik.values.checklistItems.some((item) => item.status > DamageStatus.Good)
-
-    if (isLoading) {
+    if (isLoading || !checklist) {
         return <SpinnerStyled />
     }
 
@@ -108,7 +124,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                         {VehicleChecklistTypeLabels[checklist!.type]}
                     </span>
                 </h2>
-                {checklist?.contractId && (
+                {checklist.contractId && (
                     <Link href={contractUrl}>
                         {`${t("rental_contract.id")}: ${checklist.contractId}`}
                     </Link>
@@ -126,22 +142,22 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                 />
                 <InputStyled
                     label={t("vehicle_checklist.vehicle_license_plate")}
-                    value={checklist?.vehicle.licensePlate}
+                    value={checklist.vehicle.licensePlate}
                     readOnly
                 />
                 <InputStyled
                     label={t("vehicle_checklist.staff_name")}
                     value={toFullName({
-                        firstName: checklist?.staff.firstName,
-                        lastName: checklist?.staff.lastName
+                        firstName: checklist.staff.firstName,
+                        lastName: checklist.staff.lastName
                     })}
                     readOnly
                 />
                 <InputStyled
                     label={t("vehicle_checklist.customer_name")}
                     value={toFullName({
-                        firstName: checklist?.customer?.firstName,
-                        lastName: checklist?.customer?.lastName
+                        firstName: checklist.customer?.firstName,
+                        lastName: checklist.customer?.lastName
                     })}
                     readOnly
                 />
@@ -154,29 +170,31 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
             {/* Table */}
             <TableCheckListItems
                 isEditable={isEditable}
-                // checklistId={id as string}
+                checklistType={checklist.type}
                 vehicleCheckListItem={formik.values.checklistItems}
                 setFieldValue={formik.setFieldValue}
+                setHasItemsDamaged={setHasItemsDamaged}
             />
 
-            <DateTimeStyled
+            <DatePickerStyled
                 label={t("vehicle_checklist.maintain_until")}
-                value={toZonedDateTime(formik.values.maintainUntil)}
+                value={toDate(formik.values.maintainedUntil)}
                 onChange={(value) => {
                     if (!value) {
-                        formik.setFieldValue("maintainUntil", null)
+                        formik.setFieldValue("maintainedUntil", null)
                         return
                     }
-                    const date = formatDateTime({ date: value })
-                    formik.setFieldValue("maintainUntil", date)
+
+                    const date = formatDate({ date: value })
+                    formik.setFieldValue("maintainedUntil", date)
                 }}
                 className="mt-3"
-                isInvalid={hasItemsDamaged && !!formik.errors.maintainUntil}
+                isInvalid={hasItemsDamaged && !!formik.errors.maintainedUntil}
                 isReadOnly={!hasItemsDamaged}
                 isRequired={hasItemsDamaged}
-                errorMessage={hasItemsDamaged ? formik.errors.maintainUntil : undefined}
+                errorMessage={hasItemsDamaged ? formik.errors.maintainedUntil : undefined}
                 onBlur={() => {
-                    formik.setFieldTouched("maintainUntil")
+                    formik.setFieldTouched("maintainedUntil")
                 }}
             />
 

@@ -1,4 +1,4 @@
-import { RentalContractStatus, VehicleIssueResolutionOption, VehicleStatus } from "@/constants/enum"
+import { RentalContractStatus, VehicleIssueResolutionOption } from "@/constants/enum"
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { PaginationParams } from "@/models/common/request"
 import { BackendError, PageResult } from "@/models/common/response"

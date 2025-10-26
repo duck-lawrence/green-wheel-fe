@@ -5,17 +5,20 @@ import { useTranslation } from "react-i18next"
 import { VehicleChecklistItemViewRes } from "@/models/checklist/schema/response"
 import { DamageStatusLabels } from "@/constants/labels"
 import { TextareaStyled, ChecklistItemUploader, EnumPicker, TableStyled } from "@/components/"
+import { DamageStatus, VehicleChecklistType } from "@/constants/enum"
 
 export function TableCheckListItems({
     isEditable = false,
-    // checklistId,
+    checklistType,
     vehicleCheckListItem,
-    setFieldValue
+    setFieldValue,
+    setHasItemsDamaged
 }: {
     isEditable: boolean
-    // checklistId: string
+    checklistType: VehicleChecklistType
     vehicleCheckListItem: VehicleChecklistItemViewRes[]
     setFieldValue: (field: string, value: any) => void
+    setHasItemsDamaged: (hasItemsDamaged: boolean) => void
 }) {
     const { t } = useTranslation()
     return (
@@ -66,6 +69,31 @@ export function TableCheckListItems({
                                                     `checklistItems[${index}].status`,
                                                     val
                                                 )
+                                                if (
+                                                    val &&
+                                                    (val as DamageStatus) > DamageStatus.Good
+                                                ) {
+                                                    setHasItemsDamaged(
+                                                        checklistType !==
+                                                            VehicleChecklistType.Handover
+                                                    )
+                                                } else {
+                                                    setHasItemsDamaged(
+                                                        (checklistType !==
+                                                            VehicleChecklistType.Handover &&
+                                                            vehicleCheckListItem
+                                                                .filter(
+                                                                    (checklistItem) =>
+                                                                        checklistItem.id != item.id
+                                                                )
+                                                                .some(
+                                                                    (checklistItem) =>
+                                                                        checklistItem.status >
+                                                                        DamageStatus.Good
+                                                                )) ??
+                                                            false
+                                                    )
+                                                }
                                             }}
                                             isReadOnly={!isEditable}
                                             isClearable={false}

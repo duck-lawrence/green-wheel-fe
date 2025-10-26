@@ -32,7 +32,7 @@ export function InvoiceAccordion({
 }) {
     const { t } = useTranslation()
     const pathName = usePathname()
-    const payInvoiceMutation = usePayInvoice()
+    const payInvoiceMutation = usePayInvoice({ contractId })
     const [cashAmounts, setCashAmounts] = useState<Record<string, number | undefined>>({})
 
     const { data: user } = useGetMe()

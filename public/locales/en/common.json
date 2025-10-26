@@ -648,6 +648,7 @@
         "can_not_cancel": "This rental contract can not be cancelled",
         "handover": "Handover",
         "return": "Return",
+        "return_comfirm": "Confirm return",
         "fees_include_tax": "Fees marked with * include tax",
         "penalty_warning": "Please be aware that the deposit is non-refundable if any penalty fees are incurred"
     },
