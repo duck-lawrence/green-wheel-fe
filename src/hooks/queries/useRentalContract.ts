@@ -1,8 +1,12 @@
-import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
+import { RentalContractStatus } from "@/constants/enum"
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { PaginationParams } from "@/models/common/request"
 import { BackendError, PageResult } from "@/models/common/response"
-import { ContractQueryParams, HandoverContractReq } from "@/models/rental-contract/schema/request"
+import {
+    ConfirmContractReq,
+    ContractQueryParams,
+    HandoverContractReq
+} from "@/models/rental-contract/schema/request"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { rentalContractApi } from "@/services/rentalContractApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
@@ -106,6 +110,58 @@ export const useGetMyContracts = ({
     return query
 }
 
+// export const useConfirmContract = ({
+//     params,
+//     pagination = {},
+//     onSuccess
+// }: {
+//     params: ContractQueryParams
+//     pagination: PaginationParams
+//     onSuccess?: () => void
+// }) => {
+//     const { t } = useTranslation()
+//     const queryClient = useQueryClient()
+//     const key = [...QUERY_KEYS.RENTAL_CONTRACTS, params, pagination]
+
+//     const acceptContract = useMutation({
+//         mutationFn: async ({ id }: { id: string }) => {
+//             await rentalContractApi.acceptContract({ id })
+//         },
+
+//         onSuccess: () => {
+//             queryClient.invalidateQueries({ queryKey: key })
+//             onSuccess?.()
+//             toast.success(t("rental_contract.update_success"))
+//         },
+
+//         onError: (error: BackendError) => {
+//             toast.error(
+//                 translateWithFallback(t, error.detail) || t("rental_contract.update_failed")
+//             )
+//         }
+//     })
+
+//     const rejectContract = useMutation({
+//         mutationFn: async ({ id, vehicalStatus }: { id: string; vehicalStatus: VehicleStatus }) => {
+//             await rentalContractApi.rejectContract({ id, vehicalStatus })
+//         },
+
+//         onSuccess: () => {
+//             queryClient.invalidateQueries({ queryKey: key })
+//             onSuccess?.()
+//             toast.success(t("rental_contract.update_success"))
+//         },
+
+//         onError: (error: BackendError) => {
+//             toast.error(
+//                 translateWithFallback(t, error.detail) || t("rental_contract.update_failed")
+//             )
+//         }
+//     })
+
+//     return { acceptContract, rejectContract }
+// }
+
 export const useConfirmContract = ({
     params,
     pagination = {},
@@ -118,44 +174,19 @@ export const useConfirmContract = ({
     const { t } = useTranslation()
     const queryClient = useQueryClient()
     const key = [...QUERY_KEYS.RENTAL_CONTRACTS, params, pagination]
-
-    const acceptContract = useMutation({
-        mutationFn: async ({ id }: { id: string }) => {
-            await rentalContractApi.acceptContract({ id })
+    return useMutation({
+        mutationFn: async ({ id, req }: { id: string; req: ConfirmContractReq }) => {
+            await rentalContractApi.confirmContract({ id, req })
         },
-
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: key })
+            toast.success(t("success.update"))
             onSuccess?.()
-            toast.success(t("rental_contract.update_success"))
+            queryClient.invalidateQueries({ queryKey: key })
         },
-
         onError: (error: BackendError) => {
-            toast.error(
-                translateWithFallback(t, error.detail) || t("rental_contract.update_failed")
-            )
+            toast.error(translateWithFallback(t, error.detail))
         }
     })
-
-    const rejectContract = useMutation({
-        mutationFn: async ({ id, vehicalStatus }: { id: string; vehicalStatus: VehicleStatus }) => {
-            await rentalContractApi.rejectContract({ id, vehicalStatus })
-        },
-
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: key })
-            onSuccess?.()
-            toast.success(t("rental_contract.update_success"))
-        },
-
-        onError: (error: BackendError) => {
-            toast.error(
-                translateWithFallback(t, error.detail) || t("rental_contract.update_failed")
-            )
-        }
-    })
-
-    return { acceptContract, rejectContract }
 }
 
 export const useUpdateContractStatus = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
