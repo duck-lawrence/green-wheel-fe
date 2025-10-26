@@ -8,7 +8,7 @@ import { cn } from "@heroui/react"
 export type ReviewType = {
     user: {
         name: string
-        avatar: string
+        avatar?: string
     }
     createdAt: string
     rating: number

@@ -171,7 +171,7 @@ export function InvoiceAccordion({
                                             color="primary"
                                             className="btn-gradient px-6 py-3"
                                         >
-                                            {t("car_rental.pay")} {button.label}
+                                            {button.label}
                                         </ButtonStyled>
                                     </div>
                                 ))}

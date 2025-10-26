@@ -291,7 +291,7 @@ export function RentalContractDetail({
                         isReadOnly
                         label={t("rental_contract.contract_description")}
                         value={contract.description}
-                        placeholder=". . . "
+                        placeholder=". . ."
                         variant="bordered"
                         className="sm:col-span-2"
                     />
@@ -381,7 +381,7 @@ export function RentalContractDetail({
 
             {/* Invoice Accordion  isLoading={isFetching}*/}
             <SectionStyled title={t("rental_contract.payment_invoice_list")}>
-                <AlertStyled className="mb-3 mt-[-0.75rem] mx-2 max-w-fit italic">
+                <AlertStyled className="mb-3 mt-[-0.75rem] mx-2 max-w-fit">
                     {t("rental_contract.fees_include_tax")}
                 </AlertStyled>
                 {/* <div className="mt-[-1rem] mb-3 px-4 italic text-default-500 text-sm">

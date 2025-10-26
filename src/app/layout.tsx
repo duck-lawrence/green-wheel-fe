@@ -36,10 +36,10 @@ export default async function RootLayout({
 
     return (
         <html lang={locale} className={`${geistSans.variable} ${geistMono.variable} min-w-xs`}>
-            <body className="antialiased bg-secondary diamondBackground min-w-xs">
+            <body className="antialiased bg-secondary diamond-background min-w-xs">
                 <AppProviders locale={locale}>
                     <ClientHydration>
-                        <div className="min-h-screen flex flex-col items-center pt-25 mb-10">
+                        <div className="min-h-screen flex flex-col items-center pt-25">
                             <Navbar />
                             {children}
                             <ScrollToTopButton />

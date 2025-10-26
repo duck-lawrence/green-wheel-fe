@@ -1,18 +1,17 @@
 "use client"
-import { AutocompleteStyle, ButtonStyled, SectionStyled, SpinnerStyled } from "@/components"
+import { AutocompleteStyled, ButtonStyled, SectionStyled, SpinnerStyled } from "@/components"
 import TableSelectionStaff from "@/components/modules/TableSelectionStaff"
 import TableSelectionVehicle from "@/components/modules/TableSelectionVehicle/indesx"
 import { useGetAllStaffs, useGetAllStations, useGetAllVehicles, useGetMe } from "@/hooks"
 import { useCreateDispatch } from "@/hooks/queries/useDispatch"
 import { AutocompleteItem, Textarea } from "@heroui/react"
 import { Car, MapPinAreaIcon, UserSwitchIcon } from "@phosphor-icons/react"
-import { useRouter } from "next/navigation"
 import React, { useCallback, useState } from "react"
 import { useTranslation } from "react-i18next"
 
-export default function DispatchPage() {
+export default function DispatchCreatePage() {
     const { t } = useTranslation()
-    const router = useRouter()
+    // const router = useRouter()
     const { data: user, isLoading: isLoading_1 } = useGetMe()
     const stationIdNow = user?.station?.id
 
@@ -24,11 +23,11 @@ export default function DispatchPage() {
     const [selecedSation, setSelecedSation] = useState("")
 
     //Staff && Vehicle
-    const { data: staffs, isLoading: isLoading_3 } = useGetAllStaffs({
+    const { data: dispatchRequestStaffs, isLoading: isLoading_3 } = useGetAllStaffs({
         params: { stationId: selecedSation },
         enabled: !!selecedSation
     })
-    const { data: vehicles, isLoading: isLoading_4 } = useGetAllVehicles({
+    const { data: dispatchRequestVehicles, isLoading: isLoading_4 } = useGetAllVehicles({
         params: { stationId: selecedSation },
         enabled: !!selecedSation
     })
@@ -63,7 +62,7 @@ export default function DispatchPage() {
             {/* Station - Description */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                 <SectionStyled title={t("dispatch.station")}>
-                    <AutocompleteStyle
+                    <AutocompleteStyled
                         label={t("vehicle_model.station")}
                         items={stationDispatch ?? []}
                         startContent={<MapPinAreaIcon className="text-xl" />}
@@ -76,7 +75,7 @@ export default function DispatchPage() {
                         {(stationDispatch ?? []).map((item) => (
                             <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
                         ))}
-                    </AutocompleteStyle>
+                    </AutocompleteStyled>
                 </SectionStyled>
                 <SectionStyled title={t("dispatch.description")}>
                     <Textarea
@@ -94,7 +93,7 @@ export default function DispatchPage() {
                 <SectionStyled title={t("dispatch.list_staff")} icon={UserSwitchIcon}>
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
                         <TableSelectionStaff
-                            staffs={staffs ?? []}
+                            staffs={dispatchRequestStaffs ?? []}
                             onChangeSelected={setSelectStaffs}
                         />
                     </div>
@@ -103,7 +102,7 @@ export default function DispatchPage() {
                 <SectionStyled title={t("dispatch.list_vehicle")} icon={Car}>
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
                         <TableSelectionVehicle
-                            vehicles={vehicles ?? []}
+                            vehicles={dispatchRequestVehicles ?? []}
                             onChangeSelected={setSelectVehicles}
                         />
                     </div>
@@ -114,11 +113,9 @@ export default function DispatchPage() {
                 <ButtonStyled
                     color="primary"
                     className="p-6 btn-gradient btn-gradient:hover btn-gradient:active"
-                    onPress={() => {
-                        handleCreateDispatch?.(), router.push("/dashboard/dispatch")
-                    }}
+                    onPress={handleCreateDispatch}
                 >
-                    {t("success.create")}
+                    {t("dispatch.create")}
                 </ButtonStyled>
             </div>
         </div>

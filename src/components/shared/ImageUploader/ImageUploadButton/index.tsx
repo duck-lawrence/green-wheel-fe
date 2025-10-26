@@ -1,12 +1,12 @@
 "use client"
 import React, { useRef } from "react"
-import { ButtonStyled } from "@/components/styled"
+import { ButtonIconStyled, ButtonStyled } from "@/components/styled"
 import { cn } from "@heroui/react"
 import { Camera } from "lucide-react"
 
 type ImageUploadButtonProps = {
     onFileSelect: (file: File) => void
-    label: string
+    label?: string
     accept?: string
     color?: "default" | "primary" | "secondary" | "success" | "warning" | "danger"
     className?: string
@@ -15,7 +15,7 @@ type ImageUploadButtonProps = {
 
 export function ImageUploadButton({
     onFileSelect,
-    label,
+    label = "",
     accept = "image/*",
     color = "secondary",
     className = "",
@@ -42,17 +42,27 @@ export function ImageUploadButton({
                 className="hidden"
             />
 
-            <ButtonStyled
-                color={color}
-                className={cn(
-                    "w-fit px-4 py-2 rounded-lg flex items-center justify-center",
-                    btnClassName
-                )}
-                onPress={() => fileRef.current?.click()}
-            >
-                <Camera size={18} fontWeight="fill" />
-                {label}
-            </ButtonStyled>
+            {label ? (
+                <ButtonStyled
+                    color={color}
+                    className={cn(
+                        "w-fit px-4 py-2 rounded-lg flex items-center justify-center",
+                        btnClassName
+                    )}
+                    onPress={() => fileRef.current?.click()}
+                >
+                    <Camera size={18} fontWeight="fill" />
+                    {label}
+                </ButtonStyled>
+            ) : (
+                <ButtonIconStyled
+                    color={color}
+                    className={cn(btnClassName)}
+                    onPress={() => fileRef.current?.click()}
+                >
+                    <Camera size={18} fontWeight="fill" />
+                </ButtonIconStyled>
+            )}
         </div>
     )
 }

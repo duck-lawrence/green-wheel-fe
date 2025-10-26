@@ -2,10 +2,11 @@
 import React, { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
-    AutocompleteStyle,
-    ButtonStyled,
+    AutocompleteStyled,
+    ButtonIconStyled,
     EnumPicker,
     InputStyled,
+    PaginationStyled,
     TableContractStaff
 } from "@/components"
 import { useGetAllRentalContracts, useGetAllStations } from "@/hooks"
@@ -17,12 +18,16 @@ import { BackendError } from "@/models/common/response"
 import toast from "react-hot-toast"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { AutocompleteItem } from "@heroui/react"
+import { PaginationParams } from "@/models/common/request"
+import { SearchIcon } from "lucide-react"
 
 export default function StaffContractsPage() {
     const { t } = useTranslation()
 
     const [filter, setFilter] = useState<ContractQueryParams>({})
-    const { data, isFetching, refetch } = useGetAllRentalContracts({ params: filter })
+    const [pagination, setPagination] = useState<PaginationParams>({ pageSize: 5 })
+    const { data, isFetching, refetch } = useGetAllRentalContracts({ params: filter, pagination })
+
     const {
         data: stations,
         isLoading: isGetStationsLoading,
@@ -33,6 +38,12 @@ export default function StaffContractsPage() {
         async (params: ContractQueryParams) => {
             setFilter(params)
             await refetch()
+            setPagination((prev) => {
+                return {
+                    ...prev,
+                    pageNumber: 1
+                }
+            })
         },
         [refetch]
     )
@@ -68,18 +79,18 @@ export default function StaffContractsPage() {
                             <FunnelSimple size={22} className="text-primary" />
                             {t("staff.contract_filter")}
                         </h3>
-                        <ButtonStyled
+                        <ButtonIconStyled
                             type="submit"
                             isLoading={isFetching}
-                            className="btn-gradient px-6 py-2 rounded-lg"
+                            className="btn-gradient rounded-lg"
                         >
-                            {t("staff.handovers_filters_search")}
-                        </ButtonStyled>
+                            <SearchIcon />
+                        </ButtonIconStyled>
                     </div>
 
                     {/* Filter inputs */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-2">
-                        <AutocompleteStyle
+                        <AutocompleteStyled
                             label={t("vehicle_model.station")}
                             items={stations}
                             startContent={<MapPinAreaIcon className="text-xl" />}
@@ -92,7 +103,7 @@ export default function StaffContractsPage() {
                             {(stations ?? []).map((item) => (
                                 <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
                             ))}
-                        </AutocompleteStyle>
+                        </AutocompleteStyled>
                         <EnumPicker
                             label={t("table.status")}
                             labels={RentalContractStatusLabels}
@@ -128,7 +139,26 @@ export default function StaffContractsPage() {
                 </form>
             </div>
             {/* Table */}
-            <TableContractStaff contracts={data ?? []} params={formik.values} />
+            <TableContractStaff
+                contracts={data?.items ?? []}
+                params={formik.values}
+                pagination={pagination}
+            />
+            <div className="mt-6 flex justify-center">
+                <PaginationStyled
+                    page={data?.pageNumber ?? 1}
+                    total={data?.totalPages ?? 10}
+                    onChange={(page: number) =>
+                        setPagination((prev) => {
+                            return {
+                                ...prev,
+                                pageNumber: page
+                            }
+                        })
+                    }
+                    showControls
+                />
+            </div>
         </div>
     )
 }

@@ -1,7 +1,12 @@
-import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
+import { RentalContractStatus } from "@/constants/enum"
 import { QUERY_KEYS } from "@/constants/queryKey"
-import { BackendError } from "@/models/common/response"
-import { ContractQueryParams, HandoverContractReq } from "@/models/rental-contract/schema/request"
+import { PaginationParams } from "@/models/common/request"
+import { BackendError, PageResult } from "@/models/common/response"
+import {
+    ConfirmContractReq,
+    ContractQueryParams,
+    HandoverContractReq
+} from "@/models/rental-contract/schema/request"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { rentalContractApi } from "@/services/rentalContractApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
@@ -43,28 +48,6 @@ export const useCreateContractManual = ({ onSuccess }: { onSuccess?: () => void 
     })
 }
 
-export const useGetAllRentalContract = ({
-    params,
-    enabled = true
-}: {
-    params: ContractQueryParams
-    enabled?: boolean
-}) => {
-    const queryClient = useQueryClient()
-    const query = useQuery({
-        queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, params],
-        queryFn: () => rentalContractApi.getAll(params),
-        initialData: () => {
-            return queryClient.getQueryData<RentalContractViewRes[]>([
-                ...QUERY_KEYS.RENTAL_CONTRACTS,
-                params
-            ])
-        },
-        enabled
-    })
-    return query
-}
-
 export const useGetRentalContractById = ({
     id,
     enabled = true
@@ -88,101 +71,122 @@ export const useGetRentalContractById = ({
     return query
 }
 
+export const useGetAllRentalContracts = ({
+    params = {},
+    pagination = {},
+    enabled = true
+}: {
+    params: ContractQueryParams
+    pagination: PaginationParams
+    enabled?: boolean
+}) => {
+    const queryClient = useQueryClient()
+    const key = [...QUERY_KEYS.RENTAL_CONTRACTS, params, pagination]
+
+    return useQuery({
+        queryKey: key,
+        queryFn: async () => await rentalContractApi.getAll({ query: params, pagination }),
+        initialData: () => {
+            return queryClient.getQueryData<PageResult<RentalContractViewRes>>(key)
+        },
+        enabled
+    })
+}
+
 export const useGetMyContracts = ({
     status,
+    pagination = {},
     enabled = true
 }: {
     status?: RentalContractStatus
+    pagination: PaginationParams
     enabled?: boolean
 }) => {
     const query = useQuery({
-        queryKey: [...QUERY_KEYS.VEHICLE_SEGMENTS, ...QUERY_KEYS.ME, status],
-        queryFn: () => rentalContractApi.getMyContract({ status }),
+        queryKey: [...QUERY_KEYS.VEHICLE_SEGMENTS, ...QUERY_KEYS.ME, status, pagination],
+        queryFn: () => rentalContractApi.getMyContract({ status, pagination }),
         enabled
     })
     return query
 }
 
+// export const useConfirmContract = ({
+//     params,
+//     pagination = {},
+//     onSuccess
+// }: {
+//     params: ContractQueryParams
+//     pagination: PaginationParams
+//     onSuccess?: () => void
+// }) => {
+//     const { t } = useTranslation()
+//     const queryClient = useQueryClient()
+//     const key = [...QUERY_KEYS.RENTAL_CONTRACTS, params, pagination]
+
+//     const acceptContract = useMutation({
+//         mutationFn: async ({ id }: { id: string }) => {
+//             await rentalContractApi.acceptContract({ id })
+//         },
+
+//         onSuccess: () => {
+//             queryClient.invalidateQueries({ queryKey: key })
+//             onSuccess?.()
+//             toast.success(t("rental_contract.update_success"))
+//         },
+
+//         onError: (error: BackendError) => {
+//             toast.error(
+//                 translateWithFallback(t, error.detail) || t("rental_contract.update_failed")
+//             )
+//         }
+//     })
+
+//     const rejectContract = useMutation({
+//         mutationFn: async ({ id, vehicalStatus }: { id: string; vehicalStatus: VehicleStatus }) => {
+//             await rentalContractApi.rejectContract({ id, vehicalStatus })
+//         },
+
+//         onSuccess: () => {
+//             queryClient.invalidateQueries({ queryKey: key })
+//             onSuccess?.()
+//             toast.success(t("rental_contract.update_success"))
+//         },
+
+//         onError: (error: BackendError) => {
+//             toast.error(
+//                 translateWithFallback(t, error.detail) || t("rental_contract.update_failed")
+//             )
+//         }
+//     })
+
+//     return { acceptContract, rejectContract }
+// }
+
 export const useConfirmContract = ({
     params,
+    pagination = {},
     onSuccess
 }: {
     params: ContractQueryParams
+    pagination: PaginationParams
     onSuccess?: () => void
 }) => {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
-
-    const acceptContract = useMutation({
-        mutationFn: async ({ id }: { id: string }) => {
-            await rentalContractApi.acceptContract({ id })
+    const key = [...QUERY_KEYS.RENTAL_CONTRACTS, params, pagination]
+    return useMutation({
+        mutationFn: async ({ id, req }: { id: string; req: ConfirmContractReq }) => {
+            await rentalContractApi.confirmContract({ id, req })
         },
-
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, params] })
+            toast.success(t("success.update"))
             onSuccess?.()
-            toast.success(t("rental_contract.update_success"))
+            queryClient.invalidateQueries({ queryKey: key })
         },
-
         onError: (error: BackendError) => {
-            toast.error(
-                translateWithFallback(t, error.detail) || t("rental_contract.update_failed")
-            )
+            toast.error(translateWithFallback(t, error.detail))
         }
     })
-
-    const rejectContract = useMutation({
-        mutationFn: async ({ id, vehicalStatus }: { id: string; vehicalStatus: VehicleStatus }) => {
-            await rentalContractApi.rejectContract({ id, vehicalStatus })
-        },
-
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, params] })
-            onSuccess?.()
-            toast.success(t("rental_contract.update_success"))
-        },
-
-        onError: (error: BackendError) => {
-            toast.error(
-                translateWithFallback(t, error.detail) || t("rental_contract.update_failed")
-            )
-        }
-    })
-
-    return { acceptContract, rejectContract }
-}
-
-export const useGetAllRentalContracts = ({
-    params = {},
-    enabled = true
-}: {
-    params: ContractQueryParams
-    enabled?: boolean
-}) => {
-    const queryClient = useQueryClient()
-    // const key = [...QUERY_KEYS.RENTAL_CONTRACTS, params]
-
-    return useQuery({
-        queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, params],
-        queryFn: async () => await rentalContractApi.getAll(params),
-        initialData: () => {
-            return queryClient.getQueryData<RentalContractViewRes[]>(QUERY_KEYS.RENTAL_CONTRACTS)
-        },
-        enabled
-    })
-
-    // const getCachedOrFetch = async (params: ContractQueryParams) => {
-    //     const key = [...QUERY_KEYS.RENTAL_CONTRACTS, params]
-    //     const cached = queryClient.getQueryData<RentalContractViewRes[]>(key)
-    //     if (cached) return cached
-    //     const data = await queryClient.fetchQuery({
-    //         queryKey: key,
-    //         queryFn: () => rentalContractApi.getAll(params)
-    //     })
-    //     return data
-    // }
-
-    // return { ...query, getCachedOrFetch }
 }
 
 export const useUpdateContractStatus = ({ onSuccess }: { onSuccess?: () => void } = {}) => {

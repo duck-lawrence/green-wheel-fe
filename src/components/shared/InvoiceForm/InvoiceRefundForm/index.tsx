@@ -23,7 +23,7 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
 
     return (
         <>
-            <AlertStyled color="warning" className="mb-3 mt-[-0.75rem] max-w-fit italic">
+            <AlertStyled color="warning" className="mb-3 mt-[-0.75rem] max-w-fit">
                 {t("rental_contract.penalty_warning")}
             </AlertStyled>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">

@@ -6,12 +6,19 @@ import {
     ButtonStyled,
     FieldStyled,
     CreateRentalContractModal,
-    TempInvoice
+    TempInvoice,
+    AlertStyled
 } from "@/components"
 import { GasPump, UsersFour, RoadHorizon, BatteryChargingIcon } from "@phosphor-icons/react"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { useParams, useRouter } from "next/navigation"
-import { useBookingFilterStore, useGetVehicleModelById, useGetMe, useDay } from "@/hooks"
+import {
+    useBookingFilterStore,
+    useGetVehicleModelById,
+    useGetMe,
+    useDay,
+    useTokenStore
+} from "@/hooks"
 import { useTranslation } from "react-i18next"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { Spinner, useDisclosure } from "@heroui/react"
@@ -30,6 +37,7 @@ export default function VehicleDetailPage() {
     const { getDiffDaysCeil } = useDay()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { data: user } = useGetMe()
+    const isLogined = useTokenStore((s) => !!s.accessToken)
     const isCustomer = useMemo(() => {
         return user?.role?.name === ROLE_CUSTOMER
     }, [user])
@@ -310,13 +318,23 @@ export default function VehicleDetailPage() {
                                 totalPrice={totalPrice}
                             />
 
-                            <ButtonStyled
-                                isDisabled={!isCustomer && !isStaff}
-                                className="w-full rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                                onPress={handleClickBooking}
-                            >
-                                {t("rental_contract.create")}
-                            </ButtonStyled>
+                            <div>
+                                <ButtonStyled
+                                    isDisabled={
+                                        model.availableVehicleCount == 0 ||
+                                        (!isCustomer && !isStaff)
+                                    }
+                                    className="w-full rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                    onPress={handleClickBooking}
+                                >
+                                    {t("rental_contract.rent")}
+                                </ButtonStyled>
+                                {!isLogined && (
+                                    <AlertStyled className="mt-1">
+                                        {t("rental_contract.please_login")}
+                                    </AlertStyled>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </aside>

@@ -1,41 +1,33 @@
 "use client"
-import { useNavbarItemStore } from "@/hooks/singleton/store/useNavbarItemStore"
-import React, { useEffect } from "react"
+import React from "react"
 import { motion } from "framer-motion"
 import { ButtonStyled } from "@/components"
 import { Handshake, Leaf, Lightning } from "@phosphor-icons/react"
 import { useTypewriter } from "@/utils/helpers/useTypewriter"
 import { Image } from "@heroui/react"
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 
 export default function AboutPage() {
-    const setActiveMenuKey = useNavbarItemStore((s) => s.setActiveMenuKey)
+    const { t } = useTranslation()
 
-    useEffect(() => {
-        setActiveMenuKey("about")
-    }, [setActiveMenuKey])
-
-    const [title, titleDone] = useTypewriter("About Us", 50)
-    const [desc] = useTypewriter(
-        "Green Wheel — Vietnam’s leading electric car rental platform, delivering an eco-friendly, affordable, and seamless driving experience.",
-        12,
-        300
-    )
+    const [title, titleDone] = useTypewriter(t("about_us.about_us"), 50)
+    const [desc] = useTypewriter(t("about_us.green_wheel_description"), 12, 300)
 
     const visionContent = [
         {
-            title: "Towards a Greener Future",
-            desc: "We believe electric vehicles are the key to sustainable and environmentally friendly mobility.",
+            title: t("about_us.towards_a_greener_future"),
+            desc: t("about_us.ev_sustainability_belief"),
             icon: <Leaf size={48} weight="duotone" className="text-green-500" />
         },
         {
-            title: "Customer-Centric Approach",
-            desc: "Green Wheel prioritizes customer experience above all — ensuring convenience, transparency, and safety in every ride.",
+            title: t("about_us.customer_centric_approach"),
+            desc: t("about_us.customer_experience_focus"),
             icon: <Handshake size={48} weight="duotone" className="text-blue-500" />
         },
         {
-            title: "Continuous Innovation",
-            desc: "We constantly improve our technology and expand our fleet with the latest electric vehicles to offer the best options available.",
+            title: t("about_us.continuous_innovation"),
+            desc: t("about_us.innovation_description"),
             icon: <Lightning size={48} weight="duotone" className="text-yellow-500" />
         }
     ]
@@ -81,16 +73,13 @@ export default function AboutPage() {
                             transition={{ duration: 0.5 }}
                         >
                             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-                                Our Mission
+                                {t("about_us.our_mission")}
                             </h2>
                             <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                                Green Wheel was founded to accelerate the transition to clean,
-                                sustainable transportation. We provide modern electric vehicles that
-                                are environmentally friendly, helping customers enjoy smooth,
-                                cost-effective, and eco-conscious journeys.
+                                {t("about_us.green_wheel_mission")}
                             </p>
                             <ButtonStyled color="primary" variant="solid" className="btn-gradient">
-                                Learn more
+                                {t("about_us.learn_more")}
                             </ButtonStyled>
                         </motion.div>
 
@@ -122,7 +111,7 @@ export default function AboutPage() {
                             className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
                         >
                             <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
-                                Vision & Core Values
+                                {t("about_us.vision_and_core_values")}
                             </h2>
                         </motion.div>
                         <div className="grid md:grid-cols-3 gap-8">
@@ -157,7 +146,7 @@ export default function AboutPage() {
                         transition={{ duration: 0.5 }}
                         className="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
                     >
-                        Ready to join us on the road to a greener future?
+                        {t("about_us.join_us_greener_future")}
                     </motion.h3>
                     <ButtonStyled
                         as={Link}
@@ -166,7 +155,7 @@ export default function AboutPage() {
                         size="lg"
                         className="btn-gradient"
                     >
-                        Contact Us
+                        {t("about_us.contact_us")}
                     </ButtonStyled>
                 </div>
             </section>

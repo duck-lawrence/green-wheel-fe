@@ -11,17 +11,19 @@ button {
 }
 
 /* --- COMPONENTS --- */
-@component interactive-scale {
-    transition: transform 0.3s ease-in-out;
-    &:hover {
-        transform: scale(1.05);
-    }
-    &:active {
-        transform: scale(0.95);
-    }
-}
-
 @layer components {
+    /* --- Interactive scale effect --- */
+    .interactive-scale {
+        transition: transform 0.3s ease-in-out;
+    }
+    .interactive-scale:hover {
+        transform: scale(1.03);
+    }
+    .interactive-scale:active {
+        transform: scale(0.99);
+    }
+
+    /* --- Button gradient --- */
     .btn-gradient {
         @apply !text-white rounded-xl font-semibold
         bg-gradient-to-r 
@@ -37,19 +39,21 @@ button {
 }
 
 /* --- UTILITIES --- */
-@utility asfaltBackground {
-    background-image: url("/textures/asfalt-dark.png");
-}
+@layer utilities {
+    .asfalt-background {
+        background-image: url("/textures/asfalt-dark.png");
+    }
 
-@utility bannerBackground {
-    background-image: url("/images/test-bg.png");
-    background-size: contain;
-    background-position: top;
-    background-repeat: no-repeat;
-}
+    .banner-background {
+        background-image: url("/images/test-bg.png");
+        background-size: contain;
+        background-position: top;
+        background-repeat: no-repeat;
+    }
 
-@utility diamondBackground {
-    background-image: url("/textures/diagmonds-light.png");
+    .diamond-background {
+        background-image: url("/textures/diagmonds-light.png");
+    }
 }
 
 /* ::-webkit-scrollbar {

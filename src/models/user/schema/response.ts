@@ -10,6 +10,9 @@ export type UserProfileViewRes = {
     dateOfBirth?: string
     avatarUrl?: string
     phone?: string
+    bankName?: string
+    bankAccountNumber?: string
+    bankAccountName?: string
     licenseUrl?: string
     citizenUrl?: string
     needSetPassword: boolean

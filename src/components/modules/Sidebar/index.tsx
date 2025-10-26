@@ -25,13 +25,15 @@ export const buildTabs = ({
     defaultTabs,
     customerTabs = [],
     staffTabs = [],
-    adminTabs = []
+    adminTabs = [],
+    bottomTabs = []
 }: {
     roleName?: string
     defaultTabs: SidebarItem[]
     customerTabs?: SidebarItem[]
     staffTabs?: SidebarItem[]
     adminTabs?: SidebarItem[]
+    bottomTabs?: SidebarItem[]
 }) => {
     const roleTabsMap: Record<string, SidebarItem[]> = {
         [ROLE_CUSTOMER]: customerTabs,
@@ -43,7 +45,7 @@ export const buildTabs = ({
     //NAY SỬA LẠI ĐỂ LỌC TRÙNG
     //VD: ROLE_ADMIN CÓ ADMIN TABS LÀ /DASHBOARD, NẾU DEFAULT TABS CŨNG CÓ /DASHBOARD THÌ CHỈ LẤY 1 TAB
     //ROLE_STAFF CÓ STAFF TABS LÀ /DASHBOARD, NẾU DEFAULT TABS CŨNG CÓ /DASHBOARD THÌ CHỈ LẤY 1 TAB
-    const combinedTabs = [...defaultTabs, ...(roleTabsMap[roleName ?? ""] ?? [])]
+    const combinedTabs = [...defaultTabs, ...(roleTabsMap[roleName ?? ""] ?? []), ...bottomTabs]
 
     const uniqueTabs: SidebarItem[] = []
     const seenKeys = new Set<string>()

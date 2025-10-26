@@ -9,25 +9,6 @@ import Link from "next/link"
 import { DEFAULT_AVATAR_URL, ROLE_ADMIN, ROLE_CUSTOMER, ROLE_STAFF } from "@/constants/constants"
 import { useRouter } from "next/navigation"
 
-// type MaybeRoleDetail = { name?: string | null } | null | undefined
-
-// function normalizeRole(role?: unknown, roleDetail?: MaybeRoleDetail) {
-//     if (typeof role === "string" && role.trim().length > 0) {
-//         const normalized = role.trim().toLowerCase()
-//         return normalized.replace(/^"+|"+$/g, "").replace(/^'+|'+$/g, "")
-//     }
-//     if (role && typeof role === "object") {
-//         const roleName = (role as { name?: string | null }).name
-//         if (typeof roleName === "string" && roleName.trim().length > 0) {
-//             return roleName.trim().toLowerCase()
-//         }
-//     }
-//     if (roleDetail && typeof roleDetail === "object" && typeof roleDetail.name === "string") {
-//         return roleDetail.name.trim().toLowerCase()
-//     }
-//     return undefined
-// }
-
 type DropdownLinkItem = {
     key: string
     href?: string
@@ -102,6 +83,11 @@ export function ProfileDropdown() {
             key: "rental_contracts",
             href: "/rental-contracts",
             label: t("user.rental_contracts")
+        },
+        {
+            key: "customer_support",
+            href: "/customer-supports",
+            label: t("ticket.customer_support")
         }
     ]
 
@@ -139,7 +125,11 @@ export function ProfileDropdown() {
 
     return (
         <div className="gap-4 flex items-center">
-            <DropdownStyled>
+            <DropdownStyled
+                classNames={{
+                    content: "min-w-fit"
+                }}
+            >
                 <DropdownTrigger>
                     <User
                         as="button"
@@ -154,14 +144,14 @@ export function ProfileDropdown() {
                         }}
                     />
                 </DropdownTrigger>
-                <DropdownMenu aria-label="User Actions" variant="flat">
+                <DropdownMenu className="max-w-fit" variant="flat">
                     {dropdownItems.map((item) =>
                         item.href ? (
                             <DropdownItem
                                 key={item.key}
                                 as={Link}
                                 href={item.href}
-                                className="block"
+                                className="block pr-5"
                             >
                                 {item.label}
                             </DropdownItem>
@@ -170,6 +160,7 @@ export function ProfileDropdown() {
                                 key={item.key}
                                 textValue={item.label}
                                 color={item.color}
+                                className="block pr-5"
                                 onPress={handleLogout}
                             >
                                 {item.label}

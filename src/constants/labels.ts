@@ -55,7 +55,8 @@ export const RentalContractStatusLabels: Record<RentalContractStatus, string> = 
     [RentalContractStatus.Active]: i18n.t("enum.active"),
     [RentalContractStatus.Returned]: i18n.t("enum.returned"),
     [RentalContractStatus.Completed]: i18n.t("enum.completed"),
-    [RentalContractStatus.Cancelled]: i18n.t("enum.cancelled")
+    [RentalContractStatus.Cancelled]: i18n.t("enum.cancelled"),
+    [RentalContractStatus.UnavailableVehicle]: i18n.t("enum.unavailable_vehicle")
 }
 
 export const DamageStatusLabels: Record<DamageStatus, string> = {
@@ -116,7 +117,8 @@ export const PaymentMethodLabels: Record<PaymentMethod, string> = {
 
 export const TicketTypeLabels: Record<TicketType, string> = {
     [TicketType.CustomerSupport]: i18n.t("enum.customer_support"),
-    [TicketType.StaffReport]: i18n.t("enum.staff_report")
+    [TicketType.StaffReport]: i18n.t("enum.staff_report"),
+    [TicketType.Contact]: i18n.t("enum.contact")
 }
 
 export const TicketStatusLabels: Record<TicketStatus, string> = {

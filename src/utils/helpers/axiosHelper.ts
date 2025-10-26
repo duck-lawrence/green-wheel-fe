@@ -30,7 +30,9 @@ export const buildQueryParams = (obj: Record<string, any>, ignoreFalsy = false) 
 
 export const debouncedWrapper = <T extends (...args: any[]) => Promise<any>>(
     fn: T,
-    delay = 800
+    delay = 800,
+    onDebounceStart?: () => void,
+    onDebounceEnd?: () => void
 ) => {
     let timeoutRef: ReturnType<typeof setTimeout> | null = null
     let abortController: AbortController | null = null
@@ -39,7 +41,6 @@ export const debouncedWrapper = <T extends (...args: any[]) => Promise<any>>(
         ...args: Parameters<T>
     ): Promise<ReturnType<T> extends Promise<infer R> ? R : never> => {
         return new Promise((resolve, reject) => {
-            // Huỷ các lần gọi trước
             if (timeoutRef) {
                 clearTimeout(timeoutRef)
                 timeoutRef = null
@@ -49,31 +50,29 @@ export const debouncedWrapper = <T extends (...args: any[]) => Promise<any>>(
                 abortController = null
             }
 
-            // Tạo AbortController mới
             abortController = new AbortController()
             const signal = abortController.signal
 
-            // Đặt timeout để gọi hàm sau khi người dùng dừng thao tác
+            // báo bắt đầu debounce
+            onDebounceStart?.()
+
             timeoutRef = setTimeout(async () => {
                 try {
                     const result = await fn(...args)
                     resolve(result)
                 } catch (error) {
-                    if (signal.aborted) {
-                        reject(new Error("Operation aborted"))
-                    } else {
-                        reject(error)
-                    }
+                    if (signal.aborted) reject(new Error("Operation aborted"))
+                    else reject(error)
                 } finally {
-                    // Reset
                     timeoutRef = null
                     abortController = null
+                    // báo kết thúc debounce
+                    onDebounceEnd?.()
                 }
             }, delay)
         })
     }
 
-    // Thêm phương thức cancel để huỷ debounce
     debouncedFn.cancel = () => {
         if (timeoutRef) {
             clearTimeout(timeoutRef)
@@ -83,6 +82,7 @@ export const debouncedWrapper = <T extends (...args: any[]) => Promise<any>>(
             abortController.abort()
             abortController = null
         }
+        onDebounceEnd?.()
     }
 
     return debouncedFn

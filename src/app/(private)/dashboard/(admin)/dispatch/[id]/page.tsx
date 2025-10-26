@@ -18,9 +18,9 @@ export default function DispatchDetailPage() {
     const { data: user } = useGetMe()
     const stationNow = user?.station?.id
     const { data: dispatchDetail } = useGetDispatchById({ id: dispatchId!, enabled: true })
-    const updateDispatch = useUpdateDispatch({})
 
     // Update
+    const updateDispatch = useUpdateDispatch({})
     const handleUpdateDispatch = useCallback(
         async (status: DispatchRequestStatus) => {
             if (!dispatchDetail?.id) return
@@ -28,6 +28,11 @@ export default function DispatchDetailPage() {
         },
         [dispatchDetail?.id, updateDispatch]
     )
+
+    //data dispatch
+    const dispatchStaff = dispatchDetail?.dispatchRequestStaffs.map((item) => item.staff) ?? []
+    const dispatchVehicle =
+        dispatchDetail?.dispatchRequestVehicles.map(({ vehicle }) => vehicle) ?? []
 
     // Display conditions
     const display1 =
@@ -87,6 +92,16 @@ export default function DispatchDetailPage() {
                 </div>
             </SectionStyled>
 
+            <SectionStyled title={t("dispatch.description")}>
+                <div className="flex flex-col gap-3">
+                    <InputStyled
+                        label={t("dispatch.description")}
+                        value={dispatchDetail?.description}
+                        readOnly
+                    />
+                </div>
+            </SectionStyled>
+
             {/* Status */}
             <SectionStyled title={t("dispatch.cur_status")}>
                 <div className="flex flex-wrap items-center gap-3">
@@ -142,17 +157,23 @@ export default function DispatchDetailPage() {
                 </div>
             </SectionStyled>
 
-            {/* Staff & Vehicle Tables */}
+            {/* Tables */}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 mt-8">
                 <SectionStyled title={t("dispatch.assigned_staff")} icon={UserSwitch}>
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
-                        <TableSelectionStaff staffs={dispatchDetail?.staffs ?? []} />
+                        <TableSelectionStaff
+                            staffs={dispatchStaff ?? []}
+                            selectionBehavior="replace"
+                        />
                     </div>
                 </SectionStyled>
 
                 <SectionStyled title={t("dispatch.assigned_vehicle")} icon={Car}>
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
-                        <TableSelectionVehicle vehicles={dispatchDetail?.vehicles ?? []} />
+                        <TableSelectionVehicle
+                            vehicles={dispatchVehicle ?? []}
+                            selectionBehavior="replace"
+                        />
                     </div>
                 </SectionStyled>
             </div>

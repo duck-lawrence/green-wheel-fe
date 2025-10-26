@@ -47,7 +47,12 @@ export type DeleteModelImagesReq = {
     imageIds: string[]
 }
 
-export type VehicleFilterReq = {
+export type GetAllModelParams = {
+    name?: string
+    segmentId?: string
+}
+
+export type SearchModelParams = {
     stationId: string
     startDate: string
     endDate: string

@@ -1,2 +1,4 @@
 export * from "./RentalContractDetail"
+export * from "./TicketManagement"
+export * from "./UserManagement"
 export * from "./VehicleChecklistDetail"
