@@ -1,4 +1,4 @@
-import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
+import { RentalContractStatus, VehicleIssueResolutionOption, VehicleStatus } from "@/constants/enum"
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { PaginationParams } from "@/models/common/request"
 import { BackendError, PageResult } from "@/models/common/response"
@@ -11,6 +11,18 @@ import { usePathname, useRouter } from "next/navigation"
 
 import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
+
+export const useInvalidateContractQueries = () => {
+    const queryClient = useQueryClient()
+
+    const invalidateById = async (id: string) => {
+        await queryClient.invalidateQueries({
+            queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id]
+        })
+    }
+
+    return { invalidateById }
+}
 
 export const useCreateRentalContract = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
@@ -162,12 +174,12 @@ export const useUpdateContractStatus = ({ onSuccess }: { onSuccess?: () => void 
     const { t } = useTranslation()
     const pathName = usePathname()
     const router = useRouter()
-    const queryClient = useQueryClient()
+    const { invalidateById } = useInvalidateContractQueries()
 
     return useMutation({
         mutationFn: async ({ id }: { id: string }) => {
             await rentalContractApi.updateContractStatus({ id })
-            queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
+            await invalidateById(id)
         },
         onSuccess: () => {
             router.replace(pathName)
@@ -181,14 +193,14 @@ export const useUpdateContractStatus = ({ onSuccess }: { onSuccess?: () => void 
 
 export const useHandoverContract = ({ id, onSuccess }: { id: string; onSuccess?: () => void }) => {
     const { t } = useTranslation()
-    const queryClient = useQueryClient()
+    const { invalidateById } = useInvalidateContractQueries()
 
     return useMutation({
         mutationFn: async ({ req }: { req: HandoverContractReq }) => {
             await rentalContractApi.handover({ id, req })
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
+        onSuccess: async () => {
+            await invalidateById(id)
             onSuccess?.()
             toast.success(t("success.handover"))
         },
@@ -200,15 +212,15 @@ export const useHandoverContract = ({ id, onSuccess }: { id: string; onSuccess?:
 
 export const useReturnContract = ({ id, onSuccess }: { id: string; onSuccess?: () => void }) => {
     const { t } = useTranslation()
-    const queryClient = useQueryClient()
+    const { invalidateById } = useInvalidateContractQueries()
 
     return useMutation({
         // mutationFn: rentalContractApi.return,
         mutationFn: async () => {
             await rentalContractApi.return({ id })
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
+        onSuccess: async () => {
+            await invalidateById(id)
             onSuccess?.()
             toast.success(t("success.return"))
         },
@@ -220,16 +232,62 @@ export const useReturnContract = ({ id, onSuccess }: { id: string; onSuccess?: (
 
 export const useCancelContract = ({ id, onSuccess }: { id: string; onSuccess?: () => void }) => {
     const { t } = useTranslation()
-    const queryClient = useQueryClient()
+    const { invalidateById } = useInvalidateContractQueries()
 
     return useMutation({
         mutationFn: async () => {
             await rentalContractApi.cancel({ id })
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id] })
+        onSuccess: async () => {
+            await invalidateById(id)
             onSuccess?.()
             toast.success(t("success.cancel"))
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useChangeVehicle = ({ id, onSuccess }: { id: string; onSuccess?: () => void }) => {
+    const { t } = useTranslation()
+    const { invalidateById } = useInvalidateContractQueries()
+
+    return useMutation({
+        mutationFn: async () => {
+            await rentalContractApi.changeVehicle({ id })
+        },
+        onSuccess: async () => {
+            await invalidateById(id)
+            onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useConfirmChangeVehicle = ({
+    id,
+    onSuccess
+}: {
+    id: string
+    onSuccess?: () => void
+}) => {
+    const { t } = useTranslation()
+    const { invalidateById } = useInvalidateContractQueries()
+
+    return useMutation({
+        mutationFn: async ({
+            req
+        }: {
+            req: { resolutionOption: VehicleIssueResolutionOption }
+        }) => {
+            await rentalContractApi.confirmChangeVehicle({ id, req })
+        },
+        onSuccess: async () => {
+            await invalidateById(id)
+            onSuccess?.()
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))

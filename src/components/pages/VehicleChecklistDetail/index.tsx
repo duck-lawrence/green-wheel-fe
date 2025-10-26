@@ -1,7 +1,13 @@
 "use client"
-import { ButtonStyled, InputStyled, SignatureSection, SpinnerStyled } from "@/components"
+import {
+    ButtonStyled,
+    DateTimeStyled,
+    InputStyled,
+    SignatureSection,
+    SpinnerStyled
+} from "@/components"
 import { VehicleChecklistTypeLabels } from "@/constants/labels"
-import { useGetVehicleChecklistById, useName, useUpdateVehicleChecklist } from "@/hooks"
+import { useDay, useGetVehicleChecklistById, useName, useUpdateVehicleChecklist } from "@/hooks"
 import { UpdateVehicleChecklistReq } from "@/models/checklist/schema/request"
 import { useFormik } from "formik"
 import * as Yup from "yup"
@@ -9,12 +15,15 @@ import React, { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { TableCheckListItems } from "./TableCheckListItems"
 import { Spinner } from "@heroui/react"
-import { VehicleChecklistType } from "@/constants/enum"
+import { DamageStatus, VehicleChecklistType } from "@/constants/enum"
 import Link from "next/link"
+import { fromDate } from "@internationalized/date"
+import { DEFAULT_TIMEZONE } from "@/constants/constants"
 
 export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; isStaff?: boolean }) {
     const { t } = useTranslation()
     const { toFullName } = useName()
+    const { formatDateTime, toZonedDateTime } = useDay()
 
     const { data: checklist, isLoading } = useGetVehicleChecklistById({
         id,
@@ -37,7 +46,8 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
             await updateChecklist.mutateAsync({
                 checklistItems: value.checklistItems,
                 isSignedByCustomer: value.isSignedByCustomer,
-                isSignedByStaff: value.isSignedByStaff
+                isSignedByStaff: value.isSignedByStaff,
+                maintainUntil: value.maintainUntil
             })
         },
         [updateChecklist]
@@ -47,7 +57,8 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
         initialValues: {
             isSignedByStaff: checklist?.isSignedByStaff ?? false,
             isSignedByCustomer: checklist?.isSignedByCustomer ?? false,
-            checklistItems: checklist?.vehicleChecklistItems || []
+            checklistItems: checklist?.vehicleChecklistItems || [],
+            maintainUntil: undefined
         },
         enableReinitialize: true,
         validationSchema: Yup.object().shape({
@@ -55,10 +66,29 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
             isSignedByCustomer:
                 checklist?.type == VehicleChecklistType.OutOfContract
                     ? Yup.boolean().notRequired()
-                    : Yup.boolean().oneOf([true], t("signature.signed_by_customer_require"))
+                    : Yup.boolean().oneOf([true], t("signature.signed_by_customer_require")),
+            maintainUntil: Yup.string()
+                .required(t("vehicle_checklist.maintain_until_require"))
+                .test(
+                    "is-valid-maintain-date",
+                    t("vehicle_checklist.invalid_maintain_until"),
+                    (value) => {
+                        const valueDatetime = toZonedDateTime(value)
+                        return (
+                            !!valueDatetime &&
+                            valueDatetime.compare(
+                                fromDate(new Date(), DEFAULT_TIMEZONE).add({ minutes: 30 })
+                            ) >= 0
+                        )
+                    }
+                )
         }),
         onSubmit: handleUpdate
     })
+
+    const hasItemsDamaged =
+        checklist?.type !== VehicleChecklistType.Handover &&
+        formik.values.checklistItems.some((item) => item.status > DamageStatus.Good)
 
     if (isLoading) {
         return <SpinnerStyled />
@@ -129,22 +159,26 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                 setFieldValue={formik.setFieldValue}
             />
 
-            {/* <div className="flex justify-between px-16 pt-10 gap-2 ">
-                <CheckboxStyled
-                    isReadOnly={!isStaff}
-                    isSelected={formik.values.isSignedByStaff}
-                    onValueChange={(value) => formik.setFieldValue("isSignedByStaff", value)}
-                >
-                    {t("signature.signed_by_staff")}
-                </CheckboxStyled>
-                <CheckboxStyled
-                    isReadOnly={!isStaff}
-                    isSelected={formik.values.isSignedByCustomer}
-                    onValueChange={(value) => formik.setFieldValue("isSignedByCustomer", value)}
-                >
-                    {t("signature.signed_by_customer")}
-                </CheckboxStyled>
-            </div> */}
+            <DateTimeStyled
+                label={t("vehicle_checklist.maintain_until")}
+                value={toZonedDateTime(formik.values.maintainUntil)}
+                onChange={(value) => {
+                    if (!value) {
+                        formik.setFieldValue("maintainUntil", null)
+                        return
+                    }
+                    const date = formatDateTime({ date: value })
+                    formik.setFieldValue("maintainUntil", date)
+                }}
+                className="mt-3"
+                isInvalid={hasItemsDamaged && !!formik.errors.maintainUntil}
+                isReadOnly={!hasItemsDamaged}
+                isRequired={hasItemsDamaged}
+                errorMessage={hasItemsDamaged ? formik.errors.maintainUntil : undefined}
+                onBlur={() => {
+                    formik.setFieldTouched("maintainUntil")
+                }}
+            />
 
             {/* Signature */}
             <SignatureSection

@@ -363,7 +363,9 @@
         "refunded": "Refunded",
         "forfeited": "Forfeited",
         "cancelled": "Cancelled",
-        "unavailable_vehicle": "Unavailable vehicle",
+        "unavailable_vehicle": "Unavailable Vehicle",
+        "refund_pending": "Refund Pending",
+        "change_vehicle": "Change Vehicle",
         "request_pending": "Request Pending",
         "confirm_change_station_pending": "Confirm Change Station Pending",
         "payment_pending": "Payment Pending",
@@ -591,6 +593,7 @@
         "back_to_rental_contract": "Back to rental contract",
         "please_login": "Please login to rent",
         "rent": "Rent this vehicle",
+        "send_rental_request": "Send rental request",
         "create_manual": "Create rental request for customer",
         "update_success": "Update success",
         "update_failed": "Update failed",
@@ -663,7 +666,8 @@
         "add_item": "Add new item",
         "create_refund": "Create refund invoice",
         "subtotal": "Subtotal",
-        "temp": "Provisional invoice"
+        "temp": "Provisional invoice",
+        "upload_image": "Upload Invoice Image"
     },
     "momo": {
         "invalid_signature": "Invalid signature",
@@ -795,7 +799,11 @@
         "view_return": "View return checklist",
         "create_out_of_contract": "Create out of contract checklist",
         "view_out_of_contract": "View out of contract checklist",
-        "item_image": "Vehicle checklist item image"
+        "item_image": "Vehicle checklist item image",
+
+        "maintain_until": "Maintain until",
+        "maintain_until_require": "Maintain date is required",
+        "invalid_maintain_until": "Maintain date must be at least 30 minutes from now"
     },
     "signature": {
         "signature": "Signature",

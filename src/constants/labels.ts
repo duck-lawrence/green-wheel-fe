@@ -15,7 +15,8 @@ import {
     TicketType,
     TicketStatus,
     VehicleChecklistType,
-    RoleName
+    RoleName,
+    VehicleIssueResolutionOption
 } from "./enum"
 
 export const RoleNameLabels: Record<RoleName, string> = {
@@ -56,7 +57,13 @@ export const RentalContractStatusLabels: Record<RentalContractStatus, string> = 
     [RentalContractStatus.Returned]: i18n.t("enum.returned"),
     [RentalContractStatus.Completed]: i18n.t("enum.completed"),
     [RentalContractStatus.Cancelled]: i18n.t("enum.cancelled"),
-    [RentalContractStatus.UnavailableVehicle]: i18n.t("enum.unavailable_vehicle")
+    [RentalContractStatus.UnavailableVehicle]: i18n.t("enum.unavailable_vehicle"),
+    [RentalContractStatus.RefundPending]: i18n.t("enum.refund_pending")
+}
+
+export const VehicleIssueResolutionOptionLabels: Record<VehicleIssueResolutionOption, string> = {
+    [VehicleIssueResolutionOption.Refund]: i18n.t("enum.refund"),
+    [VehicleIssueResolutionOption.ChangeVehicle]: i18n.t("enum.change_vehicle")
 }
 
 export const DamageStatusLabels: Record<DamageStatus, string> = {

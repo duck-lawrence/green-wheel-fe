@@ -13,6 +13,7 @@ export type InvoiceViewRes = {
     status: InvoiceStatus
     type: InvoiceType
     paidAt?: string
+    imageUrl?: string
     invoiceItems: InvoiceItemViewRes[]
     deposit?: DepositViewRes
 }

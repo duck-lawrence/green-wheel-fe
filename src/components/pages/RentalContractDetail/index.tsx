@@ -384,11 +384,9 @@ export function RentalContractDetail({
                 <AlertStyled className="mb-3 mt-[-0.75rem] mx-2 max-w-fit">
                     {t("rental_contract.fees_include_tax")}
                 </AlertStyled>
-                {/* <div className="mt-[-1rem] mb-3 px-4 italic text-default-500 text-sm">
-                        {t("rental_contract.fees_include_tax")}
-                    </div> */}
                 <InvoiceAccordion
                     items={invoiceAccordion}
+                    contractId={contract.id}
                     contractStatus={contract.status}
                     className="mb-3"
                 />

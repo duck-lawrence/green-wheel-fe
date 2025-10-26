@@ -1,4 +1,4 @@
-import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
+import { RentalContractStatus, VehicleIssueResolutionOption, VehicleStatus } from "@/constants/enum"
 import { PaginationParams } from "@/models/common/request"
 import { PageResult } from "@/models/common/response"
 import {
@@ -91,5 +91,21 @@ export const rentalContractApi = {
     cancel: ({ id }: { id: string }) =>
         requestWrapper<void>(async () => {
             await axiosInstance.put(`/rental-contracts/${id}/cancel`)
+        }),
+
+    changeVehicle: ({ id }: { id: string }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/rental-contracts/${id}/change-vehicle`)
+        }),
+
+    confirmChangeVehicle: ({
+        id,
+        req
+    }: {
+        id: string
+        req: { resolutionOption: VehicleIssueResolutionOption }
+    }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/rental-contracts/${id}/customer-confirm`, req)
         })
 }

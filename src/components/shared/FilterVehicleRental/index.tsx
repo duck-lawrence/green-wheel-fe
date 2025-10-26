@@ -25,7 +25,7 @@ export function FilterVehicleRental({
     setIsSearching: (isSearching: boolean) => void
 }) {
     const { t } = useTranslation()
-    const { formatDateTime, toZonedDateTime } = useDay({})
+    const { formatDateTime, toZonedDateTime } = useDay()
     // setup date time
     const { minStartDate, minEndDate } = useMemo(() => {
         const zonedNow = fromDate(new Date(), DEFAULT_TIMEZONE)

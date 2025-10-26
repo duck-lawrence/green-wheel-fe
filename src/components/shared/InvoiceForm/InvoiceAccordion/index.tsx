@@ -9,11 +9,13 @@ import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { FRONTEND_API_URL } from "@/constants/env"
 import { usePathname } from "next/navigation"
 import { ROLE_CUSTOMER, ROLE_STAFF } from "@/constants/constants"
-import { ButtonStyled, NumberInputStyled } from "@/components"
+import { ButtonStyled, InvoiceUploader, NumberInputStyled } from "@/components"
+import Image from "next/image"
 
 export function InvoiceAccordion({
     className = "",
     items,
+    contractId,
     contractStatus
 }: {
     className?: string
@@ -25,6 +27,7 @@ export function InvoiceAccordion({
         content: React.ReactNode
         invoice: InvoiceViewRes
     }[]
+    contractId: string
     contractStatus: RentalContractStatus
 }) {
     const { t } = useTranslation()
@@ -75,14 +78,28 @@ export function InvoiceAccordion({
                 contractStatus === RentalContractStatus.Returned &&
                 [InvoiceType.Return, InvoiceType.Refund].includes(invoice.type)
 
+            const isRefundPendingType =
+                contractStatus === RentalContractStatus.RefundPending &&
+                [InvoiceType.Refund].includes(invoice.type)
+
             const isOtherType = invoice.type === InvoiceType.Other
 
             return (
-                isPending && (isPaymentPendingType || isActiveType || isOtherType || isReturnType)
+                isPending &&
+                invoice.total > 0 &&
+                (isPaymentPendingType ||
+                    isActiveType ||
+                    isReturnType ||
+                    isRefundPendingType ||
+                    isOtherType)
             )
         },
         []
     )
+
+    const isRefundUpload = useCallback((invoice: InvoiceViewRes) => {
+        return invoice.type === InvoiceType.Refund && invoice.total < 0
+    }, [])
 
     const handlePayment = async ({
         id,
@@ -94,7 +111,7 @@ export function InvoiceAccordion({
         amount?: number
     }) => {
         await payInvoiceMutation.mutateAsync({
-            invoiceId: id,
+            id: id,
             req: {
                 paymentMethod: paymentMethod,
                 fallbackUrl: FRONTEND_API_URL!.concat(pathName),
@@ -116,6 +133,7 @@ export function InvoiceAccordion({
             </Chip>
         )
     }
+
     return (
         <Accordion variant="splitted" className={cn("w-full", className)}>
             {items
@@ -132,12 +150,19 @@ export function InvoiceAccordion({
                         }
                     >
                         {val.content}
+                        {val.invoice.imageUrl && (
+                            <Image
+                                src={val.invoice.imageUrl}
+                                alt={val.ariaLabel}
+                                width={525}
+                                height={700}
+                            />
+                        )}
                         <div className="flex flex-wrap gap-2 my-2 justify-end items-center">
-                            {val.invoice.total >= 0 &&
-                                isPaidable({
-                                    invoice: val.invoice,
-                                    contractStatus: contractStatus
-                                }) &&
+                            {isPaidable({
+                                invoice: val.invoice,
+                                contractStatus: contractStatus
+                            }) &&
                                 paymentButtons.map((button) => (
                                     <div key={button.method} className="flex items-center gap-2">
                                         {button.method === PaymentMethod.Cash && (
@@ -175,6 +200,9 @@ export function InvoiceAccordion({
                                         </ButtonStyled>
                                     </div>
                                 ))}
+                            {isStaff && isRefundUpload(val.invoice) && (
+                                <InvoiceUploader id={val.invoice.id} contractId={contractId} />
+                            )}
                         </div>
                     </AccordionItem>
                 ))}
