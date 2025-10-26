@@ -63,7 +63,7 @@ export const useCreateVehicleChecklist = ({ onSuccess }: { onSuccess?: () => voi
     return useMutation({
         mutationFn: vehicleChecklistsApi.create,
         onSuccess: ({ id }) => {
-            toast.success(t("success.create"))
+            toast.success(`${t("success.create")}, ${t("common.redirecting").toLowerCase()}`)
             router.push(`/dashboard/vehicle-checklists/${id}`)
             onSuccess?.()
         },
@@ -87,7 +87,7 @@ export const useUpdateVehicleChecklist = ({
             await vehicleChecklistsApi.update({ id, req })
         },
         onSuccess: (id) => {
-            queryClient.invalidateQueries({
+            queryClient.refetchQueries({
                 queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, id]
             })
             toast.success(t("success.update"))

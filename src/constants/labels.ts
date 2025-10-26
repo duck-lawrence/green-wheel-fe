@@ -167,11 +167,11 @@ export const OrderStatusLabels: Record<OrderStatus, string> = {
 }
 
 export const InvoiceTypeLabels: Record<InvoiceType, string> = {
-    [InvoiceType.Handover]: i18n.t("enum.handover_payment"),
-    [InvoiceType.Return]: i18n.t("enum.return_payment"),
-    [InvoiceType.Refund]: i18n.t("enum.refund_payment"),
-    [InvoiceType.Other]: i18n.t("enum.other_payment"),
-    [InvoiceType.Reservation]: i18n.t("enum.reservation_payment")
+    [InvoiceType.Handover]: i18n.t("enum.handover_invoice"),
+    [InvoiceType.Return]: i18n.t("enum.return_invoice"),
+    [InvoiceType.Refund]: i18n.t("enum.refund_invoice"),
+    [InvoiceType.Other]: i18n.t("enum.other_invoice"),
+    [InvoiceType.Reservation]: i18n.t("enum.reservation_invoice")
 }
 
 export const VehicleChecklistTypeLabels: Record<VehicleChecklistType, string> = {

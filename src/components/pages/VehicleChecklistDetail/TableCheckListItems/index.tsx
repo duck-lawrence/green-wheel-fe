@@ -38,7 +38,7 @@ export function TableCheckListItems({
                         {t("table.notes")}
                     </TableColumn>
                     <TableColumn className="text-center text-gray-700 font-semibold w-50">
-                        {t("table.action")}
+                        {t("common.image")}
                     </TableColumn>
                 </TableHeader>
 

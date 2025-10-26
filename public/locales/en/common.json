@@ -41,7 +41,9 @@
         "close": "Close",
         "view_details": "View details",
         "choose": "Choose",
-        "send": "Send"
+        "send": "Send",
+        "redirecting": "Redirecting...",
+        "image": "Image"
     },
     "json": {
         "parsing_failed": "Failed to parse json"
@@ -419,11 +421,11 @@
         "in_use": "In Use",
         "returned": "Returned",
         "overdue": "Overdue",
-        "handover_payment": "Hand over payment",
-        "return_payment": "Return payment",
-        "refund_payment": "Refund payment",
-        "other_payment": "Other payment",
-        "reservation_payment": "Reservation payment",
+        "handover_invoice": "Handover invoice",
+        "return_invoice": "Return invoice",
+        "refund_invoice": "Refund invoice",
+        "other_invoice": "Other invoice",
+        "reservation_invoice": "Reservation invoice",
         "customer_support": "Customer support",
         "staff_report": "Staff report",
         "contact": "Contact",
@@ -619,6 +621,21 @@
         "vehicle_handover_staff": "Vehicle handover staff",
         "vehicle_return_staff": "Vehicle return staff",
         "payment_invoice_list": "Payment invoice list",
+        "create_at": "Created at",
+        "user_already_have_contract": "You can only have one pending or active contract at a time",
+        "not_found": "Rental contract not found",
+        "already_process": "This rental contract already processes",
+        "can_not_cancel": "This rental contract can not be cancelled",
+        "handover": "Handover",
+        "return": "Return",
+        "return_comfirm": "Confirm return"
+    },
+    "invoice": {
+        "not_found": "Invoice not found",
+        "this_invoice_was_paid_or_cancel": "This invoice was paid or cancelled",
+
+        "paid_amount": "Paid amount",
+        "return_amount": "Return amount",
         "deposit_amount": "Deposit amount",
         "rental_fee": "Base rental fee",
         "vat_tax": "VAT tax",
@@ -641,20 +658,9 @@
         "total": "Total",
         "no_damage_items": "No damage items.",
         "no_detailed_description": "No detailed description.",
-        "create_at": "Created at",
-        "user_already_have_contract": "You can only have one pending or active contract at a time",
-        "not_found": "Rental contract not found",
-        "already_process": "This rental contract already processes",
-        "can_not_cancel": "This rental contract can not be cancelled",
-        "handover": "Handover",
-        "return": "Return",
-        "return_comfirm": "Confirm return",
         "fees_include_tax": "Fees marked with * include tax",
-        "penalty_warning": "Please be aware that the deposit is non-refundable if any penalty fees are incurred"
-    },
-    "invoice": {
-        "not_found": "Invoice not found",
-        "this_invoice_was_paid_or_cancel": "This invoice was paid or cancelled",
+        "penalty_warning": "Please be aware that the deposit is non-refundable if any penalty fees are incurred",
+        "update_bank_info": "Please update your bank account in your profile to receive the refund, or visit our station to get it in cash.",
         "create_title": "CREATE INVOICE",
         "unit_price": "Unit price",
         "unit_price_require": "Unit price is required",
@@ -668,7 +674,8 @@
         "create_refund": "Create refund invoice",
         "subtotal": "Subtotal",
         "temp": "Provisional invoice",
-        "upload_image": "Upload Invoice Image"
+        "image": "Invoice image",
+        "upload_image": "Upload Invoice image"
     },
     "momo": {
         "invalid_signature": "Invalid signature",

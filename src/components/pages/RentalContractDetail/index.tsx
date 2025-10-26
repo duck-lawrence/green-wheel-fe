@@ -385,7 +385,7 @@ export function RentalContractDetail({
             {/* Invoice Accordion  isLoading={isFetching}*/}
             <SectionStyled title={t("rental_contract.payment_invoice_list")}>
                 <AlertStyled className="mb-3 mt-[-0.75rem] mx-2 max-w-fit">
-                    {t("rental_contract.fees_include_tax")}
+                    {t("invoice.fees_include_tax")}
                 </AlertStyled>
                 <InvoiceAccordion
                     items={invoiceAccordion}
@@ -394,7 +394,7 @@ export function RentalContractDetail({
                     className="mb-3"
                 />
                 {isStaff &&
-                    contract.status == RentalContractStatus.Returned &&
+                    // contract.status == RentalContractStatus.Returned &&
                     !contract.invoices.find((item) => item.type == InvoiceType.Refund) && (
                         <CreateInvoiceSection contractId={contract.id} type={InvoiceType.Refund} />
                     )}

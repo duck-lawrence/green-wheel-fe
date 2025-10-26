@@ -68,7 +68,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                 maintainedUntil: formatMaintainDate
             })
         },
-        [formatDate, hasItemsDamaged, toZonedDateTime, updateChecklist]
+        [formatDateTime, hasItemsDamaged, toZonedDateTime, updateChecklist]
     )
 
     const formik = useFormik({
@@ -176,27 +176,29 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                 setHasItemsDamaged={setHasItemsDamaged}
             />
 
-            <DatePickerStyled
-                label={t("vehicle_checklist.maintain_until")}
-                value={toDate(formik.values.maintainedUntil)}
-                onChange={(value) => {
-                    if (!value) {
-                        formik.setFieldValue("maintainedUntil", null)
-                        return
-                    }
+            {hasItemsDamaged && (
+                <DatePickerStyled
+                    label={t("vehicle_checklist.maintain_until")}
+                    value={toDate(formik.values.maintainedUntil)}
+                    onChange={(value) => {
+                        if (!value) {
+                            formik.setFieldValue("maintainedUntil", null)
+                            return
+                        }
 
-                    const date = formatDate({ date: value })
-                    formik.setFieldValue("maintainedUntil", date)
-                }}
-                className="mt-3"
-                isInvalid={hasItemsDamaged && !!formik.errors.maintainedUntil}
-                isReadOnly={!hasItemsDamaged}
-                isRequired={hasItemsDamaged}
-                errorMessage={hasItemsDamaged ? formik.errors.maintainedUntil : undefined}
-                onBlur={() => {
-                    formik.setFieldTouched("maintainedUntil")
-                }}
-            />
+                        const date = formatDate({ date: value })
+                        formik.setFieldValue("maintainedUntil", date)
+                    }}
+                    className="mt-3"
+                    isInvalid={hasItemsDamaged && !!formik.errors.maintainedUntil}
+                    isReadOnly={!hasItemsDamaged}
+                    isRequired={hasItemsDamaged}
+                    errorMessage={hasItemsDamaged ? formik.errors.maintainedUntil : undefined}
+                    onBlur={() => {
+                        formik.setFieldTouched("maintainedUntil")
+                    }}
+                />
+            )}
 
             {/* Signature */}
             <SignatureSection

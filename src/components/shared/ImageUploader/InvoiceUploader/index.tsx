@@ -17,12 +17,12 @@ export function InvoiceUploader({
     const { t } = useTranslation()
     const { imgSrc, setImgSrc, isOpen, onOpenChange, onClose, onFileSelect } = useImageUploadModal()
 
-    const uploadMutation = useUploadInvoiceImage({ id, contractId, onSuccess: undefined })
+    const uploadMutation = useUploadInvoiceImage({ id, contractId, onSuccess: onClose })
 
     return (
         <>
             <ImageUploadButton
-                label={t("common.upload")}
+                label={t("invoice.upload_image")}
                 onFileSelect={onFileSelect}
                 btnClassName={btnClassName}
             />
@@ -36,7 +36,7 @@ export function InvoiceUploader({
                 uploadFn={uploadMutation.mutateAsync}
                 isUploadPending={uploadMutation.isPending}
                 cropShape="rect"
-                cropSize={{ width: 525, height: 700 }}
+                cropSize={{ width: 375, height: 500 }}
             />
         </>
     )

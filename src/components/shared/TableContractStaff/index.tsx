@@ -22,7 +22,7 @@ import { ConfirmContractReq, ContractQueryParams } from "@/models/rental-contrac
 import { PaginationParams } from "@/models/common/request"
 import { RentalContractStatus } from "@/constants/enum"
 import { Check, X } from "@phosphor-icons/react"
-import { STATUS_STYLES } from "@/constants/statusStyled"
+import { RentalContractStatusColorMap } from "@/constants/colorMap"
 
 export function TableContractStaff({
     contracts,
@@ -131,7 +131,7 @@ export function TableContractStaff({
                             <TableCell className="text-center">
                                 <span
                                     className={`inline-block px-3 py-1 rounded-full text-xs font-semibold 
-                                        ${STATUS_STYLES[item.status]}`}
+                                        ${RentalContractStatusColorMap[item.status]}`}
                                 >
                                     {RentalContractStatusLabels[item.status]}
                                 </span>
