@@ -6,7 +6,7 @@ import { fromDate } from "@internationalized/date"
 import { useTranslation } from "react-i18next"
 import { AutocompleteItem, cn, Spinner } from "@heroui/react"
 import { MapPinAreaIcon } from "@phosphor-icons/react"
-import { AutocompleteStyle, DateTimeStyled } from "@/components"
+import { AutocompleteStyled, DateTimeStyled } from "@/components"
 import { useBookingFilterStore, useDay, useGetAllStations, useGetAllVehicleSegments } from "@/hooks"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
@@ -14,7 +14,7 @@ import toast from "react-hot-toast"
 import { DEFAULT_TIMEZONE, MAX_HOUR, MIN_HOUR } from "@/constants/constants"
 import dayjs from "dayjs"
 import { useSearchVehicleModels } from "@/hooks/queries/useVehicleModel"
-import { VehicleFilterReq } from "@/models/vehicle/schema/request"
+import { SearchModelParams } from "@/models/vehicle/schema/request"
 import { debouncedWrapper } from "@/utils/helpers/axiosHelper"
 
 export function FilterVehicleRental({
@@ -69,7 +69,7 @@ export function FilterVehicleRental({
     const setFilteredVehicleModels = useBookingFilterStore((s) => s.setFilteredVehicleModels)
 
     // filter
-    const [filter, setFilter] = useState<VehicleFilterReq>({
+    const [filter, setFilter] = useState<SearchModelParams>({
         stationId: stationId || "",
         startDate: startDate || formatDateTime({ date: minStartDate }),
         endDate: endDate || formatDateTime({ date: minEndDate }),
@@ -110,7 +110,7 @@ export function FilterVehicleRental({
     const { refetch } = useSearchVehicleModels({
         query: filter
     })
-    const handleSearch = useCallback(async (params: VehicleFilterReq) => {
+    const handleSearch = useCallback(async (params: SearchModelParams) => {
         setFilter(params)
     }, [])
     const debouncedSearch = useMemo(
@@ -188,7 +188,7 @@ export function FilterVehicleRental({
     )
 
     //  useFormik
-    const formik = useFormik<VehicleFilterReq>({
+    const formik = useFormik<SearchModelParams>({
         initialValues: filter,
         enableReinitialize: filter.stationId !== "",
         validationSchema: bookingSchema,
@@ -240,7 +240,7 @@ export function FilterVehicleRental({
                 {/* Left section */}
                 <div>
                     <div className="grid md:flex gap-4">
-                        <AutocompleteStyle
+                        <AutocompleteStyled
                             className="md:w-50"
                             label={t("vehicle_model.station")}
                             items={stations}
@@ -256,9 +256,9 @@ export function FilterVehicleRental({
                             {(stations ?? []).map((item) => (
                                 <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
                             ))}
-                        </AutocompleteStyle>
+                        </AutocompleteStyled>
 
-                        <AutocompleteStyle
+                        <AutocompleteStyled
                             className="md:w-36"
                             label={t("vehicle_model.segment")}
                             items={vehicleSegments}
@@ -271,9 +271,9 @@ export function FilterVehicleRental({
                             {(vehicleSegments ?? []).map((item) => (
                                 <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
                             ))}
-                        </AutocompleteStyle>
+                        </AutocompleteStyled>
                     </div>
-                    <div className="hidden md:block">{`${t("station.address")}: ${
+                    <div className="hidden md:block text-left">{`${t("station.address")}: ${
                         stations?.find((station) => station.id === formik.values.stationId)?.address
                     }`}</div>
                 </div>
@@ -321,8 +321,12 @@ export function FilterVehicleRental({
                         />
                     </div>
                     <div>
-                        <div className="text-danger-500 text-small">{formik.errors.startDate}</div>
-                        <div className="text-danger-500 text-small">{formik.errors.endDate}</div>
+                        <div className="text-danger-500 text-small text-left">
+                            {formik.errors.startDate}
+                        </div>
+                        <div className="text-danger-500 text-small text-left">
+                            {formik.errors.endDate}
+                        </div>
                     </div>
                 </div>
             </form>

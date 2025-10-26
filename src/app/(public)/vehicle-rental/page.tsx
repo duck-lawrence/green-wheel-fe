@@ -1,18 +1,13 @@
 "use client"
 import { FilterVehicleRental, CardVehicalStyled } from "@/components"
-import { useBookingFilterStore, useNavbarItemStore } from "@/hooks"
+import { useBookingFilterStore } from "@/hooks"
 import { Spinner } from "@heroui/react"
 import Link from "next/link"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 
 export default function VehicleModelsPage() {
     const [isSearching, setIsSearching] = useState(false)
-    const setActiveMenuKey = useNavbarItemStore((s) => s.setActiveMenuKey)
     const vehicleModels = useBookingFilterStore((s) => s.filteredVehicleModels)
-
-    useEffect(() => {
-        setActiveMenuKey("vehicle-rental")
-    }, [setActiveMenuKey])
 
     return (
         <div className="min-h-[80vh] h-fit max-w-screen p-4 text-center">

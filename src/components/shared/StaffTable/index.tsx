@@ -6,7 +6,7 @@ import { Paperclip } from "@phosphor-icons/react"
 import { Skeleton, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { EyeIcon } from "lucide-react"
-import { TableStyled, ButtonStyled } from "@/components"
+import { TableStyled, ButtonIconStyled } from "@/components"
 import { useName } from "@/hooks"
 
 type DocumentKey = "citizen" | "driver"
@@ -130,12 +130,9 @@ export function StaffTable({
                         </div>
                     </TableCell>
                     <TableCell className="text-center">
-                        <ButtonStyled
-                            className="p-4 min-w-fit max-w-fit"
-                            onPress={() => onEditStaff?.(item)}
-                        >
+                        <ButtonIconStyled className="p-4" onPress={() => onEditStaff?.(item)}>
                             <EyeIcon />
-                        </ButtonStyled>
+                        </ButtonIconStyled>
                     </TableCell>
                 </TableRow>
             )

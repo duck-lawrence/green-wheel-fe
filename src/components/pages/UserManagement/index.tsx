@@ -6,14 +6,14 @@ import { useFormik } from "formik"
 import * as Yup from "yup"
 
 import {
-    ButtonStyled,
     EditUserModal,
     InputStyled,
     PaginationStyled,
     CustomerTable,
     useModalDisclosure,
     CreateUserModal,
-    StaffTable
+    StaffTable,
+    ButtonIconStyled
 } from "@/components"
 import { useCreateNewUser, useGetAllUsers } from "@/hooks"
 import { UserProfileViewRes } from "@/models/user/schema/response"
@@ -198,19 +198,6 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
                 >
                     {/* Filter */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {/* <InputStyled
-                            label={t("table.name")}
-                            placeholder={t("staff.user_filter_name_placeholder")}
-                            value={formik.values.name}
-                            onChange={(value) => formik.setFieldValue("name", value.target.value)}
-                            onClear={() => formik.setFieldValue("name", "")}
-                            classNames={{
-                                inputWrapper:
-                                    "border-2 border-gray-200 data-[hover=true]:border-primary data-[focus=true]:border-primary",
-                                label: "text-gray-700",
-                                input: "text-gray-900"
-                            }}
-                        /> */}
                         <InputStyled
                             label={t("user.phone")}
                             // placeholder={t("staff.user_filter_phone_placeholder")}
@@ -266,22 +253,22 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
                             <FunnelSimple size={22} className="text-primary" />
                             {t("staff.user_filter_title")}
                         </h3> */}
-                        <ButtonStyled
+                        <ButtonIconStyled
                             type="submit"
                             isLoading={isLoading}
-                            className="btn-gradient rounded-lg min-w-fit p-2"
+                            className="btn-gradient rounded-lg"
                         >
                             {/* {t("staff.handovers_filters_search")} */}
                             <SearchIcon />
-                        </ButtonStyled>
-                        <ButtonStyled
+                        </ButtonIconStyled>
+                        <ButtonIconStyled
                             isLoading={isLoading}
-                            className="btn-gradient rounded-lg min-w-fit p-2"
+                            className="btn-gradient rounded-lg"
                             onPress={onCreateOpen}
                         >
                             {/* {t("staff.handovers_filters_search")} */}
                             <Plus />
-                        </ButtonStyled>
+                        </ButtonIconStyled>
 
                         <CreateUserModal
                             isOpen={isCreateOpen}

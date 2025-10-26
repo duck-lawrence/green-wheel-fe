@@ -31,7 +31,7 @@ export function HeroSection() {
     return (
         <section
             className="
-                relative w-full h-auto min-h-[70vh] mt-10
+                relative w-full h-auto min-h-[70vh]
                 flex items-center justify-center
                 overflow-hidden text-white 
                 px-4 sm:px-6 md:px-12 lg:px-24

@@ -1,9 +1,10 @@
 export * from "./AlertStyled"
-export * from "./AutocompleteStyle"
+export * from "./AutocompleteStyled"
 export * from "./AvatarStyled"
 
 export * from "./BreadcrumbsStyled"
 export * from "./ButtonGoBack"
+export * from "./ButtonIconStyled"
 export * from "./ButtonSendStyled"
 export * from "./ButtonStyled"
 export * from "./ButtonToggleVisibility"

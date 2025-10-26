@@ -40,7 +40,8 @@
         "create": "Create",
         "close": "Close",
         "view_details": "View details",
-        "choose": "Choose"
+        "choose": "Choose",
+        "send": "Send"
     },
     "json": {
         "parsing_failed": "Failed to parse json"
@@ -147,6 +148,15 @@
         "driver_license_duplicate": "This driver license already exists",
 
         "station_require": "Station is required",
+
+        "bank_account_info": "Bank account info",
+        "bank_name": "Bank name",
+        "bank_name_require": "Bank name is required",
+        "bank_account_number": "Bank account number",
+        "bank_account_number_require": "Bank account number is required",
+        "invalid_bank_account_number": "Invalid bank account number",
+        "bank_account_name": "Bank account name",
+        "bank_account_name_require": "Bank account name is required",
 
         "unauthorized": "Unauthorized",
         "do_not_have_permission": "Permission denied",
@@ -317,7 +327,9 @@
         "sport_range_km_can_not_negative": "Sport range km can not be negative",
 
         "brand_id_require": "Brand id is required",
-        "segment_id_require": "Segment id is required"
+        "segment_id_require": "Segment id is required",
+
+        "upload_images": "Upload vehicle model images"
     },
     "vehicle_model_image": {
         "main_image_not_found": "Main image not found"
@@ -351,6 +363,7 @@
         "refunded": "Refunded",
         "forfeited": "Forfeited",
         "cancelled": "Cancelled",
+        "unavailable_vehicle": "Unavailable vehicle",
         "request_pending": "Request Pending",
         "confirm_change_station_pending": "Confirm Change Station Pending",
         "payment_pending": "Payment Pending",
@@ -471,6 +484,7 @@
         "sidebar_fleet": "Fleet",
         "sidebar_notifications": "Notifications",
         "sidebar_reports": "Reports",
+        "sidebar_customer_supports": "Customer Supports",
         "sidebar_user_management": "User Management",
         "sidebar_profile": "Profile",
         "sidebar_logout": "Sign out",
@@ -563,17 +577,20 @@
     },
     "contact": {
         "title": "Contact Us",
-        "des": "We will love to hear from you! Fill out the form or reach us via the information below.",
+        "des": "We’d love to hear from you! Fill out the form or reach us via the information below.",
         "address": "Address",
         "phone": "Phone",
         "email": "Email",
+        "further_description": "Further description",
+        "further_description_placeholder": "Add more details if needed",
         "send_message": "Send Message",
         "sub": "Our team will get back to you as soon as possible. For urgent matters, please call our hotline."
     },
     "rental_contract": {
         "id": "Contract ID",
         "back_to_rental_contract": "Back to rental contract",
-        "create": "Create rental request",
+        "please_login": "Please login to rent",
+        "rent": "Rent this vehicle",
         "create_manual": "Create rental request for customer",
         "update_success": "Update success",
         "update_failed": "Update failed",
@@ -656,8 +673,22 @@
         "failed_to_create_momo_payment": "Failed to create momo payment"
     },
     "ticket": {
+        "customer_support": "Customer support",
+        "send_customer_support": "Send customer support request",
+        "staff_report": "Staff report",
+        "title": "Title",
+        "title_require": "Title is required",
+        "description": "Description",
+        "description_placeholder": "Describe your problem in detail...",
+        "description_require": "Description is required",
+        "reply": "Reply",
+        "reply_placeholder": "Enter your reply here...",
+        "wait_for_reply": "Please wait for reply...",
+        "reply_require": "Reply is required",
         "not_found": "Ticket not found",
-        "already_escalated": "This ticket already escalated to admin"
+        "already_escalated": "This ticket already escalated to admin",
+        "requester": "Requester",
+        "assignee": "Assignee"
     },
     "station_feedback": {
         "not_found": "Station feedback not found"

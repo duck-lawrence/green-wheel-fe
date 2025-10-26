@@ -1,13 +1,13 @@
 "use client"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import "./index.css"
 import { NavbarBrand, NavbarContent, NavbarItem } from "@heroui/react"
 import Link from "next/link"
 import { useTranslation } from "react-i18next"
 import { ButtonStyled, NavbarStyled, LanguageSwitcher } from "@/components/"
 import { useLoginDiscloresureSingleton, useTokenStore } from "@/hooks"
-import { useNavbarItemStore } from "@/hooks/singleton/store/useNavbarItemStore"
 import { ProfileDropdown } from "./ProfileDropdown"
+import { usePathname } from "next/navigation"
 
 export const AcmeLogo = () => {
     return (
@@ -22,19 +22,60 @@ export const AcmeLogo = () => {
     )
 }
 
+type MenuKey = "home" | "vehicle-rental" | "about" | "contact" | undefined
+type MenuItem = { key: Exclude<MenuKey, undefined>; label: string }
+
 export function Navbar() {
     const { t } = useTranslation()
+    const pathname = usePathname()
+    // handle when login
+    const isLoggedIn = useTokenStore((s) => !!s.accessToken)
+    const { onOpen: onOpenLogin } = useLoginDiscloresureSingleton()
+
     // handle navbar
     type NavbarState = "default" | "top" | "middle"
     const [scrollState, setScroledState] = useState<NavbarState>("default")
     const [isHiddenNavbar, setIsHiddenNavbar] = useState(false)
     const [lastScrollY, setLastScrollY] = useState(0)
-    const activeMenuKey = useNavbarItemStore((s) => s.activeMenuKey)
-    const setActiveMenuKey = useNavbarItemStore((s) => s.setActiveMenuKey)
+    // set active key
+    const { menuKey } = useMemo(() => {
+        const segment = pathname.split("/").filter(Boolean)[0]
 
-    // handle when login
-    const isLoggedIn = useTokenStore((s) => !!s.accessToken)
-    const { onOpen: onOpenLogin } = useLoginDiscloresureSingleton()
+        const mapSegmentToMenuKey = (segment: string | undefined): MenuKey => {
+            switch (segment) {
+                case "":
+                case undefined:
+                    return "home"
+                case "vehicle-rental":
+                    return "vehicle-rental"
+                case "about":
+                    return "about"
+                case "contact":
+                    return "contact"
+                default:
+                    return undefined
+            }
+        }
+
+        return {
+            firstSegment: segment,
+            menuKey: mapSegmentToMenuKey(segment)
+        }
+    }, [pathname])
+    const [activeMenuKey, setActiveMenuKey] = useState<MenuKey>(menuKey)
+    const menus = useMemo(
+        () =>
+            [
+                { key: "home", label: t("navbar.home") },
+                { key: "vehicle-rental", label: t("navbar.vehicle_rental") },
+                { key: "about", label: t("navbar.about_us") },
+                { key: "contact", label: t("navbar.contact") }
+            ] satisfies MenuItem[],
+        [t]
+    )
+    useEffect(() => {
+        setActiveMenuKey(menuKey)
+    }, [menuKey])
 
     // handle navbar animation
     const baseClasses = `
@@ -66,13 +107,6 @@ export function Navbar() {
         "data-[active=true]:after:w-full",
         "data-[active=true]:after:rounded-[2px]",
         "data-[active=true]:after:bg-primary"
-    ]
-
-    const menus = [
-        { key: "home", label: t("navbar.home") },
-        { key: "vehicle-rental", label: t("navbar.vehicle_rental") },
-        { key: "about", label: t("navbar.about_us") },
-        { key: "contact", label: t("navbar.contact") }
     ]
 
     // useEffect

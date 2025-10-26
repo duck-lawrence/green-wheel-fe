@@ -1,6 +1,5 @@
 "use client"
-import { useNavbarItemStore } from "@/hooks/singleton/store/useNavbarItemStore"
-import React, { useEffect } from "react"
+import React from "react"
 import { motion } from "framer-motion"
 import { ButtonStyled } from "@/components"
 import { Handshake, Leaf, Lightning } from "@phosphor-icons/react"
@@ -11,11 +10,6 @@ import { useTranslation } from "react-i18next"
 
 export default function AboutPage() {
     const { t } = useTranslation()
-    const setActiveMenuKey = useNavbarItemStore((s) => s.setActiveMenuKey)
-
-    useEffect(() => {
-        setActiveMenuKey("about")
-    }, [setActiveMenuKey])
 
     const [title, titleDone] = useTypewriter(t("about_us.about_us"), 50)
     const [desc] = useTypewriter(t("about_us.green_wheel_description"), 12, 300)

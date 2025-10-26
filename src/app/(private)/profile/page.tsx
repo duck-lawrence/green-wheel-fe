@@ -1,24 +1,16 @@
 "use client"
 import {
-    AvatarStyled,
+    BankInfoProfile,
     ButtonStyled,
     CitizenIdentityProfile,
     DatePickerStyled,
-    DropdownStyled,
     EnumPicker,
-    ImageUploadButton,
-    ImageUploaderModal,
-    InputStyled
+    InputStyled,
+    SpinnerStyled,
+    ButtonIconStyled,
+    AvatarProfile
 } from "@/components"
-import {
-    useDay,
-    useDeleteAvatar,
-    useGetMe,
-    useImageUploadModal,
-    useName,
-    useUpdateMe,
-    useUploadAvatar
-} from "@/hooks"
+import { useDay, useGetMe, useName, useUpdateMe } from "@/hooks"
 import { UserUpdateReq } from "@/models/user/schema/request"
 import { NotePencilIcon } from "@phosphor-icons/react/dist/ssr"
 import React, { useCallback, useState } from "react"
@@ -27,8 +19,6 @@ import { useFormik } from "formik"
 import * as Yup from "yup"
 import { Sex } from "@/constants/enum"
 import { SexLabels } from "@/constants/labels"
-import { DEFAULT_AVATAR_URL } from "@/constants/constants"
-import { DropdownItem, DropdownMenu, DropdownTrigger, useDisclosure } from "@heroui/react"
 import { NAME_REGEX, PHONE_REGEX } from "@/constants/regex"
 import { DriverLicenseProfile } from "@/components/shared/Profile/DriverLicenseProfile"
 
@@ -39,24 +29,6 @@ export default function ProfilePage() {
     const { toFullName } = useName()
     const { data: user } = useGetMe()
     const updateMeMutation = useUpdateMe({ onSuccess: undefined })
-    // avatar
-    const uploadAvatar = useUploadAvatar({ onSuccess: undefined })
-    const deleteAvatarMutation = useDeleteAvatar({ onSuccess: undefined })
-
-    const {
-        isOpen: isDropdownOpen,
-        onOpenChange: onDropdownOpenChange,
-        onClose: onDropdownClose
-    } = useDisclosure()
-
-    const { imgSrc, setImgSrc, isOpen, onOpenChange, onClose, onFileSelect } = useImageUploadModal({
-        onBeforeOpenModal: onDropdownClose
-    })
-
-    // ===== Avatar =====
-    const handleDeleteAvatar = useCallback(async () => {
-        await deleteAvatarMutation.mutateAsync()
-    }, [deleteAvatarMutation])
 
     // ===== Update Me =====
     const handleUpdateMe = useCallback(
@@ -92,55 +64,16 @@ export default function ProfilePage() {
         onSubmit: handleUpdateMe
     })
 
+    if (!user) return <SpinnerStyled />
+
     return (
         <div className="px-4">
             {/* Title */}
             <div className="text-3xl mb-8 font-bold">{t("user.account_information")}</div>
 
-            {/* Avatar Upload Modal */}
-            <ImageUploaderModal
-                isOpen={isOpen}
-                onOpenChange={onOpenChange}
-                onClose={onClose}
-                imgSrc={imgSrc}
-                setImgSrc={setImgSrc}
-                uploadFn={uploadAvatar.mutateAsync}
-                isUploadPending={uploadAvatar.isPending}
-                aspect={1}
-                cropShape="round"
-                cropSize={{ width: 300, height: 300 }}
-                label={t("user.upload_avatar")}
-            />
-
-            <div className="flex justify-between mb-8 items-center">
+            <div className="flex flex-col sm:flex-row justify-between sm:gap-6 mb-8 items-center">
                 {/* Avatar */}
-                <DropdownStyled
-                    placement="right-end"
-                    classNames={{ content: "min-w-fit max-w-fit" }}
-                    isOpen={isDropdownOpen}
-                    onOpenChange={onDropdownOpenChange}
-                    closeOnSelect={false}
-                >
-                    <DropdownTrigger className="w-47 h-47 cursor-pointer">
-                        <AvatarStyled src={user?.avatarUrl || DEFAULT_AVATAR_URL} />
-                    </DropdownTrigger>
-                    <DropdownMenu variant="flat" classNames={{ base: "p-0 w-fit" }}>
-                        <DropdownItem key="upload_avatar" className="block p-0">
-                            <ImageUploadButton
-                                label={t("user.upload_avatar")}
-                                onFileSelect={onFileSelect}
-                            />
-                        </DropdownItem>
-                        <DropdownItem key="delete_avatar" className="block p-0">
-                            <ButtonStyled
-                                className="block w-fit bg-transparent"
-                                onPress={handleDeleteAvatar}
-                            >
-                                {t("user.delete_avatar")}
-                            </ButtonStyled>
-                        </DropdownItem>
-                    </DropdownMenu>
-                </DropdownStyled>
+                <AvatarProfile user={user} />
 
                 {/* Preview info */}
                 <div>
@@ -151,31 +84,26 @@ export default function ProfilePage() {
                             className="text-3xl" //
                         >
                             {`${toFullName({
-                                firstName: user?.firstName,
-                                lastName: user?.lastName
-                            })} ${user?.station && `- ${user?.station?.name}`}`}
+                                firstName: user.firstName,
+                                lastName: user.lastName
+                            })} ${user.station != null ? `- ${user.station?.name}` : ""}`}
                         </div>
 
                         {/* Button enable show change */}
                         <div>
                             {!editable ? (
-                                <ButtonStyled
-                                    className="border-primary
-                                    bg-white border text-primary   
-                                    hover:text-white hover:bg-primary"
+                                <ButtonIconStyled
+                                    color="primary"
+                                    variant="ghost"
                                     onPress={() => setEditable(!editable)}
                                 >
-                                    <div>
-                                        <NotePencilIcon />
-                                    </div>
-                                    {t("common.edit")}
-                                </ButtonStyled>
+                                    <NotePencilIcon />
+                                </ButtonIconStyled>
                             ) : (
                                 <div className="flex gap-2">
                                     <ButtonStyled
-                                        className="border-primary 
-                                            bg-white border text-primary 
-                                            hover:text-white hover:bg-primary"
+                                        color="primary"
+                                        variant="ghost"
                                         isLoading={updateMeFormik.isSubmitting}
                                         isDisabled={
                                             !updateMeFormik.isValid || !updateMeFormik.dirty
@@ -201,9 +129,9 @@ export default function ProfilePage() {
                     {/* Form for update */}
                     <form
                         onSubmit={updateMeFormik.submitForm}
-                        className="flex flex-col mt-5 gap-2 min-w-xl max-w-xl"
+                        className="flex flex-col mt-5 gap-2 lg:min-w-xl max-w-xl"
                     >
-                        <div className="flex justify-center gap-2">
+                        <div className="flex flex-col sm:flex-row justify-center gap-2">
                             <InputStyled
                                 isReadOnly={!editable}
                                 label={t("user.last_name")}
@@ -247,7 +175,7 @@ export default function ProfilePage() {
                             />
                         </div>
 
-                        <div className="flex justify-center gap-2">
+                        <div className="flex justify-center flex-wrap sm:flex-nowrap gap-2">
                             {/* Phone */}
                             <InputStyled
                                 isRequired
@@ -310,8 +238,9 @@ export default function ProfilePage() {
                 </div>
             </div>
 
-            <CitizenIdentityProfile />
-            <DriverLicenseProfile />
+            <CitizenIdentityProfile user={user} />
+            <DriverLicenseProfile user={user} />
+            <BankInfoProfile user={user} />
         </div>
     )
 }

@@ -29,7 +29,7 @@ import {
     useGetAllVehicles,
     useUpdateVehicle
 } from "@/hooks"
-import { VehicleCreateModal, VehicleEditModal } from "@/components/modals/VehicleModals"
+import { VehicleCreateModal, VehicleEditModal } from "@/components/modals/Vehicle"
 import {
     CreateVehicleReq,
     GetVehicleParams,
@@ -117,7 +117,7 @@ export default function AdminVehicleManagementPage() {
         }))
     }, [vehiclesData])
     const { data: vehicleModels = [], isFetching: isFetchingVehicleModels } =
-        useGetAllVehicleModels()
+        useGetAllVehicleModels({ query: {} })
     const vehicleModelsById = useMemo(() => {
         return vehicleModels.reduce<Record<string, VehicleModelViewRes>>((acc, model) => {
             acc[model.id] = model

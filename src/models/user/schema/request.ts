@@ -20,13 +20,18 @@ export type UserUpdateReq = {
     stationId?: string // Only for staff
 }
 
+export type UpdateBankAccountReq = {
+    bankName: string
+    bankAccountNumber: string
+    bankAccountName: string
+}
+
 export type UserFilterParams = {
     roleName?: RoleName
     phone?: string
     citizenIdNumber?: string
     driverLicenseNumber?: string
-    // role?: string // Để lọc bên staff, chỉ hiển thị staff thôi 
-
+    // role?: string // Để lọc bên staff, chỉ hiển thị staff thôi
 }
 
 export type StaffReq = {
