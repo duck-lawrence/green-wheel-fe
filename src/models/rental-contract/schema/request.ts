@@ -1,4 +1,4 @@
-import { RentalContractStatus } from "@/constants/enum"
+import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
 
 export type CreateRentalContractReq = {
     modelId: string
@@ -24,4 +24,9 @@ export type ContractQueryParams = {
     citizenIdentityNumber?: string
     driverLicenseNumber?: string
     stationId?: string
+}
+
+export type ConfirmContractReq = {
+    hasVehicle: boolean
+    vehicleStatus?: VehicleStatus
 }

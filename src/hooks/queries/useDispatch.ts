@@ -30,19 +30,18 @@ export const useCreateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => 
 export const useUpdateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
-
+    const router = useRouter()
     return useMutation({
         mutationFn: async ({ id, req }: { id: string; req: UpdateDispatchReq }) => {
             await dispatchApi.update({ id, req })
         },
-        onSuccess: async (_data, variables) => {
-            const { id } = variables
-            await queryClient.invalidateQueries({
-                queryKey: [...QUERY_KEYS.DISPATCH_REQUESTS, id]
-            })
-
-            onSuccess?.()
+        onSuccess: () => {
             toast.success(t("dispatch.update_success"))
+            queryClient.invalidateQueries({
+                queryKey: [...QUERY_KEYS.DISPATCH_REQUESTS]
+            })
+            onSuccess?.()
+            router.push("/dashboard/dispatch")
         },
         onError: (error: BackendError) => {
             toast.error(translateWithFallback(t, error.detail))
