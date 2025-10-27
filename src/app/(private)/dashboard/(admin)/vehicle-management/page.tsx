@@ -4,9 +4,10 @@ import { useTranslation } from "react-i18next"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import type { Selection } from "@heroui/react"
-import { FunnelSimple, MagnifyingGlass } from "@phosphor-icons/react"
+import { FunnelSimple } from "@phosphor-icons/react"
 import {
     ButtonStyled,
+    ButtonIconStyled,
     FilterTypeOption,
     FilterTypeStyle,
     InputStyled,
@@ -19,6 +20,7 @@ import {
     TableVehicleManagement,
     useModalDisclosure,
 } from "@/components"
+import { SearchIcon, Plus } from "lucide-react"
 import { VehicleStatus } from "@/constants/enum"
 import { VehicleModelViewRes, VehicleViewRes } from "@/models/vehicle/schema/response"
 import {
@@ -398,22 +400,22 @@ const editValidationSchema = useMemo(() => {
                             ))}
                         </FilterTypeStyle>
                         <div className="flex w-full flex-col gap-2 sm:flex-row sm:justify-end">
-                            <ButtonStyled
+                            <ButtonIconStyled
                                 type="submit"
                                 isDisabled={isFetchingVehicles}
                                 aria-label={t("common.search")}
-                                className="flex h-10 w-full items-center justify-center rounded-xl bg-gradient-to-r from-primary to-emerald-400 text-white sm:h-10 sm:w-16 sm:px-0"
+                                className="btn-gradient rounded-lg"
                             >
-                                <MagnifyingGlass size={18} weight="bold" aria-hidden />
-                                <span className="sr-only">{t("common.search")}</span>
-                            </ButtonStyled>
-                            <ButtonStyled
+                                <SearchIcon />
+                            </ButtonIconStyled>
+                            <ButtonIconStyled
                                 type="button"
                                 onPress={onCreateOpen}
-                                className="h-10 w-full rounded-xl bg-gradient-to-r from-primary to-emerald-400 text-white sm:h-10 sm:w-20 sm:px-0"
+                                aria-label={t("admin.vehicle_new_button")}
+                                className="btn-gradient rounded-lg"
                             >
-                                {t("admin.vehicle_new_button")}
-                            </ButtonStyled>
+                                <Plus />
+                            </ButtonIconStyled>
                         </div>
                     </div>
                 </form>

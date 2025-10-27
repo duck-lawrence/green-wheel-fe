@@ -225,11 +225,9 @@ export default function AdminFleetPage() {
                     </div>
                     <div className="flex flex-col gap-3 sm:flex-row">
                         <ButtonStyled
-                            color="danger"
-                            radius="lg"
-                            className="h-12 px-5 font-semibold sm:ml-3 sm:shrink-0"
+                            className="btn-gradient btn-gradient:hover btn-gradient:active h-12 px-5 font-semibold text-white sm:ml-3 sm:shrink-0"
                         >
-                            {t("fleet.add_unit_button")}
+                            + {t("fleet.add_unit_button")}
                         </ButtonStyled>
                     </div>
                 </div>
