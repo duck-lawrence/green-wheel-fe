@@ -3,6 +3,7 @@
 import { MapPin } from "lucide-react"
 import { motion } from "framer-motion"
 import React from "react"
+import { ImageStyled } from "@/components/styled"
 
 const stations = [
     {
@@ -99,10 +100,9 @@ export function Stations() {
                     >
                         {/* Ảnh */}
                         <div className="relative w-full h-56 md:h-64 overflow-hidden">
-                            <img
+                            <ImageStyled
                                 src={s.img}
                                 alt={s.name}
-                                loading="lazy"
                                 className="w-full h-full object-cover transform group-hover:scale-110 
                                            transition-transform duration-700 ease-out"
                             />

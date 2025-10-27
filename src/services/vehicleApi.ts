@@ -10,7 +10,7 @@ import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 export const vehicleApi = {
     getAll: (params: GetVehicleParams) =>
         requestWrapper<VehicleViewRes[]>(async () => {
-            const query = buildQueryParams(params, true)
+            const query = buildQueryParams(params)
             const res = await axiosInstance.get("/vehicles", { params: query })
             return res.data
         }),
