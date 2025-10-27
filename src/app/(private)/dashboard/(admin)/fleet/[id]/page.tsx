@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useEffect, useMemo } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { useTranslation } from "react-i18next"
 import { Spinner } from "@heroui/react"
@@ -17,7 +17,7 @@ import {
 } from "@phosphor-icons/react"
 import toast from "react-hot-toast"
 
-import { ButtonStyled } from "@/components"
+import { ButtonStyled, VehicleSubImagesScroll } from "@/components"
 import {
     useDay,
     useGetAllStations,
@@ -32,6 +32,8 @@ import {
     VehicleViewRes,
 } from "@/models/vehicle/schema/response"
 import { BackendError } from "@/models/common/response"
+import { FALLBACK_IMAGE_URL } from "@/constants/constants"
+import { slides } from "public/cars"
 
 /* constant map from status -> chip style */
 const VEHICLE_STATUS_CLASS_MAP: Record<VehicleStatus, string> = {
@@ -204,85 +206,102 @@ function FleetInfoHeader(props: {
     t: TranslateFn
     vehicleModel: VehicleModelViewRes
     availabilityLabel: string
+    subImgUrls: string[]
+    activeImage: number
+    onSelectImage: (index: number) => void
 }) {
-    const { t, vehicleModel, availabilityLabel } = props
+    const { t, vehicleModel, availabilityLabel, subImgUrls, activeImage, onSelectImage } = props
 
     return (
         <section className="space-y-6 bg-white p-6 md:p-8">
-            <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-                {/* left side: model info */}
-                <div className="space-y-4">
-                    {/* badges: segment + availability */}
-                    <div className="flex flex-wrap items-center gap-3">
-                        <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-black-600">
-                            {vehicleModel.segment?.name ?? t("fleet.detail_segment")}
-                        </span>
-
-                        <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">
-                            <CheckCircle size={14} weight="bold" />
-                            {availabilityLabel}
-
-                        </span>
+            <div className="space-y-6">
+                <div className="w-full">
+                    <div className="mx-auto w-full max-w-xl">
+                        <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-slate-100">
+                            <img
+                                src={subImgUrls[activeImage] ?? FALLBACK_IMAGE_URL}
+                                alt={vehicleModel.name}
+                                className="h-full w-full object-cover"
+                            />
+                        </div>
                     </div>
-
-                    {/* name, brand, model id */}
-                    <div className="space-y-2">
-                        <h1 className="text-4xl font-bold text-slate-900">
-                            {vehicleModel.name}
-                        </h1>
-
-                        <p className="text-sm font-medium text-slate-500">
-                            {vehicleModel.brand?.name ?? t("fleet.detail_brand")}
-                        </p>
-
-                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                            {t("fleet.detail_model_id")}:{" "}
-                            <span className="text-slate-700">{vehicleModel.id}</span>
-                        </p>
+                    <div className="mx-auto mt-4 w-full max-w-xl">
+                        <VehicleSubImagesScroll
+                            subImgUrls={subImgUrls}
+                            active={activeImage}
+                            setActive={onSelectImage}
+                        />
                     </div>
                 </div>
 
-                {/* right side: actions + pricing */}
-                <div className="flex flex-col items-stretch gap-3 md:items-end">
-                    {/* edit / delete buttons */}
-                    <div className="flex items-center gap-2">
-                        <ButtonStyled
-                            variant="light"
-                            className="flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1 text-sm font-medium text-slate-600 shadow-none transition-all hover:bg-slate-50 hover:text-slate-700"
-                            startContent={<PencilSimple size={16} weight="bold" />}
-                        >
-                            {/* {t("common.edit")} */}
-                        </ButtonStyled>
+                <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+                    <div className="space-y-4">
+                        <div className="flex flex-wrap items-center gap-3">
+                            <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-black-600">
+                                {vehicleModel.segment?.name ?? t("fleet.detail_segment")}
+                            </span>
 
-                        <ButtonStyled
-                            variant="light"
-                            onPress={() => {}}
-                            className="flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1 text-sm font-medium text-slate-600 shadow-none transition-all hover:bg-slate-50 hover:text-rose-600"
-                            startContent={<TrashSimple size={16} weight="bold" />}
-                        >
-                         
-                        </ButtonStyled>
+                            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                                <CheckCircle size={14} weight="bold" />
+                                {availabilityLabel}
+                            </span>
+                        </div>
+
+                        <div className="space-y-2">
+                            <h1 className="text-4xl font-bold text-slate-900">
+                                {vehicleModel.name}
+                            </h1>
+
+                            <p className="text-sm font-medium text-slate-500">
+                                {vehicleModel.brand?.name ?? t("fleet.detail_brand")}
+                            </p>
+
+                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                {t("fleet.detail_model_id")}:{" "}
+                                <span className="text-slate-700">{vehicleModel.id}</span>
+                            </p>
+                        </div>
                     </div>
 
-                    {/* pricing info */}
-                    <div className="text-right space-y-1">
-                        <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                            {t("fleet.detail_cost_per_day")}
-                        </span>
+                    <div className="flex flex-col items-stretch gap-3 md:items-end">
+                        <div className="flex items-center gap-2">
+                            <ButtonStyled
+                                variant="light"
+                                className="flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1 text-sm font-medium text-slate-600 shadow-none transition-all hover:bg-slate-50 hover:text-slate-700"
+                                startContent={<PencilSimple size={16} weight="bold" />}
+                            >
+                                {/* {t("common.edit")} */}
+                            </ButtonStyled>
 
-                        <p className="mt-1 text-3xl font-bold text-emerald-700">
-                            {formatCurrency(vehicleModel.costPerDay)}
-                            <span className="ml-1 text-sm font-medium text-emerald-600">
-                                /{t("fleet.detail_day_unit")}
+                            <ButtonStyled
+                                variant="light"
+                                onPress={() => {}}
+                                className="flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1 text-sm font-medium text-slate-600 shadow-none transition-all hover:bg-slate-50 hover:text-rose-600"
+                                startContent={<TrashSimple size={16} weight="bold" />}
+                            >
+                                {/* {t("common.delete")} */}
+                            </ButtonStyled>
+                        </div>
+
+                        <div className="space-y-1 text-right">
+                            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                {t("fleet.detail_cost_per_day")}
                             </span>
-                        </p>
 
-                        <p className="text-xs text-slate-500">
-                            {t("fleet.detail_deposit_fee")}:{" "}
-                            <strong className="text-slate-700">
-                                {formatCurrency(vehicleModel.depositFee)}
-                            </strong>
-                        </p>
+                            <p className="mt-1 text-3xl font-bold text-emerald-700">
+                                {formatCurrency(vehicleModel.costPerDay)}
+                                <span className="ml-1 text-sm font-medium text-emerald-600">
+                                    /{t("fleet.detail_day_unit")}
+                                </span>
+                            </p>
+
+                            <p className="text-xs text-slate-500">
+                                {t("fleet.detail_deposit_fee")}:{" "}
+                                <strong className="text-slate-700">
+                                    {formatCurrency(vehicleModel.depositFee)}
+                                </strong>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -549,6 +568,31 @@ export default function AdminFleetDetailPage() {
         )
     }, [vehicleModel, translate])
 
+    const subImgUrls = useMemo(() => {
+        const modelImages = vehicleModel
+            ? [
+                  vehicleModel.imageUrl,
+                  ...(vehicleModel.imageUrls ?? []),
+              ]
+            : []
+        const merged = [...modelImages, ...slides].filter(
+            (src): src is string => Boolean(src)
+        )
+        return merged.length > 0 ? merged : [FALLBACK_IMAGE_URL]
+    }, [vehicleModel])
+
+    const [activeImage, setActiveImage] = useState(0)
+
+    useEffect(() => {
+        setActiveImage(0)
+    }, [vehicleModel?.id])
+
+    useEffect(() => {
+        if (activeImage >= subImgUrls.length) {
+            setActiveImage(0)
+        }
+    }, [activeImage, subImgUrls])
+
     // show spinner while fetching model data
     if (isLoading || isFetchingAny) {
         return (
@@ -591,6 +635,9 @@ export default function AdminFleetDetailPage() {
                 t={translate}
                 vehicleModel={vehicleModel}
                 availabilityLabel={availabilityLabel}
+                subImgUrls={subImgUrls}
+                activeImage={activeImage}
+                onSelectImage={setActiveImage}
             />
 
             <FleetSpecSection t={translate} vehicleModel={vehicleModel} />
