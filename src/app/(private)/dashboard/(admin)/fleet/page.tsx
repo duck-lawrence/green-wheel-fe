@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { AutocompleteItem, type Selection } from "@heroui/react"
 import { useTranslation } from "react-i18next"
 import VehicleHorizontalCard from "@/components/modules/VehicleHorizontalCard"
@@ -19,10 +19,12 @@ import toast from "react-hot-toast"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
+import { useRouter } from "next/navigation"
 
 export default function AdminFleetPage() {
     const { t } = useTranslation()
-    const [page, setPage] = useState(1)
+    const router = useRouter()
+    // const [page, setPage] = useState(1)
     const [searchTerm, setSearchTerm] = useState("")
     // filter
     const [filter, setFilter] = useState<GetAllModelParams>({
@@ -134,8 +136,6 @@ export default function AdminFleetPage() {
         setStatus(value != null ? value.toString() : undefined)
     }
 
-
-
     // const handlePageChange = (nextPage: number) => {
     //     setPage(Math.min(Math.max(nextPage, 1), totalPages))
     // }
@@ -158,6 +158,13 @@ export default function AdminFleetPage() {
     }, [filter, refetchModels])
 
     const isLoading = isModelsLoading || isModelsFetching
+
+    const handleVehicleSelect = useCallback(
+        (vehicleModel: VehicleModelViewRes) => {
+            router.push(`/dashboard/fleet/${vehicleModel.id}`)
+        },
+        [router]
+    )
 
     if (isGetVehicleSegmentsLoading || getVehicleSegmentsError) return <SpinnerStyled />
 
@@ -240,6 +247,7 @@ export default function AdminFleetPage() {
                                 <VehicleHorizontalCard
                                     key={vehicle.id}
                                     vehicleModel={vehicle}
+                                    onSelect={handleVehicleSelect}
                                     readOnly={false}
                                 />
                             ))}

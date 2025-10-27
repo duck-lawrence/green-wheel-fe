@@ -44,4 +44,5 @@ export type VehicleViewRes = {
     stationId: string
     model: VehicleModelViewRes
     status: VehicleStatus
+    updatedAt?: string
 }
