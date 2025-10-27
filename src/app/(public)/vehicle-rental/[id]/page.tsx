@@ -8,7 +8,7 @@ import {
     CreateRentalContractModal,
     TempInvoice,
     AlertStyled,
-    ImageStyled
+    VehicleSubImagesScroll
 } from "@/components"
 import { GasPump, UsersFour, RoadHorizon, BatteryChargingIcon } from "@phosphor-icons/react"
 import { formatCurrency } from "@/utils/helpers/currency"
@@ -28,6 +28,7 @@ import toast from "react-hot-toast"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { Icon } from "@iconify/react"
+import { slides } from "public/cars"
 
 export default function VehicleDetailPage() {
     const { id } = useParams()
@@ -67,7 +68,7 @@ export default function VehicleDetailPage() {
     })
     const subImgUrls = useMemo(() => {
         if (!model) return []
-        return [model.imageUrl, ...model.imageUrls].filter((img) => !!img)
+        return [model.imageUrl, ...model.imageUrls, ...slides].filter((img) => !!img)
     }, [model])
 
     // redirect if filter not valid
@@ -92,12 +93,6 @@ export default function VehicleDetailPage() {
             totalPrice: totalDays * model.costPerDay + model.depositFee
         }
     }, [endDate, getDiffDaysCeil, model, startDate])
-
-    // display item similar
-    // const similarVehicles = vehicleModels
-    //     .filter((v) => v.id !== id)
-    //     .sort(() => Math.random() - 0.5)
-    //     .slice(0, 3)
 
     const handleClickBooking = useCallback(() => {
         if (
@@ -163,16 +158,6 @@ export default function VehicleDetailPage() {
 
     return (
         <div className="min-h-dvh bg-neutral-50 text-neutral-900 rounded">
-            <CreateRentalContractModal
-                isOpen={isOpen}
-                isCustomer={isCustomer}
-                isStaff={isStaff}
-                onClose={onClose}
-                modelViewRes={model}
-                totalDays={totalDays}
-                totalPrice={totalPrice}
-            />
-
             {/* Breadcrumb */}
             <div className="p-4">
                 <BreadCrumbsStyled
@@ -224,18 +209,14 @@ export default function VehicleDetailPage() {
                 {/* Gallery */}
                 <section className="lg:col-span-8">
                     {/* Images */}
-                    <div className="grid grid-rows-4 gap-3">
-                        <div
-                            className={`${
-                                subImgUrls.length > 0 ? "row-span-3" : "row-span-4"
-                            } aspect-[16/10] overflow-hidden rounded-2xl bg-neutral-200`}
-                        >
+                    <div className="gap-3">
+                        <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-neutral-200">
                             <motion.img
                                 key={active}
                                 initial={{ opacity: 0, scale: 1.02 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.35 }}
-                                src={model.imageUrls && model.imageUrls[active]}
+                                src={subImgUrls[active]}
                                 alt={`${model.name} - ${active + 1}`}
                                 className="h-full w-full object-cover"
                             />
@@ -243,23 +224,11 @@ export default function VehicleDetailPage() {
 
                         {/* List sub img */}
                         {subImgUrls.length > 0 && (
-                            <div className="row-span-1 grid grid-cols-4 gap-3">
-                                {subImgUrls.map((src, idx) => (
-                                    <button
-                                        key={src}
-                                        onClick={() => setActive(idx)}
-                                        className={`group relative aspect-[4/3] overflow-hidden rounded-2xl outline-none ring-2 ring-transparent focus:ring-emerald-500 ${
-                                            active === idx ? "ring-emerald-500" : ""
-                                        }`}
-                                    >
-                                        <ImageStyled
-                                            src={src}
-                                            alt={`thumb ${idx + 1}`}
-                                            className="h-full w-full object-cover group-hover:scale-[1.02] transition"
-                                        />
-                                    </button>
-                                ))}
-                            </div>
+                            <VehicleSubImagesScroll
+                                active={active}
+                                setActive={setActive}
+                                subImgUrls={subImgUrls}
+                            />
                         )}
                     </div>
 
@@ -316,6 +285,15 @@ export default function VehicleDetailPage() {
                                 >
                                     {t("rental_contract.rent")}
                                 </ButtonStyled>
+                                <CreateRentalContractModal
+                                    isOpen={isOpen}
+                                    isCustomer={isCustomer}
+                                    isStaff={isStaff}
+                                    onClose={onClose}
+                                    modelViewRes={model}
+                                    totalDays={totalDays}
+                                    totalPrice={totalPrice}
+                                />
                                 {!isLogined && (
                                     <AlertStyled className="mt-1">
                                         {t("rental_contract.please_login")}

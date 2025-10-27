@@ -30,10 +30,12 @@ export const useInvalidateContractQueries = () => {
 
 export const useCreateRentalContract = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
+    const router = useRouter()
 
     return useMutation({
         mutationFn: rentalContractApi.create,
         onSuccess: () => {
+            router.push("/rental-contracts")
             toast.success(t("contral_form.wait_for_confirm"), {
                 duration: 5000
             })
@@ -280,7 +282,13 @@ export const useCancelContract = ({ id, onSuccess }: { id: string; onSuccess?: (
     })
 }
 
-export const useChangeVehicle = ({ id, onSuccess }: { id: string; onSuccess?: () => void }) => {
+export const useChangeVehicleByContractId = ({
+    id,
+    onSuccess
+}: {
+    id: string
+    onSuccess?: () => void
+}) => {
     const { t } = useTranslation()
     const { invalidateById } = useInvalidateContractQueries()
 

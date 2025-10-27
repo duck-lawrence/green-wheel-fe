@@ -16,6 +16,7 @@ import {
 } from "@/components"
 import {
     useCancelContract,
+    useConfirmChangeVehicle,
     useDay,
     useGetAllVehicleChecklists,
     useGetRentalContractById,
@@ -44,7 +45,12 @@ import { Spinner } from "@heroui/react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { decodeJwt } from "@/utils/helpers/jwt"
-import { InvoiceType, RentalContractStatus, VehicleChecklistType } from "@/constants/enum"
+import {
+    InvoiceType,
+    RentalContractStatus,
+    VehicleChecklistType,
+    VehicleIssueResolutionOption
+} from "@/constants/enum"
 import { ChecklistSection } from "./ChecklistSection"
 import { CreateInvoiceSection } from "./CreateInvoiceSection"
 
@@ -57,8 +63,6 @@ export function RentalContractDetail({
     isCustomer?: boolean
     isStaff?: boolean
 }) {
-    // const { id } = useParams()
-    // const contractId = id?.toString()
     const searchParams = useSearchParams()
     const pathName = usePathname()
     const returnPath = pathName.startsWith("/dashboard")
@@ -90,9 +94,9 @@ export function RentalContractDetail({
         }
     }, [contract, isStaff, payload.sid, router, t])
 
-    //=======================================//
+    //======================================= //
     // Invoice accordion
-    //=======================================//
+    //======================================= //
     const invoiceAccordion = (contract?.invoices || []).map((invoice) => ({
         key: invoice.id,
         ariaLabel: invoice.id,
@@ -122,9 +126,9 @@ export function RentalContractDetail({
         fn()
     }, [contractId, parseNumber, pathName, searchParams, t, updateContractStatus])
 
-    //=======================================//
+    //======================================= //
     // Checklist
-    //=======================================//
+    //======================================= //
     const { data: checklists } = useGetAllVehicleChecklists({
         query: {
             contractId
@@ -137,9 +141,9 @@ export function RentalContractDetail({
         return checklists?.find((item) => item.type === VehicleChecklistType.Return)
     }, [checklists])
 
-    //=======================================//
+    //======================================= //
     // Handover
-    //=======================================//
+    //======================================= //
     const handoverMutation = useHandoverContract({ id: contractId })
     const handoverInitValue = useMemo(() => {
         return {
@@ -169,23 +173,34 @@ export function RentalContractDetail({
         }
     })
 
-    //=======================================//
+    //======================================= //
     // Return
-    //=======================================//
+    //======================================= //
     const returnMutation = useReturnContract({ id: contractId })
     const handleReturn = useCallback(async () => {
         await returnMutation.mutateAsync()
     }, [returnMutation])
 
-    //=======================================//
+    //======================================= //
     // Cancel
-    //=======================================//
+    //======================================= //
     const cancelMutation = useCancelContract({ id: contractId })
     const handleCancel = useCallback(async () => {
         await cancelMutation.mutateAsync()
     }, [cancelMutation])
 
-    //=======================================//
+    // ====================================== //
+    // Customer confirm change vehicle
+    // ====================================== //
+    const confirmChangeVehicle = useConfirmChangeVehicle({ id: contractId })
+    const handleConfirmChangeVehicle = useCallback(
+        async (resolutionOption: VehicleIssueResolutionOption) => {
+            await confirmChangeVehicle.mutateAsync({ req: { resolutionOption } })
+        },
+        [confirmChangeVehicle]
+    )
+
+    //======================================= //
     if (isLoading || !contract)
         return (
             <div className="flex justify-center mt-65">
@@ -457,7 +472,7 @@ export function RentalContractDetail({
                             </ButtonStyled>
                         ) : (
                             contract.status == RentalContractStatus.Active && (
-                                <div className="flex justify-center gap-2">
+                                <div className="flex flex-col items-center gap-2">
                                     <CheckboxStyled
                                         checked={isReturnChecked}
                                         onChange={(e) => setIsReturnChecked(e.target.checked)}
@@ -483,18 +498,46 @@ export function RentalContractDetail({
                     </>
                 )}
                 {isCustomer &&
-                    (contract.status == RentalContractStatus.RequestPending ||
-                        contract.status == RentalContractStatus.PaymentPending) && (
+                (contract.status == RentalContractStatus.RequestPending ||
+                    contract.status == RentalContractStatus.PaymentPending) ? (
+                    <ButtonStyled
+                        variant="ghost"
+                        color="primary"
+                        isDisabled={cancelMutation.isPending}
+                        onPress={() => handleCancel()}
+                    >
+                        {cancelMutation.isPending ? <Spinner /> : t("rental_contract.cancel")}
+                    </ButtonStyled>
+                ) : confirmChangeVehicle.isPending ? (
+                    <Spinner />
+                ) : (
+                    <div>
                         <ButtonStyled
-                            variant="bordered"
+                            variant="ghost"
                             color="primary"
-                            className="hover:text-white hover:bg-primary"
-                            isDisabled={cancelMutation.isPending}
-                            onPress={() => handleCancel()}
+                            isDisabled={confirmChangeVehicle.isPending}
+                            onPress={() =>
+                                handleConfirmChangeVehicle(
+                                    VehicleIssueResolutionOption.ChangeVehicle
+                                )
+                            }
                         >
-                            {cancelMutation.isPending ? <Spinner /> : t("rental_contract.cancel")}
+                            {confirmChangeVehicle.isPending ? (
+                                <Spinner />
+                            ) : (
+                                t("enum.change_vehicle")
+                            )}
                         </ButtonStyled>
-                    )}
+                        <ButtonStyled
+                            isDisabled={confirmChangeVehicle.isPending}
+                            onPress={() =>
+                                handleConfirmChangeVehicle(VehicleIssueResolutionOption.Refund)
+                            }
+                        >
+                            {confirmChangeVehicle.isPending ? <Spinner /> : t("enum.refund")}
+                        </ButtonStyled>
+                    </div>
+                )}
             </div>
         </motion.div>
     )

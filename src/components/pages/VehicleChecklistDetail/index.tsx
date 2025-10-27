@@ -7,7 +7,13 @@ import {
     SpinnerStyled
 } from "@/components"
 import { VehicleChecklistTypeLabels } from "@/constants/labels"
-import { useDay, useGetVehicleChecklistById, useName, useUpdateVehicleChecklist } from "@/hooks"
+import {
+    useChangeVehicleByContractId,
+    useDay,
+    useGetVehicleChecklistById,
+    useName,
+    useUpdateVehicleChecklist
+} from "@/hooks"
 import { UpdateVehicleChecklistReq } from "@/models/checklist/schema/request"
 import { useFormik } from "formik"
 import * as Yup from "yup"
@@ -51,6 +57,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
     )
 
     const updateChecklist = useUpdateVehicleChecklist({ id })
+    const changeVehicle = useChangeVehicleByContractId({ id: checklist?.contractId || "" })
     const handleUpdate = useCallback(
         async (value: UpdateVehicleChecklistReq) => {
             const maintainDateTimeZoned = toZonedDateTime(value.maintainedUntil)
@@ -67,8 +74,19 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                 isSignedByStaff: value.isSignedByStaff,
                 maintainedUntil: formatMaintainDate
             })
+
+            if (checklist?.type == VehicleChecklistType.Return && formatMaintainDate != undefined) {
+                await changeVehicle.mutateAsync()
+            }
         },
-        [formatDateTime, hasItemsDamaged, toZonedDateTime, updateChecklist]
+        [
+            changeVehicle,
+            checklist?.type,
+            formatDateTime,
+            hasItemsDamaged,
+            toZonedDateTime,
+            updateChecklist
+        ]
     )
 
     const formik = useFormik({
