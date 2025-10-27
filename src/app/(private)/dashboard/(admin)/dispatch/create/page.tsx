@@ -2,6 +2,7 @@
 import { AutocompleteStyled, ButtonStyled, SectionStyled, SpinnerStyled } from "@/components"
 import TableSelectionStaff from "@/components/modules/TableSelectionStaff"
 import TableSelectionVehicle from "@/components/modules/TableSelectionVehicle/indesx"
+import { VehicleStatus } from "@/constants/enum"
 import { useGetAllStaffs, useGetAllStations, useGetAllVehicles, useGetMe } from "@/hooks"
 import { useCreateDispatch } from "@/hooks/queries/useDispatch"
 import { AutocompleteItem, Textarea } from "@heroui/react"
@@ -28,7 +29,7 @@ export default function DispatchCreatePage() {
         enabled: !!selecedSation
     })
     const { data: dispatchRequestVehicles, isLoading: isLoading_4 } = useGetAllVehicles({
-        params: { stationId: selecedSation },
+        params: { stationId: selecedSation, status: VehicleStatus.Available },
         enabled: !!selecedSation
     })
 
@@ -48,7 +49,8 @@ export default function DispatchCreatePage() {
         })
     }, [createDispatch, selecedSation, selectStaffs, selectVehicles, stationIdNow, textArea])
 
-    if (isLoading_1 && isLoading_2 && isLoading_3 && isLoading_4) return <SpinnerStyled />
+    if (isLoading_1 || isLoading_2 || isLoading_3 || isLoading_4) return <SpinnerStyled />
+
     return (
         <div className="max-w-7xl mx-auto w-full bg-white p-8 rounded-2xl shadow-md border border-gray-100">
             {/* Header */}

@@ -15,7 +15,6 @@ import {
     ModalStyled
 } from "@/components"
 
-
 type SelectOption = {
     id: string
     label: string
@@ -59,8 +58,12 @@ export function VehicleEditModal({
                         <InputStyled
                             label={t("vehicle.license_plate")}
                             value={formik.values.licensePlate}
-                            onChange={(event) => formik.setFieldValue("licensePlate", event.target.value)}
-                            isInvalid={Boolean(formik.touched.licensePlate && formik.errors.licensePlate)}
+                            onChange={(event) =>
+                                formik.setFieldValue("licensePlate", event.target.value)
+                            }
+                            isInvalid={Boolean(
+                                formik.touched.licensePlate && formik.errors.licensePlate
+                            )}
                             errorMessage={formik.errors.licensePlate}
                             isRequired
                         />
@@ -68,7 +71,9 @@ export function VehicleEditModal({
                             label={t("vehicle.model_name")}
                             placeholder={t("vehicle.model_name_placeholder")}
                             selectedKeys={
-                                formik.values.modelId ? new Set([formik.values.modelId]) : new Set([])
+                                formik.values.modelId
+                                    ? new Set([formik.values.modelId])
+                                    : new Set([])
                             }
                             disallowEmptySelection={false}
                             isRequired
@@ -80,7 +85,10 @@ export function VehicleEditModal({
                                 }
                                 const [value] = Array.from(keys)
                                 formik.setFieldTouched("modelId", true, false)
-                                formik.setFieldValue("modelId", value != null ? value.toString() : "")
+                                formik.setFieldValue(
+                                    "modelId",
+                                    value != null ? value.toString() : ""
+                                )
                             }}
                             isInvalid={Boolean(formik.touched.modelId && formik.errors.modelId)}
                             errorMessage={formik.errors.modelId}
@@ -120,7 +128,10 @@ export function VehicleEditModal({
                                     return
                                 }
                                 const [value] = Array.from(keys)
-                                formik.setFieldValue("status", value != null ? value.toString() : null)
+                                formik.setFieldValue(
+                                    "status",
+                                    value != null ? value.toString() : null
+                                )
                             }}
                             errorMessage={formik.errors.status ?? undefined}
                         >

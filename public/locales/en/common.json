@@ -1,4 +1,14 @@
 {
+    "home": {
+        "welcome": "Welcome to Green Wheel",
+        "slogan": "Green Rides. Brighter Future.",
+        "description": "Professional self-drive car rental service to meet all your personal travel needs",
+        "vehicle_rental": "Rent a car",
+        "about": "About us",
+        "desc_first": "Rent smart, eco-friendly electric vehicles.\nExperience a",
+        "desc_second": "green – safe – sustainable",
+        "desc_third": "journey."
+    },
     "success": {
         "create": "Created",
         "update": "Updated",
@@ -188,13 +198,6 @@
         "need_to_create_an_account": "Need to create an account?",
         "register": "Register",
         "submit": "Submit"
-    },
-    "home": {
-        "welcome": "Welcome to Green Wheel",
-        "slogan": "Green Rides. Brighter Future.",
-        "description": "Professional self-drive car rental service to meet all your personal travel needs",
-        "view_details": "View details",
-        "learn_more": "Learn more"
     },
     "navbar": {
         "home": "Home",

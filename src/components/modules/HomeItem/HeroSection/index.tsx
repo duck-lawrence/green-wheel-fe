@@ -7,13 +7,21 @@ import { useTranslation } from "react-i18next"
 import { useTypewriter } from "@/utils/helpers/useTypewriter"
 import Image from "next/image"
 
+const images = [
+    { src: "/images/home-banner/3.png", direction: "right" },
+    { src: "/images/home-banner/2.png", direction: "right" },
+    { src: "/images/home-banner/1.png", direction: "right" },
+    { src: "/images/home-banner/green.png", direction: "bottom" },
+    { src: "/images/home-banner/car.png", direction: "right" }
+]
+
 export function HeroSection() {
     const { t } = useTranslation()
 
     const slogans = [
-        "Drive Electric. Go Green.",
-        "Rent Smarter. Save More.",
-        "Green Wheel – The Future is Electric."
+        "Drive Electric\nGo Green",
+        "Rent Smarter\nSave More",
+        "Green Wheel\nThe Future is Electric"
     ]
 
     const [index, setIndex] = useState(0)
@@ -31,30 +39,53 @@ export function HeroSection() {
     return (
         <section
             className="
-                relative w-full h-auto min-h-[70vh]
-                flex items-center justify-center
+                relative w-full h-auto min-h-screen mt-[-6.25rem]
+                flex items-center justify-start
                 overflow-hidden text-white 
-                px-4 sm:px-6 md:px-12 lg:px-24
+                px-4 sm:px-6 md:px-12 lg:px-20
             "
         >
             {/* Background image */}
-            <Image
-                src="/images/test-bg2.png"
-                alt="Green Wheel"
-                fill
-                className="object-cover object-center opacity-100"
-                priority
-            />
+            {images.map((img, index) => {
+                // delay: ảnh green xuất hiện cùng lúc ảnh 3 (index 0)
+                const delay = img.src.includes("green") ? 0 : index * 0.3
+
+                // hướng trượt
+                const initial =
+                    img.direction === "bottom" ? { y: 200, opacity: 0 } : { x: 200, opacity: 0 }
+
+                return (
+                    <motion.div
+                        key={img.src}
+                        initial={initial}
+                        animate={{ x: 0, y: 0, opacity: 1 }}
+                        transition={{
+                            duration: 0.6,
+                            delay,
+                            ease: "easeInOut"
+                        }}
+                        className="absolute inset-0"
+                    >
+                        <Image
+                            src={img.src}
+                            alt="Green Wheel"
+                            fill
+                            className="object-cover object-center"
+                            priority={img.src.includes("green") || index === 0}
+                        />
+                    </motion.div>
+                )
+            })}
 
             {/* Overlay gradient (different levels for breakpoints) */}
-            <div
+            {/* <div
                 className="
                     absolute inset-0 
                     bg-gradient-to-b 
                     from-black/20 via-black/10 to-black/20
                     md:from-black/40 md:via-black/25 md:to-black/35
                 "
-            />
+            /> */}
 
             {/* Dynamic light */}
             <motion.div
@@ -73,9 +104,9 @@ export function HeroSection() {
             {/* Content */}
             <div
                 className="
-                    relative z-10 flex flex-col justify-center
-                    text-center ml:top-10  ms:mr-0 md:text-left
-                    max-w-[700px] sm:max-w-[600px]
+                    z-10 flex flex-col
+                    text-center ml:top-10 ms:mr-0 md:text-left
+                    max-w-[38rem] min-w-[38erm]
                     space-y-6 py-10 md:py-0
                 "
             >
@@ -86,11 +117,12 @@ export function HeroSection() {
                         initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -40 }}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
                         className="
                             font-bold leading-tight 
                             text-3xl sm:text-4xl md:text-5xl lg:text-6xl
-                            text-balance
+                            text-primary min-h-[10rem]
+                            whitespace-pre-line
                         "
                     >
                         {text}
@@ -104,15 +136,16 @@ export function HeroSection() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.2 }}
                     className="
-                        text-base sm:text-lg md:text-xl
-                        text-gray-100/90 leading-relaxed
-                        max-w-full md:max-w-[90%]
+                        text-black sm:text-lg md:text-xl
+                        leading-relaxed
+                        min-w-full md:max-w-[90%]
                         mx-auto md:mx-0
+                        whitespace-pre-line
                     "
                 >
-                    Thuê xe điện thông minh, tiết kiệm và thân thiện môi trường. Trải nghiệm hành
-                    trình{" "}
-                    <span className="text-teal-400 font-medium">xanh – an toàn – bền vững</span>.
+                    {t("home.desc_first")}{" "}
+                    <span className="text-teal-400 font-medium">{t("home.desc_second")}</span>
+                    {` ${t("home.desc_third")}`}
                 </motion.p>
 
                 {/* Energy bar */}
@@ -146,20 +179,21 @@ export function HeroSection() {
                             text-center w-full sm:w-auto
                         "
                     >
-                        {t("home.view_details")}
+                        {t("home.vehicle_rental")}
                     </ButtonStyled>
 
                     <ButtonStyled
                         href="/about"
-                        className="
-                            text-base md:text-lg font-semibold px-8 py-3 rounded-xl 
-                            border-2 border-white text-white 
-                            hover:bg-white hover:text-primary transition-all duration-400 
-                            w-full sm:w-auto text-center
-                        "
                         variant="bordered"
+                        className="
+                            md:text-lg font-semibold px-8 py-3 rounded-xl 
+                            border-2 transition-all duration-400 
+                            w-full sm:w-auto text-center
+                            text-gray-800 border-gray-800
+                            hover:text-secondary hover:bg-gray-800
+                        "
                     >
-                        {t("home.learn_more")}
+                        {t("home.about")}
                     </ButtonStyled>
                 </motion.div>
             </div>
