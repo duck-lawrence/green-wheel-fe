@@ -1,3 +1,4 @@
+export const GREENWHEEL = "Green Wheel"
 export const GREENWHEEL_EMAIL = "greenwheel.work@gmail.com"
 export const GREENWHEEL_PHONE = "0900.123.456"
 export const GREENWHEEL_ADDRESS = "TP HCM, Việt Nam"

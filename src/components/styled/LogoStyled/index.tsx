@@ -17,7 +17,7 @@ export function LogoStyled({ src = LOGO_URL, alt = "LOGO", ...rest }: LogoImageP
             {...rest}
             src={src}
             alt={alt}
-            className={cn("w-20 h-20 rounded-2xl", rest.className)}
+            className={cn("w-20 h-20 rounded-full bg-primary", rest.className)}
         />
     )
 }
