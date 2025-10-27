@@ -14,7 +14,7 @@ export type CreateVehicleChecklistReq = {
 export type UpdateVehicleChecklistReq = {
     isSignedByStaff: boolean
     isSignedByCustomer: boolean
-    maintainedUntil?: string
+    maintainUntil?: string
     checklistItems: UpdateChecklistItemReq[]
 }
 

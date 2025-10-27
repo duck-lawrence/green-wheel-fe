@@ -18,34 +18,23 @@ export function InvoiceReservation({ invoice }: { invoice: InvoiceViewRes }) {
                 variant="bordered"
             />
             {invoice.status === InvoiceStatus.Paid && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-3">
-                    <div></div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <InputStyled
-                            label={t("invoice.paid_amount")}
-                            value={formatCurrency(invoice.paidAmount)}
-                            startContent={
-                                <ClipboardText
-                                    size={22}
-                                    className="text-primary"
-                                    weight="duotone"
-                                />
-                            }
-                            variant="bordered"
-                        />
-                        <InputStyled
-                            label={t("invoice.return_amount")}
-                            value={formatCurrency(invoice.paidAmount - invoice.total)}
-                            startContent={
-                                <ArrowUDownLeft
-                                    size={22}
-                                    className="text-primary"
-                                    weight="duotone"
-                                />
-                            }
-                            variant="bordered"
-                        />
-                    </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <InputStyled
+                        label={t("invoice.paid_amount")}
+                        value={formatCurrency(invoice.paidAmount)}
+                        startContent={
+                            <ClipboardText size={22} className="text-primary" weight="duotone" />
+                        }
+                        variant="bordered"
+                    />
+                    <InputStyled
+                        label={t("invoice.return_amount")}
+                        value={formatCurrency(invoice.paidAmount - invoice.total)}
+                        startContent={
+                            <ArrowUDownLeft size={22} className="text-primary" weight="duotone" />
+                        }
+                        variant="bordered"
+                    />
                 </div>
             )}
             {/* <TextareaStyled
