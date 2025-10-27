@@ -40,7 +40,7 @@ export function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceViewRes }) {
             />
 
             {invoice.status === InvoiceStatus.Paid && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-3">
+                <>
                     <div></div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <InputStyled
@@ -68,7 +68,7 @@ export function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceViewRes }) {
                             variant="bordered"
                         />
                     </div>
-                </div>
+                </>
             )}
             {/* <TextareaStyled
                 label={t("invoice.note")}

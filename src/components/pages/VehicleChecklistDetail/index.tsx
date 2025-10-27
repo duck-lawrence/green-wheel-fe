@@ -60,7 +60,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
     const changeVehicle = useChangeVehicleByContractId({ id: checklist?.contractId || "" })
     const handleUpdate = useCallback(
         async (value: UpdateVehicleChecklistReq) => {
-            const maintainDateTimeZoned = toZonedDateTime(value.maintainedUntil)
+            const maintainDateTimeZoned = toZonedDateTime(value.maintainUntil)
             const formatMaintainDate =
                 maintainDateTimeZoned && hasItemsDamaged
                     ? formatDateTime({
@@ -68,11 +68,18 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                       })
                     : undefined
 
+            console.log({
+                checklistItems: value.checklistItems,
+                isSignedByCustomer: value.isSignedByCustomer,
+                isSignedByStaff: value.isSignedByStaff,
+                maintainUntil: formatMaintainDate
+            })
+
             await updateChecklist.mutateAsync({
                 checklistItems: value.checklistItems,
                 isSignedByCustomer: value.isSignedByCustomer,
                 isSignedByStaff: value.isSignedByStaff,
-                maintainedUntil: formatMaintainDate
+                maintainUntil: formatMaintainDate
             })
 
             if (checklist?.type == VehicleChecklistType.Return && formatMaintainDate != undefined) {
@@ -94,7 +101,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
             isSignedByStaff: checklist?.isSignedByStaff ?? false,
             isSignedByCustomer: checklist?.isSignedByCustomer ?? false,
             checklistItems: checklist?.vehicleChecklistItems || [],
-            maintainedUntil: checklist?.maintainedUntil || undefined
+            maintainUntil: checklist?.maintainedUntil || undefined
         },
         enableReinitialize: true,
         validationSchema: Yup.object().shape({
@@ -103,7 +110,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                 checklist?.type == VehicleChecklistType.OutOfContract
                     ? Yup.boolean().notRequired()
                     : Yup.boolean().oneOf([true], t("signature.signed_by_customer_require")),
-            maintainedUntil: hasItemsDamaged
+            maintainUntil: hasItemsDamaged
                 ? Yup.string()
                       .required(t("vehicle_checklist.maintain_until_require"))
                       .test(
@@ -197,23 +204,23 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
             {hasItemsDamaged && (
                 <DatePickerStyled
                     label={t("vehicle_checklist.maintain_until")}
-                    value={toDate(formik.values.maintainedUntil)}
+                    value={toDate(formik.values.maintainUntil)}
                     onChange={(value) => {
                         if (!value) {
-                            formik.setFieldValue("maintainedUntil", null)
+                            formik.setFieldValue("maintainUntil", null)
                             return
                         }
 
                         const date = formatDate({ date: value })
-                        formik.setFieldValue("maintainedUntil", date)
+                        formik.setFieldValue("maintainUntil", date)
                     }}
                     className="mt-3"
-                    isInvalid={hasItemsDamaged && !!formik.errors.maintainedUntil}
+                    isInvalid={hasItemsDamaged && !!formik.errors.maintainUntil}
                     isReadOnly={!hasItemsDamaged}
                     isRequired={hasItemsDamaged}
-                    errorMessage={hasItemsDamaged ? formik.errors.maintainedUntil : undefined}
+                    errorMessage={hasItemsDamaged ? formik.errors.maintainUntil : undefined}
                     onBlur={() => {
-                        formik.setFieldTouched("maintainedUntil")
+                        formik.setFieldTouched("maintainUntil")
                     }}
                 />
             )}

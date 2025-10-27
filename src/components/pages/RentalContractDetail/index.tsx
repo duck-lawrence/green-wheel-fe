@@ -1,5 +1,6 @@
 "use client"
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import {
     AlertStyled,
@@ -10,20 +11,15 @@ import {
     SpinnerStyled,
     TextareaStyled,
     DateTimeStyled,
-    ButtonStyled,
-    SignatureSection,
-    CheckboxStyled
+    SignatureSection
 } from "@/components"
 import {
-    useCancelContract,
-    useConfirmChangeVehicle,
     useDay,
     useGetAllVehicleChecklists,
     useGetRentalContractById,
     useHandoverContract,
     useName,
     useNumber,
-    useReturnContract,
     useTokenStore,
     useUpdateContractStatus
 } from "@/hooks"
@@ -41,18 +37,14 @@ import { useTranslation } from "react-i18next"
 import Link from "next/link"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import toast from "react-hot-toast"
-import { Spinner } from "@heroui/react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { decodeJwt } from "@/utils/helpers/jwt"
-import {
-    InvoiceType,
-    RentalContractStatus,
-    VehicleChecklistType,
-    VehicleIssueResolutionOption
-} from "@/constants/enum"
+import { InvoiceType, RentalContractStatus, VehicleChecklistType } from "@/constants/enum"
 import { ChecklistSection } from "./ChecklistSection"
 import { CreateInvoiceSection } from "./CreateInvoiceSection"
+import { HandoverContractReq } from "@/models/rental-contract/schema/request"
+import { BottomActionButtons } from "./BottomActionButtons"
 
 export function RentalContractDetail({
     contractId,
@@ -152,7 +144,7 @@ export function RentalContractDetail({
         }
     }, [contract?.isSignedByCustomer, contract?.isSignedByStaff])
 
-    const handoverFormik = useFormik({
+    const handoverFormik = useFormik<HandoverContractReq>({
         initialValues: handoverInitValue,
         enableReinitialize: true,
         validationSchema: Yup.object().shape({
@@ -174,33 +166,6 @@ export function RentalContractDetail({
     })
 
     //======================================= //
-    // Return
-    //======================================= //
-    const returnMutation = useReturnContract({ id: contractId })
-    const handleReturn = useCallback(async () => {
-        await returnMutation.mutateAsync()
-    }, [returnMutation])
-
-    //======================================= //
-    // Cancel
-    //======================================= //
-    const cancelMutation = useCancelContract({ id: contractId })
-    const handleCancel = useCallback(async () => {
-        await cancelMutation.mutateAsync()
-    }, [cancelMutation])
-
-    // ====================================== //
-    // Customer confirm change vehicle
-    // ====================================== //
-    const confirmChangeVehicle = useConfirmChangeVehicle({ id: contractId })
-    const handleConfirmChangeVehicle = useCallback(
-        async (resolutionOption: VehicleIssueResolutionOption) => {
-            await confirmChangeVehicle.mutateAsync({ req: { resolutionOption } })
-        },
-        [confirmChangeVehicle]
-    )
-
-    //======================================= //
     if (isLoading || !contract)
         return (
             <div className="flex justify-center mt-65">
@@ -213,7 +178,7 @@ export function RentalContractDetail({
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="relative min-h-screen w-full max-w-6xl bg-white shadow-xl rounded-2xl border border-gray-200 px-4 py-3 md:p-12"
+            className="relative min-h-screen w-full max-w-6xl bg-white shadow-xl rounded-2xl border border-gray-200 px-3 py-2 pt-12 md:px-12"
         >
             <Link
                 className="absolute top-3 left-5 hover:cursor-pointer text-gray-500 italic hidden sm:block"
@@ -381,13 +346,15 @@ export function RentalContractDetail({
                 title={t("vehicle_checklist.vehicle_checklist")}
                 childrenClassName="flex gap-2"
             >
-                <ChecklistSection
-                    isStaff={isStaff}
-                    contract={contract}
-                    checklist={hanoverChecklist}
-                    type={VehicleChecklistType.Handover}
-                />
-                {contract.status >= RentalContractStatus.Returned && (
+                {contract.status >= RentalContractStatus.Active && (
+                    <ChecklistSection
+                        isStaff={isStaff}
+                        contract={contract}
+                        checklist={hanoverChecklist}
+                        type={VehicleChecklistType.Handover}
+                    />
+                )}
+                {contract.status == RentalContractStatus.Returned && (
                     <ChecklistSection
                         isStaff={isStaff}
                         contract={contract}
@@ -450,94 +417,15 @@ export function RentalContractDetail({
 
             {/* Contract action button */}
             <div className="text-center mb-10">
-                {isStaff && (
-                    <>
-                        {!contract.actualStartDate ? (
-                            <ButtonStyled
-                                variant="bordered"
-                                color="primary"
-                                className="hover:text-white hover:bg-primary"
-                                isDisabled={
-                                    !handoverFormik.isValid ||
-                                    handoverFormik.isSubmitting ||
-                                    !hanoverChecklist
-                                }
-                                onPress={() => handoverFormik.handleSubmit()}
-                            >
-                                {handoverFormik.isSubmitting ? (
-                                    <Spinner />
-                                ) : (
-                                    t("rental_contract.handover")
-                                )}
-                            </ButtonStyled>
-                        ) : (
-                            contract.status == RentalContractStatus.Active && (
-                                <div className="flex flex-col items-center gap-2">
-                                    <CheckboxStyled
-                                        checked={isReturnChecked}
-                                        onChange={(e) => setIsReturnChecked(e.target.checked)}
-                                    >
-                                        {t("rental_contract.return_comfirm")}
-                                    </CheckboxStyled>
-                                    <ButtonStyled
-                                        variant="bordered"
-                                        color="primary"
-                                        className="hover:text-white hover:bg-primary"
-                                        isDisabled={!isReturnChecked || returnMutation.isPending}
-                                        onPress={handleReturn}
-                                    >
-                                        {returnMutation.isPending ? (
-                                            <Spinner />
-                                        ) : (
-                                            t("rental_contract.return")
-                                        )}
-                                    </ButtonStyled>
-                                </div>
-                            )
-                        )}
-                    </>
-                )}
-                {isCustomer &&
-                (contract.status == RentalContractStatus.RequestPending ||
-                    contract.status == RentalContractStatus.PaymentPending) ? (
-                    <ButtonStyled
-                        variant="ghost"
-                        color="primary"
-                        isDisabled={cancelMutation.isPending}
-                        onPress={() => handleCancel()}
-                    >
-                        {cancelMutation.isPending ? <Spinner /> : t("rental_contract.cancel")}
-                    </ButtonStyled>
-                ) : confirmChangeVehicle.isPending ? (
-                    <Spinner />
-                ) : (
-                    <div>
-                        <ButtonStyled
-                            variant="ghost"
-                            color="primary"
-                            isDisabled={confirmChangeVehicle.isPending}
-                            onPress={() =>
-                                handleConfirmChangeVehicle(
-                                    VehicleIssueResolutionOption.ChangeVehicle
-                                )
-                            }
-                        >
-                            {confirmChangeVehicle.isPending ? (
-                                <Spinner />
-                            ) : (
-                                t("enum.change_vehicle")
-                            )}
-                        </ButtonStyled>
-                        <ButtonStyled
-                            isDisabled={confirmChangeVehicle.isPending}
-                            onPress={() =>
-                                handleConfirmChangeVehicle(VehicleIssueResolutionOption.Refund)
-                            }
-                        >
-                            {confirmChangeVehicle.isPending ? <Spinner /> : t("enum.refund")}
-                        </ButtonStyled>
-                    </div>
-                )}
+                <BottomActionButtons
+                    contract={contract}
+                    isStaff={isStaff}
+                    isCustomer={isCustomer}
+                    isReturnChecked={isReturnChecked}
+                    setIsReturnChecked={setIsReturnChecked}
+                    handoverFormik={handoverFormik}
+                    hanoverChecklist={hanoverChecklist}
+                />
             </div>
         </motion.div>
     )

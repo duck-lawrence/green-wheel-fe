@@ -628,7 +628,9 @@
         "can_not_cancel": "This rental contract can not be cancelled",
         "handover": "Handover",
         "return": "Return",
-        "return_comfirm": "Confirm return"
+        "return_comfirm": "Confirm return",
+        "confirm_change_vehicle": "Your previously reserved vehicle is no longer available. You can choose to switch to another car of the same model or request a refund.\nWe sincerely apologize for the inconvenience.",
+        "unavailable_vehicle_refund": "Your reserved vehicle is no longer available, and no suitable replacement is available. A refund will be issued.\nWe sincerely apologize for the inconvenience."
     },
     "invoice": {
         "not_found": "Invoice not found",
