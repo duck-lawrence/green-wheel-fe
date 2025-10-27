@@ -1,4 +1,14 @@
 {
+    "home": {
+        "welcome": "Chào mừng đến với Green Wheel",
+        "slogan": "Hành trình xanh – Tương lai tươi sáng",
+        "description": "Dịch vụ cho thuê xe tự lái chuyên nghiệp đáp ứng mọi nhu cầu di chuyển cá nhân của bạn",
+        "vehicle_rental": "Đặt xe",
+        "about": "Về chúng tôi",
+        "desc_first": "Thuê xe điện thông minh, tiết kiệm và thân thiện với môi trường.\nTrải nghiệm hành trình",
+        "desc_second": "xanh – an toàn – bền vững.",
+        "desc_third": ""
+    },
     "success": {
         "create": "Tạo thành công",
         "update": "Cập nhật thành công",

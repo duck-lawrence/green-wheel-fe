@@ -45,7 +45,7 @@ button {
     }
 
     .banner-background {
-        background-image: url("/images/test-bg.png");
+        background-image: url("/images/home-banner/Website.png");
         background-size: contain;
         background-position: top;
         background-repeat: no-repeat;
