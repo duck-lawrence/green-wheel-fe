@@ -26,12 +26,7 @@ export function SignatureSection({
             title={t("signature.signature")}
             sectionClassName={cn("mb-3", sectionClassName)}
         >
-            <div
-                className={cn(
-                    "flex flex-col sm:flex-row sm:justify-between gap-2 sm:px-16",
-                    childrenClassName
-                )}
-            >
+            <div className={cn("flex flex-col sm:flex-row sm:justify-around", childrenClassName)}>
                 <CheckboxStyled
                     isReadOnly={isReadOnly}
                     {...staffSign}

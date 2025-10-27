@@ -1,10 +1,10 @@
 "use client"
 import React from "react"
-import { InputStyled, TextareaStyled } from "@/components"
-import { Wrench, Money } from "@phosphor-icons/react"
+import { InputStyled } from "@/components"
+import { Wrench, Money, ClipboardText, ArrowUDownLeft } from "@phosphor-icons/react"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { formatCurrency } from "@/utils/helpers/currency"
-import { InvoiceItemType } from "@/constants/enum"
+import { InvoiceItemType, InvoiceStatus } from "@/constants/enum"
 import { useTranslation } from "react-i18next"
 
 export function InvoiceOtherForm({ invoice }: { invoice: InvoiceViewRes }) {
@@ -15,28 +15,59 @@ export function InvoiceOtherForm({ invoice }: { invoice: InvoiceViewRes }) {
         .reduce((sum, item) => sum + item.subTotal, 0)
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <InputStyled
-                label={t("rental_contract.incident_cause")}
+                label={t("invoice.incident_cause")}
                 value={invoice.notes}
                 startContent={<Wrench size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
                 className="sm:col-span-2"
             />
             <InputStyled
-                label={t("rental_contract.repair_rescue_cost")}
+                label={t("invoice.repair_rescue_cost")}
                 value={formatCurrency(totalOther)}
                 startContent={<Money size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
                 className="sm:col-span-2"
                 isIncludeTax={true}
             />
-            <TextareaStyled
-                label={t("rental_contract.note")}
+            {invoice.status === InvoiceStatus.Paid && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-3">
+                    <div></div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <InputStyled
+                            label={t("invoice.paid_amount")}
+                            value={formatCurrency(invoice.paidAmount)}
+                            startContent={
+                                <ClipboardText
+                                    size={22}
+                                    className="text-primary"
+                                    weight="duotone"
+                                />
+                            }
+                            variant="bordered"
+                        />
+                        <InputStyled
+                            label={t("invoice.return_amount")}
+                            value={formatCurrency(invoice.paidAmount - invoice.total)}
+                            startContent={
+                                <ArrowUDownLeft
+                                    size={22}
+                                    className="text-primary"
+                                    weight="duotone"
+                                />
+                            }
+                            variant="bordered"
+                        />
+                    </div>
+                </div>
+            )}
+            {/* <TextareaStyled
+                label={t("invoice.note")}
                 placeholder="Chi phí do khách hàng chịu (ngoài hợp đồng)."
                 variant="bordered"
                 className="sm:col-span-2"
-            />
+            /> */}
         </div>
     )
 }

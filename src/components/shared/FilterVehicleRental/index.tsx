@@ -17,6 +17,29 @@ import { useSearchVehicleModels } from "@/hooks/queries/useVehicleModel"
 import { SearchModelParams } from "@/models/vehicle/schema/request"
 import { debouncedWrapper } from "@/utils/helpers/axiosHelper"
 
+function calcDates() {
+    const zonedNow = fromDate(new Date(), DEFAULT_TIMEZONE)
+    const isAfterMax = zonedNow.hour + 3 >= MAX_HOUR
+    const isBeforeMin = zonedNow.hour + 3 < MIN_HOUR
+
+    const initialStart =
+        isBeforeMin || isAfterMax
+            ? zonedNow
+                  .add({ days: isAfterMax ? 1 : 0 })
+                  .set({ hour: MIN_HOUR, minute: 0, second: 0, millisecond: 0 })
+            : zonedNow.set({
+                  hour: zonedNow.hour + 3,
+                  minute: Math.ceil(zonedNow.minute / 5) * 5,
+                  second: 0,
+                  millisecond: 0
+              })
+
+    return {
+        minStartDate: initialStart,
+        minEndDate: initialStart.add({ days: 1 })
+    }
+}
+
 export function FilterVehicleRental({
     className = "",
     setIsSearching
@@ -25,24 +48,26 @@ export function FilterVehicleRental({
     setIsSearching: (isSearching: boolean) => void
 }) {
     const { t } = useTranslation()
-    const { formatDateTime, toZonedDateTime } = useDay({})
+    const { formatDateTime, toZonedDateTime, normalizeDateByMinuteStep } = useDay()
     // setup date time
-    const { minStartDate, minEndDate } = useMemo(() => {
-        const zonedNow = fromDate(new Date(), DEFAULT_TIMEZONE)
+    const [{ minStartDate, minEndDate }, setDates] = useState(() => calcDates())
+    useEffect(() => {
+        const updateDates = () => setDates(calcDates)
+        updateDates()
 
-        const isAfterMax = zonedNow.hour + 3 >= MAX_HOUR
-        const isBeforeMin = zonedNow.hour + 3 < MIN_HOUR
+        const now = new Date()
+        const delay = 60000 - (now.getSeconds() * 1000 + now.getMilliseconds())
 
-        const initialStart =
-            isBeforeMin || isAfterMax
-                ? zonedNow
-                      .add({ days: isAfterMax ? 1 : 0 })
-                      .set({ hour: MIN_HOUR, minute: 0, second: 0, millisecond: 0 })
-                : zonedNow.set({ hour: zonedNow.hour + 3, second: 0, millisecond: 0 })
-        return {
-            minStartDate: initialStart,
-            minEndDate: initialStart.add({ days: 1 })
-        }
+        const timeout = setTimeout(() => {
+            updateDates()
+            const interval = setInterval(updateDates, 60000)
+            // cleanup
+            cleanup = () => clearInterval(interval)
+        }, delay)
+
+        let cleanup = () => clearTimeout(timeout)
+
+        return () => cleanup()
     }, [])
 
     const {
@@ -123,14 +148,6 @@ export function FilterVehicleRental({
             ),
         [handleSearch, setIsSearching]
     )
-    useEffect(() => {
-        if (!filter.stationId) return
-        const run = async () => {
-            const { data } = await refetch()
-            setFilteredVehicleModels(data || [])
-        }
-        run()
-    }, [filter, refetch, setFilteredVehicleModels])
 
     // =========================
     // Declare formik
@@ -204,6 +221,23 @@ export function FilterVehicleRental({
             formik.setSubmitting(false)
         }
     })
+
+    useEffect(() => {
+        formik.validateField("startDate")
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [minStartDate])
+
+    useEffect(() => {
+        if (formik.errors.startDate || formik.errors.endDate || !filter.stationId) {
+            setFilteredVehicleModels([])
+            return
+        }
+        const run = async () => {
+            const { data } = await refetch()
+            setFilteredVehicleModels(data || [])
+        }
+        run()
+    }, [filter, formik.errors.endDate, formik.errors.startDate, refetch, setFilteredVehicleModels])
 
     // load filtered vehicle when enter page and if form is valid
     const hasLoadInit = useRef(false)
@@ -292,7 +326,15 @@ export function FilterVehicleRental({
                                     formik.setFieldValue("startDate", null)
                                     return
                                 }
-                                const date = formatDateTime({ date: value })
+
+                                const prevValue = toZonedDateTime(formik.values.startDate)
+                                const rounded = normalizeDateByMinuteStep(
+                                    value,
+                                    prevValue || undefined
+                                )
+
+                                const date = formatDateTime({ date: rounded })
+
                                 await formik.setFieldValue("startDate", date)
                                 formik.handleSubmit()
                             }}
@@ -313,7 +355,14 @@ export function FilterVehicleRental({
                                     formik.setFieldValue("endDate", null)
                                     return
                                 }
-                                const date = formatDateTime({ date: value })
+
+                                const prevValue = toZonedDateTime(formik.values.endDate)
+                                const rounded = normalizeDateByMinuteStep(
+                                    value,
+                                    prevValue || undefined
+                                )
+
+                                const date = formatDateTime({ date: rounded })
                                 await formik.setFieldValue("endDate", date)
                                 formik.handleSubmit()
                             }}

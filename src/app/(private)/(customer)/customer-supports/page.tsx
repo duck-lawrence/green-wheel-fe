@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next"
 
 export default function CustomerSupportsPage() {
     const { t } = useTranslation()
-    const [filter, setFilter] = useState<TicketFilterParams>({})
+    const [filter, setFilter] = useState<TicketFilterParams>({ type: TicketType.CustomerSupport })
     const [pagination, setPagination] = useState<PaginationParams>({ pageSize: 9 })
     const queryResult = useGetMyTickets({
         status: filter.status,

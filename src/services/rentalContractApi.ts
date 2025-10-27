@@ -1,4 +1,4 @@
-import { RentalContractStatus, VehicleStatus } from "@/constants/enum"
+import { RentalContractStatus, VehicleIssueResolutionOption } from "@/constants/enum"
 import { PaginationParams } from "@/models/common/request"
 import { PageResult } from "@/models/common/response"
 import {
@@ -68,15 +68,15 @@ export const rentalContractApi = {
             await axiosInstance.put(`/rental-contracts/${id}`)
         }),
 
-    acceptContract: ({ id }: { id: string }) =>
-        requestWrapper<void>(async () => {
-            await axiosInstance.put(`/rental-contracts/${id}/accept`)
-        }),
+    // acceptContract: ({ id }: { id: string }) =>
+    //     requestWrapper<void>(async () => {
+    //         await axiosInstance.put(`/rental-contracts/${id}/accept`)
+    //     }),
 
-    rejectContract: ({ id, vehicalStatus }: { id: string; vehicalStatus: VehicleStatus }) =>
-        requestWrapper<void>(async () => {
-            await axiosInstance.put(`/rental-contracts/${id}/reject`, { vehicalStatus })
-        }),
+    // rejectContract: ({ id, vehicalStatus }: { id: string; vehicalStatus: VehicleStatus }) =>
+    //     requestWrapper<void>(async () => {
+    //         await axiosInstance.put(`/rental-contracts/${id}/reject`, { vehicalStatus })
+    //     }),
 
     handover: ({ id, req }: { id: string; req: HandoverContractReq }) =>
         requestWrapper<void>(async () => {
@@ -96,6 +96,22 @@ export const rentalContractApi = {
 
     confirmContract: ({ id, req }: { id: string; req: ConfirmContractReq }) =>
         requestWrapper<void>(async () => {
-            await axiosInstance.put(`/rental-contracts/${id}/confirm`, { req })
+            await axiosInstance.put(`/rental-contracts/${id}/confirm`, req)
+        }),
+
+    changeVehicle: ({ id }: { id: string }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/rental-contracts/${id}/change-vehicle`)
+        }),
+
+    confirmChangeVehicle: ({
+        id,
+        req
+    }: {
+        id: string
+        req: { resolutionOption: VehicleIssueResolutionOption }
+    }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/rental-contracts/${id}/customer-confirm`, req)
         })
 }

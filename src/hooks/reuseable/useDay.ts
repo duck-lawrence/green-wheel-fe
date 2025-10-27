@@ -1,6 +1,6 @@
 import { DEFAULT_DATE_TIME_FORMAT, DEFAULT_TIMEZONE } from "@/constants/constants"
 import dayjs from "dayjs"
-import { DateValue, parseDate, parseZonedDateTime } from "@internationalized/date"
+import { DateValue, parseDate, parseZonedDateTime, ZonedDateTime } from "@internationalized/date"
 
 export const useDay = ({
     defaultFormat = DEFAULT_DATE_TIME_FORMAT,
@@ -55,5 +55,45 @@ export const useDay = ({
         return Math.ceil(dayjs(endDate).diff(dayjs(startDate), "day", true))
     }
 
-    return { toDate, toZonedDateTime, formatDateTime, getDiffDaysCeil }
+    const normalizeDateByMinuteStep = (
+        currentValue: DateValue,
+        prevValue?: DateValue,
+        step = 5
+    ) => {
+        if (!("minute" in currentValue)) return currentValue
+
+        const curr = currentValue as ZonedDateTime
+        const prev = prevValue as ZonedDateTime | undefined
+
+        let isIncreasing = true
+
+        if (prev) {
+            if (prev.minute == 0 && curr.minute == 59 && curr.hour == prev.hour) {
+                isIncreasing = false
+            } else if (prev.minute >= curr.minute) {
+                isIncreasing = false
+            }
+        }
+
+        let newMinute = isIncreasing
+            ? Math.ceil(curr.minute / step) * step
+            : Math.floor(curr.minute / step) * step
+
+        let newDate = curr
+
+        if (isIncreasing && newMinute === 60) {
+            newDate = newDate.add({ hours: 1 })
+            newMinute = 0
+        }
+
+        if (!isIncreasing && newMinute === 55) {
+            newDate = newDate.add({ hours: -1 })
+            newMinute = 60 - step
+        }
+
+        const rounded = newDate.set({ minute: newMinute, second: 0 })
+        return rounded
+    }
+
+    return { toDate, toZonedDateTime, formatDateTime, getDiffDaysCeil, normalizeDateByMinuteStep }
 }

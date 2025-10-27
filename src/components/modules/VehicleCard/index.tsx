@@ -1,12 +1,13 @@
 "use client"
 import React from "react"
-import { CardBody, CardFooter, Image } from "@heroui/react"
+import { CardBody, CardFooter } from "@heroui/react"
 import { BatteryChargingIcon, Couch, Users } from "@phosphor-icons/react"
 import { useTranslation } from "react-i18next"
 import { formatCurrency } from "@/utils/helpers/currency"
-import { CardStyled } from "@/components"
+import { CardStyled, ImageStyled } from "@/components"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { Icon } from "@iconify/react"
+import { FALLBACK_IMAGE_URL } from "@/constants/constants"
 
 // cắt chuỗi để chỉnh format cho đẹp =)
 // function splitTitle(title: string) {
@@ -23,13 +24,12 @@ export function CardVehicalStyled({ vehicleModel }: { vehicleModel: VehicleModel
     return (
         <CardStyled className="hover:shadow-xl interactive-scale" shadow="sm">
             <CardBody className="overflow-visible ">
-                <Image
+                <ImageStyled
                     alt={vehicleModel.name}
                     className="w-[300px] object-cover h-[280px] shadow-lg"
-                    radius="lg"
-                    shadow="sm"
-                    src={vehicleModel.imageUrl && vehicleModel.imageUrl}
-                    width="100%"
+                    src={vehicleModel.imageUrl || FALLBACK_IMAGE_URL}
+                    width={300}
+                    height={280}
                 />
                 {vehicleModel.availableVehicleCount === 0 && (
                     <span className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 text-xs rounded z-10">
@@ -45,7 +45,7 @@ export function CardVehicalStyled({ vehicleModel }: { vehicleModel: VehicleModel
                 {/* </div> */}
                 <hr className=" text-gray-300 border-1 w-full m-1" />
 
-                <div className=" flex items-center justify-center mt-2 mb-2    p-2 ">
+                <div className=" flex items-center justify-center mt-2 mb-2 p-2 ">
                     <span className="text-2xl font-bold text-green-600 whitespace-nowrap">
                         {formatCurrency(vehicleModel.costPerDay)} &nbsp;
                     </span>

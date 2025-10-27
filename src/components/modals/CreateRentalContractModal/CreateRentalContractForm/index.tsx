@@ -389,7 +389,7 @@ export const CreateRentalContractForm = ({
                                 variant={!formik.isValid || formik.isSubmitting ? "flat" : "solid"}
                                 className="px-8 py-2 rounded-md"
                             >
-                                {t("rental_contract.create")}
+                                {t("rental_contract.send_rental_request")}
                             </ButtonStyled>
                         </div>
                     </form>

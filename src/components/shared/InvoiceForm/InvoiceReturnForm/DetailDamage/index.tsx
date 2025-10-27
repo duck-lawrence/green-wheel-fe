@@ -47,15 +47,14 @@ export function DetailDamage({ invoiceItems }: { invoiceItems: InvoiceItemViewRe
                         {/* Mô tả */}
                         <p className="text-sm text-gray-600 dark:text-gray-300 flex items-start gap-2">
                             <Note size={16} className="text-teal-500 mt-[2px]" />
-                            {value.checklistItem?.notes ||
-                                t("rental_contract.no_detailed_description")}
+                            {value.checklistItem?.notes || t("invoice.no_detailed_description")}
                         </p>
                     </div>
                 ))
             ) : (
                 <div className="flex flex-col items-center justify-center py-6 text-gray-500 dark:text-gray-400">
                     <Wrench size={28} className="mb-2 text-gray-400" />
-                    <p className="italic">{t("rental_contract.no_damage_items")}</p>
+                    <p className="italic">{t("invoice.no_damage_items")}</p>
                 </div>
             )}
         </div>
