@@ -64,4 +64,5 @@ export type GetVehicleParams = {
     stationId?: string
     status?: number
     licensePlate?: string
+    modelId?: string
 }

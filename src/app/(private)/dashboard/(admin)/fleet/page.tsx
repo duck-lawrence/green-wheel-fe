@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { AutocompleteItem, type Selection } from "@heroui/react"
 import { useTranslation } from "react-i18next"
 import VehicleHorizontalCard from "@/components/modules/VehicleHorizontalCard"
@@ -19,9 +19,11 @@ import toast from "react-hot-toast"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
+import { useRouter } from "next/navigation"
 
 export default function AdminFleetPage() {
     const { t } = useTranslation()
+    const router = useRouter()
     // const [page, setPage] = useState(1)
     const [searchTerm, setSearchTerm] = useState("")
     // filter
@@ -157,6 +159,13 @@ export default function AdminFleetPage() {
 
     const isLoading = isModelsLoading || isModelsFetching
 
+    const handleVehicleSelect = useCallback(
+        (vehicleModel: VehicleModelViewRes) => {
+            router.push(`/dashboard/fleet/${vehicleModel.id}`)
+        },
+        [router]
+    )
+
     if (isGetVehicleSegmentsLoading || getVehicleSegmentsError) return <SpinnerStyled />
 
     return (
@@ -216,11 +225,9 @@ export default function AdminFleetPage() {
                     </div>
                     <div className="flex flex-col gap-3 sm:flex-row">
                         <ButtonStyled
-                            color="danger"
-                            radius="lg"
-                            className="h-12 px-5 font-semibold sm:ml-3 sm:shrink-0"
+                            className="btn-gradient btn-gradient:hover btn-gradient:active h-12 px-5 font-semibold text-white sm:ml-3 sm:shrink-0"
                         >
-                            {t("fleet.add_unit_button")}
+                            + {t("fleet.add_unit_button")}
                         </ButtonStyled>
                     </div>
                 </div>
@@ -238,6 +245,7 @@ export default function AdminFleetPage() {
                                 <VehicleHorizontalCard
                                     key={vehicle.id}
                                     vehicleModel={vehicle}
+                                    onSelect={handleVehicleSelect}
                                     readOnly={false}
                                 />
                             ))}
