@@ -11,7 +11,7 @@ import {
     MapPin,
     IconProps
 } from "@phosphor-icons/react"
-import { LogoStyle } from "@/components/styled"
+import { LogoStyled } from "@/components/styled"
 import { GREENWHEEL_ADDRESS, GREENWHEEL_EMAIL, GREENWHEEL_PHONE } from "@/constants/constants"
 
 export function Footer() {
@@ -24,7 +24,7 @@ export function Footer() {
                 {/* Logo + About */}
                 <div className="space-y-4">
                     <Link href="/" className="flex items-center gap-2">
-                        <LogoStyle />
+                        <LogoStyled />
                         <p className="font-semibold text-2xl text-primary">Green Wheel</p>
                     </Link>
 

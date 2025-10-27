@@ -7,7 +7,8 @@ import {
     FieldStyled,
     CreateRentalContractModal,
     TempInvoice,
-    AlertStyled
+    AlertStyled,
+    ImageStyled
 } from "@/components"
 import { GasPump, UsersFour, RoadHorizon, BatteryChargingIcon } from "@phosphor-icons/react"
 import { formatCurrency } from "@/utils/helpers/currency"
@@ -64,6 +65,10 @@ export default function VehicleDetailPage() {
             endDate: endDate || ""
         }
     })
+    const subImgUrls = useMemo(() => {
+        if (!model) return []
+        return [model.imageUrl, ...model.imageUrls].filter((img) => !!img)
+    }, [model])
 
     // redirect if filter not valid
     useEffect(() => {
@@ -220,7 +225,11 @@ export default function VehicleDetailPage() {
                 <section className="lg:col-span-8">
                     {/* Images */}
                     <div className="grid grid-rows-4 gap-3">
-                        <div className="row-span-3 aspect-[16/10] overflow-hidden rounded-2xl bg-neutral-200">
+                        <div
+                            className={`${
+                                subImgUrls.length > 0 ? "row-span-3" : "row-span-4"
+                            } aspect-[16/10] overflow-hidden rounded-2xl bg-neutral-200`}
+                        >
                             <motion.img
                                 key={active}
                                 initial={{ opacity: 0, scale: 1.02 }}
@@ -233,9 +242,9 @@ export default function VehicleDetailPage() {
                         </div>
 
                         {/* List sub img */}
-                        <div className="row-span-1 grid grid-cols-4 gap-3">
-                            {model.imageUrls &&
-                                [model.imageUrl, ...model.imageUrls].map((src, idx) => (
+                        {subImgUrls.length > 0 && (
+                            <div className="row-span-1 grid grid-cols-4 gap-3">
+                                {subImgUrls.map((src, idx) => (
                                     <button
                                         key={src}
                                         onClick={() => setActive(idx)}
@@ -243,14 +252,15 @@ export default function VehicleDetailPage() {
                                             active === idx ? "ring-emerald-500" : ""
                                         }`}
                                     >
-                                        <img
+                                        <ImageStyled
                                             src={src}
                                             alt={`thumb ${idx + 1}`}
                                             className="h-full w-full object-cover group-hover:scale-[1.02] transition"
                                         />
                                     </button>
                                 ))}
-                        </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Thông số */}
@@ -288,29 +298,6 @@ export default function VehicleDetailPage() {
                     <div className="rounded-2xl bg-white p-5 shadow-sm border border-neutral-100">
                         <h2 className="text-lg font-semibold">{t("invoice.temp")}</h2>
                         <div className="mt-4 grid gap-4">
-                            {/* <div className="grid grid-cols-2 gap-3">
-                                <FieldStyled
-                                    label={"Nhiên liệu"}
-                                    value="Điện"
-                                    icon={<GasPump size={18} weight="duotone" />}
-                                />
-                                <FieldStyled
-                                    label="Số chỗ"
-                                    value={`${model.seatingCapacity}`}
-                                    icon={<UsersFour size={18} />}
-                                />
-                                <FieldStyled
-                                    label="Hộp số"
-                                    value="Tự động"
-                                    icon={<SteeringWheel size={18} />}
-                                />
-                                <FieldStyled
-                                    label="Quãng đường"
-                                    value={`~${model.ecoRangeKm} km`}
-                                    icon={<RoadHorizon size={18} />}
-                                />
-                            </div> */}
-
                             {/* Đơn tạm tính */}
                             <TempInvoice
                                 model={model}
@@ -339,50 +326,6 @@ export default function VehicleDetailPage() {
                     </div>
                 </aside>
             </main>
-
-            {/* <section className="w-300 ml-10 flex flex-col pb-10">
-                <div className="flex items-end gap-250">
-                    <h2 className="text-2xl font-semibold">
-                        {t("vehicle_model.similar_vehicles")}
-                    </h2>
-                    <Link
-                        href="/vehicle-rental"
-                        className="text-sm text-emerald-700 hover:underline font-semibold"
-                    >
-                        {t("vehicle_model.view_all")}
-                    </Link>
-                </div>
-                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {similarVehicles.map((i) => (
-                        <Link
-                            key={i.id}
-                            href={`/vehicle-rental/detail/${i.id}`}
-                            className="group block rounded-2xl bg-white p-5 shadow-md hover:shadow-lg transition transform hover:scale-[1.02]"
-                        >
-                            <div className="aspect-[16/10] w-full overflow-hidden rounded-xl bg-neutral-200">
-                                <img
-                                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                    src={i.imageUrls && i.imageUrls[0]}
-                                    alt={i.name}
-                                />
-                            </div>
-
-                            <div className="mt-4 flex items-center justify-between">
-                                <div className="min-w-0">
-                                    <p className="font-semibold text-lg truncate">{i.name}</p>
-                                    <p className="text-sm text-neutral-500">
-                                        Điện • {i.seatingCapacity} chỗ • Tự động
-                                    </p>
-                                </div>
-                                <p className="text-emerald-600 font-semibold text-base whitespace-nowrap">
-                                    {formatCurrency(i.costPerDay)}{" "}
-                                    <span className="text-sm text-neutral-500">VND/Ngày</span>
-                                </p>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-            </section> */}
         </div>
     )
 }
