@@ -5,7 +5,7 @@ import { useFormik } from "formik"
 import * as Yup from "yup"
 import { useTranslation } from "react-i18next"
 import { usePathname, useRouter } from "next/navigation"
-import { ButtonStyled, ButtonToggleVisibility, InputStyled, LogoStyle } from "@/components"
+import { ButtonStyled, ButtonToggleVisibility, InputStyled, LogoStyled } from "@/components"
 import {
     useGetMe,
     useTokenStore,
@@ -87,7 +87,7 @@ export function LoginForm({ onSuccess }: { onSuccess?: () => void }) {
                 <div className="flex w-full flex-col gap-4">
                     <div className="flex flex-col items-center pb-6">
                         {/* <AcmeIcon size={60} /> */}
-                        <LogoStyle />
+                        <LogoStyled className="mb-3" />
                         <p className="text-xl font-medium">{t("login.welcome")}</p>
                         <p className="text-small text-default-500">{t("login.login_continue")}</p>
                     </div>

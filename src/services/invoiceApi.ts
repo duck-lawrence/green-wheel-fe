@@ -4,9 +4,9 @@ import axiosInstance from "@/utils/axios"
 import { requestWrapper } from "@/utils/helpers/axiosHelper"
 
 export const invoiceApi = {
-    createPayment: ({ invoiceId, req }: { invoiceId: string; req: PaymentReq }) =>
-        requestWrapper<{ link: string }>(async () => {
-            const res = await axiosInstance.put(`/invoices/${invoiceId}/payment`, req)
+    createPayment: ({ id, req }: { id: string; req: PaymentReq }) =>
+        requestWrapper<{ link: string } | undefined>(async () => {
+            const res = await axiosInstance.put(`/invoices/${id}/payment`, req)
             return res.data
         }),
 
@@ -19,5 +19,12 @@ export const invoiceApi = {
     create: (req: CreateInvoiceReq) =>
         requestWrapper<void>(async () => {
             await axiosInstance.post("/invoices", req)
+        }),
+
+    uploadImage: ({ id, formData }: { id: string; formData: FormData }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/invoices/${id}/image`, formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            })
         })
 }

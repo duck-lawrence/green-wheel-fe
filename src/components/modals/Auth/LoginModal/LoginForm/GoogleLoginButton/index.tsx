@@ -42,8 +42,7 @@ export function GoogleLoginButton({
     return (
         <div
             id="google-signin-button"
-            className="overflow-hidden border-primary border-2 rounded-[12px] interactive-scale
-                    transform transition-transform duration-150 active:scale-95 ease-in-out"
+            className="overflow-hidden border-primary border-2 rounded-[12px] interactive-scale"
         ></div>
     )
 }

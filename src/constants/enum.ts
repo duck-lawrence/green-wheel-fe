@@ -44,7 +44,13 @@ export enum RentalContractStatus {
     Returned = 3,
     Completed = 4,
     Cancelled = 5,
-    UnavailableVehicle = 6
+    UnavailableVehicle = 6,
+    RefundPending = 7
+}
+
+export enum VehicleIssueResolutionOption {
+    Refund = 0,
+    ChangeVehicle = 1
 }
 
 export enum DamageStatus {

@@ -70,7 +70,7 @@ export default function TicketManagement({
                             }
                         })
                     }}
-                    className="max-w-48"
+                    className="max-w-60"
                 />
                 {createType !== undefined && (
                     <>
@@ -96,7 +96,7 @@ export default function TicketManagement({
             {queryResult.isLoading ? (
                 <Spinner className="md:min-w-[60rem]" />
             ) : (
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(17rem,1fr))] space-y-6">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(17rem,1fr))] gap-5">
                     {(queryResult.data?.items ?? []).map((item) => (
                         <TicketCard
                             key={item.id}

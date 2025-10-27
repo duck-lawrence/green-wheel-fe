@@ -7,12 +7,13 @@ export type InvoiceViewRes = {
     subtotal: number
     tax: number
     total: number
-    payAmount: number
-    paymentMentod?: PaymentMethod
+    paidAmount: number
+    paymentMethod?: PaymentMethod
     notes: string
     status: InvoiceStatus
     type: InvoiceType
     paidAt?: string
+    imageUrl?: string
     invoiceItems: InvoiceItemViewRes[]
     deposit?: DepositViewRes
 }

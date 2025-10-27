@@ -44,7 +44,7 @@ export function TicketCard({
                 pagination={pagination}
             />
             <CardStyled
-                className="w-[17rem] max-w-[17rem] max-h-fit interactive-scale px-2 py-0"
+                className="w-full max-w-full max-h-fit interactive-scale px-2 py-0"
                 onPress={onOpen}
                 isPressable
             >

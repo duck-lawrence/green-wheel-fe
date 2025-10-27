@@ -7,6 +7,8 @@ export type VehicleChecklistViewRes = {
     type: VehicleChecklistType
     isSignedByStaff: boolean
     isSignedByCustomer: boolean
+    maintainedUntil?: string
+
     staff: UserProfileViewRes
     customer?: UserProfileViewRes
     vehicle: VehicleViewRes
