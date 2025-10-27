@@ -1,16 +1,21 @@
 import {
     CreateVehicleReq,
     GetVehicleParams,
-    UpdateVehicleReq
+    UpdateVehicleReq,
 } from "@/models/vehicle/schema/request"
 import { VehicleViewRes } from "@/models/vehicle/schema/response"
+import { PaginationParams } from "@/models/common/request"
+import { PageResult } from "@/models/common/response"
 import axiosInstance from "@/utils/axios"
 import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 
 export const vehicleApi = {
-    getAll: (params: GetVehicleParams) =>
-        requestWrapper<VehicleViewRes[]>(async () => {
-            const query = buildQueryParams(params, true)
+    getAll: ({ params = {}, pagination = {} }: { params?: GetVehicleParams; pagination?: PaginationParams } = {}) =>
+        requestWrapper<PageResult<VehicleViewRes>>(async () => {
+            const query = {
+                ...buildQueryParams(params),
+                ...buildQueryParams(pagination),
+            }
             const res = await axiosInstance.get("/vehicles", { params: query })
             return res.data
         }),
