@@ -34,14 +34,9 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                 />
             )}
             <div className={`${hasImage ? "col-span-3" : "col-span-4"}`}>
-                {invoice.status !== InvoiceStatus.Paid && invoice.total < 0 && (
-                    <AlertStyled
-                        color={invoice.total >= 0 ? "warning" : "default"}
-                        className="mb-3 mt-[-0.75rem] max-w-fit"
-                    >
-                        {invoice.total >= 0
-                            ? t("invoice.penalty_warning")
-                            : t("invoice.update_bank_info")}
+                {invoice.status !== InvoiceStatus.Paid && invoice.total >= 0 && (
+                    <AlertStyled color="warning" className="mb-3 mt-[-0.75rem] max-w-fit">
+                        {t("invoice.penalty_warning")}
                     </AlertStyled>
                 )}
                 <div className={`grid grid-cols-1 ${hasImage ? "col-span-3" : ""} gap-3 mb-3`}>

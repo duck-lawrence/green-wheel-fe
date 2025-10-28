@@ -6,6 +6,7 @@ import { VehicleChecklistItemViewRes } from "@/models/checklist/schema/response"
 import { DamageStatusLabels } from "@/constants/labels"
 import { TextareaStyled, ChecklistItemUploader, EnumPicker, TableStyled } from "@/components/"
 import { DamageStatus, VehicleChecklistType } from "@/constants/enum"
+import { formatCurrencyWithSymbol } from "@/utils/helpers/currency"
 
 export function TableCheckListItems({
     isEditable = false,
@@ -53,8 +54,13 @@ export function TableCheckListItems({
                                     </TableCell>
 
                                     {/* Component name */}
-                                    <TableCell className="text-center align-top text-gray-800 font-semibold">
-                                        {item.component.name}
+                                    <TableCell className="text-center align-top">
+                                        <div className="text-gray-800 font-semibold">
+                                            {item.component.name}
+                                        </div>
+                                        <div className="text-gray-800">
+                                            {formatCurrencyWithSymbol(item.component.damageFee)}
+                                        </div>
                                     </TableCell>
 
                                     {/* Damage Status */}

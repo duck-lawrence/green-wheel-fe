@@ -139,7 +139,7 @@
 
         "citizen_identity": "Cititzen Identity",
         "upload_citizen_identity": "Upload Cititzen Identity",
-        "please_upload_citizen_identity": "Please upload your Cititzen Identity",
+        "please_upload_citizen_identity": "Please upload your Cititzen Identity to booking",
         "citizen_identity_number_require": "Cititzen Identity number is required",
         "citizen_identity_invalid": "Cititzen Identity number is invalid",
         "citizen_identity_expired_time_require": "Cititzen Identity expired time is required",
@@ -149,7 +149,7 @@
 
         "driver_license": "Driver License",
         "upload_driver_license": "Upload Driver License",
-        "please_upload_driver_license": "Please upload your Driver License",
+        "please_upload_driver_license": "Please upload your Driver License to booking",
         "class": "Class",
         "driver_license_class_require": "Driver License class is required",
         "driver_license_number_require": "Driver License number is required",
@@ -179,12 +179,12 @@
         "user_not_found": "User not found",
         "account_information": "Account information",
         "profile": "Profile",
-        "rental_contracts": "Rental Contract",
+        "rental_bookings": "Rental Booking",
         "my_profile": "My Profile",
         "create_staff": "Create new staff",
         "create_anonymous": "Create anonymous user",
         "edit_information": "Edit Information",
-        "enter_required_info": "Please enter required information in profile to continue booking"
+        "enter_required_info": "Please complete your profile with your citizen ID, driver’s license, phone number, and date of birth to continue booking."
     },
     "login": {
         "welcome": "Welcome Back",
@@ -209,7 +209,7 @@
         "logout": "Logout",
         "staff_management": "Staff Management",
         "staff_profile": "Profile",
-        "staff_contracts": "Contracts"
+        "staff_contracts": "Rental Booking"
     },
     "table": {
         "order": "Order",
@@ -484,7 +484,7 @@
     "staff": {
         "sidebar_dashboard": "Dash Board",
         "sidebar_vehicle_checklists": "Checklists",
-        "sidebar_contracts": "Contracts",
+        "sidebar_bookings": "Rental Bookings",
         "sidebar_test": "Test",
         "sidebar_verify_customer": "Customer Verification",
         "sidebar_payments": "On-site Payments",
@@ -539,7 +539,7 @@
         "report_form_validation_description_max": "Description must be 1000 characters or less.",
         "search_success": "Search success",
         "search_failed": "Search failed",
-        "contract_filter": "Contract Filters",
+        "booking_filter": "Booking Filters",
         "user_filter_title": "User Filter",
         "user_filter_name_placeholder": "Enter full name",
         "user_filter_phone_placeholder": "Enter phone number",
@@ -595,7 +595,7 @@
     },
     "rental_contract": {
         "id": "Contract ID",
-        "back_to_rental_contract": "Back to rental contract",
+        "back_to_rental_contract": "Back to Rental Booking",
         "please_login": "Please login to rent",
         "rent": "Rent this vehicle",
         "send_rental_request": "Send rental request",
@@ -606,9 +606,9 @@
         "accept": "Accept",
         "reject": "Reject",
         "cancel": "Cancel",
-        "rental_contract": "Rental contract",
-        "rental_contract_details_description": "Detailed information about the customer's electric vehicle rental contract.",
-        "rental_contract_information": "Rental contract information",
+        "rental_contract": "Rental Booking",
+        "rental_contract_details_description": "Detailed information about the customer's electric vehicle Rental Booking.",
+        "rental_contract_information": "Rental Booking information",
         "rental_date": "Rental date",
         "contract_code": "Contract code",
         "contract_status": "Contract status",
@@ -626,9 +626,9 @@
         "payment_invoice_list": "Payment invoice list",
         "create_at": "Created at",
         "user_already_have_contract": "You can only have one pending or active contract at a time",
-        "not_found": "Rental contract not found",
-        "already_process": "This rental contract already processes",
-        "can_not_cancel": "This rental contract can not be cancelled",
+        "not_found": "Rental Booking not found",
+        "already_process": "This Rental Booking already processes",
+        "can_not_cancel": "This Rental Booking can not be cancelled",
         "handover": "Handover",
         "return": "Return",
         "return_comfirm": "Confirm return",
@@ -665,7 +665,7 @@
         "no_detailed_description": "No detailed description.",
         "fees_include_tax": "Fees marked with * include tax",
         "penalty_warning": "Please be aware that the deposit is non-refundable if any penalty fees are incurred",
-        "update_bank_info": "Please update your bank account in your profile to receive the refund, or visit our station to get it in cash.",
+        "visit_station_to_get_refund": "Please visit our station to get the refund in cash",
         "create_title": "CREATE INVOICE",
         "unit_price": "Unit price",
         "unit_price_require": "Unit price is required",

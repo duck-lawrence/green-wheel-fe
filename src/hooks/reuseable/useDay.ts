@@ -13,6 +13,7 @@ export const useDay = ({
         if (!dateTime) return null
 
         if (typeof dateTime === "string") {
+            dateTime = dayjs(dateTime).format(defaultFormat)
             dateTime = dateTime.split("+")[0]
         }
 

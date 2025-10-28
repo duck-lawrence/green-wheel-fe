@@ -3,7 +3,7 @@ import React from "react"
 import { motion } from "framer-motion"
 import { ButtonStyled } from "@/components"
 import { Handshake, Leaf, Lightning } from "@phosphor-icons/react"
-import { useTypewriter } from "@/utils/helpers/useTypewriter"
+import { useTypewriter } from "@/hooks/reuseable/useTypewriter"
 import { Image } from "@heroui/react"
 import Link from "next/link"
 import { useTranslation } from "react-i18next"
@@ -78,9 +78,9 @@ export default function AboutPage() {
                             <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
                                 {t("about_us.green_wheel_mission")}
                             </p>
-                            <ButtonStyled color="primary" variant="solid" className="btn-gradient">
+                            {/* <ButtonStyled color="primary" variant="solid" className="btn-gradient">
                                 {t("about_us.learn_more")}
-                            </ButtonStyled>
+                            </ButtonStyled> */}
                         </motion.div>
 
                         <motion.div

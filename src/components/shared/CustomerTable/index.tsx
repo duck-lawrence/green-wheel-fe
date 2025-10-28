@@ -6,7 +6,7 @@ import { EyeIcon, Paperclip } from "@phosphor-icons/react"
 import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 
 import { UserProfileViewRes } from "@/models/user/schema/response"
-import { useName } from "@/hooks"
+import { useUserHelper } from "@/hooks"
 import { ButtonIconStyled, TableStyled } from "@/components"
 
 type CustomerTableProps = {
@@ -17,7 +17,7 @@ type CustomerTableProps = {
 
 export function CustomerTable({ users, onPreviewDocument, onEditUser }: CustomerTableProps) {
     const { t } = useTranslation()
-    const { toFullName } = useName()
+    const { toFullName } = useUserHelper()
 
     const tableRows = useMemo(() => {
         return users.map((user) => {

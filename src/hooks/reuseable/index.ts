@@ -1,4 +1,5 @@
 export * from "./useDay"
 export * from "./useImageUploadModal"
-export * from "./useName"
+export * from "./useUserHelper"
 export * from "./useNumber"
+export * from "./useTypewriter"

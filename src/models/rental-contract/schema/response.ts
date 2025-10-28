@@ -19,7 +19,7 @@ export type RentalContractViewRes = {
     isSignedByCustomer: boolean
     status: RentalContractStatus
 
-    vehicle: VehicleViewRes
+    vehicle?: VehicleViewRes
     customer: UserProfileViewRes
     station: StationViewRes
     handoverStaff?: UserProfileViewRes

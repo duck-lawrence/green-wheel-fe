@@ -80,9 +80,9 @@ export function ProfileDropdown() {
 
     const customerItems: DropdownLinkItem[] = [
         {
-            key: "rental_contracts",
-            href: "/rental-contracts",
-            label: t("user.rental_contracts")
+            key: "rental_bookings",
+            href: "/rental-bookings",
+            label: t("user.rental_bookings")
         },
         {
             key: "customer_support",

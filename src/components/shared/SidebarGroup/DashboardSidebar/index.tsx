@@ -13,9 +13,9 @@ export function DashboardSidebar({ className }: { className?: string }) {
 
     const staffTabs: SidebarItem[] = [
         {
-            key: "/dashboard/rental-contracts",
-            label: t("staff.sidebar_contracts"),
-            href: "/dashboard/rental-contracts"
+            key: "/dashboard/rental-bookings",
+            label: t("staff.sidebar_bookings"),
+            href: "/dashboard/rental-bookings"
         },
         {
             key: "/dashboard/vehicle-checklists",

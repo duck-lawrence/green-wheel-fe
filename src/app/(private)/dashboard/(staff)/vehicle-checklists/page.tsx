@@ -5,7 +5,7 @@ import { EnumPicker, TableStyled } from "@/components"
 import { useTranslation } from "react-i18next"
 import { Spinner, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { useRouter } from "next/navigation"
-import { useGetAllVehicleChecklists, useName } from "@/hooks"
+import { useGetAllVehicleChecklists, useUserHelper } from "@/hooks"
 import { VehicleChecklistType } from "@/constants/enum"
 import { VehicleChecklistTypeLabels } from "@/constants/labels"
 import { GetAllVehicleChecklistParams } from "@/models/checklist/schema/request"
@@ -13,7 +13,7 @@ import { GetAllVehicleChecklistParams } from "@/models/checklist/schema/request"
 export default function VehicleChecklistPage() {
     const { t } = useTranslation()
     const router = useRouter()
-    const { toFullName } = useName()
+    const { toFullName } = useUserHelper()
     const [filters, setFilter] = useState<GetAllVehicleChecklistParams>({})
 
     const {
