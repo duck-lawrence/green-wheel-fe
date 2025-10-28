@@ -1,7 +1,6 @@
 "use client"
-// import BrandPicker from "@/components/modules/UserItem/BrandPicker"
 import React, { useEffect, useState } from "react"
-import { EnumPicker, PaginationStyled, TableStyled } from "@/components"
+import { EnumPicker, PaginationStyled, StepContract, TableStyled } from "@/components"
 import { useTranslation } from "react-i18next"
 import { Spinner, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { useRouter } from "next/navigation"
@@ -13,6 +12,7 @@ import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { RentalContractStatusLabels } from "@/constants/labels"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { PaginationParams } from "@/models/common/request"
+import { RentalContractStatusColorMap } from "@/constants/colorMap"
 
 export default function RentalContractPage() {
     const { t } = useTranslation()
@@ -34,6 +34,17 @@ export default function RentalContractPage() {
             toast.error(translateWithFallback(t, backendErr.detail))
         }
     }, [contractsError, t])
+
+    const status =
+        data?.items.find((item) =>
+            [
+                RentalContractStatus.RequestPending,
+                RentalContractStatus.PaymentPending,
+                RentalContractStatus.Active,
+                RentalContractStatus.Returned,
+                RentalContractStatus.RefundPending
+            ].includes(item.status)
+        )?.status ?? undefined
 
     return (
         <div className="py-8 md:px-12 max-w-screen shadow-2xs rounded-2xl bg-white text-center">
@@ -86,6 +97,10 @@ export default function RentalContractPage() {
                 </form> */}
             </div>
 
+            <div className="flex justify-center ml-[6.5rem]">
+                <StepContract status={status!} />
+            </div>
+
             {isContractsLoading ? (
                 <Spinner className="md:min-w-[60rem]" />
             ) : (
@@ -126,10 +141,17 @@ export default function RentalContractPage() {
                                         {item.endDate && formatDateTime({ date: item.endDate })}
                                     </TableCell>
                                     <TableCell className="text-center text-gray-600">
-                                        {item.station.name}
+                                        <span>{item.station.name}</span>
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        <span className="py-1 rounded-full text-xs">
+                                        <span
+                                            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold 
+                                                        ${
+                                                            RentalContractStatusColorMap[
+                                                                item.status
+                                                            ]
+                                                        }`}
+                                        >
                                             {RentalContractStatusLabels[item.status]}
                                         </span>
                                     </TableCell>

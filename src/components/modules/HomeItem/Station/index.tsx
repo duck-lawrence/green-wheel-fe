@@ -4,30 +4,26 @@ import { MapPin } from "lucide-react"
 import { motion } from "framer-motion"
 import React from "react"
 import { ImageStyled } from "@/components/styled"
+import { StationViewRes } from "@/models/station/schema/response"
 
-const stations = [
-    {
-        id: 1,
-        name: "Trạm A - Green Central",
-        address: "123 Nguyễn Văn Linh, Q7, TP.HCM",
-        img: "/images/station1.jpg"
-    },
-    {
-        id: 2,
-        name: "Trạm B - Eco North",
-        address: "45 Lê Duẩn, Q1, TP.HCM",
-        img: "/images/station1.jpg"
-    }
-]
+export function Stations({ stations }: { stations: StationViewRes[] }) {
+    const picture_1 = "/images/station1.jpg"
+    const picture_2 = "/images/bg-2.jpg"
 
-export function Stations() {
+    const newStation = stations.map((item) => ({
+        id: item.id,
+        name: item.name,
+        address: item.address,
+        img: item.name.toLowerCase() === "trạm a" ? picture_1 : picture_2
+    }))
+
     return (
         <motion.section
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="py-24 text-center overflow-hidden relative bg-transparent"
+            className="py-24  text-center overflow-hidden relative bg-transparent"
         >
             <style>{`
                 @keyframes flow {
@@ -68,10 +64,10 @@ export function Stations() {
                 </div>
             </motion.h2>
 
-            {/* Dòng năng lượng ngang nối 2 station */}
+            {/* Dòng ngang nối 2 station */}
             <div
                 className="hidden md:block absolute left-1/2 top-[58%] -translate-x-1/2 
-                           w-[60%] h-[4px] rounded-full 
+                           w-[55%] h-[4px] rounded-full 
                            bg-gradient-to-r from-primary via-teal-400 to-green-400 
                            bg-[length:200%] animate-[flow_3s_linear_infinite] opacity-40"
             />
@@ -86,8 +82,8 @@ export function Stations() {
             </div>
 
             {/* Grid stations */}
-            <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto px-6">
-                {stations.map((s, i) => (
+            <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto px-6 ">
+                {newStation.map((s, i) => (
                     <motion.div
                         key={s.id}
                         initial={{ opacity: 0, y: 80 }}
@@ -96,7 +92,7 @@ export function Stations() {
                         viewport={{ once: true, amount: 0.3 }}
                         whileHover={{ scale: 1.04, y: -8 }}
                         className="relative bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl 
-                                   transition-all duration-30 border border-gray-100 group z-10"
+                                   transition-all duration-30 border border-gray-100 group z-10 "
                     >
                         {/* Ảnh */}
                         <div className="relative w-full h-56 md:h-64 overflow-hidden">

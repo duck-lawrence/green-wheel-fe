@@ -14,12 +14,14 @@ import { slides } from "@/../public/cars"
 import { useTranslation } from "react-i18next"
 import { useRouter, useSearchParams } from "next/navigation"
 import toast from "react-hot-toast"
+import { useGetAllStations } from "@/hooks"
 
 export default function HomePage() {
     const { t } = useTranslation()
     const router = useRouter()
     const params = useSearchParams()
     const hasShownToast = useRef(false)
+    const { data: station } = useGetAllStations()
 
     useEffect(() => {
         if (hasShownToast.current) return
@@ -55,7 +57,7 @@ export default function HomePage() {
 
             {/* Stations */}
             <section className="bg-gradient-to-b from-green-100/70 via-white/80 to-transparent py-24">
-                <Stations />
+                <Stations stations={station === undefined ? [] : station} />
             </section>
 
             {/* Experience + Review */}

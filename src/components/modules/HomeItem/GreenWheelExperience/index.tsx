@@ -145,10 +145,10 @@ function StepItem({ exp, isLeft }: { exp: any; isLeft: boolean }) {
         if (inView) controls.start("visible")
     }, [inView, controls])
 
-    const cardVariants = {
-        hidden: { opacity: 0, x: isLeft ? -120 : 120 },
-        visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } }
-    }
+    // const cardVariants = {
+    //     hidden: { opacity: 0, x: isLeft ? -120 : 120 },
+    //     visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } }
+    // }
 
     const circleVariants = {
         hidden: { scale: 0.8, opacity: 0 },
@@ -160,7 +160,10 @@ function StepItem({ exp, isLeft }: { exp: any; isLeft: boolean }) {
             ref={ref}
             initial="hidden"
             animate={controls}
-            variants={cardVariants}
+            variants={{
+                hidden: { opacity: 0, x: isLeft ? -120 : 120 },
+                visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } }
+            }}
             className="relative md:grid md:grid-cols-2 md:gap-12"
         >
             {/* LEFT */}
