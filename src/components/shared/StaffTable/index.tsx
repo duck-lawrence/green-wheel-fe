@@ -6,8 +6,9 @@ import { Paperclip } from "@phosphor-icons/react"
 import { Skeleton, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { EyeIcon } from "lucide-react"
-import { TableStyled, ButtonIconStyled } from "@/components"
+import { TableStyled, ButtonIconStyled, AvatarStyled } from "@/components"
 import { useUserHelper } from "@/hooks"
+import { DEFAULT_AVATAR_URL } from "@/constants/constants"
 
 type DocumentKey = "citizen" | "driver"
 
@@ -89,11 +90,19 @@ export function StaffTable({
                     className="border-b border-gray-100 last:border-0 transition-colors hover:bg-gray-50"
                 >
                     <TableCell className="text-center">
-                        <div className="flex flex-col">
-                            <span className="font-semibold text-slate-900">{displayName}</span>
-                            <span className="text-sm text-slate-500">
-                                {item.email ?? t("staff_management.no_email")}
-                            </span>
+                        <div className="flex items-center justify-center gap-3">
+                            <AvatarStyled
+                                src={item.avatarUrl || DEFAULT_AVATAR_URL}
+                                name={displayName || item.email || ""}
+                                className="h-10 w-10 text-sm"
+                                radius="full"
+                            />
+                            <div className="flex flex-col items-start text-left">
+                                <span className="font-semibold text-slate-900">{displayName}</span>
+                                <span className="text-sm text-slate-500">
+                                    {item.email ?? t("staff_management.no_email")}
+                                </span>
+                            </div>
                         </div>
                     </TableCell>
                     <TableCell className="text-center text-sm text-slate-700">

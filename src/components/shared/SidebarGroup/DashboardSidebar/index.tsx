@@ -47,7 +47,7 @@ export function DashboardSidebar({ className }: { className?: string }) {
         },
         {
             key: "/dashboard/vehicle-management",
-            label: t("admin.sidebar_vehicle_management", "Vehicle management"),
+            label: t("admin.sidebar_vehicle_management"),
             href: "/dashboard/vehicle-management"
         },
         {

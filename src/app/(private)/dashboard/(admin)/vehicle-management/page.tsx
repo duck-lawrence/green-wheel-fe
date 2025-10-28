@@ -1,12 +1,13 @@
 "use client"
-import React, { useCallback, useEffect, useMemo, useState } from "react"
+import React, { useCallback, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import type { Selection } from "@heroui/react"
-import { FunnelSimple, MagnifyingGlass } from "@phosphor-icons/react"
+import { FunnelSimple } from "@phosphor-icons/react"
 import {
     ButtonStyled,
+    ButtonIconStyled,
     FilterTypeOption,
     FilterTypeStyle,
     InputStyled,
@@ -17,8 +18,9 @@ import {
     ModalStyled,
     PaginationStyled,
     TableVehicleManagement,
-    useModalDisclosure
+    useModalDisclosure,
 } from "@/components"
+import { SearchIcon, Plus } from "lucide-react"
 import { VehicleStatus } from "@/constants/enum"
 import { VehicleModelViewRes, VehicleViewRes } from "@/models/vehicle/schema/response"
 import {
@@ -33,8 +35,9 @@ import { VehicleCreateModal, VehicleEditModal } from "@/components/modals/Vehicl
 import {
     CreateVehicleReq,
     GetVehicleParams,
-    UpdateVehicleReq
+    UpdateVehicleReq,
 } from "@/models/vehicle/schema/request"
+import { PaginationParams } from "@/models/common/request"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 type VehicleWithStatus = VehicleViewRes & { status?: VehicleStatus; modelId?: string }
 type VehicleFilterFormValues = {
@@ -48,14 +51,15 @@ type VehicleEditFormValues = {
     modelId: string
     status: string | null
 }
-const PAGE_SIZE = 10
 const VEHICLE_STATUS_VALUES = Object.values(VehicleStatus).filter(
     (value): value is VehicleStatus => typeof value === "number"
 )
 export default function AdminVehicleManagementPage() {
     const { t } = useTranslation()
     const [filters, setFilters] = useState<GetVehicleParams>({})
-    const [page, setPage] = useState(1)
+    const [pagination, setPagination] = useState<PaginationParams>({
+        pageSize: 10,
+    })
     const [vehicleToEdit, setVehicleToEdit] = useState<VehicleWithStatus | null>(null)
     const [vehicleToDelete, setVehicleToDelete] = useState<VehicleWithStatus | null>(null)
     const {
@@ -106,16 +110,21 @@ export default function AdminVehicleManagementPage() {
             }),
         [t]
     )
-    const { data: vehiclesData = [], isFetching: isFetchingVehicles } = useGetAllVehicles({
+    const {
+        data: vehiclesPage,
+        isFetching: isFetchingVehicles,
+    } = useGetAllVehicles({
         params: filters,
-        enabled: true
+        pagination,
+        enabled: true,
     })
     const vehicles = useMemo<VehicleWithStatus[]>(() => {
-        return (vehiclesData as VehicleWithStatus[]).map((vehicle) => ({
+        const items = (vehiclesPage?.items ?? []) as VehicleWithStatus[]
+        return items.map((vehicle) => ({
             ...vehicle,
-            modelId: vehicle.modelId ?? vehicle.model?.id
+            modelId: vehicle.modelId ?? vehicle.model?.id,
         }))
-    }, [vehiclesData])
+    }, [vehiclesPage])
     const { data: vehicleModels = [], isFetching: isFetchingVehicleModels } =
         useGetAllVehicleModels({ query: {} })
     const vehicleModelsById = useMemo(() => {
@@ -141,38 +150,8 @@ export default function AdminVehicleManagementPage() {
     //             label: [model.brand?.name, model.name].filter(Boolean).join(" ") || model.name
     //         })),
     // )
-    const filteredVehicles = useMemo(() => {
-        return vehicles.filter((vehicle) => {
-            if (filters.licensePlate) {
-                const plate = filters.licensePlate.toLowerCase()
-                if (!vehicle.licensePlate.toLowerCase().includes(plate)) {
-                    return false
-                }
-            }
-            if (filters.stationId && vehicle.stationId !== filters.stationId) {
-                return false
-            }
-            if (filters.status != null && vehicle.status !== filters.status) {
-                return false
-            }
-            return true
-        })
-    }, [filters, vehicles])
-    const totalItems = filteredVehicles.length
-    const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE))
-    const currentPage = Math.min(page, totalPages)
-    const paginatedVehicles = useMemo(() => {
-        const start = (currentPage - 1) * PAGE_SIZE
-        return filteredVehicles.slice(start, start + PAGE_SIZE)
-    }, [currentPage, filteredVehicles])
-    useEffect(() => {
-        setPage(1)
-    }, [filters])
-    useEffect(() => {
-        if (page !== currentPage) {
-            setPage(currentPage)
-        }
-    }, [currentPage, page])
+    const totalPages = vehiclesPage?.totalPages ?? 1
+    const currentPage = vehiclesPage?.pageNumber ?? pagination.pageNumber ?? 1
     const filterValidationSchema = useMemo(() => {
         return Yup.object({
             licensePlate: Yup.string().trim(),
@@ -197,6 +176,10 @@ export default function AdminVehicleManagementPage() {
             nextFilters.status = Number(values.status) as VehicleStatus
         }
         setFilters(nextFilters)
+        setPagination((prev) => ({
+            ...prev,
+            pageNumber: 1,
+        }))
     }, [])
     const filterFormik = useFormik<VehicleFilterFormValues>({
         initialValues: {
@@ -233,7 +216,7 @@ export default function AdminVehicleManagementPage() {
     const updateVehicleMutation = useUpdateVehicle()
     const deleteVehicleMutation = useDeleteVehicle()
     const createValidationSchema = useMemo(() => {
-        const requiredMsg = t("validation.required")
+        const requiredMsg = translateWithFallback(t, "validation.required", "Required")
         return Yup.object({
             licensePlate: Yup.string().trim().required(requiredMsg),
             stationId: Yup.string().trim().required(requiredMsg),
@@ -261,19 +244,20 @@ export default function AdminVehicleManagementPage() {
             })
         }
     })
-    const editValidationSchema = useMemo(() => {
-        const requiredMsg = t("validation.required")
-        return Yup.object({
-            licensePlate: Yup.string().trim().required(requiredMsg),
-            stationId: Yup.string().trim().required(requiredMsg),
-            modelId: Yup.string().trim().required(requiredMsg),
-            status: Yup.string()
-                .nullable()
-                .oneOf(
-                    VEHICLE_STATUS_VALUES.map((status) => status.toString()).concat([null as any])
-                )
-        })
-    }, [t])
+const editValidationSchema = useMemo(() => {
+    const requiredMsg = translateWithFallback(t, "validation.required", "Required")
+
+    return Yup.object({
+        licensePlate: Yup.string().trim().required(requiredMsg),
+        stationId: Yup.string().trim().required(requiredMsg),
+        modelId: Yup.string().trim().required(requiredMsg),
+        status: Yup.string()
+            .nullable()
+            .oneOf(
+                VEHICLE_STATUS_VALUES.map((status) => status.toString()).concat([null as any])
+            )
+    })
+}, [t])
     const editFormik = useFormik<VehicleEditFormValues>({
         enableReinitialize: true,
         initialValues: {
@@ -360,7 +344,7 @@ export default function AdminVehicleManagementPage() {
         })
     }, [deleteVehicleMutation, onDeleteClose, vehicleToDelete])
     return (
-        <div className="rounded-3xl border border-slate-200 bg-white px-6 py-8 shadow-sm space-y-6">
+        <div className="rounded-3xl border border-slate-200 bg-white px-6 py-8 shadow-sm space-y-6 mb-12">
             <header className="space-y-2">
                 <h1 className="text-3xl font-bold text-slate-900">
                     {t("admin.vehicle_management_title")}
@@ -416,28 +400,28 @@ export default function AdminVehicleManagementPage() {
                             ))}
                         </FilterTypeStyle>
                         <div className="flex w-full flex-col gap-2 sm:flex-row sm:justify-end">
-                            <ButtonStyled
+                            <ButtonIconStyled
                                 type="submit"
                                 isDisabled={isFetchingVehicles}
                                 aria-label={t("common.search")}
-                                className="flex h-10 w-full items-center justify-center rounded-xl bg-gradient-to-r from-primary to-emerald-400 text-white sm:h-10 sm:w-16 sm:px-0"
+                                className="btn-gradient rounded-lg"
                             >
-                                <MagnifyingGlass size={18} weight="bold" aria-hidden />
-                                <span className="sr-only">{t("common.search")}</span>
-                            </ButtonStyled>
-                            <ButtonStyled
+                                <SearchIcon />
+                            </ButtonIconStyled>
+                            <ButtonIconStyled
                                 type="button"
                                 onPress={onCreateOpen}
-                                className="h-10 w-full rounded-xl bg-gradient-to-r from-primary to-emerald-400 text-white sm:h-10 sm:w-20 sm:px-0"
+                                aria-label={t("admin.vehicle_new_button")}
+                                className="btn-gradient rounded-lg"
                             >
-                                {t("admin.vehicle_new_button")}
-                            </ButtonStyled>
+                                <Plus />
+                            </ButtonIconStyled>
                         </div>
                     </div>
                 </form>
             </div>
             <TableVehicleManagement
-                vehicles={paginatedVehicles}
+                vehicles={vehicles}
                 stationNameById={stationNameById}
                 vehicleModelsById={vehicleModelsById}
                 isLoading={isFetchingVehicles}
@@ -445,17 +429,22 @@ export default function AdminVehicleManagementPage() {
                 onEdit={handleOpenEditVehicle}
                 onDelete={handleOpenDeleteVehicle}
             />
-            {totalItems > PAGE_SIZE ? (
+            {totalPages > 1 && (
                 <div className="flex justify-center pt-2">
                     <PaginationStyled
-                        pageNumber={currentPage}
-                        pageSize={PAGE_SIZE}
-                        totalItems={totalItems}
-                        onPageChange={setPage}
+                        page={currentPage}
+                        total={totalPages}
+                        onChange={(nextPage: number) =>
+                            setPagination((prev) => ({
+                                ...prev,
+                                pageNumber: nextPage,
+                            }))
+                        }
                         showControls
                     />
                 </div>
-            ) : null}
+            )}
+
             <VehicleCreateModal
                 isOpen={isCreateOpen}
                 onOpenChange={onCreateOpenChange}

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import toast from "react-hot-toast"
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { BackendError } from "@/models/common/response"
+import { PaginationParams } from "@/models/common/request"
 import { GetVehicleParams, UpdateVehicleReq } from "@/models/vehicle/schema/request"
 import { VehicleViewRes } from "@/models/vehicle/schema/response"
 import { vehicleApi } from "@/services/vehicleApi"
@@ -11,19 +12,25 @@ import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 
 export const useGetAllVehicles = ({
     params = {},
-    enabled = true
+    pagination = {},
+    enabled = true,
 }: {
     params?: GetVehicleParams
+    pagination?: PaginationParams
     enabled?: boolean
 } = {}) => {
     const queryClient = useQueryClient()
     return useQuery({
-        queryKey: [...QUERY_KEYS.VEHICLES, params],
-        queryFn: () => vehicleApi.getAll(params),
+        queryKey: [...QUERY_KEYS.VEHICLES, params, pagination],
+        queryFn: () => vehicleApi.getAll({ params, pagination }),
         initialData: () => {
-            return queryClient.getQueryData<VehicleViewRes[]>([...QUERY_KEYS.VEHICLES, params])
+            return queryClient.getQueryData([
+                ...QUERY_KEYS.VEHICLES,
+                params,
+                pagination,
+            ])
         },
-        enabled
+        enabled,
     })
 }
 
