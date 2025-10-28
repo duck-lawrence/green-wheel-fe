@@ -1,6 +1,5 @@
 "use client"
 import {
-    BankInfoProfile,
     ButtonStyled,
     CitizenIdentityProfile,
     DatePickerStyled,
@@ -10,7 +9,7 @@ import {
     ButtonIconStyled,
     AvatarProfile
 } from "@/components"
-import { useDay, useGetMe, useName, useUpdateMe } from "@/hooks"
+import { useDay, useGetMe, useUserHelper, useUpdateMe } from "@/hooks"
 import { UserUpdateReq } from "@/models/user/schema/request"
 import { NotePencilIcon } from "@phosphor-icons/react/dist/ssr"
 import React, { useCallback, useState } from "react"
@@ -26,7 +25,7 @@ export default function ProfilePage() {
     const { t } = useTranslation()
     const [editable, setEditable] = useState(false)
     const { toDate, formatDateTime } = useDay({ defaultFormat: "YYYY-MM-DD" })
-    const { toFullName } = useName()
+    const { toFullName } = useUserHelper()
     const { data: user } = useGetMe()
     const updateMeMutation = useUpdateMe({ onSuccess: undefined })
 
@@ -240,7 +239,7 @@ export default function ProfilePage() {
 
             <CitizenIdentityProfile user={user} />
             <DriverLicenseProfile user={user} />
-            <BankInfoProfile user={user} />
+            {/* <BankInfoProfile user={user} /> */}
         </div>
     )
 }

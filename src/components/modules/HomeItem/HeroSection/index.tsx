@@ -4,8 +4,9 @@ import { AnimatePresence, motion } from "framer-motion"
 import { ButtonStyled } from "@/components"
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useTypewriter } from "@/utils/helpers/useTypewriter"
+import { useTypewriter } from "@/hooks"
 import Image from "next/image"
+import Link from "next/link"
 
 const images = [
     { src: "/images/home-banner/3.png", direction: "right" },
@@ -172,6 +173,7 @@ export function HeroSection() {
                 >
                     <ButtonStyled
                         href="/vehicle-rental"
+                        as={Link}
                         className="
                             text-base md:text-lg font-semibold px-8 py-3 rounded-xl 
                             btn-gradient btn-gradient:hover btn-gradient:active
@@ -184,6 +186,7 @@ export function HeroSection() {
 
                     <ButtonStyled
                         href="/about"
+                        as={Link}
                         variant="bordered"
                         className="
                             md:text-lg font-semibold px-8 py-3 rounded-xl 

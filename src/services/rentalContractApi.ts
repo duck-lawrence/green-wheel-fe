@@ -42,14 +42,17 @@ export const rentalContractApi = {
 
     getMyContract: ({
         status,
+        stationId,
         pagination = {}
     }: {
         status?: RentalContractStatus
+        stationId?: string
         pagination: PaginationParams
     }) =>
         requestWrapper<PageResult<RentalContractViewRes>>(async () => {
             const params = {
                 status,
+                stationId,
                 ...buildQueryParams(pagination)
             }
 

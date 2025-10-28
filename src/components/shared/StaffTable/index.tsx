@@ -7,7 +7,7 @@ import { Skeleton, TableBody, TableCell, TableColumn, TableHeader, TableRow } fr
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { EyeIcon } from "lucide-react"
 import { TableStyled, ButtonIconStyled, AvatarStyled } from "@/components"
-import { useName } from "@/hooks"
+import { useUserHelper } from "@/hooks"
 import { DEFAULT_AVATAR_URL } from "@/constants/constants"
 
 type DocumentKey = "citizen" | "driver"
@@ -32,7 +32,7 @@ export function StaffTable({
     refetchingMessage
 }: StaffUserManagementProps) {
     const { t } = useTranslation()
-    const { toFullName } = useName()
+    const { toFullName } = useUserHelper()
 
     const documentsByStaff = useMemo(() => {
         return staff.map((item) => {

@@ -90,7 +90,6 @@ export const useUpdateVehicleChecklist = ({
             queryClient.refetchQueries({
                 queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, id]
             })
-            toast.success(t("success.update"))
             onSuccess?.()
         },
         onError: (error: BackendError) => {

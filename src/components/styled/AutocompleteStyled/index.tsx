@@ -14,14 +14,7 @@ import React from "react"
 export function AutocompleteStyled(props: AutocompleteProps) {
     return (
         <Autocomplete
-            // defaultItems={locals}
             variant="bordered"
-            // className="max-w-55 h-14 mr-0"
-            // selectedKey={value ?? undefined}
-            // onSelectionChange={(key) => {
-            //     onChange(key as string)
-            //     console.log("Selected:", key)
-            // }}
             {...props}
             className={cn(props.className)}
             inputProps={{

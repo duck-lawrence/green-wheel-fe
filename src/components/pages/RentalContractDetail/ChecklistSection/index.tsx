@@ -48,11 +48,11 @@ export function ChecklistSection({ isStaff, contract, checklist, type }: Checkli
     const createVehicleChecklist = useCreateVehicleChecklist({})
     const handleCreateVehicleChecklist = useCallback(async () => {
         await createVehicleChecklist.mutateAsync({
-            vehicleId: contract?.vehicle.id,
+            vehicleId: contract?.vehicle?.id,
             contractId: contract?.id,
             type: type
         })
-    }, [contract?.id, contract?.vehicle.id, createVehicleChecklist, type])
+    }, [contract?.id, contract?.vehicle?.id, createVehicleChecklist, type])
 
     const handleOpenChecklist = useCallback(() => {
         if (!checklist) return

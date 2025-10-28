@@ -266,7 +266,7 @@ export function FilterVehicleRental({
                 onSubmit={formik.handleSubmit}
                 className={cn(
                     "bg-secondary border border-gray-300 rounded-4xl shadow-2xl",
-                    "px-8 py-3 mx-auto max-w-screen md:w-3xl lg:w-4xl",
+                    "px-8 py-3 mx-auto min-w-fit max-w-screen md:w-3xl lg:w-4xl",
                     "flex gap-4 justify-center flex-col sm:flex-row",
                     className
                 )}
@@ -313,7 +313,7 @@ export function FilterVehicleRental({
                 </div>
 
                 {/* Right section */}
-                <div className="md:w-md">
+                <div className="md:min-w-xl">
                     <div className="grid md:flex gap-4">
                         {/* STARTDate */}
                         <DateTimeStyled
@@ -334,8 +334,20 @@ export function FilterVehicleRental({
                                 )
 
                                 const date = formatDateTime({ date: rounded })
-
                                 await formik.setFieldValue("startDate", date)
+
+                                // if start date > end date, then update end date
+                                if (
+                                    !dayjs(date).isBefore(
+                                        dayjs(formik.values.endDate).add(-1, "day").add(1, "minute")
+                                    )
+                                ) {
+                                    const newEndDate = formatDateTime({
+                                        date: rounded.add({ days: 1 })
+                                    })
+                                    await formik.setFieldValue("endDate", newEndDate)
+                                    formik.validateField("endDate")
+                                }
                                 formik.handleSubmit()
                             }}
                             isRequired
@@ -364,16 +376,30 @@ export function FilterVehicleRental({
 
                                 const date = formatDateTime({ date: rounded })
                                 await formik.setFieldValue("endDate", date)
+
+                                // if end date < start date, then update start date
+                                if (
+                                    !dayjs(formik.values.startDate).isBefore(
+                                        dayjs(date).add(-1, "day").add(1, "minute")
+                                    )
+                                ) {
+                                    const newStartDate = formatDateTime({
+                                        date: rounded.add({ days: -1 })
+                                    })
+                                    await formik.setFieldValue("startDate", newStartDate)
+                                    formik.validateField("startDate")
+                                }
+
                                 formik.handleSubmit()
                             }}
                             isRequired
                         />
                     </div>
                     <div>
-                        <div className="text-danger-500 text-small text-left">
+                        <div className="text-warning-600 text-small font-semibold text-left">
                             {formik.errors.startDate}
                         </div>
-                        <div className="text-danger-500 text-small text-left">
+                        <div className="text-warning-600 text-small font-semibold text-left">
                             {formik.errors.endDate}
                         </div>
                     </div>

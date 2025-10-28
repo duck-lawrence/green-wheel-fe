@@ -29,6 +29,7 @@ import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { Icon } from "@iconify/react"
 import { slides } from "public/cars"
+import { useUserHelper } from "@/hooks/"
 
 export default function VehicleDetailPage() {
     const { id } = useParams()
@@ -37,6 +38,8 @@ export default function VehicleDetailPage() {
 
     const { t } = useTranslation()
     const { getDiffDaysCeil } = useDay()
+    const { isUserValidForBooking } = useUserHelper()
+
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { data: user } = useGetMe()
     const isLogined = useTokenStore((s) => !!s.accessToken)
@@ -95,15 +98,12 @@ export default function VehicleDetailPage() {
     }, [endDate, getDiffDaysCeil, model, startDate])
 
     const handleClickBooking = useCallback(() => {
-        if (
-            !user?.phone
-            // || !user.citizenUrl || !user.licenseUrl
-        ) {
+        if (isCustomer && !isUserValidForBooking(user)) {
             toast.error(t("user.enter_required_info"))
         } else {
             onOpen()
         }
-    }, [onOpen, t, user])
+    }, [isCustomer, isUserValidForBooking, onOpen, t, user])
 
     function mapSpecs(vehicle: VehicleModelViewRes) {
         return [
