@@ -1,7 +1,14 @@
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { BackendError } from "@/models/common/response"
-import { GetAllModelParams, SearchModelParams } from "@/models/vehicle/schema/request"
-import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
+import {
+    CreateVehicleModelReq,
+    GetAllModelParams,
+    SearchModelParams
+} from "@/models/vehicle/schema/request"
+import {
+    CreateVehicleModelRes,
+    VehicleModelViewRes
+} from "@/models/vehicle/schema/response"
 import { vehicleModelApi } from "@/services/vehicleModelApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
@@ -86,6 +93,30 @@ export const useGetVehicleModelById = ({
             return cachedList?.find((v) => v.id === modelId)
         },
         enabled
+    })
+}
+
+export const useCreateVehicleModel = ({
+    onSuccess,
+    onError
+}: {
+    onSuccess?: (response: CreateVehicleModelRes) => void
+    onError?: () => void
+} = {}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (payload: CreateVehicleModelReq) => vehicleModelApi.create(payload),
+        onSuccess: (response) => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
+            toast.success(t("success.create"))
+            onSuccess?.(response)
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+            onError?.()
+        }
     })
 }
 
