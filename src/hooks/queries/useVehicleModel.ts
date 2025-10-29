@@ -2,11 +2,14 @@ import { QUERY_KEYS } from "@/constants/queryKey"
 import { BackendError } from "@/models/common/response"
 import {
     CreateVehicleModelReq,
+    DeleteModelImagesReq,
     GetAllModelParams,
-    SearchModelParams
+    SearchModelParams,
+    UpdateVehicleModelReq
 } from "@/models/vehicle/schema/request"
 import {
     CreateVehicleModelRes,
+    VehicleModelImagesRes,
     VehicleModelViewRes
 } from "@/models/vehicle/schema/response"
 import { vehicleModelApi } from "@/services/vehicleModelApi"
@@ -120,6 +123,31 @@ export const useCreateVehicleModel = ({
     })
 }
 
+export const useUpdateVehicleModel = ({
+    onSuccess,
+    onError
+}: {
+    onSuccess?: () => void
+    onError?: () => void
+} = {}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: ({ id, payload }: { id: string; payload: UpdateVehicleModelReq }) =>
+            vehicleModelApi.update({ id, payload }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
+            toast.success(t("success.update"))
+            onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+            onError?.()
+        }
+    })
+}
+
 export const useUploadModelImages = ({
     id,
     onSuccess,
@@ -140,6 +168,89 @@ export const useUploadModelImages = ({
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
             onSuccess?.()
             toast.success(t("success.upload"))
+        },
+        onError: (error: BackendError) => {
+            onError?.()
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useUploadModelMainImage = ({
+    id,
+    onSuccess,
+    onError
+}: {
+    id: string
+    onSuccess?: () => void
+    onError?: () => void
+}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: async (formData: FormData) => {
+            await vehicleModelApi.uploadMainImage({ id, formData })
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
+            onSuccess?.()
+            toast.success(t("success.upload"))
+        },
+        onError: (error: BackendError) => {
+            onError?.()
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useUploadModelSubImages = ({
+    id,
+    onSuccess,
+    onError
+}: {
+    id: string
+    onSuccess?: (images: VehicleModelImagesRes[]) => void
+    onError?: () => void
+}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: async (formData: FormData) => {
+            return vehicleModelApi.uploadSubImages({ id, formData })
+        },
+        onSuccess: (images) => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
+            onSuccess?.(images ?? [])
+            toast.success(t("success.upload"))
+        },
+        onError: (error: BackendError) => {
+            onError?.()
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useDeleteModelImages = ({
+    id,
+    onSuccess,
+    onError
+}: {
+    id: string
+    onSuccess?: () => void
+    onError?: () => void
+}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (payload: DeleteModelImagesReq) =>
+            vehicleModelApi.deleteSubImages({ id, payload }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
+            onSuccess?.()
+            toast.success(t("success.delete"))
         },
         onError: (error: BackendError) => {
             onError?.()
