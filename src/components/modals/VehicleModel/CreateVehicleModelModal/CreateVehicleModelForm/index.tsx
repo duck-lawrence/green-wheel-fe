@@ -290,7 +290,6 @@ export function VehicleModelCreateForm({
                             minRows={4}
                             label={t("vehicle_model.description")}
                             placeholder={t("vehicle_model.description_placeholder")}
-                            description={t("vehicle_model.description_hint")}
                             value={formik.values.description}
                             onValueChange={(value) =>
                                 formik.setFieldValue("description", value)

@@ -782,7 +782,6 @@
     },
     "staff_management": {
         "page_title": "Staff Management",
-        "page_subtitle": "Create, update, and monitor staff assignments across stations.",
         "filter_title": "Filters",
         "filter_keyword": "Search",
         "filter_keyword_placeholder": "Search by name or phone number",
@@ -862,7 +861,6 @@
     },
     "fleet": {
         "page_title": "Fleet Management",
-        "page_subtitle": "Browse, filter, and manage vehicle models available in the fleet.",
         "filter_title": "Filters",
         "search_placeholder": "Search vehicle model, brand, etc",
         "filter_car_type": "Segment",
@@ -872,6 +870,8 @@
         "add_unit_button": "Add unit",
         "add_unit_title": "Add vehicle model",
         "add_unit_description": "Enter core info, pricing, and specs for this model.",
+        "edit_unit_title": "Edit vehicle model",
+        "edit_unit_description": "Update vehicle information, pricing, and technical specs.",
         "add_unit_section_info": "Vehicle info",
         "add_unit_section_pricing": "Pricing & policy",
         "add_unit_section_specs": "Technical specs",

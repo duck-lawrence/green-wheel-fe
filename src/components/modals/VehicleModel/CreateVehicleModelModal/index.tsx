@@ -2,27 +2,23 @@
 
 import React from "react"
 import { useTranslation } from "react-i18next"
+import { ModalBody, ModalHeader } from "@heroui/react"
 
-import {
-    ModalBodyStyled,
-    ModalContentStyled,
-    ModalHeaderStyled,
-    ModalStyled
-} from "@/components"
+import { ModalContentStyled, ModalStyled } from "@/components/styled"
 import { useCreateVehicleModel } from "@/hooks"
-import { VehicleModelCreateForm } from "./CreateVehicleForm"
+import {
+    VehicleModelCreateForm,
+    VehicleModelCreateFormProps
+} from "./CreateVehicleModelForm"
 
-type SelectOption = {
-    id: string
-    label: string
-}
-
-type VehicleModelCreateModalProps = {
+export interface VehicleModelCreateModalProps
+    extends Pick<
+        VehicleModelCreateFormProps,
+        "brandOptions" | "segmentOptions"
+    > {
     isOpen: boolean
     onOpenChange: (isOpen: boolean) => void
     onClose: () => void
-    brandOptions: SelectOption[]
-    segmentOptions: SelectOption[]
     onCreated?: () => void
 }
 
@@ -46,13 +42,10 @@ export function VehicleModelCreateModal({
     return (
         <ModalStyled isOpen={isOpen} onOpenChange={onOpenChange}>
             <ModalContentStyled className="w-full max-w-[760px]">
-                <ModalHeaderStyled className="flex flex-col items-center gap-2 text-center">
-                    <span className="text-3xl font-semibold">{t("fleet.add_unit_title")}</span>
-                    <p className="text-sm font-normal text-slate-500">
-                        {t("fleet.add_unit_description")}
-                    </p>
-                </ModalHeaderStyled>
-                <ModalBodyStyled>
+                <ModalHeader className="flex flex-col items-center text-3xl font-semibold">
+                    {t("fleet.add_unit_title")}
+                </ModalHeader>
+                <ModalBody>
                     <VehicleModelCreateForm
                         createMutation={createMutation}
                         onClose={onClose}
@@ -60,7 +53,7 @@ export function VehicleModelCreateModal({
                         segmentOptions={segmentOptions}
                         isOpen={isOpen}
                     />
-                </ModalBodyStyled>
+                </ModalBody>
             </ModalContentStyled>
         </ModalStyled>
     )
