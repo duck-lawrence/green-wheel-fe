@@ -9,6 +9,7 @@ import { useLoginDiscloresureSingleton, useTokenStore } from "@/hooks"
 import { ProfileDropdown } from "./ProfileDropdown"
 import { usePathname } from "next/navigation"
 import { GREENWHEEL } from "@/constants/constants"
+import clsx from "clsx"
 
 type MenuKey = "home" | "vehicle-rental" | "about" | "contact" | undefined
 type MenuItem = { key: Exclude<MenuKey, undefined>; label: string }
@@ -66,22 +67,20 @@ export function Navbar() {
     }, [menuKey])
 
     // handle navbar animation
-    const baseClasses = `
-        bg-transparent
-        transition-all duration-400 ease-in-out
-        mt-3 
-        fixed left-0 w-full z-50 h-xl
-        mx-auto max-w-6xl
-        data-[visible=false]:mt-0
-        rounded-3xl
-        justify-between
-        ${isHiddenNavbar ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100"}
-        ${
-            scrollState === "top" || scrollState === "middle"
-                ? "text-white rounded-3xl bg-[#080808]/60 backdrop-blur-md mx-auto max-w-3xl scale-95"
-                : "backdrop-blur-none"
+    const baseClasses = clsx(
+        "bg-transparent transition-all duration-400 ease-in-out fixed left-0 w-full z-50 h-xl mx-auto",
+        "max-w-6xl mt-3 rounded-3xl justify-between",
+        "data-[visible=false]:mt-0",
+        {
+            "-translate-y-full opacity-0": isHiddenNavbar,
+            "translate-y-0 opacity-100": !isHiddenNavbar,
+            "text-white rounded-3xl bg-[#080808]/60 backdrop-blur-md mx-auto max-w-3xl scale-95":
+                scrollState === "top" || scrollState === "middle",
+            "backdrop-blur-none": !(scrollState === "top" || scrollState === "middle"),
+            "text-white": menuKey === "about"
         }
-    `
+    )
+
     const itemClasses = [
         "flex",
         "relative",

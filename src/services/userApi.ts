@@ -25,9 +25,13 @@ export const userApi = {
             return res.data
         }),
 
-    getAllStafff: (query: StaffReq) =>
-        requestWrapper<UserProfileViewRes[]>(async () => {
-            const params = buildQueryParams(query)
+    getAllStafff: ({ query, pagination }: { query: StaffReq; pagination: PaginationParams }) =>
+        requestWrapper<PageResult<UserProfileViewRes>>(async () => {
+            const params = {
+                ...buildQueryParams(query),
+                ...buildQueryParams(pagination)
+            }
+
             const res = await axiosInstance.get("/users/staffs", { params })
             return res.data
         }),

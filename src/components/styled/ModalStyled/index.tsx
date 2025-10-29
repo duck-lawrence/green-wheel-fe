@@ -23,7 +23,7 @@ export function ModalStyled(props: ModalProps) {
             isDismissable={false}
             size="lg"
             {...props}
-            className={cn(props.className)}
+            className={cn("min-w-sm", props.className)}
         />
     )
 }

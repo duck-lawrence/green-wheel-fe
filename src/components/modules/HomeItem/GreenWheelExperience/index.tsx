@@ -1,6 +1,6 @@
 "use client"
 import React from "react"
-import { motion, useAnimation } from "framer-motion"
+import { motion, useAnimation, Variants } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 
 const experiences = [
@@ -145,10 +145,14 @@ function StepItem({ exp, isLeft }: { exp: any; isLeft: boolean }) {
         if (inView) controls.start("visible")
     }, [inView, controls])
 
-    const cardVariants = {
+    const createCardVariants = (isLeft: boolean): Variants => ({
         hidden: { opacity: 0, x: isLeft ? -120 : 120 },
-        visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } }
-    }
+        visible: {
+            opacity: 1,
+            x: 0,
+            transition: { duration: 0.8, ease: "easeOut" }
+        }
+    })
 
     const circleVariants = {
         hidden: { scale: 0.8, opacity: 0 },
@@ -160,7 +164,7 @@ function StepItem({ exp, isLeft }: { exp: any; isLeft: boolean }) {
             ref={ref}
             initial="hidden"
             animate={controls}
-            variants={cardVariants}
+            variants={createCardVariants(isLeft)}
             className="relative md:grid md:grid-cols-2 md:gap-12"
         >
             {/* LEFT */}

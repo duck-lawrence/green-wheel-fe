@@ -77,7 +77,7 @@ export function WhyChoose() {
             </motion.h2>
 
             {/* Grid + energy line */}
-            <div className="relative max-w-7xl mx-auto mt-16 px-6">
+            <div className="relative max-w-7xl mx-auto px-6">
                 {/* Dòng năng lượng ngang nối 4 card */}
                 <div
                     className="hidden md:block absolute left-1/2 top-[52%] -translate-x-1/2 

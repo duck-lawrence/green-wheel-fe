@@ -17,7 +17,7 @@ export function SectionStyled({
 }) {
     return (
         <div className={cn("mb-10", sectionClassName)}>
-            <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+            <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3 flex items-center gap-2">
                 <Icon size={20} className="text-primary" /> {title}
             </h3>
             <div className={cn(childrenClassName)}>{children}</div>

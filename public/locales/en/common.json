@@ -59,6 +59,7 @@
         "parsing_failed": "Failed to parse json"
     },
     "auth": {
+        "only_customer": "Only customer can use this feature",
         "otp": "OTP",
         "security_verification": "Security Verification",
         "verify_identity": "Please enter the email verification code to verify your identity",
@@ -634,7 +635,7 @@
         "return": "Return",
         "return_comfirm": "Confirm return",
         "confirm_change_vehicle": "Your previously reserved vehicle is no longer available. You can choose to switch to another car of the same model or request a refund.\nWe sincerely apologize for the inconvenience.",
-        "unavailable_vehicle_refund": "Your reserved vehicle is no longer available, and no suitable replacement is available. A refund will be issued.\nWe sincerely apologize for the inconvenience."
+        "unavailable_vehicle_refund": "Your reserved vehicle is no longer available, and no suitable replacement is available.\nA refund will be issued. We sincerely apologize for the inconvenience."
     },
     "invoice": {
         "not_found": "Invoice not found",
@@ -829,12 +830,13 @@
     "review": {
         "create_successfull": "Create feedback successful",
         "rating_required": "Rating required",
-        "create_feedback": "Create feedback",
+        "send_feedback": "Send feedback",
         "customer_review": "Customer reviews",
         "station_required": "Station required",
         "content_required": "content required",
         "submit": "Submit review",
-        "content": "Content",
+        "review": "Review",
+        "review_placeholder": "Please enter your review here...",
         "rating": "Rating",
         "create_title": "Create feedback"
     },

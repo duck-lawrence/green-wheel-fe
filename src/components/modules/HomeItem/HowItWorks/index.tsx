@@ -49,7 +49,7 @@ export function HowItWorks() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 viewport={{ once: true }}
-                className="text-3xl md:text-4xl font-bold mb-16 text-primary relative inline-block"
+                className="text-3xl md:text-4xl font-bold mb-12 text-primary relative inline-block"
             >
                 Cách thuê xe <span className="text-teal-500">Green Wheel</span>
                 {/* Dòng năng lượng + spark */}
