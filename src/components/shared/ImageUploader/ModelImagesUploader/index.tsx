@@ -9,10 +9,12 @@ import { Camera } from "lucide-react"
 
 export function ModelImagesUploader({
     id,
-    btnClassName = ""
+    btnClassName = "",
+    onUploaded
 }: {
     id: string
     btnClassName?: string
+    onUploaded?: () => void
 }) {
     const { t } = useTranslation()
     const { isOpen, onOpen, onOpenChange, onClose } = useImageUploadModal()
@@ -20,7 +22,10 @@ export function ModelImagesUploader({
     const uploadModelImages = useUploadModelImages({
         id,
         onError: onClose,
-        onSuccess: onClose
+        onSuccess: () => {
+            onClose()
+            onUploaded?.()
+        }
     })
     const handleUpload = useCallback(
         async (formData: FormData) => await uploadModelImages.mutateAsync(formData),
