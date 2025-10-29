@@ -56,18 +56,18 @@ export function VehicleModelDeleteModal({
                     </ModalHeaderStyled>
                     <ModalBodyStyled className="space-y-4 text-sm text-slate-600">
                         <p>{t("fleet.delete_model_confirm", { name: modelName })}</p>
+                        
+                           
+                       {vehicleCount > 0 && (
                         <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-700">
                             <p>
-                                {t("fleet.delete_model_vehicle_warning", {
-                                    count: vehicleCount
-                                })}
+                            {t("fleet.delete_model_vehicle_warning", { count: vehicleCount })}
                             </p>
-                            {vehicleCount > 0 && (
-                                <p className="mt-2 font-semibold text-amber-800">
-                                    {t("fleet.delete_model_blocked")}
-                                </p>
-                            )}
+                            <p className="mt-2 font-semibold text-amber-800">
+                            {t("fleet.delete_model_blocked")}
+                            </p>
                         </div>
+                        )}
                     </ModalBodyStyled>
                     <ModalFooterStyled className="justify-end gap-3">
                         <ButtonStyled

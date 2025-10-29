@@ -195,6 +195,19 @@ export default function AdminVehicleManagementPage() {
     }, [vehicleModels])
 
     // option cho dropdown chọn model trong create / edit
+    //Hiện Dropdown brandName + Model.Name 
+    //  const vehicleModelOptions = useMemo(
+    //     () =>
+    //         vehicleModels.map((model) => {
+    //             const brandName = model.brand?.name ?? ""
+    //             const label = [brandName, model.name].filter(Boolean).join(" ").trim() || model.name
+    //             return {
+    //                 id: model.id,
+    //                 label
+    //             }
+    //         }),
+    //     [vehicleModels]
+    // )
     const vehicleModelOptions = useMemo(
         () =>
             vehicleModels.map((model) => {
