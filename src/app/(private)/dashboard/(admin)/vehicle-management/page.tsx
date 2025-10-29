@@ -198,8 +198,7 @@ export default function AdminVehicleManagementPage() {
     const vehicleModelOptions = useMemo(
         () =>
             vehicleModels.map((model) => {
-                const brandName = model.brand?.name ?? ""
-                const label = [brandName, model.name]
+                const label = [model.name]
                     .filter(Boolean)
                     .join(" ")
                     .trim() || model.name

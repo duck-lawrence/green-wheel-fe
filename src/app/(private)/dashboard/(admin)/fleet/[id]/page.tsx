@@ -20,6 +20,7 @@ import toast from "react-hot-toast"
 import {
     ButtonStyled,
     useModalDisclosure,
+    VehicleModelDeleteModal,
     VehicleModelEditModal,
     VehicleSubImagesScroll
 } from "@/components"
@@ -218,6 +219,7 @@ function FleetInfoHeader(props: {
     activeImage: number
     onSelectImage: (index: number) => void
     onEdit: () => void
+    onDelete: () => void
 }) {
     const {
         t,
@@ -226,7 +228,8 @@ function FleetInfoHeader(props: {
         subImgUrls,
         activeImage,
         onSelectImage,
-        onEdit
+        onEdit,
+        onDelete
     } = props
 
     return (
@@ -291,13 +294,13 @@ function FleetInfoHeader(props: {
                                 {t("common.edit")}
                             </ButtonStyled>
 
-                            <ButtonStyled
+                             <ButtonStyled
                                 variant="light"
-                                onPress={() => {}}
+                                onPress={onDelete}
                                 className="flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1 text-sm font-medium text-slate-600 shadow-none transition-all hover:bg-slate-50 hover:text-rose-600"
                                 startContent={<TrashSimple size={16} weight="bold" />}
                             >
-                                {/* {t("common.delete")} */}
+                                {t("common.delete")}
                             </ButtonStyled>
                         </div>
 
@@ -595,9 +598,20 @@ export default function AdminFleetDetailPage() {
         onOpenChange: onEditModalOpenChange
     } = useModalDisclosure()
 
+    const {
+        isOpen: isDeleteModalOpen,
+        onOpen: onDeleteModalOpen,
+        onClose: onDeleteModalClose,
+        onOpenChange: onDeleteModalOpenChange
+    } = useModalDisclosure()
+
     const handleVehicleModelUpdated = useCallback(() => {
         void refetchVehicleModels()
     }, [refetchVehicleModels])
+
+    const handleVehicleModelDeleted = useCallback(() => {
+        router.push("/dashboard/fleet")
+    }, [router])
 
     // show toast for any API error
     useApiErrorToasts(
@@ -695,6 +709,7 @@ export default function AdminFleetDetailPage() {
                 activeImage={activeImage}
                 onSelectImage={setActiveImage}
                 onEdit={onEditModalOpen}
+                onDelete={onDeleteModalOpen}
             />
 
             <FleetSpecSection t={translate} vehicleModel={vehicleModel} />
@@ -713,6 +728,15 @@ export default function AdminFleetDetailPage() {
                 brandOptions={brandOptions}
                 segmentOptions={segmentOptions}
                 onUpdated={handleVehicleModelUpdated}
+            />
+            <VehicleModelDeleteModal
+                isOpen={isDeleteModalOpen}
+                onOpenChange={onDeleteModalOpenChange}
+                onClose={onDeleteModalClose}
+                modelName={vehicleModel.name}
+                vehicleCount={vehicleModel.availableVehicleCount ?? 0}
+                modelId={vehicleModel.id}
+                onDeleted={handleVehicleModelDeleted}
             />
         </div>
     )
