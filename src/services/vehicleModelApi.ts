@@ -74,6 +74,10 @@ export const vehicleModelApi = {
             await axiosInstance.delete(`/vehicle-models/${id}/sub-images`, {
                 data: payload
             })
+        }),
+
+    delete: (id: string) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.delete(`/vehicle-models/${id}`)
         })
 }
-

@@ -258,3 +258,27 @@ export const useDeleteModelImages = ({
         }
     })
 }
+
+export const useDeleteVehicleModel = ({
+    onSuccess,
+    onError
+}: {
+    onSuccess?: () => void
+    onError?: () => void
+} = {}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (id: string) => vehicleModelApi.delete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
+            toast.success(t("success.delete"))
+            onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+            onError?.()
+        }
+    })
+}
