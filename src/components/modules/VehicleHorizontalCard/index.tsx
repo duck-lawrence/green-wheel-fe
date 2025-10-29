@@ -132,11 +132,9 @@ export function VehicleHorizontalCard({
 
                 {!readOnly && (
                     <Button
-                        // color="danger"
                         color="primary"
                         variant="ghost"
                         className="border-none p-3 min-w-fit"
-                        isDisabled={!isAvailable}
                         onPress={() => onSelect?.(vehicleModel)}
                     >
                         <EyeIcon size={24} />
