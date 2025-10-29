@@ -17,11 +17,17 @@ import {
 } from "@phosphor-icons/react"
 import toast from "react-hot-toast"
 
-import { ButtonStyled, VehicleSubImagesScroll } from "@/components"
+import {
+    ButtonStyled,
+    useModalDisclosure,
+    VehicleModelEditModal,
+    VehicleSubImagesScroll
+} from "@/components"
 import {
     useDay,
     useGetAllStations,
     useGetAllVehicleModels,
+    useGetAllVehicleSegments,
     useGetAllVehicles,
 } from "@/hooks"
 import { VehicleStatus } from "@/constants/enum"
@@ -33,7 +39,6 @@ import {
 } from "@/models/vehicle/schema/response"
 import { BackendError } from "@/models/common/response"
 import { FALLBACK_IMAGE_URL } from "@/constants/constants"
-import { slides } from "public/cars"
 
 /* constant map from status -> chip style */
 const VEHICLE_STATUS_CLASS_MAP: Record<VehicleStatus, string> = {
@@ -119,6 +124,7 @@ function useFleetData(modelId: string | undefined) {
         isLoading: isLoadingModels,
         isFetching: isFetchingModels,
         error: vehicleModelsError,
+        refetch: refetchVehicleModels
     } = useGetAllVehicleModels({ query: {} })
 
     const {
@@ -171,6 +177,8 @@ function useFleetData(modelId: string | undefined) {
         vehicleModelsError,
         vehiclesError,
         stationsError,
+        vehicleModels: vehicleModelsData,
+        refetchVehicleModels,
     }
 }
 
@@ -209,8 +217,17 @@ function FleetInfoHeader(props: {
     subImgUrls: string[]
     activeImage: number
     onSelectImage: (index: number) => void
+    onEdit: () => void
 }) {
-    const { t, vehicleModel, availabilityLabel, subImgUrls, activeImage, onSelectImage } = props
+    const {
+        t,
+        vehicleModel,
+        availabilityLabel,
+        subImgUrls,
+        activeImage,
+        onSelectImage,
+        onEdit
+    } = props
 
     return (
         <section className="space-y-6 bg-white p-6 md:p-8">
@@ -267,10 +284,11 @@ function FleetInfoHeader(props: {
                         <div className="flex items-center gap-2">
                             <ButtonStyled
                                 variant="light"
+                                onPress={onEdit}
                                 className="flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1 text-sm font-medium text-slate-600 shadow-none transition-all hover:bg-slate-50 hover:text-slate-700"
                                 startContent={<PencilSimple size={16} weight="bold" />}
                             >
-                                {/* {t("common.edit")} */}
+                                {t("common.edit")}
                             </ButtonStyled>
 
                             <ButtonStyled
@@ -525,6 +543,8 @@ export default function AdminFleetDetailPage() {
         defaultFormat: "DD/MM/YYYY HH:mm",
     })
 
+    const { data: vehicleSegments = [] } = useGetAllVehicleSegments({ enabled: true })
+
     // fetch and derive model/vehicles data
     const {
         vehicleModel,
@@ -536,7 +556,48 @@ export default function AdminFleetDetailPage() {
         vehicleModelsError,
         vehiclesError,
         stationsError,
+        vehicleModels,
+        refetchVehicleModels,
     } = useFleetData(modelId)
+
+    const brandOptions = useMemo(() => {
+        const unique = new Map<string, string>()
+        vehicleModels.forEach((model) => {
+            if (model.brand?.id && model.brand?.name) {
+                unique.set(model.brand.id, model.brand.name)
+            }
+        })
+        if (vehicleModel?.brand?.id && vehicleModel.brand?.name) {
+            unique.set(vehicleModel.brand.id, vehicleModel.brand.name)
+        }
+        return Array.from(unique.entries())
+            .map(([id, label]) => ({ id, label }))
+            .sort((a, b) => a.label.localeCompare(b.label))
+    }, [vehicleModels, vehicleModel?.brand?.id, vehicleModel?.brand?.name])
+
+    const segmentOptions = useMemo(() => {
+        const unique = new Map<string, string>()
+        vehicleSegments.forEach((segment) => {
+            unique.set(segment.id, segment.name)
+        })
+        if (vehicleModel?.segment?.id && vehicleModel.segment?.name) {
+            unique.set(vehicleModel.segment.id, vehicleModel.segment.name)
+        }
+        return Array.from(unique.entries())
+            .map(([id, label]) => ({ id, label }))
+            .sort((a, b) => a.label.localeCompare(b.label))
+    }, [vehicleSegments, vehicleModel?.segment?.id, vehicleModel?.segment?.name])
+
+    const {
+        isOpen: isEditModalOpen,
+        onOpen: onEditModalOpen,
+        onClose: onEditModalClose,
+        onOpenChange: onEditModalOpenChange
+    } = useModalDisclosure()
+
+    const handleVehicleModelUpdated = useCallback(() => {
+        void refetchVehicleModels()
+    }, [refetchVehicleModels])
 
     // show toast for any API error
     useApiErrorToasts(
@@ -569,16 +630,11 @@ export default function AdminFleetDetailPage() {
     }, [vehicleModel, translate])
 
     const subImgUrls = useMemo(() => {
-        const modelImages = vehicleModel
-            ? [
-                  vehicleModel.imageUrl,
-                  ...(vehicleModel.imageUrls ?? []),
-              ]
-            : []
-        const merged = [...modelImages, ...slides].filter(
+        if (!vehicleModel) return [FALLBACK_IMAGE_URL]
+        const images = [vehicleModel.imageUrl, ...(vehicleModel.imageUrls ?? [])].filter(
             (src): src is string => Boolean(src)
         )
-        return merged.length > 0 ? merged : [FALLBACK_IMAGE_URL]
+        return images.length > 0 ? images : [FALLBACK_IMAGE_URL]
     }, [vehicleModel])
 
     const [activeImage, setActiveImage] = useState(0)
@@ -638,6 +694,7 @@ export default function AdminFleetDetailPage() {
                 subImgUrls={subImgUrls}
                 activeImage={activeImage}
                 onSelectImage={setActiveImage}
+                onEdit={onEditModalOpen}
             />
 
             <FleetSpecSection t={translate} vehicleModel={vehicleModel} />
@@ -646,6 +703,16 @@ export default function AdminFleetDetailPage() {
                 t={translate}
                 rows={vehicleRows}
                 isLoading={isFetchingVehicles}
+            />
+
+            <VehicleModelEditModal
+                isOpen={isEditModalOpen}
+                onOpenChange={onEditModalOpenChange}
+                onClose={onEditModalClose}
+                vehicleModel={vehicleModel}
+                brandOptions={brandOptions}
+                segmentOptions={segmentOptions}
+                onUpdated={handleVehicleModelUpdated}
             />
         </div>
     )

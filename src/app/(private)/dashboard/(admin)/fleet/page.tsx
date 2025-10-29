@@ -224,7 +224,6 @@ export default function AdminFleetPage() {
         <div className="flex flex-col gap-6 rounded-3xl bg-white p-6 shadow-sm mb-6">
             <div className="space-y-2">
                 <h1 className="text-3xl font-bold text-slate-900">{t("fleet.page_title")}</h1>
-                <p className="text-sm text-slate-500">{t("fleet.page_subtitle")}</p>
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 shadow-sm">

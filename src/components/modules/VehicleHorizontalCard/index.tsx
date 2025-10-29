@@ -5,6 +5,7 @@ import { Button, Chip, Image, cn } from "@heroui/react"
 import { EyeIcon, SteeringWheel, UsersFour } from "@phosphor-icons/react"
 import { useTranslation } from "react-i18next"
 import { CardStyled } from "@/components"
+import { FALLBACK_IMAGE_URL } from "@/constants/constants"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { formatCurrency } from "@/utils/helpers/currency"
 
@@ -43,7 +44,7 @@ export function VehicleHorizontalCard({
     const brandName = brand?.name ?? t("vehicle_model.brand_unknown", "Unknown brand")
     const segmentName = segment?.name ?? t("vehicle_model.segment_unknown", "Unknown segment")
     const isAvailable = availableVehicleCount > 0
-    const cover = imageUrl ?? imageUrls?.[0] ?? "/images/vehicle-placeholder.png"
+    const cover = imageUrl ?? imageUrls?.[0] ?? FALLBACK_IMAGE_URL
     const unitLabel = t("vehicle_model.unit", "Unit")
 
     const typeSpec: SpecItem = {
