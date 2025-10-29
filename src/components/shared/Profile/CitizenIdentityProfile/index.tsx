@@ -84,7 +84,7 @@ export function CitizenIdentityProfile({ user }: { user: UserProfileViewRes }) {
                         ) : formik.isSubmitting ? (
                             <Spinner />
                         ) : (
-                            <div className="flex items-end gap-2">
+                            <div className="flex flex-wrap items-end gap-2">
                                 <CitizenIdentityUploader btnClassName="bg-secondary" />
                                 <ButtonStyled
                                     color="primary"
@@ -125,18 +125,20 @@ export function CitizenIdentityProfile({ user }: { user: UserProfileViewRes }) {
                 {isLoading ? (
                     <Spinner />
                 ) : !citizenId ? (
-                    <div className="flex justify-between items-center text-md mt-[-0.75rem]">
+                    <div className="flex flex-wrap md:flex-nowrap justify-between items-center text-md mt-[-0.75rem]">
                         <p>{t("user.please_upload_citizen_identity")}</p>
                         <CitizenIdentityUploader />
                     </div>
                 ) : (
-                    <div className="flex justify-between items-start gap-3">
-                        <ImageStyled
-                            alt={t("user.citizen_identity")}
-                            src={citizenId?.imageUrl}
-                            width={400}
-                            height={250}
-                        />
+                    <div className="flex flex-wrap md:flex-nowrap justify-between items-start gap-3">
+                        <div>
+                            <ImageStyled
+                                alt={t("user.citizen_identity")}
+                                src={citizenId?.imageUrl}
+                                width={400}
+                                height={250}
+                            />
+                        </div>
                         <div className="w-120">
                             <form className="flex flex-col gap-2 mb-3" onSubmit={formik.submitForm}>
                                 <InputStyled

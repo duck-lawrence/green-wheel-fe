@@ -66,18 +66,20 @@ export default function ProfilePage() {
     if (!user) return <SpinnerStyled />
 
     return (
-        <div className="px-4">
+        <div>
             {/* Title */}
-            <div className="text-3xl mb-8 font-bold">{t("user.account_information")}</div>
+            <div className="text-2xl text-center sm:text-left sm:text-3xl mb-8 font-bold">
+                {t("user.account_information")}
+            </div>
 
             <div className="flex flex-col sm:flex-row justify-between sm:gap-6 mb-8 items-center">
                 {/* Avatar */}
                 <AvatarProfile user={user} />
 
                 {/* Preview info */}
-                <div>
+                <div className="mt-3 sm:mt-0">
                     {/* Top container */}
-                    <div className="flex justify-between items-center">
+                    <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                         {/* user full name */}
                         <div
                             className="text-3xl" //
@@ -128,9 +130,9 @@ export default function ProfilePage() {
                     {/* Form for update */}
                     <form
                         onSubmit={updateMeFormik.submitForm}
-                        className="flex flex-col mt-5 gap-2 lg:min-w-xl max-w-xl"
+                        className="flex flex-col mt-5 gap-2 max-w-full lg:max-w-xl lg:w-xl"
                     >
-                        <div className="flex flex-col sm:flex-row justify-center gap-2">
+                        <div className="flex flex-col md:flex-row justify-center gap-2">
                             <InputStyled
                                 isReadOnly={!editable}
                                 label={t("user.last_name")}
@@ -174,7 +176,7 @@ export default function ProfilePage() {
                             />
                         </div>
 
-                        <div className="flex justify-center flex-wrap sm:flex-nowrap gap-2">
+                        <div className="flex justify-center flex-wrap md:flex-nowrap gap-2">
                             {/* Phone */}
                             <InputStyled
                                 isRequired

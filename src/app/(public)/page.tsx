@@ -2,9 +2,8 @@
 import {
     Carousel,
     CustomerReview,
-    GreenWheelExperience,
+    HowToRent,
     HeroSection,
-    HowItWorks,
     ScrollToTopButton,
     Stations,
     WhyChoose
@@ -44,15 +43,16 @@ export default function HomePage() {
 
             <div className="relative z-10">
                 <div className="absolute z-0 inset-0 diamond-background mb-[-1.5rem]" />
-                {/* Carousel */}
-                <section className="bg-gradient-to-b from-green-100/70 via-white/80 to-transparent py-20">
-                    <Carousel slides={slides} />
-                </section>
 
                 {/* HowItWorks + WhyChoose */}
                 <section className="bg-gradient-to-b from-green-200/60 via-white/80 py-24">
-                    <HowItWorks />
+                    {/* <HowItWorks /> */}
                     <WhyChoose />
+                </section>
+
+                {/* Carousel */}
+                <section className="bg-gradient-to-b from-green-100/70 via-white/80 to-transparent py-20">
+                    <Carousel slides={slides} />
                 </section>
 
                 {/* Stations */}
@@ -62,7 +62,7 @@ export default function HomePage() {
 
                 {/* Experience + Review */}
                 <section className="bg-gradient-to-b from-green-200/60 via-white/80 py-24">
-                    <GreenWheelExperience />
+                    <HowToRent />
                 </section>
 
                 {/* <CustomerReview /> */}

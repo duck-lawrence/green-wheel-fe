@@ -46,7 +46,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
     }, [checklist?.isSignedByCustomer, checklist?.isSignedByStaff, isStaff])
 
     const isSubmitable = useMemo(() => {
-        return !checklist?.isSignedByStaff && !checklist?.isSignedByCustomer
+        return !checklist?.isSignedByStaff || !checklist?.isSignedByCustomer
     }, [checklist?.isSignedByCustomer, checklist?.isSignedByStaff])
 
     const contractUrl = useMemo(() => {
@@ -107,10 +107,9 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
         enableReinitialize: true,
         validationSchema: Yup.object().shape({
             isSignedByStaff: Yup.boolean().oneOf([true], t("signature.signed_by_staff_require")),
-            isSignedByCustomer:
-                isStaff && checklist?.type == VehicleChecklistType.OutOfContract
-                    ? Yup.boolean().notRequired()
-                    : Yup.boolean().oneOf([true], t("signature.signed_by_customer_require")),
+            isSignedByCustomer: isStaff
+                ? Yup.boolean().notRequired()
+                : Yup.boolean().oneOf([true], t("signature.signed_by_customer_require")),
             maintainUntil: hasItemsDamaged
                 ? Yup.string()
                       .required(t("vehicle_checklist.maintain_until_require"))
@@ -249,6 +248,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                         formik.touched.isSignedByCustomer && formik.errors.isSignedByCustomer
                     ),
                     isSelected: formik.values.isSignedByCustomer,
+                    isReadOnly: !isSubmitable,
                     // onValueChange: (value) => formik.setFieldValue("isSignedByCustomer", value)
                     onChange: formik.handleChange,
                     onBlur: formik.handleBlur

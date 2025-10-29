@@ -85,7 +85,7 @@ export function DriverLicenseProfile({ user }: { user: UserProfileViewRes }) {
                         ) : formik.isSubmitting ? (
                             <Spinner />
                         ) : (
-                            <div className="flex items-end gap-2">
+                            <div className="flex flex-wrap items-end gap-2">
                                 <DriverLicenseUploader btnClassName="bg-secondary" />
                                 <ButtonStyled
                                     color="primary"
@@ -126,12 +126,12 @@ export function DriverLicenseProfile({ user }: { user: UserProfileViewRes }) {
                 {isLoading ? (
                     <Spinner />
                 ) : !driverLicense ? (
-                    <div className="flex justify-between items-center text-md mt-[-0.75rem]">
+                    <div className="flex flex-wrap md:flex-nowrap justify-between items-center text-md mt-[-0.75rem]">
                         <p>{t("user.please_upload_driver_license")}</p>
                         <DriverLicenseUploader />
                     </div>
                 ) : (
-                    <div className="flex justify-between items-start gap-3">
+                    <div className="flex flex-wrap md:flex-nowrap justify-between items-start gap-3">
                         <div>
                             <ImageStyled
                                 alt={t("user.driver_license")}

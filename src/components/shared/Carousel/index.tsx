@@ -1,12 +1,15 @@
 "use client"
 import React, { useEffect, useMemo, useRef, useState } from "react"
 import { ImageStyled } from "@/components/styled"
+import { GREENWHEEL } from "@/constants/constants"
+import { useTranslation } from "react-i18next"
 
 type CarouselProps = {
     slides: string[]
 }
 
 export const Carousel: React.FC<CarouselProps> = ({ slides }) => {
+    const { t } = useTranslation()
     const [currentIndex, setCurrentIndex] = useState(0)
     const [slidesPerView, setSlidesPerView] = useState(1)
     const [isTransitioning, setIsTransitioning] = useState(true)
@@ -16,13 +19,16 @@ export const Carousel: React.FC<CarouselProps> = ({ slides }) => {
 
     // Observer: fade in khi vào viewport
     useEffect(() => {
+        const node = sectionRef.current
         const observer = new IntersectionObserver(
             (entries) => entries.forEach((entry) => setIsVisible(entry.isIntersecting)),
             { threshold: 0.2 }
         )
-        if (sectionRef.current) observer.observe(sectionRef.current)
+
+        if (node) observer.observe(node)
+
         return () => {
-            if (sectionRef.current) observer.unobserve(sectionRef.current)
+            if (node) observer.unobserve(node)
         }
     }, [])
 
@@ -129,7 +135,7 @@ export const Carousel: React.FC<CarouselProps> = ({ slides }) => {
             {/* Title */}
             <div className="text-center mb-16 relative">
                 <h2 className="text-3xl md:text-4xl font-bold text-primary">
-                    Bộ sưu tập <span className="text-teal-500">Green Wheel</span>
+                    {t("home.our_fleet_at")} <span className="text-teal-500">{GREENWHEEL}</span>
                 </h2>
 
                 {/* Energy spark line dưới title */}

@@ -4,23 +4,14 @@ import { MapPin } from "lucide-react"
 import { motion } from "framer-motion"
 import React from "react"
 import { ImageStyled } from "@/components/styled"
-
-const stations = [
-    {
-        id: 1,
-        name: "Trạm A - Green Central",
-        address: "123 Nguyễn Văn Linh, Q7, TP.HCM",
-        img: "/images/station1.jpg"
-    },
-    {
-        id: 2,
-        name: "Trạm B - Eco North",
-        address: "45 Lê Duẩn, Q1, TP.HCM",
-        img: "/images/station1.jpg"
-    }
-]
+import { DEFAULT_STATION_URL, GREENWHEEL } from "@/constants/constants"
+import { useTranslation } from "react-i18next"
+import { useGetAllStations } from "@/hooks"
 
 export function Stations() {
+    const { t } = useTranslation()
+    const { data: stations } = useGetAllStations()
+
     return (
         <motion.section
             initial={{ opacity: 0 }}
@@ -50,7 +41,7 @@ export function Stations() {
                 viewport={{ once: true }}
                 className="text-3xl md:text-4xl font-bold mb-16 text-primary relative inline-block"
             >
-                Trạm xe <span className="text-teal-500">Green Wheel</span>
+                {t("home.stations_at")} <span className="text-teal-500">{GREENWHEEL}</span>
                 {/* Dòng năng lượng + spark */}
                 <div
                     className="absolute left-1/2 -translate-x-1/2 -bottom-4 w-44 h-[4px]
@@ -87,7 +78,7 @@ export function Stations() {
 
             {/* Grid stations */}
             <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto px-6">
-                {stations.map((s, i) => (
+                {(stations || []).map((s, i) => (
                     <motion.div
                         key={s.id}
                         initial={{ opacity: 0, y: 80 }}
@@ -101,7 +92,7 @@ export function Stations() {
                         {/* Ảnh */}
                         <div className="relative w-full h-56 md:h-64 overflow-hidden">
                             <ImageStyled
-                                src={s.img}
+                                src={DEFAULT_STATION_URL}
                                 alt={s.name}
                                 className="w-full h-full object-cover transform group-hover:scale-110 
                                            transition-transform duration-700 ease-out"

@@ -1,24 +1,28 @@
 "use client"
+import { GREENWHEEL } from "@/constants/constants"
 import { motion } from "framer-motion"
 import { CheckCircle, CalendarCheck, Car } from "lucide-react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 export function HowItWorks() {
+    const { t } = useTranslation()
+
     const steps = [
         {
             icon: <CheckCircle className="w-10 h-10 text-green-500" />,
-            title: "Chọn xe & trạm",
-            desc: "Tìm xe điện VinFast gần nhất và chọn trạm bạn muốn nhận."
+            title: t("home.choose_your_car"),
+            desc: t("home.choose_your_car_desc")
         },
         {
             icon: <CalendarCheck className="w-10 h-10 text-green-500" />,
-            title: "Đặt lịch & thanh toán",
-            desc: "Thanh toán nhanh chóng bằng Momo hoặc tài khoản ngân hàng."
+            title: t("home.book_and_pay"),
+            desc: t("home.book_and_pay_desc")
         },
         {
             icon: <Car className="w-10 h-10 text-green-500" />,
-            title: "Nhận xe & khởi hành",
-            desc: "Tới trạm, nhận xe và bắt đầu chuyến đi xanh của bạn!"
+            title: t("home.pickup_and_go"),
+            desc: t("home.pickup_and_go_desc")
         }
     ]
 
@@ -51,7 +55,7 @@ export function HowItWorks() {
                 viewport={{ once: true }}
                 className="text-3xl md:text-4xl font-bold mb-12 text-primary relative inline-block"
             >
-                Cách thuê xe <span className="text-teal-500">Green Wheel</span>
+                {t("home.how_to_rent_with")} <span className="text-teal-500">{GREENWHEEL}</span>
                 {/* Dòng năng lượng + spark */}
                 <div
                     className="absolute left-1/2 -translate-x-1/2 -bottom-4 w-36 h-[4px]

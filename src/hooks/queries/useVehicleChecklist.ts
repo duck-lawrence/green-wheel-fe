@@ -87,7 +87,7 @@ export const useUpdateVehicleChecklist = ({
             await vehicleChecklistsApi.update({ id, req })
         },
         onSuccess: (id) => {
-            queryClient.refetchQueries({
+            queryClient.invalidateQueries({
                 queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, id]
             })
             onSuccess?.()
@@ -109,6 +109,31 @@ export const useUpdateVehicleChecklistItem = ({ onSuccess }: { onSuccess?: () =>
         onSuccess: () => {
             router.refresh()
             // toast.success(t("success.update"))
+            onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useSignByCustomer = ({
+    id,
+    onSuccess = undefined
+}: {
+    id: string
+    onSuccess?: () => void
+}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async () => {
+            await vehicleChecklistsApi.signByCustomer({ id })
+        },
+        onSuccess: (id) => {
+            queryClient.invalidateQueries({
+                queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, id]
+            })
             onSuccess?.()
         },
         onError: (error: BackendError) => {
