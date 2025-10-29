@@ -866,7 +866,7 @@
         "filter_car_type": "Segment",
         "filter_status": "Status",
         "status_available": "Available",
-        "status_out_of_stock": "Out of stock",
+        "status_unavailable": "Unavailable",
         "add_unit_button": "Add unit",
         "add_unit_title": "Add vehicle model",
         "add_unit_description": "Enter core info, pricing, and specs for this model.",

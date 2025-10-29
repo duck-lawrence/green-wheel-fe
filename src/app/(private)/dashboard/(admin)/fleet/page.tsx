@@ -51,7 +51,7 @@ export default function AdminFleetPage() {
     const statusOptions = useMemo(
         () => [
             { key: "available", label: t("fleet.status_available") },
-            { key: "out_of_stock", label: t("fleet.status_out_of_stock") }
+            { key: "unavailable", label: t("fleet.status_unavailable") }
         ],
         [t]
     )
