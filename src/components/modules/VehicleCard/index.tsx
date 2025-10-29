@@ -33,7 +33,7 @@ export function CardVehicalStyled({ vehicleModel }: { vehicleModel: VehicleModel
                 />
                 {vehicleModel.availableVehicleCount === 0 && (
                     <span className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 text-xs rounded z-10">
-                        {t("vehicle_model.out_of_stock")}
+                        {t("fleet.status_unavailable")}
                     </span>
                 )}
             </CardBody>

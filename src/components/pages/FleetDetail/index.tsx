@@ -57,7 +57,7 @@ import { TableFleetDetail, VehicleRow } from "./TableFleetDetail"
 
 const VEHICLE_STATUS_CLASS_MAP: Record<VehicleStatus, string> = {
     [VehicleStatus.Available]: "bg-emerald-100 text-emerald-700",
-    [VehicleStatus.Unavailable]: "bg-amber-100 text-amber-700",
+    [VehicleStatus.Unavailable]: "bg-slate-200 text-slate-600",
     [VehicleStatus.Rented]: "bg-blue-100 text-blue-700",
     [VehicleStatus.Maintenance]: "bg-orange-100 text-orange-700",
     [VehicleStatus.MissingNoReason]: "bg-rose-100 text-rose-700",
@@ -222,6 +222,7 @@ function FleetInfoHeader(props: {
     t: TranslateFn
     vehicleModel: VehicleModelViewRes
     availabilityLabel: string
+    isAvailable: boolean
     subImgUrls: string[]
     activeImage: number
     onSelectImage: (index: number) => void
@@ -232,12 +233,17 @@ function FleetInfoHeader(props: {
         t,
         vehicleModel,
         availabilityLabel,
+        isAvailable,
         subImgUrls,
         activeImage,
         onSelectImage,
         onEdit,
         onDelete
     } = props
+
+    const availabilityBadgeClasses = isAvailable
+        ? "bg-emerald-100 text-emerald-700"
+        : "bg-slate-200 text-slate-600"
 
     return (
         <section className="space-y-6 bg-white p-6 md:p-8">
@@ -269,8 +275,12 @@ function FleetInfoHeader(props: {
                                     t("fleet.detail_segment")}
                             </span>
 
-                            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">
-                                <CheckCircle size={14} weight="bold" />
+                            <span
+                                className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${availabilityBadgeClasses}`}
+                            >
+                                {isAvailable && (
+                                    <CheckCircle size={14} weight="bold" />
+                                )}
                                 {availabilityLabel}
                             </span>
                         </div>
@@ -568,16 +578,20 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
     )
 
     // availability text (stock or none)
-    const availabilityLabel = useMemo(() => {
-        if (!vehicleModel) return ""
+    const availabilityInfo = useMemo(() => {
+        if (!vehicleModel) return { label: "", isAvailable: false }
         const hasStock = vehicleModel.availableVehicleCount > 0
-        return translate(
-            hasStock
-                ? "fleet.status_available"
-                : "fleet.status_out_of_stock",
-            hasStock ? "Available" : "Out of stock"
-        )
+        return {
+            label: translate(
+                hasStock
+                    ? "fleet.status_available"
+                    : "fleet.status_unavailable",
+                hasStock ? "Available" : "Unavailable"
+            ),
+            isAvailable: hasStock
+        }
     }, [vehicleModel, translate])
+    const { label: availabilityLabel, isAvailable } = availabilityInfo
 
     // images for gallery
     const subImgUrls = useMemo(() => {
@@ -643,6 +657,7 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
                 t={translate}
                 vehicleModel={vehicleModel}
                 availabilityLabel={availabilityLabel}
+                isAvailable={isAvailable}
                 subImgUrls={subImgUrls}
                 activeImage={activeImage}
                 onSelectImage={setActiveImage}
