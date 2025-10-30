@@ -18,13 +18,16 @@ type CircleChartProps = {
 const data: CircleChartProps[] = [
     {
         title: "Traffic Sources",
-        categories: ["Search", "Direct", "Social", "Referral"],
+        categories: ["Search", "Direct", "Social", "Referral", "aaa "],
         color: "warning",
         chartData: [
-            { name: "Search", value: 600 },
-            { name: "Direct", value: 300 },
-            { name: "Social", value: 300 },
-            { name: "Referral", value: 200 }
+            { key: "1", name: "Search", value: 600 },
+            { key: "2", name: "Direct", value: 300 },
+
+            { key: "3", name: "Social", value: 300 },
+
+            { key: "4", name: "Referral", value: 200 },
+            { key: "5", name: "aaa", value: 300 }
         ]
     },
     {
@@ -74,6 +77,7 @@ export function CriclesChart() {
                     key={index}
                     {...item}
                     onChange={(value) => handleChartChange(item.title, value)}
+                    categories={item.categories}
                 />
             ))}
         </dl>

@@ -21,21 +21,21 @@ const data: TrendCardProps[] = [
         trendChipVariant: "flat"
     },
     {
-        title: "Total Expenses",
+        title: "Total Contract",
         value: "$71,887",
         change: "13.0%",
         changeType: "negative",
         trendType: "up"
     },
     {
-        title: "Total Profit",
+        title: "Total User with email",
         value: "$156,540",
         change: "0.0%",
         changeType: "neutral",
         trendType: "neutral"
     },
     {
-        title: "New Customers",
+        title: "New User with amonyous",
         value: "1,234",
         change: "1.0%",
         changeType: "positive",
