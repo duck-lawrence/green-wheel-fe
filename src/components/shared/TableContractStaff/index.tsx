@@ -8,7 +8,8 @@ import {
     DropdownTrigger,
     DropdownMenu,
     DropdownItem,
-    Spinner
+    Spinner,
+    Chip
 } from "@heroui/react"
 import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
@@ -131,12 +132,12 @@ export function TableContractStaff({
 
                             {/* status */}
                             <TableCell className="text-center">
-                                <span
-                                    className={`inline-block px-3 py-1 rounded-full text-xs font-semibold 
+                                <Chip
+                                    className={`py-1 text-xs font-semibold max-h-fit
                                         ${RentalContractStatusColorMap[item.status]}`}
                                 >
                                     {RentalContractStatusLabels[item.status]}
-                                </span>
+                                </Chip>
                             </TableCell>
 
                             {/* action */}

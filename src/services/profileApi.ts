@@ -31,6 +31,7 @@ export const profileApi = {
                     }
                     throw backendError
                 }
+                throw error
             }
         }),
 

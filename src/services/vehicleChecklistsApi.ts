@@ -23,6 +23,16 @@ export const vehicleChecklistsApi = {
             await axiosInstance.put(`/vehicle-checklists/${id}`, req)
         }),
 
+    updateItem: ({ id, req }: { id: string; req: UpdateChecklistItemReq }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/vehicle-checklists/items/${id}`, req)
+        }),
+
+    signByCustomer: ({ id }: { id: string }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/vehicle-checklists/${id}/customer-sign`)
+        }),
+
     getAll: (query: GetAllVehicleChecklistParams) =>
         requestWrapper<VehicleChecklistViewRes[]>(async () => {
             const params = buildQueryParams(query)
@@ -34,11 +44,6 @@ export const vehicleChecklistsApi = {
         requestWrapper<VehicleChecklistViewRes>(async () => {
             const res = await axiosInstance.get(`/vehicle-checklists/${id}`)
             return res.data
-        }),
-
-    updateItem: ({ id, req }: { id: string; req: UpdateChecklistItemReq }) =>
-        requestWrapper<void>(async () => {
-            await axiosInstance.put(`/vehicle-checklists/items/${id}`, req)
         }),
 
     uploadItemImage: ({ itemId, formData }: { itemId: string; formData: FormData }) =>

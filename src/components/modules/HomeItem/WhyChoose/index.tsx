@@ -1,29 +1,33 @@
 "use client"
+import { GREENWHEEL } from "@/constants/constants"
 import { motion } from "framer-motion"
 import { Leaf, Zap, FileCheck, Shield } from "lucide-react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 export function WhyChoose() {
+    const { t } = useTranslation()
+
     const reasons = [
         {
             icon: <Zap />,
-            title: "100% Xe điện",
-            desc: "Tiết kiệm năng lượng và giảm phát thải CO₂."
+            title: t("home.reason_electric"),
+            desc: t("home.reason_electric_desc")
         },
         {
             icon: <FileCheck />,
-            title: "Quản lý thông minh",
-            desc: "Tất cả hợp đồng và hóa đơn được số hoá."
+            title: t("home.reason_smart"),
+            desc: t("home.reason_smart_desc")
         },
         {
             icon: <Shield />,
-            title: "An toàn & tiện lợi",
-            desc: "Xe bảo trì định kỳ, luôn sẵn sàng hoạt động."
+            title: t("home.reason_safe"),
+            desc: t("home.reason_safe_desc")
         },
         {
             icon: <Leaf />,
-            title: "Xanh hơn mỗi ngày",
-            desc: "Cùng bạn tạo nên hành tinh xanh bền vững."
+            title: t("home.reason_green"),
+            desc: t("home.reason_green_desc")
         }
     ]
 
@@ -57,7 +61,7 @@ export function WhyChoose() {
                 viewport={{ once: true }}
                 className="text-3xl md:text-4xl font-bold mb-12 text-primary relative inline-block"
             >
-                Vì sao chọn <span className="text-teal-500">Green Wheel?</span>
+                {t("home.why_choose")} <span className="text-teal-500">{GREENWHEEL}?</span>
                 {/* Dòng năng lượng dưới tiêu đề */}
                 <div
                     className="absolute left-1/2 -translate-x-1/2 -bottom-4 w-40 h-[4px]
@@ -77,7 +81,7 @@ export function WhyChoose() {
             </motion.h2>
 
             {/* Grid + energy line */}
-            <div className="relative max-w-7xl mx-auto mt-16 px-6">
+            <div className="relative max-w-7xl mx-auto px-6">
                 {/* Dòng năng lượng ngang nối 4 card */}
                 <div
                     className="hidden md:block absolute left-1/2 top-[52%] -translate-x-1/2 
@@ -105,15 +109,28 @@ export function WhyChoose() {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: i * 0.15, ease: "easeOut" }}
                             viewport={{ once: true, amount: 0.3 }}
-                            whileHover={{ scale: 1.05, y: -6 }}
+                            whileHover={{
+                                scale: 1.05,
+                                y: -6,
+                                transition: { duration: 0.3, ease: "easeOut" }
+                            }}
+                            whileTap={{
+                                scale: 1.02,
+                                transition: { duration: 0.1 }
+                            }}
+                            animate={{
+                                scale: 1,
+                                y: 0,
+                                transition: { duration: 0.3, ease: "easeOut" } // hover ra mượt tương tự
+                            }}
                             className="relative p-8 bg-white rounded-2xl border border-gray-100 
-                                       shadow-md hover:shadow-lg transition-all duration-30 group z-10"
+                                shadow-md hover:shadow-lg transition-all duration-300 ease-out group z-10"
                         >
                             <div
                                 className="flex justify-center items-center w-16 h-16 mx-auto mb-5 
-                                           rounded-full bg-gradient-to-r from-primary to-teal-400 
-                                           text-white shadow-md transition-transform duration-500 
-                                           group-hover:rotate-12 group-hover:scale-110"
+                                    rounded-full bg-gradient-to-r from-primary to-teal-400 
+                                    text-white shadow-md transition-transform duration-300 ease-out
+                                    group-hover:rotate-12 group-hover:scale-110"
                             >
                                 {React.cloneElement(r.icon, { size: 32, strokeWidth: 2 })}
                             </div>
@@ -125,8 +142,8 @@ export function WhyChoose() {
 
                             <div
                                 className="absolute inset-0 opacity-0 group-hover:opacity-100 
-                                           bg-gradient-to-r from-gray-200/30 to-gray-700/20
-                                           rounded-2xl transition-opacity duration-700 pointer-events-none"
+                                    bg-gradient-to-r from-gray-200/30 to-gray-700/20
+                                    rounded-2xl transition-opacity duration-300 ease-out pointer-events-none"
                             />
                         </motion.div>
                     ))}

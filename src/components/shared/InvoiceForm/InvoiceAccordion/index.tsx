@@ -144,11 +144,6 @@ export function InvoiceAccordion({
         <>
             <AlertStyled className="mt-[-0.75rem] mb-3 mx-2">
                 {t("invoice.fees_include_tax")}
-                {isCustomer &&
-                    refundInvoice &&
-                    refundInvoice.status !== InvoiceStatus.Paid &&
-                    refundInvoice.total < 0 &&
-                    ` | ${t("invoice.visit_station_to_get_refund")}`}
             </AlertStyled>
             {/* {isCustomer &&
                     refundInvoice &&
@@ -167,7 +162,18 @@ export function InvoiceAccordion({
                             aria-label={val.ariaLabel}
                             title={
                                 <div className="flex justify-between items-center w-full">
-                                    <span className="font-semibold text-base">{val.title}</span>
+                                    <span className="font-semibold text-base">
+                                        {val.title}
+                                        {isCustomer &&
+                                            refundInvoice &&
+                                            val.invoice.id === refundInvoice.id &&
+                                            refundInvoice.status !== InvoiceStatus.Paid &&
+                                            refundInvoice.total < 0 && (
+                                                <span className="text-sm font-normal">{` | ${t(
+                                                    "invoice.visit_station_to_get_refund"
+                                                )}`}</span>
+                                            )}
+                                    </span>
                                     <div className="flex items-center gap-1">
                                         {renderStatusChip(val.status)}
                                         {val.invoice.paymentMethod !== undefined &&

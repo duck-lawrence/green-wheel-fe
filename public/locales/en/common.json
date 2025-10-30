@@ -7,7 +7,39 @@
         "about": "About us",
         "desc_first": "Rent smart, eco-friendly electric vehicles.\nExperience a",
         "desc_second": "green – safe – sustainable",
-        "desc_third": "journey."
+        "desc_third": "journey.",
+
+        "our_fleet_at": "Our Fleet at",
+
+        "rental_steps": "Rental Steps",
+        "how_to_rent_with": "How to rent with",
+        "step_1": "Filter Cars & Stations",
+        "step_1_desc": "Choose a car that fits your needs and select the most convenient pickup station.",
+        "step_2": "Send Request & Wait for Approval",
+        "step_2_desc": "Submit your rental request and wait for Green Wheel’s confirmation.",
+        "step_3": "Payment",
+        "step_3_desc": "Once confirmed, complete your payment via Momo or cash.",
+        "step_4": "Pick Up & Drive",
+        "step_4_desc": "Inspect the car, pick it up at the station, and start your trip.",
+
+        "choose_your_car": "Choose Your Car",
+        "choose_your_car_desc": "Find the nearest VinFast electric car and select your preferred pickup station.",
+        "book_and_pay": "Book & Pay",
+        "book_and_pay_desc": "Quickly complete your payment via Momo or Cash.",
+        "pickup_and_go": "Pick Up & Go",
+        "pickup_and_go_desc": "Head to the station, get your car, and start your green journey!",
+
+        "why_choose": "Why choose",
+        "reason_electric": "100% Electric Vehicles",
+        "reason_electric_desc": "Save energy and reduce CO₂ emissions.",
+        "reason_smart": "Smart Management",
+        "reason_smart_desc": "All contracts and invoices are fully digitized.",
+        "reason_safe": "Safe & Convenient",
+        "reason_safe_desc": "Regularly maintained cars, always ready to go.",
+        "reason_green": "Greener Every Day",
+        "reason_green_desc": "Join us in building a sustainable green planet.",
+
+        "stations_at": "Stations at"
     },
     "success": {
         "create": "Created",
@@ -59,6 +91,7 @@
         "parsing_failed": "Failed to parse json"
     },
     "auth": {
+        "only_customer": "Only customer can use this feature",
         "otp": "OTP",
         "security_verification": "Security Verification",
         "verify_identity": "Please enter the email verification code to verify your identity",
@@ -656,7 +689,7 @@
         "return": "Return",
         "return_comfirm": "Confirm return",
         "confirm_change_vehicle": "Your previously reserved vehicle is no longer available. You can choose to switch to another car of the same model or request a refund.\nWe sincerely apologize for the inconvenience.",
-        "unavailable_vehicle_refund": "Your reserved vehicle is no longer available, and no suitable replacement is available. A refund will be issued.\nWe sincerely apologize for the inconvenience."
+        "unavailable_vehicle_refund": "Your reserved vehicle is no longer available, and no suitable replacement is available.\nA refund will be issued. We sincerely apologize for the inconvenience."
     },
     "invoice": {
         "not_found": "Invoice not found",
@@ -850,12 +883,13 @@
     "review": {
         "create_successfull": "Create feedback successful",
         "rating_required": "Rating required",
-        "create_feedback": "Create feedback",
+        "send_feedback": "Send feedback",
         "customer_review": "Customer reviews",
         "station_required": "Station required",
         "content_required": "content required",
         "submit": "Submit review",
-        "content": "Content",
+        "review": "Review",
+        "review_placeholder": "Please enter your review here...",
         "rating": "Rating",
         "create_title": "Create feedback"
     },

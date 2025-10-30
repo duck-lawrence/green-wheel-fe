@@ -1,9 +1,13 @@
 "use client"
-import { AutocompleteStyled, ButtonStyled, SectionStyled, SpinnerStyled } from "@/components"
-import TableSelectionStaff from "@/components/modules/TableSelectionStaff"
-import TableSelectionVehicle from "@/components/modules/TableSelectionVehicle/indesx"
-import { VehicleStatus } from "@/constants/enum"
-import { useGetAllStaffs, useGetAllStations, useGetAllVehicles, useGetMe } from "@/hooks"
+import {
+    AutocompleteStyled,
+    ButtonStyled,
+    SectionStyled,
+    SpinnerStyled,
+    TableSelectionStaff,
+    TableSelectionVehicle
+} from "@/components"
+import { useGetAllStations, useGetMe } from "@/hooks"
 import { useCreateDispatch } from "@/hooks/queries/useDispatch"
 import { AutocompleteItem, Textarea } from "@heroui/react"
 import { Car, MapPinAreaIcon, UserSwitchIcon } from "@phosphor-icons/react"
@@ -21,17 +25,7 @@ export default function DispatchCreatePage() {
     const stationDispatch = stationIdNow
         ? (stations || []).filter(({ id }) => id !== stationIdNow) || null
         : null
-    const [selecedSation, setSelecedSation] = useState("")
-
-    //Staff && Vehicle
-    const { data: dispatchRequestStaffs, isLoading: isLoading_3 } = useGetAllStaffs({
-        params: { stationId: selecedSation },
-        enabled: !!selecedSation
-    })
-    const { data: dispatchRequestVehicles, isLoading: isLoading_4 } = useGetAllVehicles({
-        params: { stationId: selecedSation, status: VehicleStatus.Available },
-        enabled: !!selecedSation
-    })
+    const [selecedSationId, setSelecedSationId] = useState(stationDispatch?.[0]?.id || "")
 
     //Create
     const createDispatch = useCreateDispatch({})
@@ -41,15 +35,14 @@ export default function DispatchCreatePage() {
 
     const handleCreateDispatch = useCallback(async () => {
         await createDispatch.mutateAsync({
-            fromStationId: selecedSation,
-            toStationId: stationIdNow ?? "",
+            fromStationId: selecedSationId,
             description: textArea,
             staffIds: selectStaffs,
             vehicleIds: selectVehicles
         })
-    }, [createDispatch, selecedSation, selectStaffs, selectVehicles, stationIdNow, textArea])
+    }, [createDispatch, selecedSationId, selectStaffs, selectVehicles, textArea])
 
-    if (isLoading_1 || isLoading_2 || isLoading_3 || isLoading_4) return <SpinnerStyled />
+    if (isLoading_1 || isLoading_2) return <SpinnerStyled />
 
     return (
         <div className="max-w-7xl mx-auto w-full bg-white p-8 rounded-2xl shadow-md border border-gray-100">
@@ -62,15 +55,15 @@ export default function DispatchCreatePage() {
             </div>
 
             {/* Station - Description */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                <SectionStyled title={t("dispatch.station")}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-3">
+                <SectionStyled title={t("dispatch.station")} sectionClassName="mb-0">
                     <AutocompleteStyled
                         label={t("vehicle_model.station")}
                         items={stationDispatch ?? []}
                         startContent={<MapPinAreaIcon className="text-xl" />}
-                        selectedKey={selecedSation}
+                        selectedKey={selecedSationId}
                         onSelectionChange={(key) => {
-                            setSelecedSation(key as string)
+                            setSelecedSationId(key as string)
                         }}
                         className="max-w-60 h-20 mr-0"
                     >
@@ -79,7 +72,7 @@ export default function DispatchCreatePage() {
                         ))}
                     </AutocompleteStyled>
                 </SectionStyled>
-                <SectionStyled title={t("dispatch.description")}>
+                <SectionStyled title={t("dispatch.description")} sectionClassName="mb-0">
                     <Textarea
                         label={t("table.description")}
                         minRows={4}
@@ -91,25 +84,27 @@ export default function DispatchCreatePage() {
             </div>
 
             {/* Tables */}
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-10">
-                <SectionStyled title={t("dispatch.list_staff")} icon={UserSwitchIcon}>
-                    <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
-                        <TableSelectionStaff
-                            staffs={dispatchRequestStaffs ?? []}
-                            onChangeSelected={setSelectStaffs}
-                        />
-                    </div>
-                </SectionStyled>
+            <SectionStyled
+                title={t("dispatch.list_staff")}
+                icon={UserSwitchIcon}
+                sectionClassName="mb-4"
+            >
+                <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
+                    <TableSelectionStaff
+                        stationId={selecedSationId}
+                        onChangeSelected={setSelectStaffs}
+                    />
+                </div>
+            </SectionStyled>
 
-                <SectionStyled title={t("dispatch.list_vehicle")} icon={Car}>
-                    <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
-                        <TableSelectionVehicle
-                            vehicles={dispatchRequestVehicles ?? []}
-                            onChangeSelected={setSelectVehicles}
-                        />
-                    </div>
-                </SectionStyled>
-            </div>
+            <SectionStyled title={t("dispatch.list_vehicle")} icon={Car} sectionClassName="mb-4">
+                <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
+                    <TableSelectionVehicle
+                        stationId={selecedSationId}
+                        onChangeSelected={setSelectVehicles}
+                    />
+                </div>
+            </SectionStyled>
 
             <div className="flex justify-center items-center">
                 <ButtonStyled

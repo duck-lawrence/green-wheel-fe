@@ -145,7 +145,7 @@ export function HeroSection() {
                     "
                 >
                     {t("home.desc_first")}{" "}
-                    <span className="text-teal-400 font-medium">{t("home.desc_second")}</span>
+                    <span className="text-teal-500 font-medium">{t("home.desc_second")}</span>
                     {` ${t("home.desc_third")}`}
                 </motion.p>
 

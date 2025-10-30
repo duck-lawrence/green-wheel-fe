@@ -1,6 +1,6 @@
 "use client"
 
-import { AutocompleteStyled, ButtonStyled, InputStyled } from "@/components/styled"
+import { AutocompleteStyled, ButtonStyled, TextareaStyled } from "@/components/styled"
 import { useCreateFeedback, useGetAllStations } from "@/hooks"
 import { AutocompleteItem } from "@heroui/react"
 import { MapPinAreaIcon, Star } from "@phosphor-icons/react"
@@ -46,7 +46,7 @@ export function CreateFeedback({ onClose }: { onClose: () => void }) {
     return (
         <motion.form
             onSubmit={formik.handleSubmit}
-            className="space-y-8  max-w-lg mx-auto"
+            className="space-y-8 max-w-fit mx-auto"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -71,21 +71,21 @@ export function CreateFeedback({ onClose }: { onClose: () => void }) {
                 </AutocompleteStyled>
 
                 {/* Feedback content */}
-                <InputStyled
-                    label={t("review.content")}
+                <TextareaStyled
+                    label={t("review.review")}
+                    placeholder={t("review.review_placeholder")}
                     value={formik.values.content}
                     onChange={formik.handleChange("content")}
                     onBlur={formik.handleBlur("content")}
                     isInvalid={!!(formik.touched.content && formik.errors.content)}
                     errorMessage={formik.errors.content}
                     className="h-24"
-                    placeholder="Hãy chia sẻ trải nghiệm của bạn..."
                 />
 
                 {/* Rating */}
                 <div className="flex flex-col gap-2">
-                    <label className="font-medium text-gray-700">{t("review.rating")}</label>
-                    <div className="flex gap-2 justify-center md:justify-start">
+                    {/* <label className="font-medium text-gray-700">{t("review.rating")}</label> */}
+                    <div className="flex gap-2 justify-center">
                         {[1, 2, 3, 4, 5].map((val) => (
                             <Star
                                 key={val}
@@ -113,10 +113,9 @@ export function CreateFeedback({ onClose }: { onClose: () => void }) {
             {/* Submit */}
             <ButtonStyled
                 type="submit"
-                color="primary"
                 fullWidth
                 isLoading={createFeedback.isPending}
-                className="mt-6 py-3 text-base font-semibold tracking-wide rounded-xl hover:scale-[1.02] transition-transform"
+                className="py-3 text-base font-semibold tracking-wide btn-gradient rounded-xl interactive-scale"
             >
                 {t("review.submit")}
             </ButtonStyled>

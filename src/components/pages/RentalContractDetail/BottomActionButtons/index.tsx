@@ -227,8 +227,8 @@ export function BottomActionButtons({
 
                                 <AlertStyled
                                     hideIcon
-                                    color="success"
-                                    className="whitespace-pre-line"
+                                    color="warning"
+                                    className="whitespace-pre-line max-w-full"
                                 >
                                     {contract.vehicle
                                         ? t("rental_contract.confirm_change_vehicle")

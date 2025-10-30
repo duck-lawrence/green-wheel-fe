@@ -2,38 +2,39 @@
 
 import { PaginationStyled } from "@/components/styled"
 import TableSelectionStyled from "@/components/styled/TableSelectionStyled"
-import { useGetAllStaffs } from "@/hooks"
+import { VehicleStatus } from "@/constants/enum"
+import { useGetAllVehicles } from "@/hooks"
 import { PaginationParams } from "@/models/common/request"
 import { Spinner } from "@heroui/react"
-import React, { useState } from "react"
+import React, { Key, useState } from "react"
 import { useTranslation } from "react-i18next"
 
-type TableSelectionStaffProps = {
+type TableSelectionVehicleProps = {
     selectionBehavior?: "toggle" | "replace"
     stationId: string
     onChangeSelected?: (selected: string[]) => void
 }
 
-export function TableSelectionStaff({
+export function TableSelectionVehicle({
     selectionBehavior,
     stationId,
     onChangeSelected
-}: TableSelectionStaffProps) {
+}: TableSelectionVehicleProps) {
     const { t } = useTranslation()
 
-    const [selectedSatffIds, setSelectedStaffIds] = useState<string[]>([])
+    const [selectedKeys, setSelectedKeys] = useState<string[]>([])
     // const [filter, setFilter] = useState<StaffReq>({ stationId })
     const [pagination, setPagination] = useState<PaginationParams>({ pageSize: 5 })
-    const { data, isLoading } = useGetAllStaffs({
-        params: { stationId },
+    const { data, isLoading } = useGetAllVehicles({
+        params: { stationId, status: VehicleStatus.Available },
         pagination
     })
 
     const rows = (data?.items || []).map((item, index) => ({
         key: item.id,
         id: index + 1,
-        name: `${item.firstName} ${item.lastName}`,
-        station: item.station?.name
+        model: item.model.name,
+        licensePlate: item.licensePlate
     }))
 
     const columns = [
@@ -42,19 +43,19 @@ export function TableSelectionStaff({
             label: t("table.no")
         },
         {
-            key: "name",
-            label: t("table.name").toUpperCase()
+            key: "model",
+            label: t("table.vehicle_model").toUpperCase()
         },
         {
-            key: "station",
-            label: t("station.station").toUpperCase()
+            key: "licensePlate",
+            label: t("vehicle.license_plate").toUpperCase()
         }
     ]
 
-    const handleSelectionChange = (keys: React.Key[]) => {
+    const handleSelectionChange = (keys: Key[]) => {
         const ids = keys.map(String)
-        setSelectedStaffIds(ids)
-        onChangeSelected?.(ids)
+        setSelectedKeys(ids)
+        onChangeSelected?.(keys.map(String))
     }
 
     if (isLoading) return <Spinner />
@@ -64,7 +65,7 @@ export function TableSelectionStaff({
             <TableSelectionStyled
                 rows={rows}
                 columns={columns}
-                selectedKeys={selectedSatffIds}
+                selectedKeys={selectedKeys}
                 onSelectionChange={handleSelectionChange}
                 selectionBehavior={selectionBehavior}
             ></TableSelectionStyled>

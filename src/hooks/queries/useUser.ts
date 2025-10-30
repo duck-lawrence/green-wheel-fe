@@ -95,14 +95,25 @@ export const useGetAllUsers = ({
 
 export const useGetAllStaffs = ({
     params,
+    pagination = {},
     enabled = true
 }: {
     params: StaffReq
+    pagination: PaginationParams
     enabled?: boolean
 }) => {
+    const queryClient = useQueryClient()
+
     const query = useQuery({
-        queryKey: [...QUERY_KEYS.USERS, params],
-        queryFn: () => userApi.getAllStafff(params),
+        queryKey: [...QUERY_KEYS.USERS, params, pagination],
+        queryFn: () => userApi.getAllStafff({ query: params, pagination }),
+        initialData: () => {
+            return queryClient.getQueryData<PageResult<UserProfileViewRes>>([
+                ...QUERY_KEYS.USERS,
+                params,
+                pagination
+            ])
+        },
         enabled
     })
     return query
