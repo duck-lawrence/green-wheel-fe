@@ -140,7 +140,7 @@ export function DriverLicenseProfile({ user }: { user: UserProfileViewRes }) {
                                 height={250}
                             />
                         </div>
-                        <div className="w-120">
+                        <div className="w-full">
                             <form className="flex flex-col gap-2 mb-3" onSubmit={formik.submitForm}>
                                 <InputStyled
                                     isRequired
