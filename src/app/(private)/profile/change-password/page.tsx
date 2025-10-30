@@ -57,7 +57,7 @@ export default function ChangePasswordPage() {
     return (
         <form
             onSubmit={formik.handleSubmit}
-            className="bg-white w-md mx-auto overflow-y-auto px-4 sm:px-14 py-6 shadow-2xs rounded-2xl"
+            className="bg-white w-xl mx-auto overflow-y-auto px-4 sm:px-14 py-6 shadow-2xs rounded-2xl"
         >
             {/* Title */}
             <div className="text-3xl text-center mb-3 px-4 font-bold">
