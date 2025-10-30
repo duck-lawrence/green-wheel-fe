@@ -33,7 +33,7 @@ export function ImageUploadButton({
     }
 
     return (
-        <div className={cn("w-fit", className)}>
+        <div className={cn("w-fit mb-0", className)}>
             <input
                 ref={fileRef}
                 type="file"

@@ -138,7 +138,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
     return (
         <form
             onSubmit={formik.handleSubmit}
-            className="rounded-2xl bg-white shadow-md px-8 py-10 border border-gray-100 max-w-6xl mx-auto"
+            className="rounded-2xl bg-white px-3 py-2 md:px-8 md:py-10 max-w-full md:max-w-6xl mx-auto"
         >
             {/* Header */}
             {/* <div className="flex flex-col md:flex-row items-center justify-between mb-8"> */}

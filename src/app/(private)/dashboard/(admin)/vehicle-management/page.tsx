@@ -25,10 +25,7 @@ import {
 } from "@/components"
 
 import { VehicleStatus } from "@/constants/enum"
-import {
-    VehicleModelViewRes,
-    VehicleViewRes
-} from "@/models/vehicle/schema/response"
+import { VehicleModelViewRes, VehicleViewRes } from "@/models/vehicle/schema/response"
 
 import {
     useCreateVehicle,
@@ -39,10 +36,7 @@ import {
     useUpdateVehicle
 } from "@/hooks"
 
-import {
-    VehicleCreateModal,
-    VehicleEditModal
-} from "@/components/modals/Vehicle"
+import { VehicleCreateModal, VehicleEditModal } from "@/components/modals/Vehicle"
 
 import {
     CreateVehicleReq,
@@ -119,19 +113,14 @@ export default function AdminVehicleManagementPage() {
 
     const { data: stations = [] } = useGetAllStations({ enabled: true })
 
-    const {
-        data: vehiclesPage,
-        isFetching: isFetchingVehicles
-    } = useGetAllVehicles({
+    const { data: vehiclesPage, isFetching: isFetchingVehicles } = useGetAllVehicles({
         params: filter,
         pagination,
         enabled: true
     })
 
-    const {
-        data: vehicleModels = [],
-        isFetching: isFetchingVehicleModels
-    } = useGetAllVehicleModels({ query: {} })
+    const { data: vehicleModels = [], isFetching: isFetchingVehicleModels } =
+        useGetAllVehicleModels({ query: {} })
 
     // ====================
     // Derived data (memo)
@@ -169,15 +158,11 @@ export default function AdminVehicleManagementPage() {
     const statusOptions = useMemo(
         () =>
             VEHICLE_STATUS_VALUES.map((status) => {
-                const statusKey =
-                    VehicleStatus[status]?.toString().toLowerCase() ?? "unknown"
+                const statusKey = VehicleStatus[status]?.toString().toLowerCase() ?? "unknown"
 
                 return {
                     key: status.toString(),
-                    label: translateWithFallback(
-                        t,
-                        `vehicle.status_value_${statusKey}`
-                    )
+                    label: translateWithFallback(t, `vehicle.status_value_${statusKey}`)
                 }
             }),
         [t]
@@ -185,17 +170,14 @@ export default function AdminVehicleManagementPage() {
 
     // map modelId -> full vehicle model info
     const vehicleModelsById = useMemo(() => {
-        return vehicleModels.reduce<Record<string, VehicleModelViewRes>>(
-            (acc, model) => {
-                acc[model.id] = model
-                return acc
-            },
-            {}
-        )
+        return vehicleModels.reduce<Record<string, VehicleModelViewRes>>((acc, model) => {
+            acc[model.id] = model
+            return acc
+        }, {})
     }, [vehicleModels])
 
     // option cho dropdown chọn model trong create / edit
-    //Hiện Dropdown brandName + Model.Name 
+    //Hiện Dropdown brandName + Model.Name
     //  const vehicleModelOptions = useMemo(
     //     () =>
     //         vehicleModels.map((model) => {
@@ -211,10 +193,7 @@ export default function AdminVehicleManagementPage() {
     const vehicleModelOptions = useMemo(
         () =>
             vehicleModels.map((model) => {
-                const label = [model.name]
-                    .filter(Boolean)
-                    .join(" ")
-                    .trim() || model.name
+                const label = [model.name].filter(Boolean).join(" ").trim() || model.name
 
                 return {
                     id: model.id,
@@ -234,8 +213,7 @@ export default function AdminVehicleManagementPage() {
     }, [vehiclesPage])
 
     const totalPages = vehiclesPage?.totalPages ?? 1
-    const currentPage =
-        vehiclesPage?.pageNumber ?? pagination.pageNumber ?? 1
+    const currentPage = vehiclesPage?.pageNumber ?? pagination.pageNumber ?? 1
     // Validation schemas
     const filterValidationSchema = useMemo(() => {
         return Yup.object({
@@ -243,20 +221,12 @@ export default function AdminVehicleManagementPage() {
             stationId: Yup.string().trim().nullable(),
             status: Yup.string()
                 .nullable()
-                .oneOf(
-                    VEHICLE_STATUS_VALUES.map((s) => s.toString()).concat([
-                        null as any
-                    ])
-                )
+                .oneOf(VEHICLE_STATUS_VALUES.map((s) => s.toString()).concat([null as any]))
         })
     }, [])
 
     const createValidationSchema = useMemo(() => {
-        const requiredMsg = translateWithFallback(
-            t,
-            "validation.required",
-            "Required"
-        )
+        const requiredMsg = translateWithFallback(t, "validation.required", "Required")
 
         return Yup.object({
             licensePlate: Yup.string().trim().required(requiredMsg),
@@ -266,11 +236,7 @@ export default function AdminVehicleManagementPage() {
     }, [t])
 
     const editValidationSchema = useMemo(() => {
-        const requiredMsg = translateWithFallback(
-            t,
-            "validation.required",
-            "Required"
-        )
+        const requiredMsg = translateWithFallback(t, "validation.required", "Required")
 
         return Yup.object({
             licensePlate: Yup.string().trim().required(requiredMsg),
@@ -278,41 +244,34 @@ export default function AdminVehicleManagementPage() {
             modelId: Yup.string().trim().required(requiredMsg),
             status: Yup.string()
                 .nullable()
-                .oneOf(
-                    VEHICLE_STATUS_VALUES.map((s) => s.toString()).concat([
-                        null as any
-                    ])
-                )
+                .oneOf(VEHICLE_STATUS_VALUES.map((s) => s.toString()).concat([null as any]))
         })
     }, [t])
 
     // Formiks
     // Filter
-    const handleSubmitFilter = useCallback(
-        (values: VehicleFilterFormValues) => {
-            const nextFilter: GetVehicleParams = {}
+    const handleSubmitFilter = useCallback((values: VehicleFilterFormValues) => {
+        const nextFilter: GetVehicleParams = {}
 
-            const plate = values.licensePlate.trim()
-            if (plate) nextFilter.licensePlate = plate
+        const plate = values.licensePlate.trim()
+        if (plate) nextFilter.licensePlate = plate
 
-            if (values.stationId) {
-                nextFilter.stationId = values.stationId
-            }
+        if (values.stationId) {
+            nextFilter.stationId = values.stationId
+        }
 
-            if (values.status) {
-                nextFilter.status = Number(values.status) as VehicleStatus
-            }
+        if (values.status) {
+            nextFilter.status = Number(values.status) as VehicleStatus
+        }
 
-            setFilter(nextFilter)
+        setFilter(nextFilter)
 
-            // reset về page 1
-            setPagination((prev) => ({
-                ...prev,
-                pageNumber: 1
-            }))
-        },
-        []
-    )
+        // reset về page 1
+        setPagination((prev) => ({
+            ...prev,
+            pageNumber: 1
+        }))
+    }, [])
 
     const filterFormik = useFormik<VehicleFilterFormValues>({
         initialValues: {
@@ -356,14 +315,8 @@ export default function AdminVehicleManagementPage() {
         initialValues: {
             licensePlate: editingVehicle?.licensePlate ?? "",
             stationId: editingVehicle?.stationId ?? "",
-            modelId:
-                editingVehicle?.model?.id ??
-                editingVehicle?.modelId ??
-                "",
-            status:
-                editingVehicle?.status != null
-                    ? editingVehicle.status.toString()
-                    : null
+            modelId: editingVehicle?.model?.id ?? editingVehicle?.modelId ?? "",
+            status: editingVehicle?.status != null ? editingVehicle.status.toString() : null
         },
         validationSchema: editValidationSchema,
         onSubmit: (values, helpers) => {
@@ -372,29 +325,19 @@ export default function AdminVehicleManagementPage() {
             const payload: UpdateVehicleReq = {}
 
             const trimmedPlate = values.licensePlate.trim()
-            if (
-                trimmedPlate &&
-                trimmedPlate !== editingVehicle.licensePlate
-            ) {
+            if (trimmedPlate && trimmedPlate !== editingVehicle.licensePlate) {
                 payload.licensePlate = trimmedPlate
             }
 
-            if (
-                values.stationId &&
-                values.stationId !== editingVehicle.stationId
-            ) {
+            if (values.stationId && values.stationId !== editingVehicle.stationId) {
                 payload.stationId = values.stationId
             }
 
-            if (
-                values.modelId &&
-                values.modelId !== editingVehicle.model?.id
-            ) {
+            if (values.modelId && values.modelId !== editingVehicle.model?.id) {
                 payload.modelId = values.modelId
             }
 
-            const hasStatusSelection =
-                values.status !== null && values.status !== ""
+            const hasStatusSelection = values.status !== null && values.status !== ""
             if (hasStatusSelection) {
                 const statusValue = Number(values.status) as VehicleStatus
                 if (editingVehicle.status !== statusValue) {
@@ -452,10 +395,7 @@ export default function AdminVehicleManagementPage() {
             }
 
             const [value] = Array.from(keys)
-            filterFormik.setFieldValue(
-                "stationId",
-                value != null ? value.toString() : null
-            )
+            filterFormik.setFieldValue("stationId", value != null ? value.toString() : null)
         },
         [filterFormik]
     )
@@ -469,10 +409,7 @@ export default function AdminVehicleManagementPage() {
             }
 
             const [value] = Array.from(keys)
-            filterFormik.setFieldValue(
-                "status",
-                value != null ? value.toString() : null
-            )
+            filterFormik.setFieldValue("status", value != null ? value.toString() : null)
         },
         [filterFormik]
     )
@@ -525,101 +462,58 @@ export default function AdminVehicleManagementPage() {
 
             {/* Filter card */}
             <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-6">
-                <form
-                    onSubmit={filterFormik.handleSubmit}
-                    className="space-y-5"
-                >
+                <form onSubmit={filterFormik.handleSubmit} className="space-y-5">
                     <div className="flex items-center gap-2 text-slate-800">
-                        <FunnelSimple
-                            size={22}
-                            className="text-primary"
-                        />
-                        <h3 className="text-lg font-semibold">
-                            {t("admin.vehicle_filter_title")}
-                        </h3>
+                        <FunnelSimple size={22} className="text-primary" />
+                        <h3 className="text-lg font-semibold">{t("admin.vehicle_filter_title")}</h3>
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:items-end">
                         {/* license plate */}
                         <InputStyled
                             label={t("vehicle.license_plate")}
-                            placeholder={t(
-                                "vehicle.license_plate_placeholder"
-                            )}
-                            value={
-                                filterFormik.values.licensePlate
-                            }
+                            placeholder={t("vehicle.license_plate_placeholder")}
+                            value={filterFormik.values.licensePlate}
                             onChange={(event) =>
-                                filterFormik.setFieldValue(
-                                    "licensePlate",
-                                    event.target.value
-                                )
+                                filterFormik.setFieldValue("licensePlate", event.target.value)
                             }
-                            onClear={() =>
-                                filterFormik.setFieldValue(
-                                    "licensePlate",
-                                    ""
-                                )
-                            }
+                            onClear={() => filterFormik.setFieldValue("licensePlate", "")}
                             isClearable
                         />
 
                         {/* station */}
                         <FilterTypeStyle
                             label={t("vehicle.station_name")}
-                            placeholder={t(
-                                "vehicle.station_placeholder"
-                            )}
+                            placeholder={t("vehicle.station_placeholder")}
                             selectedKeys={
                                 filterFormik.values.stationId
-                                    ? new Set([
-                                          filterFormik
-                                              .values
-                                              .stationId
-                                      ])
+                                    ? new Set([filterFormik.values.stationId])
                                     : new Set([])
                             }
                             disallowEmptySelection={false}
                             isClearable
-                            onSelectionChange={
-                                handleStationFilterChange
-                            }
+                            onSelectionChange={handleStationFilterChange}
                         >
                             {stationOptions.map((option) => (
-                                <FilterTypeOption
-                                    key={option.key}
-                                >
-                                    {option.label}
-                                </FilterTypeOption>
+                                <FilterTypeOption key={option.key}>{option.label}</FilterTypeOption>
                             ))}
                         </FilterTypeStyle>
 
                         {/* status */}
                         <FilterTypeStyle
                             label={t("vehicle.status_label")}
-                            placeholder={t(
-                                "vehicle.status_placeholder"
-                            )}
+                            placeholder={t("vehicle.status_placeholder")}
                             selectedKeys={
                                 filterFormik.values.status
-                                    ? new Set([
-                                          filterFormik
-                                              .values.status
-                                      ])
+                                    ? new Set([filterFormik.values.status])
                                     : new Set([])
                             }
                             disallowEmptySelection={false}
                             isClearable
-                            onSelectionChange={
-                                handleStatusFilterChange
-                            }
+                            onSelectionChange={handleStatusFilterChange}
                         >
                             {statusOptions.map((option) => (
-                                <FilterTypeOption
-                                    key={option.key}
-                                >
-                                    {option.label}
-                                </FilterTypeOption>
+                                <FilterTypeOption key={option.key}>{option.label}</FilterTypeOption>
                             ))}
                         </FilterTypeStyle>
 
@@ -637,9 +531,7 @@ export default function AdminVehicleManagementPage() {
                             <ButtonIconStyled
                                 type="button"
                                 onPress={onCreateOpen}
-                                aria-label={t(
-                                    "admin.vehicle_new_button"
-                                )}
+                                aria-label={t("admin.vehicle_new_button")}
                                 className="btn-gradient rounded-lg"
                             >
                                 <Plus />
@@ -672,7 +564,6 @@ export default function AdminVehicleManagementPage() {
                                 pageNumber: nextPage
                             }))
                         }
-                        showControls
                     />
                 </div>
             )}
@@ -686,9 +577,7 @@ export default function AdminVehicleManagementPage() {
                 vehicleModelOptions={vehicleModelOptions}
                 isModelLoading={isFetchingVehicleModels}
                 formik={createFormik}
-                isSubmitting={
-                    createVehicleMutation.isPending
-                }
+                isSubmitting={createVehicleMutation.isPending}
             />
 
             {/* edit modal */}
@@ -701,9 +590,7 @@ export default function AdminVehicleManagementPage() {
                 vehicleModelOptions={vehicleModelOptions}
                 isModelLoading={isFetchingVehicleModels}
                 formik={editFormik}
-                isSubmitting={
-                    updateVehicleMutation.isPending
-                }
+                isSubmitting={updateVehicleMutation.isPending}
             />
 
             {/* delete modal */}
@@ -713,43 +600,23 @@ export default function AdminVehicleManagementPage() {
                 className="max-w-md"
             >
                 <ModalContentStyled>
-                    <ModalHeaderStyled>
-                        {t(
-                            "admin.vehicle_delete_title"
-                        )}
-                    </ModalHeaderStyled>
+                    <ModalHeaderStyled>{t("admin.vehicle_delete_title")}</ModalHeaderStyled>
 
                     <ModalBodyStyled>
                         <p className="text-sm text-slate-600">
-                            {t(
-                                "admin.vehicle_delete_confirm"
-                            )}
+                            {t("admin.vehicle_delete_confirm")}
                         </p>
 
                         <div className="rounded-md bg-slate-100 px-4 py-3 text-sm text-slate-700">
                             <p>
-                                <span className="font-semibold">
-                                    {t(
-                                        "vehicle.license_plate"
-                                    )}
-                                    :
-                                </span>{" "}
-                                {deletingVehicle
-                                    ?.licensePlate ??
-                                    "-"}
+                                <span className="font-semibold">{t("vehicle.license_plate")}:</span>{" "}
+                                {deletingVehicle?.licensePlate ?? "-"}
                             </p>
 
                             <p>
-                                <span className="font-semibold">
-                                    {t(
-                                        "vehicle.station_name"
-                                    )}
-                                    :
-                                </span>{" "}
+                                <span className="font-semibold">{t("vehicle.station_name")}:</span>{" "}
                                 {deletingVehicle
-                                    ? stationNameById[
-                                          deletingVehicle.stationId
-                                      ] ??
+                                    ? stationNameById[deletingVehicle.stationId] ??
                                       deletingVehicle.stationId
                                     : "-"}
                             </p>
@@ -760,9 +627,7 @@ export default function AdminVehicleManagementPage() {
                         <ButtonStyled
                             type="button"
                             color="secondary"
-                            onPress={
-                                handleCloseDeleteVehicle
-                            }
+                            onPress={handleCloseDeleteVehicle}
                             className="bg-slate-200 text-slate-700"
                         >
                             {t("common.cancel")}
@@ -772,9 +637,7 @@ export default function AdminVehicleManagementPage() {
                             type="button"
                             color="danger"
                             onPress={handleConfirmDelete}
-                            isDisabled={
-                                deleteVehicleMutation.isPending
-                            }
+                            isDisabled={deleteVehicleMutation.isPending}
                             className="bg-rose-500 text-white"
                         >
                             {t("common.delete")}

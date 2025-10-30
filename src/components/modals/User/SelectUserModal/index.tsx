@@ -196,7 +196,6 @@ export function SelectUserModal({ isOpen, onOpenChange, onClose, setUser }: Sele
                                             }
                                         })
                                     }
-                                    showControls
                                 />
                             </div>
                         </div>

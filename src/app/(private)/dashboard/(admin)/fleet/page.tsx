@@ -310,7 +310,7 @@ export default function AdminFleetPage() {
                                     pageSize={DEFAULT_PAGE_SIZE}
                                     totalItems={totalVehicles}
                                     onPageChange={handlePageChange}
-                                    showControls
+                                    
                                 />
                             </div>
                         ) : null} */}

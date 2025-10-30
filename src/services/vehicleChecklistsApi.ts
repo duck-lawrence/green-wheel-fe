@@ -8,6 +8,8 @@ import {
     VehicleChecklistItemViewRes,
     VehicleChecklistViewRes
 } from "@/models/checklist/schema/response"
+import { PaginationParams } from "@/models/common/request"
+import { PageResult } from "@/models/common/response"
 import axiosInstance from "@/utils/axios"
 import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 
@@ -33,9 +35,18 @@ export const vehicleChecklistsApi = {
             await axiosInstance.put(`/vehicle-checklists/${id}/customer-sign`)
         }),
 
-    getAll: (query: GetAllVehicleChecklistParams) =>
-        requestWrapper<VehicleChecklistViewRes[]>(async () => {
-            const params = buildQueryParams(query)
+    getAll: ({
+        query,
+        pagination
+    }: {
+        query: GetAllVehicleChecklistParams
+        pagination: PaginationParams
+    }) =>
+        requestWrapper<PageResult<VehicleChecklistViewRes>>(async () => {
+            const params = {
+                ...buildQueryParams(query),
+                ...buildQueryParams(pagination)
+            }
             const res = await axiosInstance.get("/vehicle-checklists", { params })
             return res.data
         }),

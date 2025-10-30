@@ -81,7 +81,6 @@ export function TableSelectionVehicle({
                             }
                         })
                     }
-                    showControls
                 />
             </div>
         </>

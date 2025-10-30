@@ -179,7 +179,6 @@ export default function RentalContractPage() {
                                     }
                                 })
                             }
-                            showControls
                         />
                     </div>
                 </>

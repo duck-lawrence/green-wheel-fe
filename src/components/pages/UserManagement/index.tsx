@@ -302,7 +302,6 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
                             }
                         })
                     }
-                    showControls
                 />
             </div>
 

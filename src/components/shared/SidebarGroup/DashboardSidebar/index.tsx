@@ -7,9 +7,7 @@ export function DashboardSidebar({ className }: { className?: string }) {
     const { data: user } = useGetMe()
     const { t } = useTranslation()
 
-    const defaultTabs: SidebarItem[] = [
-        { key: "/dashboard", label: t("staff.sidebar_dashboard"), href: "/dashboard" }
-    ]
+    const defaultTabs: SidebarItem[] = []
 
     const staffTabs: SidebarItem[] = [
         {

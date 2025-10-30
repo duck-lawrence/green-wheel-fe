@@ -1,11 +1,13 @@
 "use client"
 
-import React, { useMemo, useCallback, useEffect } from "react"
+import React, { useMemo, useCallback, useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { LayoutGroup, motion } from "framer-motion"
 import { cn } from "@heroui/react"
 import { ROLE_ADMIN, ROLE_CUSTOMER, ROLE_STAFF } from "@/constants/constants"
 import { useSideBarItemStore } from "@/hooks"
+import { Menu, X } from "lucide-react"
+import { ButtonIconStyled } from "@/components/styled"
 
 export type SidebarItem = {
     key: string
@@ -67,9 +69,10 @@ export function Sidebar({ tabs, selectedKey, className = "" }: SidebarProps) {
     const router = useRouter()
     const activeMenuKey = useSideBarItemStore((s) => s.activeMenuKey)
     const setActiveMenuKey = useSideBarItemStore((s) => s.setActiveMenuKey)
+    const [isOpen, setIsOpen] = useState(false) // mobile drawer state
 
+    // Cập nhật active tab dựa vào pathname
     useEffect(() => {
-        // Lấy tab có href hợp lệ và khớp chính xác hoặc prefix
         const matchedTab = tabs
             .filter((t) => t.href)
             .sort((a, b) => b.href!.length - a.href!.length)
@@ -79,7 +82,6 @@ export function Sidebar({ tabs, selectedKey, className = "" }: SidebarProps) {
                     pathname.startsWith(t.href!.endsWith("/") ? t.href! : `${t.href}/`)
             )
 
-        // Nếu tìm thấy tab phù hợp và khác với activeMenuKey thì cập nhật
         if (matchedTab && matchedTab.key !== activeMenuKey) {
             setActiveMenuKey(matchedTab.key)
         }
@@ -88,36 +90,69 @@ export function Sidebar({ tabs, selectedKey, className = "" }: SidebarProps) {
     const activeKey = useMemo(() => {
         if (activeMenuKey) return activeMenuKey
         const candidate = selectedKey ?? pathname
-        if (candidate && tabs.some((tab) => tab.key === candidate)) {
-            return candidate
-        }
+        if (candidate && tabs.some((tab) => tab.key === candidate)) return candidate
         return tabs[0]?.key
     }, [activeMenuKey, selectedKey, pathname, tabs])
 
     const handleSelection = useCallback(
         async (key: string | number) => {
-            const stringKey = String(key)
-            const target = tabs.find((tab) => tab.key === stringKey)
+            const target = tabs.find((tab) => tab.key === String(key))
             if (!target) return
-
-            if (target.onSelect) {
-                await target.onSelect()
-                return
-            }
-
-            if (target.href && target.href !== pathname) {
-                router.push(target.href)
-            }
+            if (target.onSelect) await target.onSelect()
+            if (target.href && target.href !== pathname) router.push(target.href)
+            setIsOpen(false) // đóng drawer mobile sau khi chọn
         },
         [tabs, pathname, router]
     )
 
     return (
         <LayoutGroup id="account-sidebar">
-            <div className="flex w-full flex-col md:w-auto md:flex-shrink-0">
+            {/* Nút hamburger chỉ hiển thị ở mobile */}
+            <div className="lg:hidden">
+                <ButtonIconStyled onPress={() => setIsOpen(!isOpen)}>
+                    {isOpen ? <X size={24} /> : <Menu size={24} />}
+                </ButtonIconStyled>
+            </div>
+
+            {isOpen && (
+                <div
+                    className="fixed inset-0 bg-black/30 z-40 lg:hidden"
+                    onClick={() => setIsOpen(false)}
+                />
+            )}
+
+            {/* Sidebar Mobile Drawer */}
+            <motion.div
+                initial={{ x: "-100%" }}
+                animate={{ x: isOpen ? 0 : "-100%" }}
+                transition={{ type: "spring", stiffness: 260, damping: 30 }}
+                className="fixed top-0 left-0 h-full w-50 bg-white shadow-lg z-50 flex flex-col lg:hidden"
+            >
+                {tabs.map((item) => {
+                    const isActive = activeKey === item.key
+                    return (
+                        <button
+                            key={item.key}
+                            onClick={() => handleSelection(item.key)}
+                            className={cn(
+                                "relative w-full overflow-hidden px-3 py-2 text-xl font-medium mb-2",
+                                "flex items-center justify-center whitespace-nowrap transition-colors duration-150",
+                                isActive
+                                    ? "bg-primary text-white"
+                                    : "text-gray-700 hover:bg-gray-100"
+                            )}
+                        >
+                            {item.label}
+                        </button>
+                    )
+                })}
+            </motion.div>
+
+            {/* Sidebar Desktop */}
+            <div className="hidden lg:flex flex-col md:w-auto md:flex-shrink-0">
                 <div
                     className={cn(
-                        "relative flex w-full flex-col gap-2 rounded-2xl bg-white p-3 shadow-lg shadow-slate-200/70 md:min-w-3xs",
+                        "relative flex w-sm max-w-sm flex-col rounded-2xl bg-white overflow-hidden shadow-lg shadow-slate-200/70",
                         className
                     )}
                 >
@@ -127,11 +162,9 @@ export function Sidebar({ tabs, selectedKey, className = "" }: SidebarProps) {
                             <motion.button
                                 key={item.key}
                                 type="button"
-                                onClick={() => {
-                                    void handleSelection(item.key)
-                                }}
+                                onClick={() => handleSelection(item.key)}
                                 className={cn(
-                                    "relative w-full overflow-hidden rounded-xl px-4 py-3 text-xl font-medium",
+                                    "relative w-full overflow-hidden rounded-xl px-3 py-2 text-xl font-medium",
                                     "flex items-center justify-center whitespace-nowrap transition-colors duration-150"
                                 )}
                                 whileHover={{ scale: 1.02 }}
@@ -145,7 +178,7 @@ export function Sidebar({ tabs, selectedKey, className = "" }: SidebarProps) {
                                     />
                                 )}
                                 <motion.span
-                                    className="relative w-full text-center text-xl font-medium whitespace-nowrap"
+                                    className="relative w-full text-center text-large font-medium whitespace-nowrap"
                                     animate={{
                                         color: isActive ? "#ffffff" : "#475569",
                                         scale: isActive ? 1 : 0.98
