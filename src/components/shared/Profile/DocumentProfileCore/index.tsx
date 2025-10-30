@@ -8,7 +8,8 @@ import { Spinner } from "@heroui/react"
 
 export type DocumentProfileCoreProps = {
     title: "citizen_identity" | "driver_license"
-    imageUrl?: string
+    frontImageUrl?: string
+    backImageUrl?: string
     isLoading: boolean
     uploader: React.ReactNode
     formik: {
@@ -25,7 +26,8 @@ export type DocumentProfileCoreProps = {
 
 export function DocumentProfileCore({
     title,
-    imageUrl,
+    frontImageUrl,
+    backImageUrl,
     isLoading,
     uploader,
     formik,
@@ -39,7 +41,7 @@ export function DocumentProfileCore({
         <>
             <div className="flex flex-wrap justify-between text-2xl mb-2 font-bold">
                 <div>{t(`user.${title}`)}</div>
-                {imageUrl && (
+                {frontImageUrl && backImageUrl && (
                     <div className="flex justify-end">
                         {!editable ? (
                             <ButtonIconStyled
@@ -69,7 +71,7 @@ export function DocumentProfileCore({
             <div className="mb-8">
                 {isLoading ? (
                     <Spinner />
-                ) : !imageUrl ? (
+                ) : !frontImageUrl || !backImageUrl ? (
                     <div
                         className="flex flex-wrap md:flex-nowrap justify-between items-center 
                         text-md mt-[-0.75rem]"
@@ -83,13 +85,13 @@ export function DocumentProfileCore({
                             <div className="space-y-1">
                                 <ImageStyled
                                     alt={t(`user.${title}`)}
-                                    src={imageUrl}
+                                    src={frontImageUrl}
                                     width={400}
                                     height={250}
                                 />
                                 <ImageStyled
                                     alt={t(`user.${title}`)}
-                                    src={imageUrl}
+                                    src={backImageUrl}
                                     width={400}
                                     height={250}
                                 />

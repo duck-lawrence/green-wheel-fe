@@ -170,6 +170,8 @@
         "nationality": "Nationality",
         "expires_at": "Expires at",
 
+        "upload_first_then_back_image": "Please upload the front image first, followed by the back image",
+
         "citizen_identity": "Cititzen Identity",
         "upload_citizen_identity": "Upload Cititzen Identity",
         "please_upload_citizen_identity": "Please upload your Cititzen Identity to booking",
@@ -179,6 +181,7 @@
         "invalid_citizen_identity_data": "Invalid citizen identity data",
         "citizen_identity_not_found": "Citizen identity not found",
         "citizen_identity_duplicate": "This citizen identity already exists",
+        "invalid_citizen_identity_images_amount": "Invalid citizen identity images amount",
 
         "driver_license": "Driver License",
         "upload_driver_license": "Upload Driver License",
@@ -191,6 +194,7 @@
         "invalid_driver_license_data": "Invalid driver license data",
         "driver_license_not_found": "Driver license not found",
         "driver_license_duplicate": "This driver license already exists",
+        "invalid_driver_license_images_amount": "Invalid driver license images amount",
 
         "station_require": "Station is required",
 

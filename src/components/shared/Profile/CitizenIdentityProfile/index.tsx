@@ -60,7 +60,8 @@ export function CitizenIdentityProfile({ user }: { user: UserProfileViewRes }) {
     return (
         <DocumentProfileCore
             title="citizen_identity"
-            imageUrl={citizenId?.imageUrl}
+            frontImageUrl={citizenId?.frontImageUrl}
+            backImageUrl={citizenId?.backImageUrl}
             isLoading={isLoading}
             uploader={<CitizenIdentityUploader />}
             formik={formik}

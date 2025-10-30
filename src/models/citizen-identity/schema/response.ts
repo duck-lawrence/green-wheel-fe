@@ -8,5 +8,6 @@ export type CitizenIdentityViewRes = {
     sex: Sex
     dateOfBirth: string
     expiresAt: string
-    imageUrl: string
+    frontImageUrl: string
+    backImageUrl: string
 }

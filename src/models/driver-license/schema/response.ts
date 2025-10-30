@@ -9,5 +9,6 @@ export type DriverLicenseViewRes = {
     sex: Sex
     dateOfBirth: string
     expiresAt: string
-    imageUrl: string
+    frontImageUrl: string
+    backImageUrl: string
 }

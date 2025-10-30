@@ -36,7 +36,6 @@ export const userApi = {
             return res.data
         }),
 
-    // create: (req: CreateUserReq) =>
     create: (req: CreateUserReq) =>
         requestWrapper<{ userId: string }>(async () => {
             console.log(req)
@@ -51,9 +50,6 @@ export const userApi = {
         }),
     uploadCitizenIdById: ({ userId, formData }: { userId: string; formData: FormData }) =>
         requestWrapper<CitizenIdentityViewRes>(async () => {
-            // const res = await axiosInstance.put(`/users/${userId}/citizen-identity`, formData)
-            // axiosInstance đặt Content-Type mặc định là application/json.
-            // Khi upload FormData phải override sang multipart/form-data, nếu không server không nhận file.
             const res = await axiosInstance.put(`/users/${userId}/citizen-identity`, formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             })

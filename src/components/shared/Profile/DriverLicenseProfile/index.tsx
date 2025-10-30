@@ -62,7 +62,8 @@ export function DriverLicenseProfile({ user }: { user: UserProfileViewRes }) {
     return (
         <DocumentProfileCore
             title="driver_license"
-            imageUrl={driverLicense?.imageUrl}
+            frontImageUrl={driverLicense?.frontImageUrl}
+            backImageUrl={driverLicense?.backImageUrl}
             isLoading={isLoading}
             uploader={<DriverLicenseUploader />}
             formik={formik}
