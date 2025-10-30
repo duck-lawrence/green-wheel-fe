@@ -12,7 +12,13 @@ import {
     IconProps
 } from "@phosphor-icons/react"
 import { LogoStyled } from "@/components/styled"
-import { GREENWHEEL_ADDRESS, GREENWHEEL_EMAIL, GREENWHEEL_PHONE } from "@/constants/constants"
+import {
+    GREENWHEEL,
+    GREENWHEEL_ADDRESS,
+    GREENWHEEL_COPYRIGHT,
+    GREENWHEEL_EMAIL,
+    GREENWHEEL_PHONE
+} from "@/constants/constants"
 
 export function Footer() {
     const { t } = useTranslation()
@@ -25,7 +31,7 @@ export function Footer() {
                 <div className="space-y-4">
                     <Link href="/" className="flex items-center gap-2">
                         <LogoStyled />
-                        <p className="font-semibold text-2xl text-primary">Green Wheel</p>
+                        <p className="font-semibold text-2xl text-primary">{GREENWHEEL}</p>
                     </Link>
 
                     <p className="text-sm leading-relaxed text-gray-400 max-w-sm">
@@ -50,11 +56,6 @@ export function Footer() {
                                 {t("footer.about_us")}
                             </Link>
                         </li>
-                        {/* <li>
-                            <Link href="/services" className="hover:text-primary duration-200">
-                                {t("footer.services")}
-                            </Link>
-                        </li> */}
                     </ul>
                 </div>
 
@@ -110,9 +111,7 @@ export function Footer() {
 
             {/* COPYRIGHT */}
             <div className="border-t border-gray-800 mt-8 py-5">
-                <p className="text-center text-gray-400 text-sm">
-                    © 2025 Green Wheel Corp. All rights reserved.
-                </p>
+                <p className="text-center text-gray-400 text-sm">{GREENWHEEL_COPYRIGHT}</p>
             </div>
         </footer>
     )

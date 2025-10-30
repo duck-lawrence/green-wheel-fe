@@ -80,7 +80,6 @@ export function TableSelectionStaff({
                             }
                         })
                     }
-                    showControls
                 />
             </div>
         </>

@@ -32,7 +32,7 @@
 //   totalItems: number
 //   pageSize?: number
 //   onPageChange?: (page: number) => void
-//   showControls?: boolean
+//   ?: boolean
 //   containerClassName?: string
 //   className?: string
 //   buttonClassName?: string
@@ -76,7 +76,7 @@
 //   totalItems,
 //   pageSize = DEFAULT_PAGE_SIZE,
 //   onPageChange,
-//   showControls = true,
+//    = true,
 //   containerClassName,
 //   className,
 //   buttonClassName,
@@ -142,7 +142,7 @@
 //         total={totalPages}
 //         page={currentPage}
 //         onChange={onPageChange}
-//         showControls={showControls}
+//         ={}
 //         className={className}
 //         isDisabled={isDisabled}
 //         siblings={1}
@@ -346,6 +346,15 @@ import { Pagination, PaginationProps, cn } from "@heroui/react"
  * - Cho phép truyền className tùy chỉnh
  */
 export function PaginationStyled({ page, onChange, className, ...rest }: PaginationProps) {
+    // const [isSmall, setIsSmall] = useState(false)
+
+    // useEffect(() => {
+    //     const handleResize = () => setIsSmall(window.innerWidth < 320) // sm = 640px
+    //     handleResize()
+    //     window.addEventListener("resize", handleResize)
+    //     return () => window.removeEventListener("resize", handleResize)
+    // }, [])
+
     const handleClick = (value: number) => {
         onChange?.(value)
     }
@@ -356,6 +365,7 @@ export function PaginationStyled({ page, onChange, className, ...rest }: Paginat
             page={page}
             onChange={handleClick}
             className={cn("flex justify-center items-center", className)}
+            // showControls={!isSmall}
             // renderItem={(item) => renderItem(item, handleClick)}
         />
     )

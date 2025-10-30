@@ -55,7 +55,10 @@ export default function ChangePasswordPage() {
     })
 
     return (
-        <form onSubmit={formik.handleSubmit}>
+        <form
+            onSubmit={formik.handleSubmit}
+            className="bg-white w-full overflow-y-auto px-4 sm:px-14 py-6 shadow-2xs rounded-2xl"
+        >
             {/* Title */}
             <div className="text-3xl mb-3 px-4 font-bold">
                 <p>{user?.needSetPassword ? t("auth.set_password") : t("auth.change_password")}</p>

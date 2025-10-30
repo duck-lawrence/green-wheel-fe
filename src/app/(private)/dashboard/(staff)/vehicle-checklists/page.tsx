@@ -23,7 +23,7 @@ export default function VehicleChecklistPage() {
     } = useGetAllVehicleChecklists({ query: filters })
 
     return (
-        <div className="py-8 px-12 shadow-2xs rounded-2xl bg-white text-center">
+        <div className="px-3 py-2 md:py-8 md:px-12 shadow-2xs rounded-2xl bg-white text-center">
             <div className="text-3xl pb-6 font-bold text-center text-primary">
                 <p>{t("vehicle_checklist.checklist")}</p>
             </div>

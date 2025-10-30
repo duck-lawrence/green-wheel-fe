@@ -156,7 +156,6 @@ export default function StaffContractsPage() {
                             }
                         })
                     }
-                    showControls
                 />
             </div>
         </div>

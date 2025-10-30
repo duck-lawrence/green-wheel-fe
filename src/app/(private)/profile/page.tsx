@@ -66,7 +66,7 @@ export default function ProfilePage() {
     if (!user) return <SpinnerStyled />
 
     return (
-        <div>
+        <div className="bg-white w-full lg:w-5xl max-w-screen overflow-y-auto px-4 sm:px-14 py-6 shadow-2xs rounded-2xl">
             {/* Title */}
             <div className="text-2xl text-center sm:text-left sm:text-3xl mb-8 font-bold">
                 {t("user.account_information")}

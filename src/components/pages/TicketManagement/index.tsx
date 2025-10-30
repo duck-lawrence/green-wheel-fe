@@ -121,7 +121,6 @@ export default function TicketManagement({
                             }
                         })
                     }
-                    showControls
                 />
             </div>
         </div>
