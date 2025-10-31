@@ -13,27 +13,19 @@ import {
     RoadHorizon,
     ShieldCheck,
     TrashSimple,
-    UsersFour,
+    UsersFour
 } from "@phosphor-icons/react"
-import toast from "react-hot-toast"
 
 import { ButtonStyled, VehicleSubImagesScroll } from "@/components"
-import {
-    useDay,
-    useGetAllStations,
-    useGetAllVehicleModels,
-    useGetAllVehicles,
-} from "@/hooks"
+import { useDay, useGetAllStations, useGetAllVehicleModels, useGetAllVehicles } from "@/hooks"
 import { VehicleStatus } from "@/constants/enum"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
-import {
-    VehicleModelViewRes,
-    VehicleViewRes,
-} from "@/models/vehicle/schema/response"
+import { VehicleModelViewRes, VehicleViewRes } from "@/models/vehicle/schema/response"
 import { BackendError } from "@/models/common/response"
 import { FALLBACK_IMAGE_URL } from "@/constants/constants"
 import { slides } from "public/cars"
+import { addToast } from "@heroui/toast"
 
 /* constant map from status -> chip style */
 const VEHICLE_STATUS_CLASS_MAP: Record<VehicleStatus, string> = {
@@ -42,7 +34,7 @@ const VEHICLE_STATUS_CLASS_MAP: Record<VehicleStatus, string> = {
     [VehicleStatus.Rented]: "bg-blue-100 text-blue-700",
     [VehicleStatus.Maintenance]: "bg-orange-100 text-orange-700",
     [VehicleStatus.MissingNoReason]: "bg-rose-100 text-rose-700",
-    [VehicleStatus.LateReturn]: "bg-purple-100 text-purple-700",
+    [VehicleStatus.LateReturn]: "bg-purple-100 text-purple-700"
 }
 
 type VehicleRow = {
@@ -69,14 +61,10 @@ function mapVehiclesToRows(opts: {
     return vehicles.map((vehicle) => {
         // resolve status label & chip class
         const status: VehicleStatus | undefined =
-            typeof vehicle.status === "number"
-                ? (vehicle.status as VehicleStatus)
-                : undefined
+            typeof vehicle.status === "number" ? (vehicle.status as VehicleStatus) : undefined
 
         const statusKey =
-            status !== undefined
-                ? VehicleStatus[status]?.toString().toLowerCase()
-                : undefined
+            status !== undefined ? VehicleStatus[status]?.toString().toLowerCase() : undefined
 
         const statusLabel = statusKey
             ? t(`vehicle.status_value_${statusKey}`)
@@ -89,17 +77,14 @@ function mapVehiclesToRows(opts: {
 
         // fallback updatedAt (legacy field support)
         const rawUpdatedAt =
-            vehicle.updatedAt ||
-            (vehicle as VehicleViewRes & { updated_at?: string }).updated_at
+            vehicle.updatedAt || (vehicle as VehicleViewRes & { updated_at?: string }).updated_at
 
         const lastUpdatedLabel = rawUpdatedAt
             ? formatDateTime({ date: rawUpdatedAt })
             : t("fleet.vehicle_last_updated_unknown")
 
         // station display name
-        const stationName =
-            stationNameById[vehicle.stationId] ??
-            t("fleet.vehicle_unknown_station")
+        const stationName = stationNameById[vehicle.stationId] ?? t("fleet.vehicle_unknown_station")
 
         return {
             id: vehicle.id,
@@ -107,7 +92,7 @@ function mapVehiclesToRows(opts: {
             stationName,
             statusLabel,
             statusClasses,
-            lastUpdatedLabel,
+            lastUpdatedLabel
         }
     })
 }
@@ -118,23 +103,22 @@ function useFleetData(modelId: string | undefined) {
         data: vehicleModelsData = [],
         isLoading: isLoadingModels,
         isFetching: isFetchingModels,
-        error: vehicleModelsError,
+        error: vehicleModelsError
     } = useGetAllVehicleModels({ query: {} })
 
     const {
         data: vehiclesPage,
         isFetching: isFetchingVehicles,
-        error: vehiclesError,
+        error: vehiclesError
     } = useGetAllVehicles({
         params: modelId ? { modelId } : {},
         pagination: { pageNumber: 1, pageSize: 1000 },
-        enabled: Boolean(modelId),
+        enabled: Boolean(modelId)
     })
 
-    const {
-        data: stations = [],
-        error: stationsError,
-    } = useGetAllStations({ enabled: Boolean(modelId) })
+    const { data: stations = [], error: stationsError } = useGetAllStations({
+        enabled: Boolean(modelId)
+    })
 
     // map stationId -> stationName for fast lookup
     const stationNameById = useMemo(() => {
@@ -170,7 +154,7 @@ function useFleetData(modelId: string | undefined) {
         isFetchingVehicles,
         vehicleModelsError,
         vehiclesError,
-        stationsError,
+        stationsError
     }
 }
 
@@ -180,7 +164,11 @@ function useApiErrorToasts(errors: Array<BackendError | unknown>, t: any) {
         errors.forEach((err) => {
             if (!err) return
             const be = err as BackendError
-            toast.error(translateWithFallback(t, be.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, be.detail),
+                color: "danger"
+            })
         })
     }, [errors, t])
 }
@@ -308,12 +296,9 @@ function FleetInfoHeader(props: {
 
             {/* description */}
             <div className="space-y-3">
-                <h2 className="text-sm font-semibold text-slate-700">
-                    {t("fleet.detail_about")}
-                </h2>
+                <h2 className="text-sm font-semibold text-slate-700">{t("fleet.detail_about")}</h2>
                 <p className="text-sm leading-relaxed text-slate-600">
-                    {vehicleModel.description?.trim() ||
-                        t("fleet.detail_description_empty")}
+                    {vehicleModel.description?.trim() || t("fleet.detail_description_empty")}
                 </p>
             </div>
         </section>
@@ -321,10 +306,7 @@ function FleetInfoHeader(props: {
 }
 
 /* spec grid: capacity, motor, battery, ranges, airbags */
-function FleetSpecSection(props: {
-    t: TranslateFn
-    vehicleModel: VehicleModelViewRes
-}) {
+function FleetSpecSection(props: { t: TranslateFn; vehicleModel: VehicleModelViewRes }) {
     const { t, vehicleModel } = props
 
     const unknown = t("fleet.detail_unknown")
@@ -337,57 +319,39 @@ function FleetSpecSection(props: {
         {
             key: "capacity",
             label: t("fleet.spec_capacity"),
-            value: pretty(
-                vehicleModel.seatingCapacity,
-                t("fleet.detail_seats_unit")
-            ),
-            icon: <UsersFour size={18} weight="duotone" />,
+            value: pretty(vehicleModel.seatingCapacity, t("fleet.detail_seats_unit")),
+            icon: <UsersFour size={18} weight="duotone" />
         },
         {
             key: "motorPower",
             label: t("fleet.spec_motor_power"),
-            value: pretty(
-                vehicleModel.motorPower,
-                t("fleet.detail_kw_unit")
-            ),
-            icon: <Gauge size={18} weight="duotone" />,
+            value: pretty(vehicleModel.motorPower, t("fleet.detail_kw_unit")),
+            icon: <Gauge size={18} weight="duotone" />
         },
         {
             key: "batteryCapacity",
             label: t("fleet.spec_battery"),
-            value: pretty(
-                vehicleModel.batteryCapacity,
-                t("fleet.detail_kwh_unit")
-            ),
-            icon: <BatteryCharging size={18} weight="duotone" />,
+            value: pretty(vehicleModel.batteryCapacity, t("fleet.detail_kwh_unit")),
+            icon: <BatteryCharging size={18} weight="duotone" />
         },
         {
             key: "ecoRangeKm",
             label: t("fleet.spec_eco_range"),
-            value: pretty(
-                vehicleModel.ecoRangeKm,
-                t("fleet.detail_km_unit")
-            ),
-            icon: <RoadHorizon size={18} weight="duotone" />,
+            value: pretty(vehicleModel.ecoRangeKm, t("fleet.detail_km_unit")),
+            icon: <RoadHorizon size={18} weight="duotone" />
         },
         {
             key: "sportRangeKm",
             label: t("fleet.spec_sport_range"),
-            value: pretty(
-                vehicleModel.sportRangeKm,
-                t("fleet.detail_km_unit")
-            ),
-            icon: <FlagCheckered size={18} weight="duotone" />,
+            value: pretty(vehicleModel.sportRangeKm, t("fleet.detail_km_unit")),
+            icon: <FlagCheckered size={18} weight="duotone" />
         },
         {
             key: "numberOfAirbags",
             label: t("fleet.spec_airbags"),
-            value: pretty(
-                vehicleModel.numberOfAirbags,
-                t("fleet.detail_airbags_unit")
-            ),
-            icon: <ShieldCheck size={18} weight="duotone" />,
-        },
+            value: pretty(vehicleModel.numberOfAirbags, t("fleet.detail_airbags_unit")),
+            icon: <ShieldCheck size={18} weight="duotone" />
+        }
     ]
 
     return (
@@ -421,11 +385,7 @@ function FleetSpecSection(props: {
 }
 
 /* table of physical vehicles of this model */
-function FleetVehicleTable(props: {
-    t: TranslateFn
-    rows: VehicleRow[]
-    isLoading: boolean
-}) {
+function FleetVehicleTable(props: { t: TranslateFn; rows: VehicleRow[]; isLoading: boolean }) {
     const { t, rows, isLoading } = props
 
     return (
@@ -460,26 +420,18 @@ function FleetVehicleTable(props: {
                     <tbody className="divide-y divide-slate-100">
                         {isLoading ? (
                             <tr>
-                                <td
-                                    colSpan={4}
-                                    className="py-6 text-center text-sm text-slate-500"
-                                >
+                                <td colSpan={4} className="py-6 text-center text-sm text-slate-500">
                                     {t("fleet.detail_vehicle_table_loading")}
                                 </td>
                             </tr>
                         ) : rows.length > 0 ? (
                             rows.map((row) => (
-                                <tr
-                                    key={row.id}
-                                    className="transition-colors hover:bg-slate-50"
-                                >
+                                <tr key={row.id} className="transition-colors hover:bg-slate-50">
                                     <td className="py-3 px-4 font-semibold text-slate-900">
                                         {row.licensePlate}
                                     </td>
 
-                                    <td className="py-3 px-4 text-slate-700">
-                                        {row.stationName}
-                                    </td>
+                                    <td className="py-3 px-4 text-slate-700">{row.stationName}</td>
 
                                     <td className="py-3 px-4 text-center">
                                         <span
@@ -496,10 +448,7 @@ function FleetVehicleTable(props: {
                             ))
                         ) : (
                             <tr>
-                                <td
-                                    colSpan={4}
-                                    className="py-6 text-center text-sm text-slate-500"
-                                >
+                                <td colSpan={4} className="py-6 text-center text-sm text-slate-500">
                                     {t("fleet.detail_vehicle_table_empty")}
                                 </td>
                             </tr>
@@ -522,7 +471,7 @@ export default function AdminFleetDetailPage() {
         [t]
     )
     const { formatDateTime } = useDay({
-        defaultFormat: "DD/MM/YYYY HH:mm",
+        defaultFormat: "DD/MM/YYYY HH:mm"
     })
 
     // fetch and derive model/vehicles data
@@ -535,14 +484,11 @@ export default function AdminFleetDetailPage() {
         isFetchingVehicles,
         vehicleModelsError,
         vehiclesError,
-        stationsError,
+        stationsError
     } = useFleetData(modelId)
 
     // show toast for any API error
-    useApiErrorToasts(
-        [vehicleModelsError, vehiclesError, stationsError],
-        t
-    )
+    useApiErrorToasts([vehicleModelsError, vehiclesError, stationsError], t)
 
     // build rows for vehicle table
     const vehicleRows: VehicleRow[] = useMemo(
@@ -551,7 +497,7 @@ export default function AdminFleetDetailPage() {
                 vehicles: vehiclesOfModel,
                 t: translate,
                 formatDateTime,
-                stationNameById,
+                stationNameById
             }),
         [vehiclesOfModel, translate, formatDateTime, stationNameById]
     )
@@ -561,23 +507,16 @@ export default function AdminFleetDetailPage() {
         if (!vehicleModel) return ""
         const hasStock = vehicleModel.availableVehicleCount > 0
         return translate(
-            hasStock
-                ? "fleet.status_available"
-                : "fleet.status_out_of_stock",
+            hasStock ? "fleet.status_available" : "fleet.status_out_of_stock",
             hasStock ? "Available" : "Out of stock"
         )
     }, [vehicleModel, translate])
 
     const subImgUrls = useMemo(() => {
         const modelImages = vehicleModel
-            ? [
-                  vehicleModel.imageUrl,
-                  ...(vehicleModel.imageUrls ?? []),
-              ]
+            ? [vehicleModel.imageUrl, ...(vehicleModel.imageUrls ?? [])]
             : []
-        const merged = [...modelImages, ...slides].filter(
-            (src): src is string => Boolean(src)
-        )
+        const merged = [...modelImages, ...slides].filter((src): src is string => Boolean(src))
         return merged.length > 0 ? merged : [FALLBACK_IMAGE_URL]
     }, [vehicleModel])
 
@@ -613,10 +552,7 @@ export default function AdminFleetDetailPage() {
                     )}
                 </p>
 
-                <ButtonStyled
-                    color="primary"
-                    onPress={() => router.push("/dashboard/fleet")}
-                >
+                <ButtonStyled color="primary" onPress={() => router.push("/dashboard/fleet")}>
                     {t("fleet.back_to_list")}
                 </ButtonStyled>
             </div>
@@ -642,11 +578,7 @@ export default function AdminFleetDetailPage() {
 
             <FleetSpecSection t={translate} vehicleModel={vehicleModel} />
 
-            <FleetVehicleTable
-                t={translate}
-                rows={vehicleRows}
-                isLoading={isFetchingVehicles}
-            />
+            <FleetVehicleTable t={translate} rows={vehicleRows} isLoading={isFetchingVehicles} />
         </div>
     )
 }

@@ -3,9 +3,8 @@ import { DetailDamage, ModalStyled } from "@/components"
 import { useGetInvoiceById } from "@/hooks"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
-import { ModalBody, ModalContent, ModalHeader, Spinner } from "@heroui/react"
+import { addToast, ModalBody, ModalContent, ModalHeader, Spinner } from "@heroui/react"
 import React, { useEffect } from "react"
-import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 
 export function DetailDamageModal({
@@ -23,7 +22,11 @@ export function DetailDamageModal({
     useEffect(() => {
         if (error) {
             const backendErr = error as BackendError
-            toast.error(translateWithFallback(t, backendErr.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, backendErr.detail),
+                color: "danger"
+            })
         }
     }, [error, t])
 
@@ -31,7 +34,7 @@ export function DetailDamageModal({
         <ModalStyled isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={true}>
             <ModalContent>
                 <ModalHeader className="flex flex-col gap-1">
-                    {t("rental_contract.damage_details")}
+                    {t("invoice.damage_details")}
                 </ModalHeader>
                 <ModalBody>
                     {!invoice || isLoading ? (

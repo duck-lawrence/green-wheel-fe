@@ -8,9 +8,9 @@ import { VehicleChecklistViewRes } from "@/models/checklist/schema/response"
 import { BackendError } from "@/models/common/response"
 import { vehicleChecklistsApi } from "@/services/vehicleChecklistsApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
+import { addToast } from "@heroui/toast"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
-import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 
 export const useGetAllVehicleChecklists = ({
@@ -63,12 +63,21 @@ export const useCreateVehicleChecklist = ({ onSuccess }: { onSuccess?: () => voi
     return useMutation({
         mutationFn: vehicleChecklistsApi.create,
         onSuccess: ({ id }) => {
-            toast.success(`${t("success.create")}, ${t("common.redirecting").toLowerCase()}`)
+            addToast({
+                title: t("toast.success"),
+                description: `${t("success.create")}, ${t("common.redirecting").toLowerCase()}`,
+                color: "success"
+            })
+
             router.push(`/dashboard/vehicle-checklists/${id}`)
             onSuccess?.()
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -90,11 +99,20 @@ export const useUpdateVehicleChecklist = ({
             queryClient.refetchQueries({
                 queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, id]
             })
-            toast.success(t("success.update"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.update"),
+                color: "success"
+            })
+
             onSuccess?.()
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -113,7 +131,11 @@ export const useUpdateVehicleChecklistItem = ({ onSuccess }: { onSuccess?: () =>
             onSuccess?.()
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -135,11 +157,19 @@ export const useUploadChecklistItemImage = ({
         },
         onSuccess: async () => {
             onSuccess?.()
-            toast.success(t("success.upload"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.upload"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
             onError?.()
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }

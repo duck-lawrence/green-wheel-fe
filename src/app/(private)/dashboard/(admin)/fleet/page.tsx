@@ -15,11 +15,11 @@ import {
 import { useGetAllVehicleModels, useGetAllVehicleSegments } from "@/hooks"
 import { FunnelSimple } from "@phosphor-icons/react"
 import { GetAllModelParams } from "@/models/vehicle/schema/request"
-import toast from "react-hot-toast"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { useRouter } from "next/navigation"
+import { addToast } from "@heroui/toast"
 
 export default function AdminFleetPage() {
     const { t } = useTranslation()
@@ -144,7 +144,11 @@ export default function AdminFleetPage() {
     useEffect(() => {
         if (getVehicleSegmentsError) {
             const error = getVehicleSegmentsError as BackendError
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     }, [getVehicleSegmentsError, t])
 
@@ -224,9 +228,7 @@ export default function AdminFleetPage() {
                         </FilterTypeStyle>
                     </div>
                     <div className="flex flex-col gap-3 sm:flex-row">
-                        <ButtonStyled
-                            className="btn-gradient btn-gradient:hover btn-gradient:active h-12 px-5 font-semibold text-white sm:ml-3 sm:shrink-0"
-                        >
+                        <ButtonStyled className="btn-gradient btn-gradient:hover btn-gradient:active h-12 px-5 font-semibold text-white sm:ml-3 sm:shrink-0">
                             + {t("fleet.add_unit_button")}
                         </ButtonStyled>
                     </div>

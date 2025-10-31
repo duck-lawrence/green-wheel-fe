@@ -24,11 +24,11 @@ import { useTranslation } from "react-i18next"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { Spinner, useDisclosure } from "@heroui/react"
 import { ROLE_CUSTOMER, ROLE_STAFF } from "@/constants/constants"
-import toast from "react-hot-toast"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { Icon } from "@iconify/react"
 import { slides } from "public/cars"
+import { addToast } from "@heroui/toast"
 
 export default function VehicleDetailPage() {
     const { id } = useParams()
@@ -74,12 +74,21 @@ export default function VehicleDetailPage() {
     // redirect if filter not valid
     useEffect(() => {
         if (!stationId || !startDate || !endDate) {
-            toast.error(t("vehicle_filter.require"))
+            addToast({
+                title: t("toast.error"),
+                description: t("vehicle_filter.require"),
+                color: "danger"
+            })
             router.replace("/vehicle-rental")
         }
         if (modelError) {
             const error = modelError as BackendError
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
+
             router.replace("/vehicle-rental")
         }
     }, [endDate, modelError, router, startDate, stationId, t])
@@ -99,7 +108,11 @@ export default function VehicleDetailPage() {
             !user?.phone
             // || !user.citizenUrl || !user.licenseUrl
         ) {
-            toast.error(t("user.enter_required_info"))
+            addToast({
+                title: t("toast.error"),
+                description: t("user.enter_required_info"),
+                color: "danger"
+            })
         } else {
             onOpen()
         }

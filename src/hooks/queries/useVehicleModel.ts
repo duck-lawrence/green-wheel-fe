@@ -4,8 +4,8 @@ import { GetAllModelParams, SearchModelParams } from "@/models/vehicle/schema/re
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { vehicleModelApi } from "@/services/vehicleModelApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
+import { addToast } from "@heroui/toast"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 
 export const useGetAllVehicleModels = ({
@@ -108,11 +108,19 @@ export const useUploadModelImages = ({
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
             onSuccess?.()
-            toast.success(t("success.upload"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.upload"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
             onError?.()
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }

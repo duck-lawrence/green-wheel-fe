@@ -15,11 +15,11 @@ import { FunnelSimple, MapPinAreaIcon } from "@phosphor-icons/react"
 import { RentalContractStatusLabels } from "@/constants/labels"
 import { ContractQueryParams } from "@/models/rental-contract/schema/request"
 import { BackendError } from "@/models/common/response"
-import toast from "react-hot-toast"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { AutocompleteItem } from "@heroui/react"
 import { PaginationParams } from "@/models/common/request"
 import { SearchIcon } from "lucide-react"
+import { addToast } from "@heroui/toast"
 
 export default function StaffContractsPage() {
     const { t } = useTranslation()
@@ -57,7 +57,11 @@ export default function StaffContractsPage() {
     useEffect(() => {
         if (getStationsError) {
             const error = getStationsError as BackendError
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     }, [getStationsError, isGetStationsLoading, stations, t])
 

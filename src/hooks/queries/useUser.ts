@@ -5,7 +5,6 @@ import { StaffReq, UserFilterParams, UserUpdateReq } from "@/models/user/schema/
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { userApi } from "@/services/userApi"
 import { useTranslation } from "react-i18next"
-import toast from "react-hot-toast"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { BackendError, PageResult } from "@/models/common/response"
 import axiosInstance from "@/utils/axios"
@@ -13,6 +12,7 @@ import { requestWrapper } from "@/utils/helpers/axiosHelper"
 import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
 import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
 import { PaginationParams } from "@/models/common/request"
+import { addToast } from "@heroui/toast"
 
 export const useCreateNewUser = ({
     params,
@@ -32,11 +32,19 @@ export const useCreateNewUser = ({
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.USERS, params, pagination] })
             onSuccess?.()
-            toast.success(t("success.create"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.create"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
             onError?.()
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -59,11 +67,19 @@ export const useUpdateUser = ({
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
             onSuccess?.()
-            toast.success(t("success.update"))
+            addToast({
+                title: t("toast.success"),
+                description: t("toast.update_success"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
             onError?.()
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -123,11 +139,20 @@ export const useDeleteUser = ({
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
             onSuccess?.()
-            toast.success(t("success.delete"))
+            // toast.success(t("success.delete"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.delete"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
             onError?.()
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -161,11 +186,19 @@ export const useUploadCitizenIdById = ({
             //     }
             // )
             onSuccess?.(data)
-            toast.success(t("success.upload"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.upload"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
             onError?.()
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -194,11 +227,19 @@ export const useUpdateCitizenIdById = ({
             //     }
             // )
             onSuccess?.()
-            toast.success(t("success.update"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.update"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
             onError?.()
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -220,11 +261,19 @@ export const useDeleteCitizenIdById = ({
             //     queryKey: [...QUERY_KEYS.ME, ...QUERY_KEYS.CITIZEN_IDENTITY]
             // })
             onSuccess?.()
-            toast.success(t("success.delete"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.delete"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
             onError?.()
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -258,11 +307,19 @@ export const useUploadDriverLicenseById = ({
             //     }
             // )
             onSuccess?.(data)
-            toast.success(t("success.upload"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.upload"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
             onError?.()
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -291,11 +348,19 @@ export const useUpdateDriverLicenseById = ({
             //     }
             // )
             onSuccess?.()
-            toast.success(t("success.update"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.update"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
             onError?.()
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -317,11 +382,19 @@ export const useDeleteDriverLicenseById = ({
             //     queryKey: [...QUERY_KEYS.ME, ...QUERY_KEYS.DRIVER_LICENSE]
             // })
             onSuccess?.()
-            toast.success(t("success.delete"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.delete"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
             onError?.()
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }

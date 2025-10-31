@@ -7,12 +7,12 @@ import { useRouter } from "next/navigation"
 import { useDay, useGetMyContracts } from "@/hooks"
 import { RentalContractStatus } from "@/constants/enum"
 import { BackendError } from "@/models/common/response"
-import toast from "react-hot-toast"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { RentalContractStatusLabels } from "@/constants/labels"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { PaginationParams } from "@/models/common/request"
 import { RentalContractStatusColorMap } from "@/constants/colorMap"
+import { addToast } from "@heroui/toast"
 
 export default function RentalContractPage() {
     const { t } = useTranslation()
@@ -31,7 +31,11 @@ export default function RentalContractPage() {
     useEffect(() => {
         if (contractsError) {
             const backendErr = contractsError as BackendError
-            toast.error(translateWithFallback(t, backendErr.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, backendErr.detail),
+                color: "danger"
+            })
         }
     }, [contractsError, t])
 

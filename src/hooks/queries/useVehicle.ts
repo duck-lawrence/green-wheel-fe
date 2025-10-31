@@ -1,7 +1,6 @@
 "use client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
-import toast from "react-hot-toast"
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { BackendError } from "@/models/common/response"
 import { PaginationParams } from "@/models/common/request"
@@ -9,11 +8,12 @@ import { GetVehicleParams, UpdateVehicleReq } from "@/models/vehicle/schema/requ
 import { VehicleViewRes } from "@/models/vehicle/schema/response"
 import { vehicleApi } from "@/services/vehicleApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
+import { addToast } from "@heroui/toast"
 
 export const useGetAllVehicles = ({
     params = {},
     pagination = {},
-    enabled = true,
+    enabled = true
 }: {
     params?: GetVehicleParams
     pagination?: PaginationParams
@@ -24,13 +24,9 @@ export const useGetAllVehicles = ({
         queryKey: [...QUERY_KEYS.VEHICLES, params, pagination],
         queryFn: () => vehicleApi.getAll({ params, pagination }),
         initialData: () => {
-            return queryClient.getQueryData([
-                ...QUERY_KEYS.VEHICLES,
-                params,
-                pagination,
-            ])
+            return queryClient.getQueryData([...QUERY_KEYS.VEHICLES, params, pagination])
         },
-        enabled,
+        enabled
     })
 }
 
@@ -67,11 +63,20 @@ export const useCreateVehicle = ({
         mutationFn: vehicleApi.create,
         onSuccess: (vehicle) => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLES, exact: false })
-            toast.success(t("success.create"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.create"),
+                color: "success"
+            })
             onSuccess?.(vehicle)
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
+
             onError?.()
         }
     })
@@ -91,11 +96,20 @@ export const useUpdateVehicle = ({
             vehicleApi.update({ vehicleId, payload }),
         onSuccess: (vehicle) => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLES, exact: false })
-            toast.success(t("success.update"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.update"),
+                color: "success"
+            })
             onSuccess?.(vehicle)
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
+
             onError?.()
         }
     })
@@ -114,11 +128,20 @@ export const useDeleteVehicle = ({
         mutationFn: vehicleApi.delete,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLES, exact: false })
-            toast.success(t("success.delete"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.delete"),
+                color: "success"
+            })
             onSuccess?.()
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
+
             onError?.()
         }
     })
