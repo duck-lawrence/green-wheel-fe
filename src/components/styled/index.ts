@@ -40,6 +40,7 @@ export * from "./SearchStyle"
 export * from "./SectionStyled"
 export * from "./SkeletonStyled"
 export * from "./SliderStyled"
+export * from "./SpacerStyled"
 export * from "./SpinnerStyled"
 
 export * from "./TableStyled"

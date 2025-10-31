@@ -1,7 +1,7 @@
 "use client"
 
 import { CardBody, CardFooter, CardHeader, Chip, useDisclosure, User } from "@heroui/react"
-import { useDay, useName } from "@/hooks"
+import { useDay, useUserHelper } from "@/hooks"
 import { TicketViewRes } from "@/models/ticket/schema/response"
 import React from "react"
 import { useTranslation } from "react-i18next"
@@ -26,7 +26,7 @@ export function TicketCard({
     pagination: PaginationParams
 }) {
     const { t } = useTranslation()
-    const { toFullName } = useName()
+    const { toFullName } = useUserHelper()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
 
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()

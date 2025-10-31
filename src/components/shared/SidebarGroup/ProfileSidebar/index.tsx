@@ -18,13 +18,7 @@ export function ProfileSidebar({ className }: { className?: string }) {
         }
     ]
 
-    const customerTabs: SidebarItem[] = [
-        // {
-        //     key: "/profile/rental-contracts",
-        //     label: t("user.rental_contracts"),
-        //     href: "/profile/rental-contracts"
-        // }
-    ]
+    const customerTabs: SidebarItem[] = []
 
     const staffTabs: SidebarItem[] = []
 

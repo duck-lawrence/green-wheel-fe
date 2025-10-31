@@ -18,7 +18,7 @@ export function FeedbackModal({ id, isOpen, onOpenChange, onClose }: FeedbackMod
             onClose={onClose}
             isDismissable={true}
         >
-            <ModalContent className="min-w-fit p-14">
+            <ModalContent className="min-w-fit p-6">
                 <ModalBody id={id}>
                     <CreateFeedback onClose={onClose} />
                 </ModalBody>

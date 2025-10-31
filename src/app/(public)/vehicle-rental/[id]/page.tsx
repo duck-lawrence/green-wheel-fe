@@ -29,6 +29,7 @@ import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { Icon } from "@iconify/react"
 import { slides } from "public/cars"
 import { addToast } from "@heroui/toast"
+import { useUserHelper } from "@/hooks/"
 
 export default function VehicleDetailPage() {
     const { id } = useParams()
@@ -37,6 +38,8 @@ export default function VehicleDetailPage() {
 
     const { t } = useTranslation()
     const { getDiffDaysCeil } = useDay()
+    const { isUserValidForBooking } = useUserHelper()
+
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { data: user } = useGetMe()
     const isLogined = useTokenStore((s) => !!s.accessToken)
@@ -104,10 +107,7 @@ export default function VehicleDetailPage() {
     }, [endDate, getDiffDaysCeil, model, startDate])
 
     const handleClickBooking = useCallback(() => {
-        if (
-            !user?.phone
-            // || !user.citizenUrl || !user.licenseUrl
-        ) {
+        if (isCustomer && !isUserValidForBooking(user)) {
             addToast({
                 title: t("toast.error"),
                 description: t("user.enter_required_info"),
@@ -116,7 +116,7 @@ export default function VehicleDetailPage() {
         } else {
             onOpen()
         }
-    }, [onOpen, t, user])
+    }, [isCustomer, isUserValidForBooking, onOpen, t, user])
 
     function mapSpecs(vehicle: VehicleModelViewRes) {
         return [
@@ -155,15 +155,18 @@ export default function VehicleDetailPage() {
 
     // const basePolicies = (deposite: number) => [
     const basePolicies = () => [
-        { title: "Giấy tờ", text: "CCCD gắn chip + GPLX B1 trở lên." },
-        // { title: "Cọc", text: `${deposite}đ hoặc xe máy giấy tờ chính chủ. ` },
+        { title: t("fleet.detail_brand"), text: model?.brand.name || "" },
         {
-            title: "Phụ phí",
-            text: "Phát sinh giờ: quá 45 phút tính phụ phí 10%/giờ, quá 5 giờ tính 1 ngày."
+            title: t("vehicle_model.policy.documents"),
+            text: t("vehicle_model.policy.documents_text")
         },
         {
-            title: "Hình thức thanh toán",
-            text: "Trả trước. Thời hạn thanh toán: đặt cọc giữ xe thanh toán 100% khi kí hợp đồng và nhận xe"
+            title: t("vehicle_model.policy.late_return_fee"),
+            text: t("vehicle_model.policy.late_return_fee_text")
+        },
+        {
+            title: t("vehicle_model.policy.payment_method"),
+            text: t("vehicle_model.policy.payment_method_text")
         }
     ]
 
@@ -263,7 +266,7 @@ export default function VehicleDetailPage() {
 
                     {/*================ Policies =======================*/}
                     <section className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
-                        <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-3 md:grid-cols-2">
                             {basePolicies().map((p) => (
                                 <div key={p.title} className="rounded-2xl bg-white p-5 shadow-sm">
                                     <h3 className="font-semibold">{p.title}</h3>

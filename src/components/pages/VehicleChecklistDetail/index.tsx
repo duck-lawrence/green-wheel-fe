@@ -11,7 +11,7 @@ import {
     useChangeVehicleByContractId,
     useDay,
     useGetVehicleChecklistById,
-    useName,
+    useUserHelper,
     useUpdateVehicleChecklist
 } from "@/hooks"
 import { UpdateVehicleChecklistReq } from "@/models/checklist/schema/request"
@@ -25,10 +25,11 @@ import { DamageStatus, VehicleChecklistType } from "@/constants/enum"
 import Link from "next/link"
 import { fromDate } from "@internationalized/date"
 import { DEFAULT_DATE_FORMAT, DEFAULT_TIMEZONE } from "@/constants/constants"
+import toast from "react-hot-toast"
 
 export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; isStaff?: boolean }) {
     const { t } = useTranslation()
-    const { toFullName } = useName()
+    const { toFullName } = useUserHelper()
     const { formatDateTime: formatDate, toDate } = useDay({
         defaultFormat: DEFAULT_DATE_FORMAT
     })
@@ -41,13 +42,17 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
     })
 
     const isEditable = useMemo(() => {
-        return isStaff && !checklist?.isSignedByStaff && !checklist?.isSignedByCustomer
+        return isStaff && (!checklist?.isSignedByStaff || !checklist?.isSignedByCustomer)
     }, [checklist?.isSignedByCustomer, checklist?.isSignedByStaff, isStaff])
+
+    const isSubmitable = useMemo(() => {
+        return !checklist?.isSignedByStaff || !checklist?.isSignedByCustomer
+    }, [checklist?.isSignedByCustomer, checklist?.isSignedByStaff])
 
     const contractUrl = useMemo(() => {
         return isStaff
-            ? `/dashboard/rental-contracts/${checklist?.contractId}`
-            : `/rental-contracts/${checklist?.contractId}`
+            ? `/dashboard/rental-bookings/${checklist?.contractId}`
+            : `/rental-bookings/${checklist?.contractId}`
     }, [checklist?.contractId, isStaff])
 
     const [hasItemsDamaged, setHasItemsDamaged] = useState<boolean>(
@@ -68,13 +73,6 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                       })
                     : undefined
 
-            console.log({
-                checklistItems: value.checklistItems,
-                isSignedByCustomer: value.isSignedByCustomer,
-                isSignedByStaff: value.isSignedByStaff,
-                maintainUntil: formatMaintainDate
-            })
-
             await updateChecklist.mutateAsync({
                 checklistItems: value.checklistItems,
                 isSignedByCustomer: value.isSignedByCustomer,
@@ -85,12 +83,15 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
             if (checklist?.type == VehicleChecklistType.Return && formatMaintainDate != undefined) {
                 await changeVehicle.mutateAsync()
             }
+
+            toast.success(t("success.update"))
         },
         [
             changeVehicle,
             checklist?.type,
             formatDateTime,
             hasItemsDamaged,
+            t,
             toZonedDateTime,
             updateChecklist
         ]
@@ -106,10 +107,9 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
         enableReinitialize: true,
         validationSchema: Yup.object().shape({
             isSignedByStaff: Yup.boolean().oneOf([true], t("signature.signed_by_staff_require")),
-            isSignedByCustomer:
-                checklist?.type == VehicleChecklistType.OutOfContract
-                    ? Yup.boolean().notRequired()
-                    : Yup.boolean().oneOf([true], t("signature.signed_by_customer_require")),
+            isSignedByCustomer: isStaff
+                ? Yup.boolean().notRequired()
+                : Yup.boolean().oneOf([true], t("signature.signed_by_customer_require")),
             maintainUntil: hasItemsDamaged
                 ? Yup.string()
                       .required(t("vehicle_checklist.maintain_until_require"))
@@ -138,7 +138,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
     return (
         <form
             onSubmit={formik.handleSubmit}
-            className="rounded-2xl bg-white shadow-md px-8 py-10 border border-gray-100 max-w-6xl mx-auto"
+            className="rounded-2xl bg-white px-3 py-2 md:px-8 md:py-10 max-w-full md:max-w-6xl mx-auto"
         >
             {/* Header */}
             {/* <div className="flex flex-col md:flex-row items-center justify-between mb-8"> */}
@@ -248,13 +248,14 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                         formik.touched.isSignedByCustomer && formik.errors.isSignedByCustomer
                     ),
                     isSelected: formik.values.isSignedByCustomer,
+                    isReadOnly: !isSubmitable,
                     // onValueChange: (value) => formik.setFieldValue("isSignedByCustomer", value)
                     onChange: formik.handleChange,
                     onBlur: formik.handleBlur
                 }}
             />
 
-            {isEditable && (
+            {isSubmitable && (
                 <div className="flex justify-center">
                     <ButtonStyled
                         type="submit"

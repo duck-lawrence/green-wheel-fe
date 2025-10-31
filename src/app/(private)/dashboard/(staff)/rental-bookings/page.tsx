@@ -68,7 +68,7 @@ export default function StaffContractsPage() {
     return (
         <div className="rounded-2xl bg-white shadow-sm px-6 py-6">
             <div className="text-3xl mb-3 px-4 font-bold">
-                <p>{t("staff.sidebar_contracts")}</p>
+                <p>{t("staff.sidebar_bookings")}</p>
             </div>
 
             <div className="mb-4">
@@ -81,7 +81,7 @@ export default function StaffContractsPage() {
                     <div className="flex items-center justify-between">
                         <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
                             <FunnelSimple size={22} className="text-primary" />
-                            {t("staff.contract_filter")}
+                            {t("staff.booking_filter")}
                         </h3>
                         <ButtonIconStyled
                             type="submit"
@@ -160,7 +160,6 @@ export default function StaffContractsPage() {
                             }
                         })
                     }
-                    showControls
                 />
             </div>
         </div>

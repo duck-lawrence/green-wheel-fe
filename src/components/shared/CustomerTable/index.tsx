@@ -6,18 +6,18 @@ import { EyeIcon, Paperclip } from "@phosphor-icons/react"
 import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 
 import { UserProfileViewRes } from "@/models/user/schema/response"
-import { useName } from "@/hooks"
+import { useUserHelper } from "@/hooks"
 import { ButtonIconStyled, TableStyled } from "@/components"
 
 type CustomerTableProps = {
     users: UserProfileViewRes[]
-    onPreviewDocument?: (doc: { label: string; url: string }) => void
+    onPreviewDocument?: (payload: { user: UserProfileViewRes; type: "citizen" | "driver" }) => void
     onEditUser?: (user: UserProfileViewRes) => void
 }
 
 export function CustomerTable({ users, onPreviewDocument, onEditUser }: CustomerTableProps) {
     const { t } = useTranslation()
-    const { toFullName } = useName()
+    const { toFullName } = useUserHelper()
 
     const tableRows = useMemo(() => {
         return users.map((user) => {
@@ -59,8 +59,8 @@ export function CustomerTable({ users, onPreviewDocument, onEditUser }: Customer
                                         onClick={() =>
                                             doc.url &&
                                             onPreviewDocument?.({
-                                                label: doc.label,
-                                                url: doc.url
+                                                user: user,
+                                                type: doc.key as "citizen" | "driver"
                                             })
                                         }
                                         className="inline-flex items-center gap-2 rounded-md bg-primary/10 px-2 py-1 text-primary transition hover:bg-primary/20"

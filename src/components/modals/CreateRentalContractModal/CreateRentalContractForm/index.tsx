@@ -13,7 +13,7 @@ import {
     useCreateRentalContract,
     useDay,
     useCreateContractManual,
-    useName
+    useUserHelper
 } from "@/hooks"
 import { ButtonStyled, InputStyled, ImageStyled, TextareaStyled, TempInvoice } from "@/components"
 import { Spinner, useDisclosure } from "@heroui/react"
@@ -53,7 +53,7 @@ export const CreateRentalContractForm = ({
 }) => {
     const { t } = useTranslation()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
-    const { toFullName } = useName()
+    const { toFullName, isUserValidForBooking } = useUserHelper()
     const [mounted, setMounted] = useState(false)
     const createContract = useCreateRentalContract({ onSuccess })
     const createContractManual = useCreateContractManual({ onSuccess })
@@ -103,6 +103,7 @@ export const CreateRentalContractForm = ({
         },
         [createContract, endDate, modelViewRes.id, startDate, stationId]
     )
+
     const handleCreateManual = useCallback(
         async ({ notes }: { notes: string }) => {
             if (!user) return
@@ -120,10 +121,7 @@ export const CreateRentalContractForm = ({
 
     const handleSubmit = useCallback(
         ({ notes }: { notes: string }) => {
-            if (
-                !user?.phone
-                // || !user.citizenUrl || !user.licenseUrl
-            ) {
+            if (!isUserValidForBooking(user)) {
                 addToast({
                     title: t("toast.error"),
                     description: t("user.enter_required_info"),
@@ -134,7 +132,15 @@ export const CreateRentalContractForm = ({
             if (isStaff) handleCreateManual({ notes })
             if (isCustomer) handleCreateContract({ notes })
         },
-        [handleCreateContract, handleCreateManual, isCustomer, isStaff, t, user?.phone]
+        [
+            handleCreateContract,
+            handleCreateManual,
+            isCustomer,
+            isStaff,
+            isUserValidForBooking,
+            t,
+            user
+        ]
     )
 
     // =========================

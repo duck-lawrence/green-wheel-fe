@@ -1,3 +1,23 @@
+"use client"
+
+import React from "react"
+import { Pagination, PaginationProps, cn } from "@heroui/react"
+
+export function PaginationStyled({ page, onChange, className, ...rest }: PaginationProps) {
+    const handleClick = (value: number) => {
+        onChange?.(value)
+    }
+
+    return (
+        <Pagination
+            {...rest}
+            page={page}
+            onChange={handleClick}
+            className={cn("flex justify-center items-center", className)}
+        />
+    )
+}
+
 // "use client"
 
 // import React from "react"
@@ -32,7 +52,7 @@
 //   totalItems: number
 //   pageSize?: number
 //   onPageChange?: (page: number) => void
-//   showControls?: boolean
+//   ?: boolean
 //   containerClassName?: string
 //   className?: string
 //   buttonClassName?: string
@@ -76,7 +96,7 @@
 //   totalItems,
 //   pageSize = DEFAULT_PAGE_SIZE,
 //   onPageChange,
-//   showControls = true,
+//    = true,
 //   containerClassName,
 //   className,
 //   buttonClassName,
@@ -142,7 +162,7 @@
 //         total={totalPages}
 //         page={currentPage}
 //         onChange={onPageChange}
-//         showControls={showControls}
+//         ={}
 //         className={className}
 //         isDisabled={isDisabled}
 //         siblings={1}
@@ -334,32 +354,6 @@
 // function isDots(v: PaginationItemRenderProps["value"]) {
 //   return typeof v === "string" && v === "dots"
 // }
-
-"use client"
-
-import React from "react"
-import { Pagination, PaginationProps, cn } from "@heroui/react"
-
-/**
- * Custom Pagination kế thừa HeroUI Pagination
- * - Vẫn gọi onChange khi click trang hiện tại (HeroUI mặc định không làm)
- * - Cho phép truyền className tùy chỉnh
- */
-export function PaginationStyled({ page, onChange, className, ...rest }: PaginationProps) {
-    const handleClick = (value: number) => {
-        onChange?.(value)
-    }
-
-    return (
-        <Pagination
-            {...rest}
-            page={page}
-            onChange={handleClick}
-            className={cn("flex justify-center items-center", className)}
-            // renderItem={(item) => renderItem(item, handleClick)}
-        />
-    )
-}
 
 // function renderItem(item: PaginationItemRenderProps, onClick: (page: number) => void) {
 //     const { key, value, isActive, className, getAriaLabel, page } = item

@@ -68,7 +68,7 @@ export function ProfileDropdown() {
 
     const defaultItems: DropdownLinkItem[] = [
         {
-            key: "staff_profile",
+            key: "profile",
             href: "/profile",
             label: t("user.profile")
         }
@@ -80,9 +80,9 @@ export function ProfileDropdown() {
 
     const customerItems: DropdownLinkItem[] = [
         {
-            key: "rental_contracts",
-            href: "/rental-contracts",
-            label: t("user.rental_contracts")
+            key: "rental_bookings",
+            href: "/rental-bookings",
+            label: t("user.rental_bookings")
         },
         {
             key: "customer_support",
@@ -95,7 +95,7 @@ export function ProfileDropdown() {
         {
             key: "admin_management",
             href: "/dashboard",
-            label: t("admin.dropdown_management")
+            label: t("staff.dashboard")
         }
     ]
 
@@ -103,7 +103,7 @@ export function ProfileDropdown() {
         {
             key: "staff_management",
             href: "/dashboard",
-            label: t("navbar.staff_management")
+            label: t("staff.dashboard")
         }
     ]
 
@@ -140,7 +140,7 @@ export function ProfileDropdown() {
                         className="transition-transform"
                         name={user?.firstName.trim() || ""}
                         classNames={{
-                            name: "text-[16px] font-bold"
+                            name: "hidden sm:block text-[16px] font-bold"
                         }}
                     />
                 </DropdownTrigger>

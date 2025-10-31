@@ -3,7 +3,7 @@ import { QUERY_KEYS } from "@/constants/queryKey"
 import { useTranslation } from "react-i18next"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
-import { UpdateBankAccountReq, UserUpdateReq } from "@/models/user/schema/request"
+import { UserUpdateReq } from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { profileApi } from "@/services/profileApi"
 import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/response"
@@ -67,65 +67,49 @@ export const useUpdateMe = ({ onSuccess }: { onSuccess?: () => void }) => {
     })
 }
 
-export const useUpdateBankAccount = ({ onSuccess }: { onSuccess?: () => void }) => {
-    const { t } = useTranslation()
-    const queryClient = useQueryClient()
+// export const useUpdateBankAccount = ({ onSuccess }: { onSuccess?: () => void }) => {
+//     const { t } = useTranslation()
+//     const queryClient = useQueryClient()
 
-    return useMutation({
-        mutationFn: async (req: UpdateBankAccountReq) => {
-            await profileApi.updateBankAccount(req)
-            return req
-        },
-        onSuccess: (data) => {
-            queryClient.setQueryData<UserProfileViewRes>(QUERY_KEYS.ME, (prev) => {
-                if (!prev) return prev
-                return {
-                    ...prev,
-                    ...data
-                }
-            })
+//     return useMutation({
+//         mutationFn: async (req: UpdateBankAccountReq) => {
+//             await profileApi.updateBankAccount(req)
+//             return req
+//         },
+//         onSuccess: (data) => {
+//             queryClient.setQueryData<UserProfileViewRes>(QUERY_KEYS.ME, (prev) => {
+//                 if (!prev) return prev
+//                 return {
+//                     ...prev,
+//                     ...data
+//                 }
+//             })
 
-            onSuccess?.()
-            addToast({
-                title: t("toast.success"),
-                description: t("success.update"),
-                color: "success"
-            })
-        },
-        onError: (error: BackendError) => {
-            addToast({
-                title: t("toast.error"),
-                description: translateWithFallback(t, error.detail),
-                color: "danger"
-            })
-        }
-    })
-}
+//             onSuccess?.()
+//             toast.success(t("success.update"))
+//         },
+//         onError: (error: BackendError) => {
+//             toast.error(translateWithFallback(t, error.detail))
+//         }
+//     })
+// }
 
-export const useDeleteBankAccount = ({ onSuccess }: { onSuccess?: () => void }) => {
-    const { t } = useTranslation()
-    const queryClient = useQueryClient()
+// export const useDeleteBankAccount = ({ onSuccess }: { onSuccess?: () => void }) => {
+//     const { t } = useTranslation()
+//     const queryClient = useQueryClient()
 
-    return useMutation({
-        mutationFn: profileApi.deleteBankAccount,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ME })
-            onSuccess?.()
-            addToast({
-                title: t("toast.success"),
-                description: t("review.delete_successfull"),
-                color: "success"
-            })
-        },
-        onError: (error: BackendError) => {
-            addToast({
-                title: t("toast.error"),
-                description: translateWithFallback(t, error.detail),
-                color: "danger"
-            })
-        }
-    })
-}
+//     return useMutation({
+//         mutationFn: profileApi.deleteBankAccount,
+//         onSuccess: () => {
+//             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ME })
+//             onSuccess?.()
+//             toast.success(t("success.delete"))
+//         },
+//         onError: (error: BackendError) => {
+//             toast.error(translateWithFallback(t, error.detail))
+//         }
+//     })
+// }
 
 // ========================
 // Avatar

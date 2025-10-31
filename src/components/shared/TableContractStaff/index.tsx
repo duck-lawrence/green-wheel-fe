@@ -8,12 +8,13 @@ import {
     DropdownTrigger,
     DropdownMenu,
     DropdownItem,
-    Spinner
+    Spinner,
+    Chip
 } from "@heroui/react"
 import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
-import { useConfirmContract, useDay, useGetMe, useName } from "@/hooks"
+import { useConfirmContract, useDay, useGetMe, useUserHelper } from "@/hooks"
 import { RentalContractStatusLabels, VehicleStatusLabels } from "@/constants/labels"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { useRouter } from "next/navigation"
@@ -34,7 +35,7 @@ export function TableContractStaff({
     pagination: PaginationParams
 }) {
     const { t } = useTranslation()
-    const { toFullName } = useName()
+    const { toFullName } = useUserHelper()
     const router = useRouter()
     // const { acceptContract, rejectContract } = useConfirmContract({ params, pagination })
     const confirmContract = useConfirmContract({ params, pagination })
@@ -107,7 +108,7 @@ export function TableContractStaff({
                         <TableRow
                             key={item.id}
                             className="hover:bg-gray-50 transition-colors border-b border-gray-100 cursor-pointer"
-                            onClick={() => router.push(`/dashboard/rental-contracts/${item.id}`)}
+                            onClick={() => router.push(`/dashboard/rental-bookings/${item.id}`)}
                         >
                             <TableCell className="text-center text-gray-700">{index + 1}</TableCell>
                             <TableCell className="text-center text-gray-700 font-medium">
@@ -116,7 +117,9 @@ export function TableContractStaff({
                                     lastName: item.customer.lastName
                                 })}
                             </TableCell>
-                            <TableCell className="text-center">{item.vehicle.model.name}</TableCell>
+                            <TableCell className="text-center">
+                                {item.vehicle?.model.name || "-"}
+                            </TableCell>
                             <TableCell className="text-center text-gray-600">
                                 {item.startDate && formatDateTime({ date: item.startDate })}
                             </TableCell>
@@ -129,12 +132,12 @@ export function TableContractStaff({
 
                             {/* status */}
                             <TableCell className="text-center">
-                                <span
-                                    className={`inline-block px-3 py-1 rounded-full text-xs font-semibold 
+                                <Chip
+                                    className={`py-1 text-xs font-semibold max-h-fit
                                         ${RentalContractStatusColorMap[item.status]}`}
                                 >
                                     {RentalContractStatusLabels[item.status]}
-                                </span>
+                                </Chip>
                             </TableCell>
 
                             {/* action */}

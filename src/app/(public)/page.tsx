@@ -2,9 +2,8 @@
 import {
     Carousel,
     CustomerReview,
-    GreenWheelExperience,
+    HowToRent,
     HeroSection,
-    HowItWorks,
     ScrollToTopButton,
     Stations,
     WhyChoose
@@ -13,7 +12,6 @@ import React, { useEffect, useRef } from "react"
 import { slides } from "@/../public/cars"
 import { useTranslation } from "react-i18next"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useGetAllStations } from "@/hooks"
 import { addToast } from "@heroui/toast"
 
 export default function HomePage() {
@@ -21,7 +19,6 @@ export default function HomePage() {
     const router = useRouter()
     const params = useSearchParams()
     const hasShownToast = useRef(false)
-    const { data: station } = useGetAllStations()
 
     useEffect(() => {
         if (hasShownToast.current) return
@@ -45,34 +42,38 @@ export default function HomePage() {
     }, [params, t, router])
 
     return (
-        <div className="relative z-10">
+        <div className="relative z-10 max-w-screen">
             <HeroSection />
 
-            {/* Carousel */}
-            <section className="bg-gradient-to-b from-green-100/70 via-white/80 to-transparent py-20">
-                <Carousel slides={slides} />
-            </section>
+            <div className="relative z-10">
+                <div className="absolute z-0 inset-0 diamond-background mb-[-1.5rem]" />
 
-            {/* HowItWorks + WhyChoose */}
-            <section className="bg-white/70 backdrop-blur-md border-y border-green-100 py-24">
-                <HowItWorks />
-                <WhyChoose />
-            </section>
+                {/* HowItWorks + WhyChoose */}
+                <section className="bg-gradient-to-b from-green-200/60 via-white/80 py-24">
+                    {/* <HowItWorks /> */}
+                    <WhyChoose />
+                </section>
 
-            {/* Stations */}
-            <section className="bg-gradient-to-b from-green-100/70 via-white/80 to-transparent py-24">
-                <Stations stations={station === undefined ? [] : station} />
-            </section>
+                {/* Carousel */}
+                <section className="bg-gradient-to-b from-green-100/70 via-white/80 to-transparent py-20">
+                    <Carousel slides={slides} />
+                </section>
 
-            {/* Experience + Review */}
-            <section className="bg-white/70 backdrop-blur-md border-y border-green-100 py-24">
-                <GreenWheelExperience />
-            </section>
+                {/* Stations */}
+                <section className="bg-gradient-to-b from-green-200/60 via-white/80 to-transparent py-24">
+                    <Stations />
+                </section>
 
-            {/* <CustomerReview /> */}
-            <section className="bg-gradient-to-b from-green-100/70 via-white/80 to-transparent py-24">
-                <CustomerReview />
-            </section>
+                {/* Experience + Review */}
+                <section className="bg-gradient-to-b from-green-200/60 via-white/80 py-24">
+                    <HowToRent />
+                </section>
+
+                {/* <CustomerReview /> */}
+                <section className="bg-gradient-to-b from-green-200/60 via-white/80 to-transparent py-24">
+                    <CustomerReview />
+                </section>
+            </div>
 
             <ScrollToTopButton />
         </div>

@@ -7,15 +7,13 @@ export function DashboardSidebar({ className }: { className?: string }) {
     const { data: user } = useGetMe()
     const { t } = useTranslation()
 
-    const defaultTabs: SidebarItem[] = [
-        { key: "/dashboard", label: t("staff.sidebar_dashboard"), href: "/dashboard" }
-    ]
+    const defaultTabs: SidebarItem[] = []
 
     const staffTabs: SidebarItem[] = [
         {
-            key: "/dashboard/rental-contracts",
-            label: t("staff.sidebar_contracts"),
-            href: "/dashboard/rental-contracts"
+            key: "/dashboard/rental-bookings",
+            label: t("staff.sidebar_bookings"),
+            href: "/dashboard/rental-bookings"
         },
         {
             key: "/dashboard/vehicle-checklists",
@@ -47,7 +45,7 @@ export function DashboardSidebar({ className }: { className?: string }) {
     const adminTabs: SidebarItem[] = [
         {
             key: "/dashboard",
-            label: t("staff.sidebar_dashboard"),
+            label: t("staff.dashboard"),
             href: "/dashboard"
         },
         {

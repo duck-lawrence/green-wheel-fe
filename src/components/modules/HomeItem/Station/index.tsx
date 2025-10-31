@@ -4,13 +4,18 @@ import { MapPin } from "lucide-react"
 import { motion } from "framer-motion"
 import React from "react"
 import { ImageStyled } from "@/components/styled"
-import { StationViewRes } from "@/models/station/schema/response"
+import { DEFAULT_STATION_URL, GREENWHEEL } from "@/constants/constants"
+import { useTranslation } from "react-i18next"
+import { useGetAllStations } from "@/hooks"
 
-export function Stations({ stations }: { stations: StationViewRes[] }) {
+export function Stations() {
+    const { t } = useTranslation()
+    const { data: stations } = useGetAllStations()
+
     const picture_1 = "/images/station1.jpg"
     const picture_2 = "/images/bg-2.jpg"
 
-    const newStation = stations.map((item) => ({
+    const newStation = (stations || []).map((item) => ({
         id: item.id,
         name: item.name,
         address: item.address,
@@ -46,7 +51,7 @@ export function Stations({ stations }: { stations: StationViewRes[] }) {
                 viewport={{ once: true }}
                 className="text-3xl md:text-4xl font-bold mb-16 text-primary relative inline-block"
             >
-                Trạm xe <span className="text-teal-500">Green Wheel</span>
+                {t("home.stations_at")} <span className="text-teal-500">{GREENWHEEL}</span>
                 {/* Dòng năng lượng + spark */}
                 <div
                     className="absolute left-1/2 -translate-x-1/2 -bottom-4 w-44 h-[4px]
@@ -97,7 +102,7 @@ export function Stations({ stations }: { stations: StationViewRes[] }) {
                         {/* Ảnh */}
                         <div className="relative w-full h-56 md:h-64 overflow-hidden">
                             <ImageStyled
-                                src={s.img}
+                                src={DEFAULT_STATION_URL}
                                 alt={s.name}
                                 className="w-full h-full object-cover transform group-hover:scale-110 
                                            transition-transform duration-700 ease-out"

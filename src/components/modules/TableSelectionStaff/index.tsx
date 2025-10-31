@@ -1,21 +1,35 @@
+"use client"
+
+import { PaginationStyled } from "@/components/styled"
 import TableSelectionStyled from "@/components/styled/TableSelectionStyled"
-import { UserProfileViewRes } from "@/models/user/schema/response"
+import { useGetAllStaffs } from "@/hooks"
+import { PaginationParams } from "@/models/common/request"
+import { Spinner } from "@heroui/react"
 import React, { useState } from "react"
+import { useTranslation } from "react-i18next"
 
 type TableSelectionStaffProps = {
     selectionBehavior?: "toggle" | "replace"
-    staffs: UserProfileViewRes[]
+    stationId: string
     onChangeSelected?: (selected: string[]) => void
 }
 
-export default function TableSelectionStaff({
+export function TableSelectionStaff({
     selectionBehavior,
-    staffs,
+    stationId,
     onChangeSelected
 }: TableSelectionStaffProps) {
-    const [selectedSatffIds, setSelectedStaffIds] = useState<string[]>([])
+    const { t } = useTranslation()
 
-    const rows = staffs.map((item, index) => ({
+    const [selectedSatffIds, setSelectedStaffIds] = useState<string[]>([])
+    // const [filter, setFilter] = useState<StaffReq>({ stationId })
+    const [pagination, setPagination] = useState<PaginationParams>({ pageSize: 5 })
+    const { data, isLoading } = useGetAllStaffs({
+        params: { stationId },
+        pagination
+    })
+
+    const rows = (data?.items || []).map((item, index) => ({
         key: item.id,
         id: index + 1,
         name: `${item.firstName} ${item.lastName}`,
@@ -25,15 +39,15 @@ export default function TableSelectionStaff({
     const columns = [
         {
             key: "id",
-            label: "ID"
+            label: t("table.no")
         },
         {
             key: "name",
-            label: "NAME"
+            label: t("table.name").toUpperCase()
         },
         {
             key: "station",
-            label: "STATION"
+            label: t("station.station").toUpperCase()
         }
     ]
 
@@ -42,6 +56,8 @@ export default function TableSelectionStaff({
         setSelectedStaffIds(ids)
         onChangeSelected?.(ids)
     }
+
+    if (isLoading) return <Spinner />
 
     return (
         <>
@@ -52,6 +68,20 @@ export default function TableSelectionStaff({
                 onSelectionChange={handleSelectionChange}
                 selectionBehavior={selectionBehavior}
             ></TableSelectionStyled>
+            <div className="mt-6 flex justify-center">
+                <PaginationStyled
+                    page={data?.pageNumber ?? 1}
+                    total={data?.totalPages ?? 10}
+                    onChange={(page: number) =>
+                        setPagination((prev) => {
+                            return {
+                                ...prev,
+                                pageNumber: page
+                            }
+                        })
+                    }
+                />
+            </div>
         </>
     )
 }

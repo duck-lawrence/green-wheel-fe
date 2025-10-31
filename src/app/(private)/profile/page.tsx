@@ -1,6 +1,5 @@
 "use client"
 import {
-    BankInfoProfile,
     ButtonStyled,
     CitizenIdentityProfile,
     DatePickerStyled,
@@ -10,7 +9,7 @@ import {
     ButtonIconStyled,
     AvatarProfile
 } from "@/components"
-import { useDay, useGetMe, useName, useUpdateMe } from "@/hooks"
+import { useDay, useGetMe, useUserHelper, useUpdateMe } from "@/hooks"
 import { UserUpdateReq } from "@/models/user/schema/request"
 import { NotePencilIcon } from "@phosphor-icons/react/dist/ssr"
 import React, { useCallback, useState } from "react"
@@ -26,7 +25,7 @@ export default function ProfilePage() {
     const { t } = useTranslation()
     const [editable, setEditable] = useState(false)
     const { toDate, formatDateTime } = useDay({ defaultFormat: "YYYY-MM-DD" })
-    const { toFullName } = useName()
+    const { toFullName } = useUserHelper()
     const { data: user } = useGetMe()
     const updateMeMutation = useUpdateMe({ onSuccess: undefined })
 
@@ -67,31 +66,38 @@ export default function ProfilePage() {
     if (!user) return <SpinnerStyled />
 
     return (
-        <div className="px-4">
+        <div className="bg-white w-full lg:w-5xl max-w-screen overflow-y-auto px-4 sm:px-14 py-6 shadow-2xs rounded-2xl">
             {/* Title */}
-            <div className="text-3xl mb-8 font-bold">{t("user.account_information")}</div>
+            <div className="text-2xl text-center sm:text-left sm:text-3xl mb-8 font-bold">
+                {t("user.account_information")}
+            </div>
 
-            <div className="flex flex-col sm:flex-row justify-between sm:gap-6 mb-8 items-center">
-                {/* Avatar */}
-                <AvatarProfile user={user} />
+            <div className="flex flex-col md:flex-row gap-6 w-full">
+                <div className="flex flex-col items-center w-full md:w-sm">
+                    {/* Avatar */}
+                    <AvatarProfile user={user} />
 
-                {/* Preview info */}
-                <div>
-                    {/* Top container */}
-                    <div className="flex justify-between items-center">
-                        {/* user full name */}
-                        <div
-                            className="text-3xl" //
-                        >
-                            {`${toFullName({
-                                firstName: user.firstName,
-                                lastName: user.lastName
-                            })} ${user.station != null ? `- ${user.station?.name}` : ""}`}
-                        </div>
+                    {/* Preview info */}
+                    <div className="mt-3 space-y-2 sm:mt-1">
+                        {/* Top container */}
+                        <div className="flex gap-3 justify-between items-center">
+                            {/* user full name */}
+                            <div>
+                                <div
+                                    className="text-3xl min-h-10" //
+                                >
+                                    {toFullName({
+                                        firstName: user.firstName,
+                                        lastName: user.lastName
+                                    })}
+                                </div>
+                                {user.station != null && (
+                                    <div className="text-gray-600">{user.station?.name}</div>
+                                )}
+                            </div>
 
-                        {/* Button enable show change */}
-                        <div>
-                            {!editable ? (
+                            {/* Button enable show change */}
+                            {!editable && (
                                 <ButtonIconStyled
                                     color="primary"
                                     variant="ghost"
@@ -99,39 +105,14 @@ export default function ProfilePage() {
                                 >
                                     <NotePencilIcon />
                                 </ButtonIconStyled>
-                            ) : (
-                                <div className="flex gap-2">
-                                    <ButtonStyled
-                                        color="primary"
-                                        variant="ghost"
-                                        isLoading={updateMeFormik.isSubmitting}
-                                        isDisabled={
-                                            !updateMeFormik.isValid || !updateMeFormik.dirty
-                                        }
-                                        onPress={updateMeFormik.submitForm}
-                                    >
-                                        {t("common.save")}
-                                    </ButtonStyled>
-                                    <ButtonStyled
-                                        isDisabled={updateMeFormik.isSubmitting}
-                                        onPress={() => {
-                                            setEditable(!editable)
-                                            updateMeFormik.resetForm()
-                                        }}
-                                    >
-                                        {t("common.cancel")}
-                                    </ButtonStyled>
-                                </div>
                             )}
                         </div>
-                    </div>
 
-                    {/* Form for update */}
-                    <form
-                        onSubmit={updateMeFormik.submitForm}
-                        className="flex flex-col mt-5 gap-2 lg:min-w-xl max-w-xl"
-                    >
-                        <div className="flex flex-col sm:flex-row justify-center gap-2">
+                        {/* Form for update */}
+                        <form
+                            onSubmit={updateMeFormik.submitForm}
+                            className="flex flex-col gap-2 w-full"
+                        >
                             <InputStyled
                                 isReadOnly={!editable}
                                 label={t("user.last_name")}
@@ -173,38 +154,41 @@ export default function ProfilePage() {
                                     updateMeFormik.setFieldTouched("firstName")
                                 }}
                             />
-                        </div>
 
-                        <div className="flex justify-center flex-wrap sm:flex-nowrap gap-2">
-                            {/* Phone */}
-                            <InputStyled
-                                isRequired
-                                isReadOnly={!editable}
-                                variant="bordered"
-                                label={t("user.phone")}
-                                maxLength={10}
-                                value={updateMeFormik.values.phone}
-                                onValueChange={(value) =>
-                                    updateMeFormik.setFieldValue("phone", value)
-                                }
-                                isInvalid={
-                                    editable &&
-                                    !!(updateMeFormik.touched.phone && updateMeFormik.errors.phone)
-                                }
-                                errorMessage={updateMeFormik.errors.phone}
-                                onBlur={() => {
-                                    updateMeFormik.setFieldTouched("phone")
-                                }}
-                            />
+                            <div className="flex gap-2">
+                                {/* Phone */}
+                                <InputStyled
+                                    isRequired
+                                    isReadOnly={!editable}
+                                    variant="bordered"
+                                    label={t("user.phone")}
+                                    maxLength={10}
+                                    value={updateMeFormik.values.phone}
+                                    onValueChange={(value) =>
+                                        updateMeFormik.setFieldValue("phone", value)
+                                    }
+                                    isInvalid={
+                                        editable &&
+                                        !!(
+                                            updateMeFormik.touched.phone &&
+                                            updateMeFormik.errors.phone
+                                        )
+                                    }
+                                    errorMessage={updateMeFormik.errors.phone}
+                                    onBlur={() => {
+                                        updateMeFormik.setFieldTouched("phone")
+                                    }}
+                                />
 
-                            <EnumPicker
-                                isReadOnly={!editable}
-                                label={t("user.sex")}
-                                labels={SexLabels}
-                                value={updateMeFormik.values.sex}
-                                onChange={(val) => updateMeFormik.setFieldValue("sex", val)}
-                            />
-
+                                <EnumPicker
+                                    isReadOnly={!editable}
+                                    label={t("user.sex")}
+                                    labels={SexLabels}
+                                    value={updateMeFormik.values.sex}
+                                    onChange={(val) => updateMeFormik.setFieldValue("sex", val)}
+                                    isClearable={false}
+                                />
+                            </div>
                             <DatePickerStyled
                                 isRequired
                                 isReadOnly={!editable}
@@ -233,14 +217,43 @@ export default function ProfilePage() {
                                     updateMeFormik.setFieldValue("dateOfBirth", dob)
                                 }}
                             />
-                        </div>
-                    </form>
+
+                            {editable && (
+                                <div className="flex justify-end gap-2">
+                                    <ButtonStyled
+                                        color="primary"
+                                        variant="ghost"
+                                        isLoading={updateMeFormik.isSubmitting}
+                                        isDisabled={
+                                            !updateMeFormik.isValid || !updateMeFormik.dirty
+                                        }
+                                        onPress={updateMeFormik.submitForm}
+                                    >
+                                        {t("common.save")}
+                                    </ButtonStyled>
+                                    <ButtonStyled
+                                        isDisabled={updateMeFormik.isSubmitting}
+                                        onPress={() => {
+                                            setEditable(!editable)
+                                            updateMeFormik.resetForm()
+                                        }}
+                                    >
+                                        {t("common.cancel")}
+                                    </ButtonStyled>
+                                </div>
+                            )}
+                        </form>
+                    </div>
+                </div>
+
+                <div className="hidden md:block w-[5px] bg-default self-stretch"></div>
+
+                <div className="w-full">
+                    <CitizenIdentityProfile user={user} />
+                    <DriverLicenseProfile user={user} />
                 </div>
             </div>
-
-            <CitizenIdentityProfile user={user} />
-            <DriverLicenseProfile user={user} />
-            <BankInfoProfile user={user} />
+            {/* <BankInfoProfile user={user} /> */}
         </div>
     )
 }

@@ -13,7 +13,9 @@ import {
     useModalDisclosure,
     CreateUserModal,
     StaffTable,
-    ButtonIconStyled
+    ButtonIconStyled,
+    CitizenIdentityPreviewModal,
+    DriverLicensePreviewModal
 } from "@/components"
 import { useCreateNewUser, useGetAllUsers } from "@/hooks"
 import { UserProfileViewRes } from "@/models/user/schema/response"
@@ -31,10 +33,10 @@ import { useDisclosure } from "@heroui/react"
 
 export function UserManagement({ isCustomerManagement = true }: { isCustomerManagement: boolean }) {
     const { t } = useTranslation()
-    // const [previewDocument, setPreviewDocument] = useState<{
-    //     user: UserProfileViewRes
-    //     type: "citizen" | "driver"
-    // } | null>(null)
+    const [previewDocument, setPreviewDocument] = useState<{
+        user: UserProfileViewRes
+        type: "citizen" | "driver"
+    } | null>(null)
 
     const [editingUser, setEditingUser] = useState<UserProfileViewRes | null>(null)
     const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useModalDisclosure()
@@ -125,21 +127,14 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
     // Preview document modal
     // ====================
 
-    // const handleOpenDocumentPreview = useCallback(
-    //     (payload: {
-    //         user: UserProfileViewRes
-    //         type: "citizen" | "driver"
-    //         url?: string | null
-    //         label: string
-    //     }) => {
-    //         setPreviewDocument({ user: payload.user, type: payload.type })
-    //     },
-    //     []
-    // )
-
-    // const handleCloseDocumentPreview = useCallback(() => {
-    //     setPreviewDocument(null)
-    // }, [])
+    const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
+    const handleOpenDocumentPreview = useCallback(
+        (payload: { user: UserProfileViewRes; type: "citizen" | "driver" }) => {
+            setPreviewDocument({ user: payload.user, type: payload.type })
+            onOpen()
+        },
+        [onOpen]
+    )
 
     // const handleDocumentStateUpdate = useCallback(
     //     (userId: string, type: "citizen" | "driver", nextUrl: string | null) => {
@@ -283,7 +278,7 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
             {isCustomerManagement ? (
                 <CustomerTable
                     users={data?.items ?? []}
-                    // onPreviewDocument={handleOpenDocumentPreview}
+                    onPreviewDocument={handleOpenDocumentPreview}
                     onEditUser={handleOpenEditUser}
                 />
             ) : (
@@ -302,33 +297,26 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
                             }
                         })
                     }
-                    showControls
                 />
             </div>
 
-            {/* {previewDocument && previewDocument.type === "citizen" ? (
+            {previewDocument && previewDocument.type === "citizen" ? (
                 <CitizenIdentityPreviewModal
-                    userId={previewDocument.user.id}
-                    isOpen
-                    imageUrl={previewDocument.user.citizenUrl}
-                    onClose={handleCloseDocumentPreview}
-                    onUpdated={(nextUrl) =>
-                        handleDocumentStateUpdate(previewDocument.user.id, "citizen", nextUrl)
-                    }
+                    user={previewDocument.user}
+                    isOpen={isOpen}
+                    onOpenChange={onOpenChange}
+                    onClose={onClose}
                 />
             ) : null}
 
             {previewDocument && previewDocument.type === "driver" ? (
                 <DriverLicensePreviewModal
-                    userId={previewDocument.user.id}
-                    isOpen
-                    imageUrl={previewDocument.user.licenseUrl}
-                    onClose={handleCloseDocumentPreview}
-                    onUpdated={(nextUrl) =>
-                        handleDocumentStateUpdate(previewDocument.user.id, "driver", nextUrl)
-                    }
+                    user={previewDocument.user}
+                    isOpen={isOpen}
+                    onOpenChange={onOpenChange}
+                    onClose={onClose}
                 />
-            ) : null} */}
+            ) : null}
 
             <EditUserModal user={editingUser} isOpen={isEditOpen} onClose={handleCloseEditUser} />
         </div>

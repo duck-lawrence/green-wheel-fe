@@ -10,7 +10,8 @@ import {
     FilterTypeOption,
     FilterTypeStyle,
     SearchStyle,
-    SpinnerStyled
+    SpinnerStyled,
+    VehicleModelCreateModal
 } from "@/components"
 import { useGetAllVehicleModels, useGetAllVehicleSegments } from "@/hooks"
 import { FunnelSimple } from "@phosphor-icons/react"
@@ -34,6 +35,7 @@ export default function AdminFleetPage() {
     // const [carType, setCarType] = useState<string | undefined>()
     const [status, setStatus] = useState<string | undefined>()
     const [vehicleModels, setVehicleModels] = useState<VehicleModelViewRes[]>([])
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
     const {
         isLoading: isModelsLoading,
@@ -49,10 +51,38 @@ export default function AdminFleetPage() {
     const statusOptions = useMemo(
         () => [
             { key: "available", label: t("fleet.status_available") },
-            { key: "out_of_stock", label: t("fleet.status_out_of_stock") }
+            { key: "unavailable", label: t("fleet.status_unavailable") }
         ],
         [t]
     )
+
+    const segmentOptions = useMemo(
+        () =>
+            (vehicleSegments ?? [])
+                .map((segment) => ({
+                    id: segment.id,
+                    label: segment.name
+                }))
+                .sort((a, b) => a.label.localeCompare(b.label)),
+        [vehicleSegments]
+    )
+
+    const brandOptions = useMemo(() => {
+        const uniqueBrands = new Map<string, string>()
+        vehicleModels.forEach((model) => {
+            const brandId = model.brand?.id
+            const brandName = model.brand?.name
+            if (brandId && brandName) {
+                uniqueBrands.set(brandId, brandName)
+            }
+        })
+        return Array.from(uniqueBrands.entries())
+            .map(([id, label]) => ({
+                id,
+                label
+            }))
+            .sort((a, b) => a.label.localeCompare(b.label))
+    }, [vehicleModels])
 
     // const carTypeOptions = useMemo(() => {
     //     if (segmentData.length > 0) {
@@ -153,13 +183,39 @@ export default function AdminFleetPage() {
     }, [getVehicleSegmentsError, t])
 
     // load models
-    useEffect(() => {
-        const run = async () => {
+    const refreshVehicleModels = useCallback(async () => {
+        try {
             const { data } = await refetchModels()
             setVehicleModels(data || [])
+        } catch (error) {
+            const backendError = error as BackendError
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, backendError.detail),
+                color: "danger"
+            })
         }
-        run()
-    }, [filter, refetchModels])
+    }, [refetchModels, t])
+
+    useEffect(() => {
+        refreshVehicleModels()
+    }, [filter, refreshVehicleModels])
+
+    const handleCreateModalOpen = useCallback(() => {
+        setIsCreateModalOpen(true)
+    }, [])
+
+    const handleCreateModalClose = useCallback(() => {
+        setIsCreateModalOpen(false)
+    }, [])
+
+    const handleCreateModalChange = useCallback((open: boolean) => {
+        setIsCreateModalOpen(open)
+    }, [])
+
+    const handleVehicleModelCreated = useCallback(() => {
+        void refreshVehicleModels()
+    }, [refreshVehicleModels])
 
     const isLoading = isModelsLoading || isModelsFetching
 
@@ -176,7 +232,6 @@ export default function AdminFleetPage() {
         <div className="flex flex-col gap-6 rounded-3xl bg-white p-6 shadow-sm mb-6">
             <div className="space-y-2">
                 <h1 className="text-3xl font-bold text-slate-900">{t("fleet.page_title")}</h1>
-                <p className="text-sm text-slate-500">{t("fleet.page_subtitle")}</p>
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 shadow-sm">
@@ -228,7 +283,10 @@ export default function AdminFleetPage() {
                         </FilterTypeStyle>
                     </div>
                     <div className="flex flex-col gap-3 sm:flex-row">
-                        <ButtonStyled className="btn-gradient btn-gradient:hover btn-gradient:active h-12 px-5 font-semibold text-white sm:ml-3 sm:shrink-0">
+                        <ButtonStyled
+                            onPress={handleCreateModalOpen}
+                            className="btn-gradient btn-gradient:hover btn-gradient:active h-12 px-5 font-semibold text-white sm:ml-3 sm:shrink-0"
+                        >
                             + {t("fleet.add_unit_button")}
                         </ButtonStyled>
                     </div>
@@ -260,7 +318,7 @@ export default function AdminFleetPage() {
                                     pageSize={DEFAULT_PAGE_SIZE}
                                     totalItems={totalVehicles}
                                     onPageChange={handlePageChange}
-                                    showControls
+                                    
                                 />
                             </div>
                         ) : null} */}
@@ -271,6 +329,15 @@ export default function AdminFleetPage() {
                     </div>
                 )}
             </section>
+
+            <VehicleModelCreateModal
+                isOpen={isCreateModalOpen}
+                onOpenChange={handleCreateModalChange}
+                onClose={handleCreateModalClose}
+                brandOptions={brandOptions}
+                segmentOptions={segmentOptions}
+                onCreated={handleVehicleModelCreated}
+            />
         </div>
     )
 }

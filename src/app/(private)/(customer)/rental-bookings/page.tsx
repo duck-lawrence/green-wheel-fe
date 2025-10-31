@@ -1,11 +1,24 @@
 "use client"
 import React, { useEffect, useState } from "react"
-import { EnumPicker, PaginationStyled, StepContract, TableStyled } from "@/components"
+import {
+    AutocompleteStyled,
+    StepContract,
+    EnumPicker,
+    PaginationStyled,
+    TableStyled
+} from "@/components"
 import { useTranslation } from "react-i18next"
-import { Spinner, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
+import {
+    AutocompleteItem,
+    Spinner,
+    TableBody,
+    TableCell,
+    TableColumn,
+    TableHeader,
+    TableRow
+} from "@heroui/react"
 import { useRouter } from "next/navigation"
-import { useDay, useGetMyContracts } from "@/hooks"
-import { RentalContractStatus } from "@/constants/enum"
+import { useDay, useGetAllStations, useGetMyContracts } from "@/hooks"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { RentalContractStatusLabels } from "@/constants/labels"
@@ -13,31 +26,55 @@ import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { PaginationParams } from "@/models/common/request"
 import { RentalContractStatusColorMap } from "@/constants/colorMap"
 import { addToast } from "@heroui/toast"
+import { FunnelSimple, MapPinAreaIcon } from "@phosphor-icons/react"
+import { ContractQueryParams } from "@/models/rental-contract/schema/request"
+import { RentalContractStatus } from "@/constants/enum"
 
 export default function RentalContractPage() {
     const { t } = useTranslation()
     const router = useRouter()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
-    const [filters, setFilter] = useState<{ status?: RentalContractStatus }>({})
-    const [pagination, setPagination] = useState<PaginationParams>({})
 
+    const [filter, setFilter] = useState<ContractQueryParams>({})
+    const [pagination, setPagination] = useState<PaginationParams>({})
     const {
         data,
         isLoading: isContractsLoading,
         error: contractsError,
-        refetch: refetchContracts
-    } = useGetMyContracts({ status: filters.status, pagination })
+        refetch
+    } = useGetMyContracts({ ...filter, pagination })
+
+    const {
+        data: stations,
+        isLoading: isGetStationsLoading,
+        error: getStationsError
+    } = useGetAllStations()
 
     useEffect(() => {
-        if (contractsError) {
-            const backendErr = contractsError as BackendError
+        const updateContracts = async () => {
+            await refetch()
+            setPagination((prev) => {
+                return {
+                    ...prev,
+                    pageNumber: 1
+                }
+            })
+        }
+
+        updateContracts()
+    }, [refetch, filter])
+
+    useEffect(() => {
+        if (contractsError || getStationsError) {
+            const backendErr =
+                (contractsError as BackendError) || (getStationsError as BackendError)
             addToast({
                 title: t("toast.error"),
                 description: translateWithFallback(t, backendErr.detail),
                 color: "danger"
             })
         }
-    }, [contractsError, t])
+    }, [contractsError, getStationsError, t])
 
     const status =
         data?.items.find((item) =>
@@ -53,59 +90,58 @@ export default function RentalContractPage() {
     return (
         <div className="py-8 md:px-12 max-w-screen shadow-2xs rounded-2xl bg-white text-center">
             <div className="text-3xl pb-6 font-bold text-center text-primary">
-                <p>{t("user.rental_contracts")}</p>
+                <p>{t("user.rental_bookings")}</p>
             </div>
 
-            <div className="mb-3 flex">
-                <EnumPicker
-                    label={t("table.status")}
-                    labels={RentalContractStatusLabels}
-                    value={filters.status}
-                    onChange={async (key) => {
-                        setFilter({
-                            status: key == null ? undefined : (key as RentalContractStatus)
-                        })
-                        await refetchContracts()
-                        setPagination((prev) => {
-                            return {
-                                ...prev,
-                                pageNumber: 1
-                            }
-                        })
-                    }}
-                    className="max-w-48"
-                />
-
-                {/* <form onSubmit={filterFormik.handleSubmit} className="flex gap-4 max-h-12">
-                    <DateRangePickerStyled
-                        label={t("table.pickup_return_time")}
-                        onChange={(val) => {
-                            if (!val) {
-                                filterFormik.setFieldValue("start", null)
-                                filterFormik.setFieldValue("end", null)
-                                return
-                            }
-
-                            const startStr = val.start
-                                ? dayjs(val.start.toDate(DEFAULT_TIMEZONE)).format("YYYY-MM-DD")
-                                : ""
-                            const endStr = val.end
-                                ? dayjs(val.end.toDate(DEFAULT_TIMEZONE)).format("YYYY-MM-DD")
-                                : ""
-
-                            filterFormik.setFieldValue("start", startStr)
-                            filterFormik.setFieldValue("end", endStr)
-                            filterFormik.handleSubmit()
+            <div className="mb-3 px-4 flex flex-col ">
+                <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                        <FunnelSimple size={22} className="text-primary" />
+                        {t("staff.booking_filter")}
+                    </h3>
+                </div>
+                <div className="flex gap-3">
+                    <AutocompleteStyled
+                        label={t("vehicle_model.station")}
+                        items={stations}
+                        startContent={<MapPinAreaIcon className="text-xl" />}
+                        selectedKey={filter.stationId}
+                        onSelectionChange={(id) => {
+                            setFilter((prev) => {
+                                return {
+                                    ...prev,
+                                    stationId: id ? (id as string) : undefined
+                                }
+                            })
                         }}
+                        className="md:w-40"
+                    >
+                        {(stations ?? []).map((item) => (
+                            <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
+                        ))}
+                    </AutocompleteStyled>
+                    <EnumPicker
+                        label={t("table.status")}
+                        labels={RentalContractStatusLabels}
+                        value={filter.status}
+                        onChange={(val) => {
+                            setFilter((prev) => {
+                                return {
+                                    ...prev,
+                                    status: val ? (val as RentalContractStatus) : undefined
+                                }
+                            })
+                        }}
+                        className="md:w-56"
                     />
-                </form> */}
+                </div>
             </div>
 
             <div className="flex justify-center ml-[6.5rem]">
                 <StepContract status={status!} />
             </div>
 
-            {isContractsLoading ? (
+            {isContractsLoading || isGetStationsLoading ? (
                 <Spinner className="md:min-w-[60rem]" />
             ) : (
                 <>
@@ -130,13 +166,13 @@ export default function RentalContractPage() {
                                 <TableRow
                                     key={item.id}
                                     className="hover:bg-gray-50 transition-colors border-b border-gray-100 cursor-pointer"
-                                    onClick={() => router.push(`/rental-contracts/${item.id}`)}
+                                    onClick={() => router.push(`/rental-bookings/${item.id}`)}
                                 >
                                     <TableCell className="text-center text-gray-700">
                                         {index + 1}
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        {item.vehicle.model.name}
+                                        {item.vehicle?.model.name || "-"}
                                     </TableCell>
                                     <TableCell className="text-center text-gray-600">
                                         {item.startDate && formatDateTime({ date: item.startDate })}
@@ -175,7 +211,6 @@ export default function RentalContractPage() {
                                     }
                                 })
                             }
-                            showControls
                         />
                     </div>
                 </>

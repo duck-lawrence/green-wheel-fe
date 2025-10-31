@@ -3,9 +3,12 @@
 import { InvoiceItemViewRes } from "@/models/invoice/schema/response"
 import { InvoiceItemType } from "@/constants/enum"
 import React from "react"
-import { formatCurrency } from "@/utils/helpers/currency"
-import { Wrench, Note, CurrencyCircleDollar, HashStraight } from "@phosphor-icons/react"
+import { formatCurrencyWithSymbol } from "@/utils/helpers/currency"
+import { Wrench, Note } from "@phosphor-icons/react"
 import { useTranslation } from "react-i18next"
+import { Chip } from "@heroui/react"
+import { DamageStatusLabels } from "@/constants/labels"
+import { DamageStatusColorMap } from "@/constants/colorMap"
 
 export function DetailDamage({ invoiceItems }: { invoiceItems: InvoiceItemViewRes[] }) {
     const { t } = useTranslation()
@@ -29,17 +32,25 @@ export function DetailDamage({ invoiceItems }: { invoiceItems: InvoiceItemViewRe
                                 {value.checklistItem?.component?.name}
                             </p>
                             {/* Thông tin số lượng + chi phí */}
-                            <div className="flex items-center gap-6 sm:gap-8">
+                            <div className="flex items-center gap-3">
                                 {/* Số lượng */}
-                                <p className="flex items-center text-sm sm:text-base text-gray-700 dark:text-gray-300 gap-1">
+                                {/* <p className="flex items-center text-sm sm:text-base text-gray-700 dark:text-gray-300 gap-1">
                                     <HashStraight size={18} className="text-teal-500" />
                                     <span className="font-medium">SL:</span> {value.quantity ?? 0}
-                                </p>
+                                </p> */}
+
+                                {value.checklistItem && (
+                                    <Chip
+                                        variant="bordered"
+                                        color={DamageStatusColorMap[value.checklistItem.status]}
+                                    >
+                                        {DamageStatusLabels[value.checklistItem.status]}
+                                    </Chip>
+                                )}
 
                                 {/* Chi phí */}
                                 <p className="text-primary font-semibold flex items-center gap-1">
-                                    <CurrencyCircleDollar size={18} weight="duotone" />
-                                    {formatCurrency(value.subTotal ?? 0)}
+                                    {formatCurrencyWithSymbol(value.subTotal ?? 0)}
                                 </p>
                             </div>
                         </div>

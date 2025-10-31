@@ -6,7 +6,7 @@ export function AlertStyled(props: AlertProps) {
     return (
         <Alert
             {...props}
-            className={cn("text-sm px-3 py-2 font-[450] text-left", props.className)}
+            className={cn("max-w-fit text-sm px-3 py-1 font-[450] text-left", props.className)}
         />
     )
 }

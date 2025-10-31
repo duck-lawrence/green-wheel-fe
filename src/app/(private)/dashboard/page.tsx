@@ -6,9 +6,8 @@ import { useRouter } from "next/navigation"
 import { useTranslation } from "react-i18next"
 import { ROLE_ADMIN, ROLE_STAFF } from "@/constants/constants"
 import { useGetMe } from "@/hooks"
-import AdminDashboard from "./(admin)/AdminDashboard"
-import StaffDashboard from "./(staff)/StaffDashboard"
 import { addToast } from "@heroui/toast"
+import { SpinnerStyled } from "@/components"
 
 export default function DashboardPage() {
     const router = useRouter()
@@ -30,6 +29,8 @@ export default function DashboardPage() {
 
             router.replace("/")
         }
+        if (isAdmin) router.replace("/dashboard/")
+        if (isStaff) router.replace("/dashboard/rental-bookings")
     }, [isAdmin, isStaff, isError, isLoading, router, t])
 
     if (isLoading) {
@@ -44,7 +45,5 @@ export default function DashboardPage() {
         return null
     }
 
-    if (isAdmin) return <AdminDashboard />
-
-    return <StaffDashboard />
+    return <SpinnerStyled />
 }

@@ -10,7 +10,7 @@ import {
     TextareaStyled
 } from "@/components"
 import { TicketStatus, TicketType } from "@/constants/enum"
-import { useDay, useEscalateTicketToAdmin, useName, useUpdateTicket } from "@/hooks"
+import { useDay, useEscalateTicketToAdmin, useUserHelper, useUpdateTicket } from "@/hooks"
 import { TicketFilterParams, UpdateTicketReq } from "@/models/ticket/schema/request"
 import { useFormik } from "formik"
 import * as Yup from "yup"
@@ -46,7 +46,7 @@ export function EditTicketModal({
     pagination
 }: EditTicketModalProps) {
     const { t } = useTranslation()
-    const { toFullName } = useName()
+    const { toFullName } = useUserHelper()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
     const updateMutation = useUpdateTicket({ query: filter, pagination, onSuccess: onClose })
     const escalateMutation = useEscalateTicketToAdmin({
