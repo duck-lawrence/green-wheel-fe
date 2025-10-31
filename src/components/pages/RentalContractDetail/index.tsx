@@ -150,13 +150,14 @@ export function RentalContractDetail({
     const { data: checklists } = useGetAllVehicleChecklists({
         query: {
             contractId
-        }
+        },
+        pagination: {}
     })
     const hanoverChecklist = useMemo(() => {
-        return checklists?.find((item) => item.type === VehicleChecklistType.Handover)
+        return checklists?.items.find((item) => item.type === VehicleChecklistType.Handover)
     }, [checklists])
     const returnChecklist = useMemo(() => {
-        return checklists?.find((item) => item.type === VehicleChecklistType.Return)
+        return checklists?.items.find((item) => item.type === VehicleChecklistType.Return)
     }, [checklists])
 
     //======================================= //

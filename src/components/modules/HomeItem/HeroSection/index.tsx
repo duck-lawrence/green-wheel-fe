@@ -81,12 +81,19 @@ export function HeroSection() {
             {/* Overlay gradient (different levels for breakpoints) */}
             {/* <div
                 className="
-                    absolute inset-0 
+                    lg:hidden absolute inset-0 
                     bg-gradient-to-b 
-                    from-black/20 via-black/10 to-black/20
-                    md:from-black/40 md:via-black/25 md:to-black/35
+                    from-black/40 via-black/25 to-black/35
                 "
             /> */}
+            <div
+                className="
+                    lg:hidden absolute inset-0
+                    backdrop-blur-xl
+                    bg-gradient-to-b 
+                    from-white/40 via-white/25 to-white/35
+                "
+            />
 
             {/* Dynamic light */}
             <motion.div

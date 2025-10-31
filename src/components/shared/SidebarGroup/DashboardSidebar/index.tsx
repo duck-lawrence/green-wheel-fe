@@ -40,7 +40,7 @@ export function DashboardSidebar({ className }: { className?: string }) {
     const adminTabs: SidebarItem[] = [
         {
             key: "/dashboard",
-            label: t("staff.sidebar_dashboard"),
+            label: t("staff.dashboard"),
             href: "/dashboard"
         },
         {

@@ -42,7 +42,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
     })
 
     const isEditable = useMemo(() => {
-        return isStaff && !checklist?.isSignedByStaff && !checklist?.isSignedByCustomer
+        return isStaff && (!checklist?.isSignedByStaff || !checklist?.isSignedByCustomer)
     }, [checklist?.isSignedByCustomer, checklist?.isSignedByStaff, isStaff])
 
     const isSubmitable = useMemo(() => {

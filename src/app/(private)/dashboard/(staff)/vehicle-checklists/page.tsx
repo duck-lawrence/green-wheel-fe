@@ -30,7 +30,7 @@ export default function VehicleChecklistPage() {
                 <p>{t("vehicle_checklist.checklist")}</p>
             </div>
 
-            <div className="mb-3 flex gap-2">
+            <div className="mb-3 flex gap-2 px-4">
                 <EnumPicker
                     label={t("table.type")}
                     labels={VehicleChecklistTypeLabels}
@@ -52,7 +52,7 @@ export default function VehicleChecklistPage() {
                 <Spinner className="" />
             ) : (
                 <>
-                    <TableStyled className="w-full ">
+                    <TableStyled className="w-full">
                         <TableHeader>
                             <TableColumn className="text-sm text-center w-44">
                                 {t("table.id")}
@@ -78,7 +78,7 @@ export default function VehicleChecklistPage() {
                             {(data?.items || []).map((item) => (
                                 <TableRow
                                     key={item.id}
-                                    className="border-b border-gray-300 cursor-pointer"
+                                    className="border-b border-gray-300 cursor-pointer hover:bg-gray-50"
                                     onClick={() =>
                                         router.push(`/dashboard/vehicle-checklists/${item.id}`)
                                     }

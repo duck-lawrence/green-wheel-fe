@@ -186,6 +186,7 @@ export default function ProfilePage() {
                                     labels={SexLabels}
                                     value={updateMeFormik.values.sex}
                                     onChange={(val) => updateMeFormik.setFieldValue("sex", val)}
+                                    isClearable={false}
                                 />
                             </div>
                             <DatePickerStyled

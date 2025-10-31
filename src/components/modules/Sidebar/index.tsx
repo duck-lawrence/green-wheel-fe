@@ -8,6 +8,7 @@ import { ROLE_ADMIN, ROLE_CUSTOMER, ROLE_STAFF } from "@/constants/constants"
 import { useSideBarItemStore } from "@/hooks"
 import { Menu, X } from "lucide-react"
 import { ButtonIconStyled } from "@/components/styled"
+import { createPortal } from "react-dom"
 
 export type SidebarItem = {
     key: string
@@ -113,40 +114,44 @@ export function Sidebar({ tabs, selectedKey, className = "" }: SidebarProps) {
                     {isOpen ? <X size={24} /> : <Menu size={24} />}
                 </ButtonIconStyled>
             </div>
+            {typeof window !== "undefined" &&
+                createPortal(
+                    <>
+                        {isOpen && (
+                            <div
+                                className="fixed inset-0 bg-black/30 z-[9998] lg:hidden"
+                                onClick={() => setIsOpen(false)}
+                            />
+                        )}
 
-            {isOpen && (
-                <div
-                    className="fixed inset-0 bg-black/30 z-40 lg:hidden"
-                    onClick={() => setIsOpen(false)}
-                />
-            )}
-
-            {/* Sidebar Mobile Drawer */}
-            <motion.div
-                initial={{ x: "-100%" }}
-                animate={{ x: isOpen ? 0 : "-100%" }}
-                transition={{ type: "spring", stiffness: 260, damping: 30 }}
-                className="fixed top-0 left-0 h-full w-50 bg-white shadow-lg z-50 flex flex-col lg:hidden"
-            >
-                {tabs.map((item) => {
-                    const isActive = activeKey === item.key
-                    return (
-                        <button
-                            key={item.key}
-                            onClick={() => handleSelection(item.key)}
-                            className={cn(
-                                "relative w-full overflow-hidden px-3 py-2 text-xl font-medium mb-2",
-                                "flex items-center justify-center whitespace-nowrap transition-colors duration-150",
-                                isActive
-                                    ? "bg-primary text-white"
-                                    : "text-gray-700 hover:bg-gray-100"
-                            )}
+                        <motion.div
+                            initial={{ x: "-100%" }}
+                            animate={{ x: isOpen ? 0 : "-100%" }}
+                            transition={{ type: "spring", stiffness: 260, damping: 30 }}
+                            className="fixed top-0 left-0 h-full w-fit bg-white shadow-lg z-[9999] flex flex-col lg:hidden"
                         >
-                            {item.label}
-                        </button>
-                    )
-                })}
-            </motion.div>
+                            {tabs.map((item) => {
+                                const isActive = activeKey === item.key
+                                return (
+                                    <button
+                                        key={item.key}
+                                        onClick={() => handleSelection(item.key)}
+                                        className={cn(
+                                            "relative w-full overflow-hidden px-3 py-2 text-xl font-medium mb-2",
+                                            "flex items-center justify-start whitespace-nowrap transition-colors duration-150",
+                                            isActive
+                                                ? "bg-primary text-white"
+                                                : "text-gray-700 hover:bg-gray-100"
+                                        )}
+                                    >
+                                        {item.label}
+                                    </button>
+                                )
+                            })}
+                        </motion.div>
+                    </>,
+                    document.body
+                )}
 
             {/* Sidebar Desktop */}
             <div className="hidden lg:flex flex-col md:w-auto md:flex-shrink-0">
