@@ -14,8 +14,8 @@ import {
 } from "@/models/vehicle/schema/response"
 import { vehicleModelApi } from "@/services/vehicleModelApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
+import { addToast } from "@heroui/toast"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 
 export const useGetAllVehicleModels = ({
@@ -113,11 +113,22 @@ export const useCreateVehicleModel = ({
         mutationFn: (payload: CreateVehicleModelReq) => vehicleModelApi.create(payload),
         onSuccess: (response) => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
-            toast.success(t("success.create"))
+
+            addToast({
+                title: t("toast.success"),
+                description: t("success.create"),
+                color: "success"
+            })
+
             onSuccess?.(response)
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
+
             onError?.()
         }
     })
@@ -138,11 +149,22 @@ export const useUpdateVehicleModel = ({
             vehicleModelApi.update({ id, payload }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
-            toast.success(t("success.update"))
+
+            addToast({
+                title: t("toast.success"),
+                description: t("toast.update_success"),
+                color: "success"
+            })
+
             onSuccess?.()
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
+
             onError?.()
         }
     })
@@ -167,11 +189,19 @@ export const useUploadModelImages = ({
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
             onSuccess?.()
-            toast.success(t("success.upload"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.upload"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
             onError?.()
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -195,11 +225,19 @@ export const useUploadModelMainImage = ({
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
             onSuccess?.()
-            toast.success(t("success.upload"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.upload"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
             onError?.()
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -223,11 +261,19 @@ export const useUploadModelSubImages = ({
         onSuccess: (images) => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
             onSuccess?.(images ?? [])
-            toast.success(t("success.upload"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.upload"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
             onError?.()
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -250,11 +296,19 @@ export const useDeleteModelImages = ({
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
             onSuccess?.()
-            toast.success(t("success.delete"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.delete"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
             onError?.()
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -273,11 +327,20 @@ export const useDeleteVehicleModel = ({
         mutationFn: (id: string) => vehicleModelApi.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
-            toast.success(t("success.delete"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.delete"),
+                color: "success"
+            })
             onSuccess?.()
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
+
             onError?.()
         }
     })

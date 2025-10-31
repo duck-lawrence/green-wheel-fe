@@ -7,8 +7,8 @@ import { PaginationParams } from "@/models/common/request"
 import { BackendError } from "@/models/common/response"
 import { TicketFilterParams } from "@/models/ticket/schema/request"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
+import { addToast } from "@heroui/toast"
 import React, { useEffect, useState } from "react"
-import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 
 export default function CustomerSupportsPage() {
@@ -24,7 +24,11 @@ export default function CustomerSupportsPage() {
     useEffect(() => {
         if (queryResult.error) {
             const backendErr = queryResult.error as BackendError
-            toast.error(translateWithFallback(t, backendErr.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, backendErr.detail),
+                color: "danger"
+            })
         }
     }, [queryResult.error, t])
 

@@ -10,12 +10,12 @@ import { AutocompleteStyled, DateTimeStyled } from "@/components"
 import { useBookingFilterStore, useDay, useGetAllStations, useGetAllVehicleSegments } from "@/hooks"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
-import toast from "react-hot-toast"
 import { DEFAULT_TIMEZONE, MAX_HOUR, MIN_HOUR } from "@/constants/constants"
 import dayjs from "dayjs"
 import { useSearchVehicleModels } from "@/hooks/queries/useVehicleModel"
 import { SearchModelParams } from "@/models/vehicle/schema/request"
 import { debouncedWrapper } from "@/utils/helpers/axiosHelper"
+import { addToast } from "@heroui/toast"
 
 function calcDates() {
     const zonedNow = fromDate(new Date(), DEFAULT_TIMEZONE)
@@ -112,7 +112,12 @@ export function FilterVehicleRental({
         }
         if (getStationsError) {
             const error = getStationsError as BackendError
-            toast.error(translateWithFallback(t, error.detail))
+            // toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     }, [getStationsError, isGetStationsLoading, setStationId, stationId, stations, t])
 
@@ -120,7 +125,11 @@ export function FilterVehicleRental({
     useEffect(() => {
         if (getVehicleSegmentsError) {
             const error = getVehicleSegmentsError as BackendError
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     }, [getVehicleSegmentsError, t])
 

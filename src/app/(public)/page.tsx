@@ -12,7 +12,7 @@ import React, { useEffect, useRef } from "react"
 import { slides } from "@/../public/cars"
 import { useTranslation } from "react-i18next"
 import { useRouter, useSearchParams } from "next/navigation"
-import toast from "react-hot-toast"
+import { addToast } from "@heroui/toast"
 
 export default function HomePage() {
     const { t } = useTranslation()
@@ -24,7 +24,11 @@ export default function HomePage() {
         if (hasShownToast.current) return
         const reason = params.get("reason")
         if (reason === "expired" || reason === "no_token") {
-            toast.error(t("login.please_login"))
+            addToast({
+                title: t("toast.error"),
+                description: t("login.please_login"),
+                color: "danger"
+            })
             hasShownToast.current = true
         }
 

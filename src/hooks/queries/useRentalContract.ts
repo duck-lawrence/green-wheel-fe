@@ -10,10 +10,10 @@ import {
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
 import { rentalContractApi } from "@/services/rentalContractApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
+import { addToast } from "@heroui/toast"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { usePathname, useRouter } from "next/navigation"
 
-import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 
 export const useInvalidateContractQueries = () => {
@@ -24,7 +24,6 @@ export const useInvalidateContractQueries = () => {
             queryKey: [...QUERY_KEYS.RENTAL_CONTRACTS, id]
         })
     }
-
     return { invalidateById }
 }
 
@@ -35,14 +34,22 @@ export const useCreateRentalContract = ({ onSuccess }: { onSuccess?: () => void 
     return useMutation({
         mutationFn: rentalContractApi.create,
         onSuccess: () => {
-            router.push("/rental-bookings")
-            toast.success(t("contral_form.wait_for_confirm"), {
-                duration: 5000
+            router.push("/rental-contracts")
+            onSuccess?.()
+            addToast({
+                title: t("toast.success"),
+                description: t("contral_form.wait_for_confirm"),
+                color: "success"
             })
+
             onSuccess?.()
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -53,11 +60,19 @@ export const useCreateContractManual = ({ onSuccess }: { onSuccess?: () => void 
     return useMutation({
         mutationFn: rentalContractApi.createManual,
         onSuccess: () => {
-            toast.success(t("success.create"))
             onSuccess?.()
+            addToast({
+                title: t("toast.success"),
+                description: t("review.create_successfull"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -151,12 +166,20 @@ export const useConfirmContract = ({
             await rentalContractApi.confirmContract({ id, req })
         },
         onSuccess: () => {
-            toast.success(t("success.update"))
             onSuccess?.()
             queryClient.invalidateQueries({ queryKey: key })
+            addToast({
+                title: t("toast.success"),
+                description: t("toast.update_success"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -175,9 +198,18 @@ export const useUpdateContractStatus = ({ onSuccess }: { onSuccess?: () => void 
         onSuccess: () => {
             router.replace(pathName)
             onSuccess?.()
+            addToast({
+                title: t("toast.success"),
+                description: t("toast.update_success"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -193,10 +225,19 @@ export const useHandoverContract = ({ id, onSuccess }: { id: string; onSuccess?:
         onSuccess: async () => {
             await invalidateById(id)
             onSuccess?.()
-            toast.success(t("success.handover"))
+            // toast.success(t("success.handover"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.handover"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -213,10 +254,19 @@ export const useReturnContract = ({ id, onSuccess }: { id: string; onSuccess?: (
         onSuccess: async () => {
             await invalidateById(id)
             onSuccess?.()
-            toast.success(t("success.return"))
+            // toast.success(t("success.return"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.return"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -232,10 +282,19 @@ export const useCancelContract = ({ id, onSuccess }: { id: string; onSuccess?: (
         onSuccess: async () => {
             await invalidateById(id)
             onSuccess?.()
-            toast.success(t("success.cancel"))
+            // toast.success(t("success.cancel"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.cancel"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -259,7 +318,11 @@ export const useChangeVehicleByContractId = ({
             onSuccess?.()
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -287,7 +350,11 @@ export const useConfirmChangeVehicle = ({
             onSuccess?.()
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }

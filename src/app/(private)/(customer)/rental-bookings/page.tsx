@@ -20,12 +20,12 @@ import {
 import { useRouter } from "next/navigation"
 import { useDay, useGetAllStations, useGetMyContracts } from "@/hooks"
 import { BackendError } from "@/models/common/response"
-import toast from "react-hot-toast"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { RentalContractStatusLabels } from "@/constants/labels"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { PaginationParams } from "@/models/common/request"
 import { RentalContractStatusColorMap } from "@/constants/colorMap"
+import { addToast } from "@heroui/toast"
 import { FunnelSimple, MapPinAreaIcon } from "@phosphor-icons/react"
 import { ContractQueryParams } from "@/models/rental-contract/schema/request"
 import { RentalContractStatus } from "@/constants/enum"
@@ -68,7 +68,11 @@ export default function RentalContractPage() {
         if (contractsError || getStationsError) {
             const backendErr =
                 (contractsError as BackendError) || (getStationsError as BackendError)
-            toast.error(translateWithFallback(t, backendErr.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, backendErr.detail),
+                color: "danger"
+            })
         }
     }, [contractsError, getStationsError, t])
 

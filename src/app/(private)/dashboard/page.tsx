@@ -2,11 +2,11 @@
 
 import React, { useEffect } from "react"
 import { Spinner } from "@heroui/react"
-import toast from "react-hot-toast"
 import { useRouter } from "next/navigation"
 import { useTranslation } from "react-i18next"
 import { ROLE_ADMIN, ROLE_STAFF } from "@/constants/constants"
 import { useGetMe } from "@/hooks"
+import { addToast } from "@heroui/toast"
 import { SpinnerStyled } from "@/components"
 
 export default function DashboardPage() {
@@ -21,8 +21,12 @@ export default function DashboardPage() {
     useEffect(() => {
         if (isLoading) return
         if (isError || (!isAdmin && !isStaff)) {
-            toast.dismiss()
-            toast.error(t("user.unauthorized"))
+            addToast({
+                title: t("toast.error"),
+                description: t("user.unauthorized"),
+                color: "danger"
+            })
+
             router.replace("/")
         }
         if (isAdmin) router.replace("/dashboard/")
