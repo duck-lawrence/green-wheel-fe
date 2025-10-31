@@ -4,9 +4,9 @@ import { DispatchQueryParams, UpdateDispatchReq } from "@/models/dispatch/schema
 import { DispatchViewRes } from "@/models/dispatch/schema/response"
 import { dispatchApi } from "@/services/dispathApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
+import { addToast } from "@heroui/toast"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
-import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 
 export const useCreateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => {
@@ -16,13 +16,21 @@ export const useCreateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => 
     return useMutation({
         mutationFn: dispatchApi.create,
         onSuccess: async () => {
-            toast.success(t("dispatch.create_success"))
             await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.DISPATCH_REQUESTS })
             router.push("/dashboard/dispatch")
             onSuccess?.()
+            addToast({
+                title: t("toast.success"),
+                description: t("dispatch.create_success"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -36,15 +44,23 @@ export const useUpdateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => 
             await dispatchApi.update({ id, req })
         },
         onSuccess: () => {
-            toast.success(t("dispatch.update_success"))
             queryClient.invalidateQueries({
                 queryKey: [...QUERY_KEYS.DISPATCH_REQUESTS]
             })
             onSuccess?.()
+            addToast({
+                title: t("toast.success"),
+                description: t("dispatch.update_success"),
+                color: "success"
+            })
             router.push("/dashboard/dispatch")
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }

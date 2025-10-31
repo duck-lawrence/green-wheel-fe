@@ -17,13 +17,13 @@ import {
 } from "@/hooks"
 import { ButtonStyled, InputStyled, ImageStyled, TextareaStyled, TempInvoice } from "@/components"
 import { Spinner, useDisclosure } from "@heroui/react"
-import toast from "react-hot-toast"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { BackendError } from "@/models/common/response"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { CheckboxStyled, SelectUserModal } from "@/components"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { UserProfileViewRes } from "@/models/user/schema/response"
+import { addToast } from "@heroui/toast"
 
 type FormValues = {
     fullName: string
@@ -122,7 +122,11 @@ export const CreateRentalContractForm = ({
     const handleSubmit = useCallback(
         ({ notes }: { notes: string }) => {
             if (!isUserValidForBooking(user)) {
-                toast.error(t("user.enter_required_info"))
+                addToast({
+                    title: t("toast.error"),
+                    description: t("user.enter_required_info"),
+                    color: "danger"
+                })
                 return
             }
             if (isStaff) handleCreateManual({ notes })
@@ -149,7 +153,11 @@ export const CreateRentalContractForm = ({
     useEffect(() => {
         if (userError || stationsError) {
             const error = (userError as BackendError) || (stationsError as BackendError)
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
             onSuccess?.()
         }
     }, [onSuccess, stationsError, t, userError])

@@ -13,5 +13,9 @@ export const stationFeedbackApi = {
         requestWrapper<StationFeedbackRes[]>(async () => {
             const res = await axiosInstance.get("/station-feedbacks")
             return res.data
+        }),
+    delete: (id: string) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.delete(`/station-feedbacks/${id}`)
         })
 }

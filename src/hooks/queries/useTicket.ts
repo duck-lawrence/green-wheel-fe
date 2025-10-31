@@ -7,8 +7,8 @@ import { TicketFilterParams } from "@/models/ticket/schema/request"
 import { ticketApi } from "@/services/ticketApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
+import { addToast } from "@heroui/toast"
 
 export const useCreateTicket = ({
     status,
@@ -26,12 +26,20 @@ export const useCreateTicket = ({
     return useMutation({
         mutationFn: ticketApi.create,
         onSuccess: async () => {
-            toast.success(t("success.create"))
             onSuccess?.()
             await queryClient.invalidateQueries({ queryKey: key })
+            addToast({
+                title: t("toast.success"),
+                description: t("success.create"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -96,12 +104,20 @@ export const useUpdateTicket = ({
     return useMutation({
         mutationFn: ticketApi.update,
         onSuccess: async () => {
-            toast.success(t("success.update"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.update"),
+                color: "success"
+            })
             onSuccess?.()
             await queryClient.invalidateQueries({ queryKey: key })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -122,12 +138,20 @@ export const useEscalateTicketToAdmin = ({
     return useMutation({
         mutationFn: ticketApi.escalateToAdmin,
         onSuccess: async () => {
-            toast.success(t("success.update"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.update"),
+                color: "success"
+            })
             onSuccess?.()
             await queryClient.invalidateQueries({ queryKey: key })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }

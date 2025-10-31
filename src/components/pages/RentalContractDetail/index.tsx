@@ -36,7 +36,6 @@ import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { useTranslation } from "react-i18next"
 import Link from "next/link"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import toast from "react-hot-toast"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { decodeJwt } from "@/utils/helpers/jwt"
@@ -45,6 +44,7 @@ import { ChecklistSection } from "./ChecklistSection"
 import { CreateInvoiceSection } from "./CreateInvoiceSection"
 import { HandoverContractReq } from "@/models/rental-contract/schema/request"
 import { BottomActionButtons } from "./BottomActionButtons"
+import { addToast } from "@heroui/toast"
 import { useDisclosure } from "@heroui/react"
 
 function getChecklistDisplay(status?: RentalContractStatus) {
@@ -104,7 +104,11 @@ export function RentalContractDetail({
         if (!contract || !payload.sid) return
         if (!isStaff && payload.sid != contract?.customer.id) {
             router.push("/")
-            toast.error(t("user.do_not_have_permission"))
+            addToast({
+                title: t("toast.error"),
+                description: t("user.do_not_have_permission"),
+                color: "danger"
+            })
         }
     }, [contract, isStaff, payload.sid, router, t])
 
@@ -133,7 +137,11 @@ export function RentalContractDetail({
             if (resultCode === 0) {
                 await updateContractStatus.mutateAsync({ id: contractId })
             } else {
-                toast.error(t("failed.payment"))
+                addToast({
+                    title: t("toast.error"),
+                    description: t("failed.payment"),
+                    color: "danger"
+                })
             }
         }
 
