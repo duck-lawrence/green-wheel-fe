@@ -244,7 +244,11 @@
         "to_station": "To Station",
         "view_detail": "View Detail",
         "dispatch_managerment": "Dispatch Management",
-        "create_dispatch": "Create Dispatch"
+        "create_dispatch": "Create Dispatch",
+        "rating": "Rating",
+        "feedback": "Feedback",
+        "content": "Content",
+        "station_feedbacks": "Station Feedbacks"
     },
     "contral_form": {
         "full_name_require": "Full name is required",
@@ -548,6 +552,7 @@
         "user_filter_has_document_both": "Both Documents",
         "user_filter_has_document_license": "Driving License",
         "user_filter_has_document_citizen": "Citizen ID",
+        "sidebar_feedback": "Feedback",
         "user_filter_has_document_none": "No document"
     },
     "admin": {
@@ -836,7 +841,9 @@
         "submit": "Submit review",
         "content": "Content",
         "rating": "Rating",
-        "create_title": "Create feedback"
+        "create_title": "Create feedback",
+        "delete_successfull": "Delete feedback successful",
+        "feedback": "Feedback"
     },
     "fleet": {
         "page_title": "Fleet Management",
@@ -889,5 +896,19 @@
     },
     "reaview": {
         "create": "Create feedback successful"
+    },
+    "toast": {
+        "create": "Create",
+        "update": "Update",
+        "delete": "Delete",
+        "success": "successfully",
+        "failed": "failed",
+        "error": "Error",
+        "create_failed": "Create failed",
+        "update_failed": "Update failed",
+        "delete_failed": "Delete failed",
+        "create_success": "Created successfully",
+        "update_success": "Updated successfully",
+        "delete_success": "Deleted successfully"
     }
 }
