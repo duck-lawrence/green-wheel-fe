@@ -3,18 +3,23 @@
 import React, { memo } from "react"
 import { ButtonStyled, ImageStyled } from "@/components/"
 import { X } from "@phosphor-icons/react"
+import { cn } from "@heroui/react"
 
 export const PreviewList = memo(function PreviewList({
     images,
     cropSize,
-    onRemove
+    onRemove,
+    className = ""
 }: {
     images: { blob: Blob; url: string }[]
     cropSize: { width: number; height: number }
     onRemove: (index: number) => void
+    className?: string
 }) {
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full">
+        <div
+            className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full", className)}
+        >
             {images.map((img, idx) => (
                 <div key={idx} className="relative group">
                     <ImageStyled

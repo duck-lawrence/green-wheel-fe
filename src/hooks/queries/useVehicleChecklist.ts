@@ -5,7 +5,8 @@ import {
     UpdateVehicleChecklistReq
 } from "@/models/checklist/schema/request"
 import { VehicleChecklistViewRes } from "@/models/checklist/schema/response"
-import { BackendError } from "@/models/common/response"
+import { PaginationParams } from "@/models/common/request"
+import { BackendError, PageResult } from "@/models/common/response"
 import { vehicleChecklistsApi } from "@/services/vehicleChecklistsApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
@@ -15,19 +16,22 @@ import { useTranslation } from "react-i18next"
 
 export const useGetAllVehicleChecklists = ({
     query,
+    pagination = {},
     enabled = true
 }: {
     query: GetAllVehicleChecklistParams
+    pagination: PaginationParams
     enabled?: boolean
 }) => {
     const queryClient = useQueryClient()
     return useQuery({
-        queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, query],
-        queryFn: () => vehicleChecklistsApi.getAll(query),
+        queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, query, pagination],
+        queryFn: () => vehicleChecklistsApi.getAll({ query, pagination }),
         initialData: () => {
-            return queryClient.getQueryData<VehicleChecklistViewRes[]>([
+            return queryClient.getQueryData<PageResult<VehicleChecklistViewRes>>([
                 ...QUERY_KEYS.VEHICLE_CHECKLISTS,
-                query
+                query,
+                pagination
             ])
         },
         enabled
@@ -87,10 +91,9 @@ export const useUpdateVehicleChecklist = ({
             await vehicleChecklistsApi.update({ id, req })
         },
         onSuccess: (id) => {
-            queryClient.refetchQueries({
+            queryClient.invalidateQueries({
                 queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, id]
             })
-            toast.success(t("success.update"))
             onSuccess?.()
         },
         onError: (error: BackendError) => {
@@ -110,6 +113,31 @@ export const useUpdateVehicleChecklistItem = ({ onSuccess }: { onSuccess?: () =>
         onSuccess: () => {
             router.refresh()
             // toast.success(t("success.update"))
+            onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
+        }
+    })
+}
+
+export const useSignByCustomer = ({
+    id,
+    onSuccess = undefined
+}: {
+    id: string
+    onSuccess?: () => void
+}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async () => {
+            await vehicleChecklistsApi.signByCustomer({ id })
+        },
+        onSuccess: (id) => {
+            queryClient.invalidateQueries({
+                queryKey: [...QUERY_KEYS.VEHICLE_CHECKLISTS, id]
+            })
             onSuccess?.()
         },
         onError: (error: BackendError) => {

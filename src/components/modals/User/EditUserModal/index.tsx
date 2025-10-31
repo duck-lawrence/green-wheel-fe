@@ -53,7 +53,7 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
 
     const handleCitizenUploadSuccess = useCallback(
         (data: CitizenIdentityViewRes) => {
-            setCitizenUrl(data.imageUrl ?? null)
+            setCitizenUrl(data.frontImageUrl ?? null)
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
         },
         [queryClient]
@@ -61,7 +61,7 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
 
     const handleDriverUploadSuccess = useCallback(
         (data: DriverLicenseViewRes) => {
-            setLicenseUrl(data.imageUrl ?? null)
+            setLicenseUrl(data.frontImageUrl ?? null)
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
         },
         [queryClient]

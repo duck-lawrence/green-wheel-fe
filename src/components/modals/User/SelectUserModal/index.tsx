@@ -11,10 +11,9 @@ import {
     User
 } from "@heroui/react"
 import {
+    AccountPreview,
+    ButtonIconStyled,
     ButtonStyled,
-    DatePickerStyled,
-    EnumPicker,
-    ImageStyled,
     InputStyled,
     ModalStyled,
     PaginationStyled,
@@ -26,12 +25,12 @@ import { useTranslation } from "react-i18next"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { UserFilterParams } from "@/models/user/schema/request"
-import { useDay, useGetAllUsers, useName } from "@/hooks"
+import { useGetAllUsers, useUserHelper } from "@/hooks"
 import { RoleName } from "@/constants/enum"
 import { NUMBER_REGEX, PHONE_REGEX } from "@/constants/regex"
 import { DEFAULT_AVATAR_URL } from "@/constants/constants"
-import { SexLabels } from "@/constants/labels"
 import { PaginationParams } from "@/models/common/request"
+import { Search } from "lucide-react"
 
 interface SelectUserModalProps {
     isOpen: boolean
@@ -42,8 +41,7 @@ interface SelectUserModalProps {
 
 export function SelectUserModal({ isOpen, onOpenChange, onClose, setUser }: SelectUserModalProps) {
     const { t } = useTranslation()
-    const { toFullName } = useName()
-    const { toDate } = useDay({ defaultFormat: "YYYY-MM-DD" })
+    const { toFullName, isUserValidForBooking } = useUserHelper()
 
     const [selectedUser, setSelectedUser] = useState<UserProfileViewRes | null>(null)
     const [filter, setFilter] = useState<UserFilterParams>({ roleName: RoleName.Customer })
@@ -132,14 +130,14 @@ export function SelectUserModal({ isOpen, onOpenChange, onClose, setUser }: Sele
                                     errorMessage={formik.errors.phone}
                                     onBlur={() => formik.setFieldTouched("phone")}
                                 />
-                                <ButtonStyled
+                                <ButtonIconStyled
                                     type="submit"
                                     variant="ghost"
                                     color="primary"
-                                    className="h-14"
+                                    className="max-w-fit my-auto"
                                 >
-                                    {t("common.search")}
-                                </ButtonStyled>
+                                    <Search size={18} />
+                                </ButtonIconStyled>
                             </form>
                             <TableStyled
                                 selectionMode="single"
@@ -198,7 +196,6 @@ export function SelectUserModal({ isOpen, onOpenChange, onClose, setUser }: Sele
                                             }
                                         })
                                     }
-                                    showControls
                                 />
                             </div>
                         </div>
@@ -207,74 +204,13 @@ export function SelectUserModal({ isOpen, onOpenChange, onClose, setUser }: Sele
                     <div className="md:border-l-2 md:pl-4">
                         {selectedUser && (
                             <>
-                                <div className="text-center font-bold text-2xl my-3">
-                                    {t("user.account_information")}
-                                </div>
-                                <User
-                                    as="button"
-                                    avatarProps={{
-                                        isBordered: true,
-                                        src: selectedUser.avatarUrl || DEFAULT_AVATAR_URL
-                                    }}
-                                    className="transition-transform"
-                                    name={toFullName({
-                                        firstName: selectedUser.firstName,
-                                        lastName: selectedUser.lastName
-                                    })}
-                                    classNames={{
-                                        name: "text-[16px]",
-                                        base: "flex gap-4"
-                                    }}
-                                />
-
-                                <div className="my-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    <InputStyled
-                                        label={t("auth.email")}
-                                        value={selectedUser.email}
-                                        isReadOnly
-                                    />
-                                    <InputStyled
-                                        label={t("user.phone")}
-                                        value={selectedUser.phone}
-                                        isReadOnly
-                                    />
-                                    <EnumPicker
-                                        value={selectedUser.sex}
-                                        label={t("user.sex")}
-                                        labels={SexLabels}
-                                        isReadOnly
-                                    />
-                                    <DatePickerStyled
-                                        isReadOnly
-                                        label={t("user.date_of_birth")}
-                                        value={toDate(selectedUser.dateOfBirth) || null}
-                                    />
-                                </div>
-
-                                {selectedUser.citizenUrl && (
-                                    <ImageStyled
-                                        alt={t("user.citizen_identity")}
-                                        src={selectedUser.citizenUrl}
-                                        width={500}
-                                        height={312.5}
-                                        className="mb-3"
-                                    />
-                                )}
-
-                                {selectedUser.licenseUrl && (
-                                    <ImageStyled
-                                        alt={t("user.driver_license")}
-                                        src={selectedUser.licenseUrl}
-                                        width={500}
-                                        height={312.5}
-                                        className="mb-3"
-                                    />
-                                )}
+                                <AccountPreview user={selectedUser} />
 
                                 <div className="text-center">
                                     <ButtonStyled
                                         variant="ghost"
                                         color="default"
+                                        isDisabled={!isUserValidForBooking(selectedUser)}
                                         onPress={handleSelect}
                                     >
                                         {t("common.choose")}

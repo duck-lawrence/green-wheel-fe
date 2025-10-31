@@ -1,6 +1,6 @@
 export * from "./CustomerReview"
 export * from "./HowItWorks"
 export * from "./HeroSection"
-export * from "./GreenWheelExperience"
+export * from "./HowToRent"
 export * from "./Station"
 export * from "./WhyChoose"

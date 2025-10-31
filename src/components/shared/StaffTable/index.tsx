@@ -7,7 +7,7 @@ import { Skeleton, TableBody, TableCell, TableColumn, TableHeader, TableRow } fr
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { EyeIcon } from "lucide-react"
 import { TableStyled, ButtonIconStyled, AvatarStyled } from "@/components"
-import { useName } from "@/hooks"
+import { useUserHelper } from "@/hooks"
 import { DEFAULT_AVATAR_URL } from "@/constants/constants"
 
 type DocumentKey = "citizen" | "driver"
@@ -32,7 +32,7 @@ export function StaffTable({
     refetchingMessage
 }: StaffUserManagementProps) {
     const { t } = useTranslation()
-    const { toFullName } = useName()
+    const { toFullName } = useUserHelper()
 
     const documentsByStaff = useMemo(() => {
         return staff.map((item) => {
@@ -89,12 +89,12 @@ export function StaffTable({
                     key={item.id}
                     className="border-b border-gray-100 last:border-0 transition-colors hover:bg-gray-50"
                 >
-                    <TableCell className="text-center">
-                        <div className="flex items-center justify-center gap-3">
+                    <TableCell className="px-6 py-4 text-left align-middle">
+                        <div className="flex items-center gap-3 ml-5">
                             <AvatarStyled
                                 src={item.avatarUrl || DEFAULT_AVATAR_URL}
                                 name={displayName || item.email || ""}
-                                className="h-10 w-10 text-sm"
+                                className="h-10 w-10 flex-shrink-0 text-sm"
                                 radius="full"
                             />
                             <div className="flex flex-col items-start text-left">

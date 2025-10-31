@@ -2,9 +2,11 @@
 
 import React from "react"
 import { useImageUploadModal, useUploadDriverLicense, useUploadDriverLicenseById } from "@/hooks"
-import { ImageUploadButton, ImageUploaderModal } from "@/components/"
+import { ButtonIconStyled, ImagesUploaderModal } from "@/components/"
 import { useTranslation } from "react-i18next"
 import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
+import { Camera } from "lucide-react"
+import { cn } from "@heroui/react"
 
 export function DriverLicenseUploader({
     btnClassName = "",
@@ -19,7 +21,7 @@ export function DriverLicenseUploader({
     onSuccess?: (data: DriverLicenseViewRes) => void
 }) {
     const { t } = useTranslation()
-    const { imgSrc, setImgSrc, isOpen, onOpenChange, onClose, onFileSelect } = useImageUploadModal()
+    const { isOpen, onOpen, onOpenChange, onClose } = useImageUploadModal()
     const uploadDriverLicenseById = useUploadDriverLicenseById({
         userId: customerId || "",
         onError: onClose,
@@ -33,23 +35,56 @@ export function DriverLicenseUploader({
 
     return (
         <>
-            <ImageUploadButton
+            <ButtonIconStyled
+                color="primary"
+                variant="ghost"
+                isDisabled={currentUpload.isPending}
+                className={cn(
+                    "w-fit px-4 py-2 rounded-lg flex items-center justify-center",
+                    btnClassName
+                )}
+                onPress={onOpen}
+            >
+                <Camera size={18} fontWeight="fill" />
+                {t("user.upload_driver_license")}
+            </ButtonIconStyled>
+            <ImagesUploaderModal
+                key={isOpen ? "open" : "closed"}
                 label={t("user.upload_driver_license")}
-                onFileSelect={onFileSelect}
-                btnClassName={btnClassName}
-            />
-            <ImageUploaderModal
-                label={t("user.upload_driver_license")}
-                imgSrc={imgSrc}
-                setImgSrc={setImgSrc}
+                notes={t("user.upload_first_then_back_image")}
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
                 onClose={onClose}
-                uploadFn={currentUpload.mutateAsync}
-                isUploadPending={currentUpload.isPending}
                 cropShape="rect"
                 cropSize={{ width: 700, height: 437.5 }}
+                uploadFn={currentUpload.mutateAsync}
+                isUploadPending={currentUpload.isPending}
+                minAmount={2}
+                maxAmount={2}
+                listClassName="md:grid-cols-2"
             />
         </>
     )
+
+    // return (
+    //     <>
+    //         <ImageUploadButton
+    //             label={t("user.upload_driver_license")}
+    //             onFileSelect={onFileSelect}
+    //             btnClassName={btnClassName}
+    //         />
+    //         <ImageUploaderModal
+    //             label={t("user.upload_driver_license")}
+    //             imgSrc={imgSrc}
+    //             setImgSrc={setImgSrc}
+    //             isOpen={isOpen}
+    //             onOpenChange={onOpenChange}
+    //             onClose={onClose}
+    //             uploadFn={currentUpload.mutateAsync}
+    //             isUploadPending={currentUpload.isPending}
+    //             cropShape="rect"
+    //             cropSize={{ width: 700, height: 437.5 }}
+    //         />
+    //     </>
+    // )
 }

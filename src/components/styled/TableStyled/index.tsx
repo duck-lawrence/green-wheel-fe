@@ -4,6 +4,6 @@ import React from "react"
 
 export function TableStyled(props: TableProps) {
     return (
-        <Table isHeaderSticky {...props} className={cn("overflow-auto  w-full", props.className)} />
+        <Table isHeaderSticky {...props} className={cn("overflow-auto w-full", props.className)} />
     )
 }

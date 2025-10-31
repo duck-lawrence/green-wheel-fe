@@ -95,14 +95,25 @@ export const useGetAllUsers = ({
 
 export const useGetAllStaffs = ({
     params,
+    pagination = {},
     enabled = true
 }: {
     params: StaffReq
+    pagination: PaginationParams
     enabled?: boolean
 }) => {
+    const queryClient = useQueryClient()
+
     const query = useQuery({
-        queryKey: [...QUERY_KEYS.USERS, params],
-        queryFn: () => userApi.getAllStafff(params),
+        queryKey: [...QUERY_KEYS.USERS, params, pagination],
+        queryFn: () => userApi.getAllStafff({ query: params, pagination }),
+        initialData: () => {
+            return queryClient.getQueryData<PageResult<UserProfileViewRes>>([
+                ...QUERY_KEYS.USERS,
+                params,
+                pagination
+            ])
+        },
         enabled
     })
     return query
@@ -132,7 +143,29 @@ export const useDeleteUser = ({
     })
 }
 
-// citizen identity
+// ========================
+// Citizen Id
+// ========================
+export const useGetCitizenIdByUserId = ({
+    userId,
+    enabled = true
+}: {
+    userId: string
+    enabled?: boolean
+}) => {
+    const key = [...QUERY_KEYS.CITIZEN_IDENTITY, userId]
+    const queryClient = useQueryClient()
+
+    return useQuery({
+        queryKey: key,
+        queryFn: () => userApi.getCitizenIdByUserId({ userId }),
+        initialData: () => {
+            return queryClient.getQueryData<CitizenIdentityViewRes>(key)
+        },
+        enabled
+    })
+}
+
 export const useUploadCitizenIdById = ({
     userId,
     onSuccess,
@@ -229,7 +262,28 @@ export const useDeleteCitizenIdById = ({
     })
 }
 
-// driver license
+// ========================
+// Driver license
+// ========================
+export const useGetDriverLicenseByUserId = ({
+    userId,
+    enabled = true
+}: {
+    userId: string
+    enabled?: boolean
+}) => {
+    const key = [...QUERY_KEYS.DRIVER_LICENSE, userId]
+    const queryClient = useQueryClient()
+    return useQuery({
+        queryKey: key,
+        queryFn: () => userApi.getDriverLisenseByUserId({ userId }),
+        initialData: () => {
+            return queryClient.getQueryData<DriverLicenseViewRes>(key)
+        },
+        enabled
+    })
+}
+
 export const useUploadDriverLicenseById = ({
     userId,
     onSuccess,

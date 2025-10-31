@@ -14,6 +14,7 @@ export * from "./Staff"
 export * from "./Ticket"
 export * from "./User"
 export * from "./Vehicle"
+export * from "./VehicleModel"
 
 export const Modals = () => {
     return (

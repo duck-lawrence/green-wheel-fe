@@ -31,7 +31,7 @@ export function DetailDamageModal({
         <ModalStyled isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={true}>
             <ModalContent>
                 <ModalHeader className="flex flex-col gap-1">
-                    {t("rental_contract.damage_details")}
+                    {t("invoice.damage_details")}
                 </ModalHeader>
                 <ModalBody>
                     {!invoice || isLoading ? (

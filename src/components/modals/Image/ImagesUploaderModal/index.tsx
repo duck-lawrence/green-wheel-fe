@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useMemo, useState } from "react"
 import {
     ModalStyled,
     ButtonStyled,
@@ -16,6 +16,7 @@ import { PreviewList } from "./PreviewList"
 
 type ImagesUploaderModalProps = {
     label?: string
+    notes?: string
     isOpen: boolean
     onOpenChange: () => void
     onClose: () => void
@@ -24,23 +25,40 @@ type ImagesUploaderModalProps = {
     cropSize: { width: number; height: number }
     uploadFn: (formData: FormData) => Promise<any>
     isUploadPending: boolean
+    listClassName?: string
+    minAmount?: number
+    maxAmount?: number
 }
 
 export function ImagesUploaderModal({
     label = "",
+    notes = undefined,
     isOpen,
     onOpenChange,
     onClose,
-    uploadFn,
-    isUploadPending,
     aspect = 1,
     cropShape = "rect",
-    cropSize
+    cropSize,
+    uploadFn,
+    isUploadPending,
+    listClassName = "",
+    minAmount,
+    maxAmount
 }: ImagesUploaderModalProps) {
     const { t } = useTranslation()
     const [imgSrc, setImgSrc] = useState<string | null>(null)
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null)
     const [croppedImages, setCroppedImages] = useState<{ blob: Blob; url: string }[]>([])
+
+    const isUploadable = useMemo(() => {
+        const count = croppedImages.length
+
+        if (minAmount == null && maxAmount == null) return true
+        if (minAmount != null && count < minAmount) return false
+        if (maxAmount != null && count > maxAmount) return false
+
+        return true
+    }, [croppedImages.length, minAmount, maxAmount])
 
     const handleFileSelect = (file: File) => {
         const src = URL.createObjectURL(file)
@@ -83,6 +101,7 @@ export function ImagesUploaderModal({
             <ModalContent className="w-full min-w-fit p-4">
                 <ModalHeader className="px-3 py-2 self-center">{label}</ModalHeader>
                 <ModalBody>
+                    <div className="text-center">{notes !== undefined && notes}</div>
                     {imgSrc ? (
                         <div className="flex flex-col items-center gap-4">
                             <ImageCropper
@@ -111,13 +130,19 @@ export function ImagesUploaderModal({
                         </div>
                     ) : (
                         <div className="flex flex-col gap-4 items-center">
-                            <ImageUploadButton onFileSelect={handleFileSelect} color="secondary" />
+                            {!isUploadable && (
+                                <ImageUploadButton
+                                    onFileSelect={handleFileSelect}
+                                    color="secondary"
+                                />
+                            )}
 
                             {croppedImages.length > 0 && (
                                 <PreviewList
                                     images={croppedImages}
                                     cropSize={{ width: 400, height: 250 }}
                                     onRemove={handleRemovePreview}
+                                    className={listClassName}
                                 />
                             )}
 
@@ -125,7 +150,9 @@ export function ImagesUploaderModal({
                                 <ButtonStyled
                                     color="primary"
                                     onPress={handleSubmitAll}
-                                    isDisabled={isUploadPending || !croppedImages.length}
+                                    isDisabled={
+                                        isUploadPending || !croppedImages.length || !isUploadable
+                                    }
                                 >
                                     {isUploadPending ? (
                                         <Spinner color="white" />

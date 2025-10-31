@@ -13,6 +13,7 @@ export const useDay = ({
         if (!dateTime) return null
 
         if (typeof dateTime === "string") {
+            dateTime = dayjs(dateTime).format(defaultFormat)
             dateTime = dateTime.split("+")[0]
         }
 
@@ -68,6 +69,7 @@ export const useDay = ({
         let isIncreasing = true
 
         if (prev) {
+            if (prev.minute === curr.minute) return curr
             if (prev.minute == 0 && curr.minute == 59 && curr.hour == prev.hour) {
                 isIncreasing = false
             } else if (prev.minute >= curr.minute) {

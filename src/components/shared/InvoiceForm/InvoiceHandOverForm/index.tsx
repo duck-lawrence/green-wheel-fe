@@ -1,11 +1,12 @@
 "use client"
 import React from "react"
 import { InputStyled } from "@/components"
-import { Money, ClipboardText, Receipt, Percent, ArrowUDownLeft } from "@phosphor-icons/react"
+import { Money, ClipboardText, Receipt, ArrowUDownLeft } from "@phosphor-icons/react"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
-import { formatCurrency } from "@/utils/helpers/currency"
+import { formatCurrencyWithSymbol } from "@/utils/helpers/currency"
 import { useTranslation } from "react-i18next"
 import { InvoiceStatus } from "@/constants/enum"
+import { TaxInput } from "../TaxInput"
 
 export function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceViewRes }) {
     const { t } = useTranslation()
@@ -13,7 +14,7 @@ export function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceViewRes }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <InputStyled
                 label={t("invoice.rental_fee")}
-                value={formatCurrency(invoice.subtotal)}
+                value={formatCurrencyWithSymbol(invoice.subtotal)}
                 startContent={<Receipt size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
                 isIncludeTax={true}
@@ -21,31 +22,29 @@ export function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceViewRes }) {
             <InputStyled
                 label={t("invoice.deposit_amount")}
                 value={
-                    invoice.deposit?.amount != null ? formatCurrency(invoice.deposit.amount) : ""
+                    invoice.deposit?.amount != null
+                        ? formatCurrencyWithSymbol(invoice.deposit.amount)
+                        : ""
                 }
                 startContent={<Money size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
             />
-            <InputStyled
-                label={t("invoice.vat_tax")}
-                value={formatCurrency(invoice.tax)}
-                startContent={<Percent size={22} className="text-primary" weight="duotone" />}
-                variant="bordered"
-            />
-            <InputStyled
-                label={t("invoice.total")}
-                value={formatCurrency(invoice.total)}
-                startContent={<Money size={22} className="text-primary" weight="duotone" />}
-                variant="bordered"
-            />
+            <div className="flex gap-3">
+                <TaxInput invoice={invoice} />
+                <InputStyled
+                    label={t("invoice.total")}
+                    value={formatCurrencyWithSymbol(invoice.total)}
+                    startContent={<Money size={22} className="text-primary" weight="duotone" />}
+                    variant="bordered"
+                />
+            </div>
 
             {invoice.status === InvoiceStatus.Paid && (
                 <>
-                    <div></div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <InputStyled
                             label={t("invoice.paid_amount")}
-                            value={formatCurrency(invoice.paidAmount)}
+                            value={formatCurrencyWithSymbol(invoice.paidAmount)}
                             startContent={
                                 <ClipboardText
                                     size={22}
@@ -57,7 +56,7 @@ export function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceViewRes }) {
                         />
                         <InputStyled
                             label={t("invoice.return_amount")}
-                            value={formatCurrency(invoice.paidAmount - invoice.total)}
+                            value={formatCurrencyWithSymbol(invoice.paidAmount - invoice.total)}
                             startContent={
                                 <ArrowUDownLeft
                                     size={22}

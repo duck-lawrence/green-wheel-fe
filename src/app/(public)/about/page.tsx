@@ -3,7 +3,7 @@ import React from "react"
 import { motion } from "framer-motion"
 import { ButtonStyled } from "@/components"
 import { Handshake, Leaf, Lightning } from "@phosphor-icons/react"
-import { useTypewriter } from "@/utils/helpers/useTypewriter"
+import { useTypewriter } from "@/hooks/reuseable/useTypewriter"
 import { Image } from "@heroui/react"
 import Link from "next/link"
 import { useTranslation } from "react-i18next"
@@ -78,9 +78,9 @@ export default function AboutPage() {
                             <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
                                 {t("about_us.green_wheel_mission")}
                             </p>
-                            <ButtonStyled color="primary" variant="solid" className="btn-gradient">
+                            {/* <ButtonStyled color="primary" variant="solid" className="btn-gradient">
                                 {t("about_us.learn_more")}
-                            </ButtonStyled>
+                            </ButtonStyled> */}
                         </motion.div>
 
                         <motion.div
@@ -125,7 +125,11 @@ export default function AboutPage() {
                                         duration: 0.5,
                                         ease: "easeOut"
                                     }}
-                                    className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-xl transition"
+                                    whileHover={{
+                                        scale: 1.05,
+                                        transition: { duration: 0.3, ease: "easeOut" }
+                                    }}
+                                    className="hover:cursor-pointer bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md"
                                 >
                                     <div className="text-4xl mb-4">{item.icon}</div>
                                     <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">

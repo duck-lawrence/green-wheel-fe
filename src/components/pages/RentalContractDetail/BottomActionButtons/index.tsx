@@ -1,10 +1,16 @@
-import { AlertStyled, ButtonStyled, CheckboxStyled } from "@/components/styled"
+import { AlertStyled, ButtonStyled, CheckboxStyled, DropdownStyled } from "@/components/styled"
 import { RentalContractStatus, VehicleIssueResolutionOption } from "@/constants/enum"
-import { useCancelContract, useConfirmChangeVehicle, useReturnContract } from "@/hooks"
+import { VehicleStatusLabels } from "@/constants/labels"
+import {
+    useCancelContract,
+    useConfirmChangeVehicle,
+    useConfirmContract,
+    useReturnContract
+} from "@/hooks"
 import { VehicleChecklistViewRes } from "@/models/checklist/schema/response"
-import { HandoverContractReq } from "@/models/rental-contract/schema/request"
+import { ConfirmContractReq, HandoverContractReq } from "@/models/rental-contract/schema/request"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
-import { Spinner } from "@heroui/react"
+import { DropdownItem, DropdownMenu, DropdownTrigger, Spinner } from "@heroui/react"
 import { useFormik } from "formik"
 import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
@@ -30,17 +36,28 @@ export function BottomActionButtons({
 }: BottomActionButtonsProps) {
     const { t } = useTranslation()
 
-    //======================================= //
+    // ======================================= //
+    // Confirm
+    // ======================================= //
+    const confirmContract = useConfirmContract({ id: contract.id })
+    const handleConfirm = useCallback(
+        (id: string, req: ConfirmContractReq) => {
+            confirmContract.mutateAsync({ id, req })
+        },
+        [confirmContract]
+    )
+
+    // ======================================= //
     // Return
-    //======================================= //
+    // ======================================= //
     const returnMutation = useReturnContract({ id: contract.id })
     const handleReturn = useCallback(async () => {
         await returnMutation.mutateAsync()
     }, [returnMutation])
 
-    //======================================= //
+    // ======================================= //
     // Cancel
-    //======================================= //
+    // ======================================= //
     const cancelMutation = useCancelContract({ id: contract.id })
     const handleCancel = useCallback(async () => {
         await cancelMutation.mutateAsync()
@@ -62,6 +79,50 @@ export function BottomActionButtons({
             {/* STAFF */}
             {isStaff && (
                 <>
+                    {/* Khi contract đang Request Pending */}
+                    {confirmContract.isPending && <Spinner />}
+                    {contract.status === RentalContractStatus.RequestPending && (
+                        <div className="flex flex-wrap justify-center gap-2">
+                            <ButtonStyled
+                                color="primary"
+                                variant="ghost"
+                                className="py-2 px-4"
+                                onPress={() => {
+                                    handleConfirm(contract.id, { hasVehicle: true })
+                                }}
+                            >
+                                {t("rental_contract.accept")}
+                            </ButtonStyled>
+
+                            {/* Reject */}
+                            <DropdownStyled placement="bottom-end">
+                                <DropdownTrigger>
+                                    <ButtonStyled
+                                        color="danger"
+                                        variant="ghost"
+                                        className="py-2 px-4"
+                                    >
+                                        {t("rental_contract.reject")}
+                                    </ButtonStyled>
+                                </DropdownTrigger>
+
+                                <DropdownMenu
+                                    onAction={(key) => {
+                                        const selected = Number(key)
+                                        handleConfirm(contract.id, {
+                                            hasVehicle: false,
+                                            vehicleStatus: selected
+                                        })
+                                    }}
+                                >
+                                    {Object.entries(VehicleStatusLabels).map(([key, label]) => (
+                                        <DropdownItem key={key}>{label}</DropdownItem>
+                                    ))}
+                                </DropdownMenu>
+                            </DropdownStyled>
+                        </div>
+                    )}
+
                     {/* Khi chưa bắt đầu và contract đang Active */}
                     {!contract.actualStartDate &&
                         contract.status === RentalContractStatus.Active && (
@@ -166,8 +227,8 @@ export function BottomActionButtons({
 
                                 <AlertStyled
                                     hideIcon
-                                    color="success"
-                                    className="whitespace-pre-line"
+                                    color="warning"
+                                    className="whitespace-pre-line max-w-full"
                                 >
                                     {contract.vehicle
                                         ? t("rental_contract.confirm_change_vehicle")

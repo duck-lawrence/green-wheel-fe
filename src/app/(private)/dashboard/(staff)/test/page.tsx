@@ -125,11 +125,11 @@ export default function StaffTestPage() {
                 {/* Phân trang dùng PaginationStyled */}
                 <div className="pt-2">
                     <PaginationStyled
-                        pageNumber={data.pageNumber} // PageNumber từ “backend”
+                        page={data.pageNumber} // PageNumber từ “backend”
                         pageSize={data.pageSize} // PageSize từ “backend”
                         totalItems={data.totalCount} // TotalCount từ “backend”
                         onPageChange={setPage} // đổi trang -> tính lại data
-                        showControls
+
                         // // Dùng màu hệ thống (có thể đổi):
                         // activeBgClass="bg-primary"
                         // activeTextClass="text-white"

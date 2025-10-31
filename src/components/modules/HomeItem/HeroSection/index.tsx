@@ -4,8 +4,9 @@ import { AnimatePresence, motion } from "framer-motion"
 import { ButtonStyled } from "@/components"
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useTypewriter } from "@/utils/helpers/useTypewriter"
+import { useTypewriter } from "@/hooks"
 import Image from "next/image"
+import Link from "next/link"
 
 const images = [
     { src: "/images/home-banner/3.png", direction: "right" },
@@ -80,12 +81,19 @@ export function HeroSection() {
             {/* Overlay gradient (different levels for breakpoints) */}
             {/* <div
                 className="
-                    absolute inset-0 
+                    lg:hidden absolute inset-0 
                     bg-gradient-to-b 
-                    from-black/20 via-black/10 to-black/20
-                    md:from-black/40 md:via-black/25 md:to-black/35
+                    from-black/40 via-black/25 to-black/35
                 "
             /> */}
+            <div
+                className="
+                    lg:hidden absolute inset-0
+                    backdrop-blur-xl
+                    bg-gradient-to-b 
+                    from-white/40 via-white/25 to-white/35
+                "
+            />
 
             {/* Dynamic light */}
             <motion.div
@@ -144,7 +152,7 @@ export function HeroSection() {
                     "
                 >
                     {t("home.desc_first")}{" "}
-                    <span className="text-teal-400 font-medium">{t("home.desc_second")}</span>
+                    <span className="text-teal-500 font-medium">{t("home.desc_second")}</span>
                     {` ${t("home.desc_third")}`}
                 </motion.p>
 
@@ -172,6 +180,7 @@ export function HeroSection() {
                 >
                     <ButtonStyled
                         href="/vehicle-rental"
+                        as={Link}
                         className="
                             text-base md:text-lg font-semibold px-8 py-3 rounded-xl 
                             btn-gradient btn-gradient:hover btn-gradient:active
@@ -184,6 +193,7 @@ export function HeroSection() {
 
                     <ButtonStyled
                         href="/about"
+                        as={Link}
                         variant="bordered"
                         className="
                             md:text-lg font-semibold px-8 py-3 rounded-xl 

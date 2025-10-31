@@ -3,7 +3,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import {
-    AlertStyled,
     InvoiceAccordion,
     InputStyled,
     renderInvoiceForm,
@@ -11,14 +10,15 @@ import {
     SpinnerStyled,
     TextareaStyled,
     DateTimeStyled,
-    SignatureSection
+    SignatureSection,
+    ViewUserModal
 } from "@/components"
 import {
     useDay,
     useGetAllVehicleChecklists,
     useGetRentalContractById,
     useHandoverContract,
-    useName,
+    useUserHelper,
     useNumber,
     useTokenStore,
     useUpdateContractStatus
@@ -45,6 +45,27 @@ import { ChecklistSection } from "./ChecklistSection"
 import { CreateInvoiceSection } from "./CreateInvoiceSection"
 import { HandoverContractReq } from "@/models/rental-contract/schema/request"
 import { BottomActionButtons } from "./BottomActionButtons"
+import { useDisclosure } from "@heroui/react"
+
+function getChecklistDisplay(status?: RentalContractStatus) {
+    const handoverStatuses = [
+        RentalContractStatus.Active,
+        RentalContractStatus.Returned,
+        RentalContractStatus.RefundPending,
+        RentalContractStatus.Completed
+    ]
+
+    const returnStatuses = [
+        RentalContractStatus.Returned,
+        RentalContractStatus.RefundPending,
+        RentalContractStatus.Completed
+    ]
+
+    return {
+        isHandoverChecklistDisplay: !!status && handoverStatuses.includes(status),
+        isReturnChecklistDisplay: !!status && returnStatuses.includes(status)
+    }
+}
 
 export function RentalContractDetail({
     contractId,
@@ -58,15 +79,16 @@ export function RentalContractDetail({
     const searchParams = useSearchParams()
     const pathName = usePathname()
     const returnPath = pathName.startsWith("/dashboard")
-        ? "/dashboard/rental-contracts"
-        : "/rental-contracts"
+        ? "/dashboard/rental-bookings"
+        : "/rental-bookings"
     const router = useRouter()
 
     const { t } = useTranslation()
     const { toZonedDateTime } = useDay()
     const { parseNumber } = useNumber()
-    const { toFullName } = useName()
+    const { toFullName } = useUserHelper()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
+    const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
     const [isReturnChecked, setIsReturnChecked] = useState(false)
 
@@ -82,7 +104,7 @@ export function RentalContractDetail({
         if (!contract || !payload.sid) return
         if (!isStaff && payload.sid != contract?.customer.id) {
             router.push("/")
-            toast.error(t("user.unauthorized"))
+            toast.error(t("user.do_not_have_permission"))
         }
     }, [contract, isStaff, payload.sid, router, t])
 
@@ -121,16 +143,21 @@ export function RentalContractDetail({
     //======================================= //
     // Checklist
     //======================================= //
+    const { isHandoverChecklistDisplay, isReturnChecklistDisplay } = getChecklistDisplay(
+        contract?.status
+    )
+
     const { data: checklists } = useGetAllVehicleChecklists({
         query: {
             contractId
-        }
+        },
+        pagination: {}
     })
     const hanoverChecklist = useMemo(() => {
-        return checklists?.find((item) => item.type === VehicleChecklistType.Handover)
+        return checklists?.items.find((item) => item.type === VehicleChecklistType.Handover)
     }, [checklists])
     const returnChecklist = useMemo(() => {
-        return checklists?.find((item) => item.type === VehicleChecklistType.Return)
+        return checklists?.items.find((item) => item.type === VehicleChecklistType.Return)
     }, [checklists])
 
     //======================================= //
@@ -200,7 +227,7 @@ export function RentalContractDetail({
             <SectionStyled title={t("rental_contract.rental_contract_information")}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="sm:col-span-2">
-                        <div>
+                        <div onClick={onOpen} className="hover:cursor-pointer">
                             {t("table.customer")}
                             {": "}
                             {toFullName({
@@ -208,6 +235,11 @@ export function RentalContractDetail({
                                 lastName: contract.customer.lastName
                             })}
                         </div>
+                        <ViewUserModal
+                            isOpen={isOpen}
+                            onOpenChange={onOpenChange}
+                            user={contract.customer}
+                        />
                         <div>
                             {t("rental_contract.create_at")}
                             {": "}
@@ -229,7 +261,7 @@ export function RentalContractDetail({
                         <InputStyled
                             isReadOnly
                             label={t("rental_contract.vehicle_name")}
-                            value={contract.vehicle.model.name || ""}
+                            value={contract.vehicle?.model.name || "-"}
                             placeholder="VinFast VF8"
                             startContent={
                                 <Car size={22} className="text-primary" weight="duotone" />
@@ -239,7 +271,7 @@ export function RentalContractDetail({
                         <InputStyled
                             isReadOnly
                             label={t("rental_contract.license_plate")}
-                            value={contract.vehicle.licensePlate || ""}
+                            value={contract.vehicle?.licensePlate || "-"}
                             startContent={
                                 <IdentificationBadge
                                     size={22}
@@ -346,7 +378,7 @@ export function RentalContractDetail({
                 title={t("vehicle_checklist.vehicle_checklist")}
                 childrenClassName="flex gap-2"
             >
-                {contract.status >= RentalContractStatus.Active && (
+                {isHandoverChecklistDisplay && (
                     <ChecklistSection
                         isStaff={isStaff}
                         contract={contract}
@@ -354,7 +386,7 @@ export function RentalContractDetail({
                         type={VehicleChecklistType.Handover}
                     />
                 )}
-                {contract.status == RentalContractStatus.Returned && (
+                {isReturnChecklistDisplay && (
                     <ChecklistSection
                         isStaff={isStaff}
                         contract={contract}
@@ -366,13 +398,11 @@ export function RentalContractDetail({
 
             {/* Invoice Accordion  isLoading={isFetching}*/}
             <SectionStyled title={t("rental_contract.payment_invoice_list")}>
-                <AlertStyled className="mb-3 mt-[-0.75rem] mx-2 max-w-fit">
-                    {t("invoice.fees_include_tax")}
-                </AlertStyled>
                 <InvoiceAccordion
                     items={invoiceAccordion}
                     contractId={contract.id}
                     contractStatus={contract.status}
+                    isReturnChecklistExists={!!returnChecklist}
                     className="mb-3"
                 />
                 {isStaff &&

@@ -1,23 +1,41 @@
 "use client"
 import { motion } from "framer-motion"
-import { ButtonStyled, FeedbackModal } from "@/components"
-import React from "react"
+import { ButtonStyled, FeedbackModal, SpacerStyled } from "@/components"
+import React, { useCallback, useRef } from "react"
 import CardReviewUser from "@/components/styled/GrateStyled"
 import { useTranslation } from "react-i18next"
 import { Spinner, useDisclosure } from "@heroui/react"
-import { useGetAllFeedback, useGetAllStations } from "@/hooks"
+import { useGetAllFeedback, useGetAllStations, useGetMe, useTokenStore } from "@/hooks"
+import toast from "react-hot-toast"
+import { RoleName } from "@/constants/enum"
+import { scrollItemToCenter } from "@/utils/helpers/scrollToCenter"
 
 export function CustomerReview() {
     const { t } = useTranslation()
-    const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure()
+    const isLogined = useTokenStore((s) => !!s.accessToken)
+    const { data: user } = useGetMe({ enabled: isLogined })
+
     const { data: feedbacks, isLoading } = useGetAllFeedback()
 
     const { data: station, isFetching } = useGetAllStations()
+    const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure()
+    const handleOpen = useCallback(() => {
+        if (!isLogined) {
+            toast.error(t("login.please_login"))
+            return
+        }
+
+        if (user?.role?.name !== RoleName.Customer) {
+            toast.error(t("auth.only_customer"))
+            return
+        }
+        onOpen()
+    }, [isLogined, onOpen, t, user?.role?.name])
 
     //===========ANIMATION==================
+    const containerRef = useRef<HTMLDivElement | null>(null)
 
-    //===========ANIMATION==================
-    if (isLoading && isFetching) return <Spinner />
+    if ((isLoading && isFetching) || (feedbacks || []).length === 0) return <Spinner />
 
     return (
         <motion.section
@@ -49,17 +67,18 @@ export function CustomerReview() {
             {/* <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(16,185,129,0.08),transparent_70%)]"></div> */}
 
             {/* Header */}
-            <div className="max-w-6xl mx-auto px-6 mb-14 relative z-10">
+            <div className="max-w-6xl mx-auto px-6 mb-3 relative z-10">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-6">
                     <h2 className="text-3xl md:text-4xl font-bold text-primary tracking-wide text-center md:text-left">
                         {t("review.customer_review")}
                     </h2>
                     <ButtonStyled
-                        onPress={onOpen}
-                        className="hover:scale-[1.03] transition-transform duration-300 shadow-md border border-gray-400 "
-                        //  btn-gradient btn-gradient:hover btn-gradient:active
+                        variant="ghost"
+                        color="default"
+                        onPress={handleOpen}
+                        className="interactive-scale"
                     >
-                        {t("review.create_feedback")}
+                        {t("review.send_feedback")}
                     </ButtonStyled>
                     <FeedbackModal
                         id="feedback-modal"
@@ -82,7 +101,45 @@ export function CustomerReview() {
             </div>
 
             {/* Reviews scroll list */}
-            <div className="max-w-7xl mx-auto relative z-10 overflow-hidden">
+            <div
+                ref={containerRef}
+                className="max-w-7xl mx-auto relative z-10 overflow-hidden py-2 px-1 scrollbar-none 
+                    [mask-image:linear-gradient(to_right,transparent_0%,black_5%,black_95%,transparent_100%)]"
+            >
+                <div className="flex gap-6 max-w-full">
+                    <SpacerStyled />
+                    {(feedbacks || []).map((item, idx) => (
+                        <button
+                            key={`${item}-${idx}`}
+                            onClick={(e) => {
+                                const container = containerRef.current
+                                if (!container) return
+
+                                scrollItemToCenter(container, e.currentTarget)
+                            }}
+                            className="max-h-fit relative flex-shrink-0 overflow-hidden rounded-2xl
+                                outline-none ring-2 ring-transparent focus:ring-primary
+                                interactive-scale"
+                        >
+                            <CardReviewUser
+                                name={item.customerName}
+                                avatar={item.avartarUrl}
+                                rating={item.rating}
+                                station={
+                                    (item.stationId == station?.[0].id
+                                        ? station?.[0].name
+                                        : station?.[1].name) ?? ""
+                                }
+                                content={item.content}
+                                createdAt={item.createdAt}
+                            />
+                        </button>
+                    ))}
+                    <SpacerStyled />
+                </div>
+            </div>
+
+            {/* <div className="max-w-7xl mx-auto relative z-10 overflow-hidden">
                 <motion.div
                     className="flex gap-8 px-8 py-8"
                     animate={{
@@ -95,8 +152,6 @@ export function CustomerReview() {
                     }}
                     whileHover={{ animationPlayState: "paused" }}
                 >
-                    {/* [...feedbacks, ...feedbacks, ...feedbacks] */}
-
                     {feedbacks &&
                         feedbacks.map((item, key) => (
                             <motion.div
@@ -123,12 +178,12 @@ export function CustomerReview() {
                             </motion.div>
                         ))}
                 </motion.div>
-            </div>
+            </div> */}
 
             {/* Decor*/}
-            <div className="absolute top-10 left-10 w-2 h-2 bg-emerald-300 rounded-full opacity-60 animate-[floating_3s_ease-in-out_infinite]" />
+            <div className="absolute top-10 left-1/4 w-2 h-2 bg-emerald-300 rounded-full opacity-60 animate-[floating_3s_ease-in-out_infinite]" />
             <div className="absolute bottom-20 right-20 w-3 h-3 bg-teal-400 rounded-full opacity-50 animate-[floating_4s_ease-in-out_infinite]" />
-            <div className="absolute top-1/2 left-1/4 w-1.5 h-1.5 bg-green-400 rounded-full opacity-70 animate-[floating_3.5s_ease-in-out_infinite]" />
+            <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-green-400 rounded-full opacity-70 animate-[floating_3.5s_ease-in-out_infinite]" />
         </motion.section>
     )
 }

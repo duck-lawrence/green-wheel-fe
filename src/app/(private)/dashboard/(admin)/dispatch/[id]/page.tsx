@@ -1,8 +1,13 @@
 "use client"
 
-import { ButtonStyled, InputStyled, SectionStyled, SpinnerStyled } from "@/components"
-import TableSelectionStaff from "@/components/modules/TableSelectionStaff"
-import TableSelectionVehicle from "@/components/modules/TableSelectionVehicle/indesx"
+import {
+    ButtonStyled,
+    InputStyled,
+    SectionStyled,
+    SpinnerStyled,
+    TableSelectionStaff,
+    TableSelectionVehicle
+} from "@/components"
 import { DispatchRequestStatus } from "@/constants/enum"
 import { DispatchRequestStatusLabels } from "@/constants/labels"
 import { useGetDispatchById, useGetMe, useUpdateDispatch } from "@/hooks"
@@ -16,7 +21,7 @@ export default function DispatchDetailPage() {
     const { id } = useParams()
     const dispatchId = id?.toString()
     const { data: user } = useGetMe()
-    const stationNow = user?.station?.id
+    const stationIdNow = user?.station?.id || ""
     const { data: dispatchDetail } = useGetDispatchById({ id: dispatchId!, enabled: true })
 
     // Update
@@ -29,21 +34,16 @@ export default function DispatchDetailPage() {
         [dispatchDetail?.id, updateDispatch]
     )
 
-    //data dispatch
-    const dispatchStaff = dispatchDetail?.dispatchRequestStaffs.map((item) => item.staff) ?? []
-    const dispatchVehicle =
-        dispatchDetail?.dispatchRequestVehicles.map(({ vehicle }) => vehicle) ?? []
-
     // Display conditions
     const display1 =
         dispatchDetail?.status === DispatchRequestStatus.Pending &&
-        stationNow === dispatchDetail?.fromStationId
+        stationIdNow === dispatchDetail?.fromStationId
     const display2 =
         dispatchDetail?.status === DispatchRequestStatus.Pending &&
-        stationNow === dispatchDetail?.toStationId
+        stationIdNow === dispatchDetail?.toStationId
     const display3 =
         dispatchDetail?.status === DispatchRequestStatus.Approved &&
-        stationNow === dispatchDetail?.toStationId
+        stationIdNow === dispatchDetail?.toStationId
 
     if (!dispatchId || !dispatchDetail) return <SpinnerStyled />
 
@@ -158,25 +158,17 @@ export default function DispatchDetailPage() {
             </SectionStyled>
 
             {/* Tables */}
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 mt-8">
-                <SectionStyled title={t("dispatch.assigned_staff")} icon={UserSwitch}>
-                    <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
-                        <TableSelectionStaff
-                            staffs={dispatchStaff ?? []}
-                            selectionBehavior="replace"
-                        />
-                    </div>
-                </SectionStyled>
+            <SectionStyled title={t("dispatch.assigned_staff")} icon={UserSwitch}>
+                <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
+                    <TableSelectionStaff stationId={stationIdNow} selectionBehavior="replace" />
+                </div>
+            </SectionStyled>
 
-                <SectionStyled title={t("dispatch.assigned_vehicle")} icon={Car}>
-                    <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
-                        <TableSelectionVehicle
-                            vehicles={dispatchVehicle ?? []}
-                            selectionBehavior="replace"
-                        />
-                    </div>
-                </SectionStyled>
-            </div>
+            <SectionStyled title={t("dispatch.assigned_vehicle")} icon={Car}>
+                <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
+                    <TableSelectionVehicle stationId={stationIdNow} selectionBehavior="replace" />
+                </div>
+            </SectionStyled>
         </div>
     )
 }
