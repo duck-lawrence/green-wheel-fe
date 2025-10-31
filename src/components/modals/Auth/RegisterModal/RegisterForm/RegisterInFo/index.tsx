@@ -72,14 +72,14 @@ export function RegisterInFo({ onSuccess }: RegisterInfoProps) {
     })
 
     return (
-        <form onSubmit={formik.handleSubmit} className="flex flex-col">
+        <form onSubmit={formik.handleSubmit} className="flex flex-col gap-2 w-full max-w-110">
             {/* Title */}
-            <div className="mx-auto mt-2 mb-2">
+            <div className="mx-auto mt-2">
                 <div className="text-center">{t("auth.complete_register")}</div>
             </div>
 
             {/* Input InFo */}
-            <div className="flex mx-auto w-110 gap-5">
+            <div className="flex mx-auto w-full gap-2">
                 <InputStyled
                     label={t("user.first_name")}
                     variant="bordered"
@@ -105,9 +105,8 @@ export function RegisterInFo({ onSuccess }: RegisterInfoProps) {
                 />
             </div>
 
-            <div className="w-110 mx-auto">
+            <div className="w-full mx-auto space-y-2">
                 <InputStyled
-                    className="my-3"
                     variant="bordered"
                     label={t("auth.password")}
                     type={isVisible ? "text" : "password"}
@@ -127,7 +126,6 @@ export function RegisterInFo({ onSuccess }: RegisterInfoProps) {
                 />
 
                 <InputStyled
-                    className="my-3"
                     variant="bordered"
                     label={t("auth.confirm_password")}
                     type={isConfirmVisible ? "text" : "password"}
@@ -146,7 +144,6 @@ export function RegisterInFo({ onSuccess }: RegisterInfoProps) {
                     }
                 />
                 <InputStyled
-                    className="my-3"
                     variant="bordered"
                     label={t("user.phone")}
                     maxLength={10}
@@ -164,7 +161,7 @@ export function RegisterInFo({ onSuccess }: RegisterInfoProps) {
                 />
             </div>
 
-            <div className="flex mx-auto w-110 gap-5">
+            <div className="flex mx-auto w-full gap-2">
                 <EnumPicker
                     label={t("user.sex")}
                     labels={SexLabels}
@@ -189,21 +186,15 @@ export function RegisterInFo({ onSuccess }: RegisterInfoProps) {
                 />
             </div>
 
-            <div className="mx-auto">
-                {/* <ButtonStyled onPress={onBack} className="w-5 h-10 mx-auto mt-0">
-                    <ArrowLeftIcon />
-                </ButtonStyled> */}
-
-                <ButtonStyled
-                    type="submit"
-                    className="w-110 h-10 mx-auto mt-4"
-                    isLoading={formik.isSubmitting}
-                    color="primary"
-                    isDisabled={!formik.isValid}
-                >
-                    {t("login.register")}
-                </ButtonStyled>
-            </div>
+            <ButtonStyled
+                type="submit"
+                className="w-full h-10 mx-auto my-4"
+                isLoading={formik.isSubmitting}
+                color="primary"
+                isDisabled={!formik.isValid}
+            >
+                {t("login.register")}
+            </ButtonStyled>
         </form>
     )
 }

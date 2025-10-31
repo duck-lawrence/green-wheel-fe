@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next"
 import { useTypewriter } from "@/hooks"
 import Image from "next/image"
 import Link from "next/link"
+import clsx from "clsx"
 
 const images = [
     { src: "/images/home-banner/3.png", direction: "right" },
@@ -65,7 +66,10 @@ export function HeroSection() {
                             delay,
                             ease: "easeInOut"
                         }}
-                        className="absolute inset-0"
+                        className={clsx(
+                            "absolute inset-0",
+                            !img.src.includes("green") && "hidden md:block"
+                        )}
                     >
                         <Image
                             src={img.src}
@@ -89,7 +93,7 @@ export function HeroSection() {
             <div
                 className="
                     lg:hidden absolute inset-0
-                    backdrop-blur-xl
+                    backdrop-blur-md
                     bg-gradient-to-b 
                     from-white/40 via-white/25 to-white/35
                 "

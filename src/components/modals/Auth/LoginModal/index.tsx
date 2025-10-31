@@ -10,7 +10,7 @@ export function LoginModal() {
 
     return (
         <ModalStyled isOpen={isOpen} onOpenChange={onOpenChange}>
-            <ModalContent className="max-w-150 w-full p-14">
+            <ModalContent className="w-full max-w-screen min-w-full sm:min-w-sm md:max-w-150 py-2 md:p-14">
                 <ModalBody>
                     <LoginForm onSuccess={onClose} />
                 </ModalBody>

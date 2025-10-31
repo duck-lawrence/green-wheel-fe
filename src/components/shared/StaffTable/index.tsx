@@ -121,7 +121,7 @@ export function StaffTable({
                                         onClick={() =>
                                             onPreviewDocument?.({ user: item, type: doc.key })
                                         }
-                                        className="flex w-full items-center gap-2 rounded-lg bg-emerald-50 px-3 py-1.5 text-left text-xs font-semibold text-emerald-600 transition hover:bg-emerald-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400"
+                                        className="flex w-full items-center gap-2 rounded-lg bg-emerald-50 px-3 py-1.5 text-left text-xs font-semibold text-emerald-600 transition hover:bg-emerald-100 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-emerald-400"
                                     >
                                         <Paperclip size={14} weight="duotone" />
                                         <span className="flex-1">{doc.label}</span>

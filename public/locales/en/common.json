@@ -224,7 +224,7 @@
         "enter_required_info": "Please complete your profile with your citizen ID, driver’s license, phone number, and date of birth to continue booking."
     },
     "login": {
-        "welcome": "Welcome Back",
+        "welcome": "Welcome!",
         "login_continue": "Login to your account to continue",
         "please_login": "Please login",
         "remember": "Remember Me",

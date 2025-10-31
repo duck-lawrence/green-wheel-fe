@@ -12,7 +12,7 @@ export function RegisterModal() {
 
     return (
         <ModalStyled isOpen={isOpen} onOpenChange={onOpenChange}>
-            <ModalContent className="w-full max-w-140">
+            <ModalContent className="w-full max-w-screen min-w-full sm:min-w-sm md:max-w-140 py-3">
                 <ModalHeader className="flex justify-center items-center text-2xl front-bold mt">
                     {t("login.register")}
                 </ModalHeader>

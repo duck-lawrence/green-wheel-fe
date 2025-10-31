@@ -35,6 +35,17 @@ export const useGetAllVehicleModels = ({
     })
 }
 
+export const useGetAllVehicleModelImages = ({ enabled = true }: { enabled?: boolean } = {}) => {
+    return useQuery({
+        queryKey: [...QUERY_KEYS.VEHICLE_MODELS, "images"],
+        queryFn: async () => {
+            const data = await vehicleModelApi.getAllImages()
+            return data
+        },
+        enabled
+    })
+}
+
 export const useSearchVehicleModels = ({
     query,
     enabled = true

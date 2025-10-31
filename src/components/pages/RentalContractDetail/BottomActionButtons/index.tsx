@@ -81,47 +81,48 @@ export function BottomActionButtons({
                 <>
                     {/* Khi contract đang Request Pending */}
                     {confirmContract.isPending && <Spinner />}
-                    {contract.status === RentalContractStatus.RequestPending && (
-                        <div className="flex flex-wrap justify-center gap-2">
-                            <ButtonStyled
-                                color="primary"
-                                variant="ghost"
-                                className="py-2 px-4"
-                                onPress={() => {
-                                    handleConfirm(contract.id, { hasVehicle: true })
-                                }}
-                            >
-                                {t("rental_contract.accept")}
-                            </ButtonStyled>
-
-                            {/* Reject */}
-                            <DropdownStyled placement="bottom-end">
-                                <DropdownTrigger>
-                                    <ButtonStyled
-                                        color="danger"
-                                        variant="ghost"
-                                        className="py-2 px-4"
-                                    >
-                                        {t("rental_contract.reject")}
-                                    </ButtonStyled>
-                                </DropdownTrigger>
-
-                                <DropdownMenu
-                                    onAction={(key) => {
-                                        const selected = Number(key)
-                                        handleConfirm(contract.id, {
-                                            hasVehicle: false,
-                                            vehicleStatus: selected
-                                        })
+                    {!confirmContract.isPending &&
+                        contract.status === RentalContractStatus.RequestPending && (
+                            <div className="flex flex-wrap justify-center gap-2">
+                                <ButtonStyled
+                                    color="primary"
+                                    variant="ghost"
+                                    className="py-2 px-4"
+                                    onPress={() => {
+                                        handleConfirm(contract.id, { hasVehicle: true })
                                     }}
                                 >
-                                    {Object.entries(VehicleStatusLabels).map(([key, label]) => (
-                                        <DropdownItem key={key}>{label}</DropdownItem>
-                                    ))}
-                                </DropdownMenu>
-                            </DropdownStyled>
-                        </div>
-                    )}
+                                    {t("rental_contract.accept")}
+                                </ButtonStyled>
+
+                                {/* Reject */}
+                                <DropdownStyled placement="bottom-end">
+                                    <DropdownTrigger>
+                                        <ButtonStyled
+                                            color="danger"
+                                            variant="ghost"
+                                            className="py-2 px-4"
+                                        >
+                                            {t("rental_contract.reject")}
+                                        </ButtonStyled>
+                                    </DropdownTrigger>
+
+                                    <DropdownMenu
+                                        onAction={(key) => {
+                                            const selected = Number(key)
+                                            handleConfirm(contract.id, {
+                                                hasVehicle: false,
+                                                vehicleStatus: selected
+                                            })
+                                        }}
+                                    >
+                                        {Object.entries(VehicleStatusLabels).map(([key, label]) => (
+                                            <DropdownItem key={key}>{label}</DropdownItem>
+                                        ))}
+                                    </DropdownMenu>
+                                </DropdownStyled>
+                            </div>
+                        )}
 
                     {/* Khi chưa bắt đầu và contract đang Active */}
                     {!contract.actualStartDate &&

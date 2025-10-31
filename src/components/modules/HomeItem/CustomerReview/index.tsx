@@ -89,7 +89,7 @@ export function CustomerReview() {
                 </div>
 
                 <div
-                    className="relative h-[5px] w-48 bg-gradient-to-r from-primary via-emerald-400 to-teal-500
+                    className="relative h-[5px] w-full md:w-48 bg-gradient-to-r from-primary via-emerald-400 to-teal-500
                                 bg-[length:200%] animate-[flow_3s_linear_infinite] rounded-full opacity-80 overflow-hidden"
                 >
                     <span
@@ -138,47 +138,6 @@ export function CustomerReview() {
                     <SpacerStyled />
                 </div>
             </div>
-
-            {/* <div className="max-w-7xl mx-auto relative z-10 overflow-hidden">
-                <motion.div
-                    className="flex gap-8 px-8 py-8"
-                    animate={{
-                        x: ["0%", "-150%"]
-                    }}
-                    transition={{
-                        repeat: Infinity,
-                        ease: "linear",
-                        duration: 25 // chỉnh tốc độ (s) ở đây
-                    }}
-                    whileHover={{ animationPlayState: "paused" }}
-                >
-                    {feedbacks &&
-                        feedbacks.map((item, key) => (
-                            <motion.div
-                                key={item.id + "-" + key}
-                                whileHover={{
-                                    scale: 1.04,
-                                    y: -4,
-                                    boxShadow: "0 10px 25px rgba(16,185,129,0.15)"
-                                }}
-                                className="snap-center flex-shrink-0 transform-gpu transition-transform duration-300"
-                            >
-                                <CardReviewUser
-                                    name={item.customerName}
-                                    avatar={item.avartarUrl}
-                                    rating={item.rating}
-                                    station={
-                                        (item.stationId == station?.[0].id
-                                            ? station?.[0].name
-                                            : station?.[1].name) ?? ""
-                                    }
-                                    content={item.content}
-                                    createdAt={item.createdAt}
-                                />
-                            </motion.div>
-                        ))}
-                </motion.div>
-            </div> */}
 
             {/* Decor*/}
             <div className="absolute top-10 left-1/4 w-2 h-2 bg-emerald-300 rounded-full opacity-60 animate-[floating_3s_ease-in-out_infinite]" />
