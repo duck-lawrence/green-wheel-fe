@@ -1,7 +1,12 @@
 "use client"
-// import BrandPicker from "@/components/modules/UserItem/BrandPicker"
 import React, { useEffect, useState } from "react"
-import { AutocompleteStyled, EnumPicker, PaginationStyled, TableStyled } from "@/components"
+import {
+    AutocompleteStyled,
+    StepContract,
+    EnumPicker,
+    PaginationStyled,
+    TableStyled
+} from "@/components"
 import { useTranslation } from "react-i18next"
 import {
     AutocompleteItem,
@@ -20,6 +25,7 @@ import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { RentalContractStatusLabels } from "@/constants/labels"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { PaginationParams } from "@/models/common/request"
+import { RentalContractStatusColorMap } from "@/constants/colorMap"
 import { FunnelSimple, MapPinAreaIcon } from "@phosphor-icons/react"
 import { ContractQueryParams } from "@/models/rental-contract/schema/request"
 import { RentalContractStatus } from "@/constants/enum"
@@ -65,6 +71,17 @@ export default function RentalContractPage() {
             toast.error(translateWithFallback(t, backendErr.detail))
         }
     }, [contractsError, getStationsError, t])
+
+    const status =
+        data?.items.find((item) =>
+            [
+                RentalContractStatus.RequestPending,
+                RentalContractStatus.PaymentPending,
+                RentalContractStatus.Active,
+                RentalContractStatus.Returned,
+                RentalContractStatus.RefundPending
+            ].includes(item.status)
+        )?.status ?? undefined
 
     return (
         <div className="py-8 md:px-12 max-w-screen shadow-2xs rounded-2xl bg-white text-center">
@@ -116,6 +133,10 @@ export default function RentalContractPage() {
                 </div>
             </div>
 
+            <div className="flex justify-center ml-[6.5rem]">
+                <StepContract status={status!} />
+            </div>
+
             {isContractsLoading || isGetStationsLoading ? (
                 <Spinner className="md:min-w-[60rem]" />
             ) : (
@@ -156,10 +177,17 @@ export default function RentalContractPage() {
                                         {item.endDate && formatDateTime({ date: item.endDate })}
                                     </TableCell>
                                     <TableCell className="text-center text-gray-600">
-                                        {item.station.name}
+                                        <span>{item.station.name}</span>
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        <span className="py-1 rounded-full text-xs">
+                                        <span
+                                            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold 
+                                                        ${
+                                                            RentalContractStatusColorMap[
+                                                                item.status
+                                                            ]
+                                                        }`}
+                                        >
                                             {RentalContractStatusLabels[item.status]}
                                         </span>
                                     </TableCell>

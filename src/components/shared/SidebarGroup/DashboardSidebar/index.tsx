@@ -34,6 +34,11 @@ export function DashboardSidebar({ className }: { className?: string }) {
             key: "/dashboard/reports",
             label: t("staff.sidebar_reports"),
             href: "/dashboard/reports"
+        },
+        {
+            key: "/dashboard/feedback",
+            label: t("staff.sidebar_feedback"),
+            href: "/dashboard/feedback"
         }
     ]
 
