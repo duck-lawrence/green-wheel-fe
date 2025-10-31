@@ -63,9 +63,11 @@ export function TableCheckListItems({
                                         <div className="text-gray-800 font-semibold">
                                             {item.component.name}
                                         </div>
-                                        <div className="text-gray-800">
-                                            {damageFee !== 0 && formatCurrencyWithSymbol(damageFee)}
-                                        </div>
+                                        {checklistType === VehicleChecklistType.Return && (
+                                            <div className="text-gray-800">
+                                                {formatCurrencyWithSymbol(damageFee)}
+                                            </div>
+                                        )}
                                     </TableCell>
 
                                     {/* Damage Status */}

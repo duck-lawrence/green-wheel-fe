@@ -125,7 +125,11 @@ export default function AboutPage() {
                                         duration: 0.5,
                                         ease: "easeOut"
                                     }}
-                                    className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-xl transition"
+                                    whileHover={{
+                                        scale: 1.05,
+                                        transition: { duration: 0.3, ease: "easeOut" }
+                                    }}
+                                    className="hover:cursor-pointer bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md"
                                 >
                                     <div className="text-4xl mb-4">{item.icon}</div>
                                     <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">

@@ -23,7 +23,7 @@ export default function DispatchPage() {
     return (
         <div className="max-w-6xl mx-auto w-full bg-white p-10 rounded-2xl shadow-md border border-gray-100">
             {/* Header */}
-            <div className="flex flex-col md:flex-row items-center justify-between mb-6">
+            <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-3">
                 <h1 className="text-3xl font-bold text-primary tracking-wide">
                     {t("table.dispatch_managerment")}
                 </h1>

@@ -2,7 +2,7 @@
 import { InputStyled } from "@/components/styled"
 import { InvoiceStatus } from "@/constants/enum"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
-import { formatCurrency } from "@/utils/helpers/currency"
+import { formatCurrencyWithSymbol } from "@/utils/helpers/currency"
 import { ArrowUDownLeft, ClipboardText, Money } from "@phosphor-icons/react"
 import React from "react"
 import { useTranslation } from "react-i18next"
@@ -13,7 +13,7 @@ export function InvoiceReservation({ invoice }: { invoice: InvoiceViewRes }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <InputStyled
                 label={t("invoice.reservation_fee")}
-                value={formatCurrency(invoice.total ?? 0)}
+                value={formatCurrencyWithSymbol(invoice.total ?? 0)}
                 startContent={<Money size={22} className="text-primary" weight="duotone" />}
                 variant="bordered"
             />
@@ -21,7 +21,7 @@ export function InvoiceReservation({ invoice }: { invoice: InvoiceViewRes }) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <InputStyled
                         label={t("invoice.paid_amount")}
-                        value={formatCurrency(invoice.paidAmount)}
+                        value={formatCurrencyWithSymbol(invoice.paidAmount)}
                         startContent={
                             <ClipboardText size={22} className="text-primary" weight="duotone" />
                         }
@@ -29,7 +29,7 @@ export function InvoiceReservation({ invoice }: { invoice: InvoiceViewRes }) {
                     />
                     <InputStyled
                         label={t("invoice.return_amount")}
-                        value={formatCurrency(invoice.paidAmount - invoice.total)}
+                        value={formatCurrencyWithSymbol(invoice.paidAmount - invoice.total)}
                         startContent={
                             <ArrowUDownLeft size={22} className="text-primary" weight="duotone" />
                         }

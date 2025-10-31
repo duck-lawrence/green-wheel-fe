@@ -1,8 +1,7 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { useTranslation } from "react-i18next"
-import { useQueryClient } from "@tanstack/react-query"
 import { cn, Skeleton } from "@heroui/react"
 
 import {
@@ -14,15 +13,15 @@ import {
     ModalHeaderStyled,
     ModalStyled
 } from "@/components"
-import { useDeleteCitizenIdById, useDeleteDriverLicenseById } from "@/hooks"
-import { QUERY_KEYS } from "@/constants/queryKey"
+import { useGetCitizenIdByUserId, useGetDriverLicenseByUserId } from "@/hooks"
+import { UserProfileViewRes } from "@/models/user/schema/response"
 
 type ImagePreviewModalProps = {
     title: string
     isOpen: boolean
-    onClose: () => void
     onOpenChange?: (isOpen: boolean) => void
-    imageUrl?: string | null
+    frontImageUrl?: string | null
+    backImageUrl?: string | null
     isLoading?: boolean
     emptyMessage: string
     footerContent?: React.ReactNode
@@ -34,9 +33,9 @@ type ImagePreviewModalProps = {
 export function ImagePreviewModal({
     title,
     isOpen,
-    onClose,
     onOpenChange,
-    imageUrl,
+    frontImageUrl,
+    backImageUrl,
     isLoading = false,
     emptyMessage,
     footerContent,
@@ -44,17 +43,10 @@ export function ImagePreviewModal({
     children,
     className
 }: ImagePreviewModalProps) {
-    const handleOpenChange = (open: boolean) => {
-        if (!open) {
-            onClose()
-        }
-        onOpenChange?.(open)
-    }
-
     return (
         <ModalStyled
             isOpen={isOpen}
-            onOpenChange={handleOpenChange}
+            onOpenChange={onOpenChange}
             className={cn("max-w-xl", className)}
             isDismissable={!isBusy}
         >
@@ -69,15 +61,14 @@ export function ImagePreviewModal({
                         </div>
                     ) : null} */}
 
-                    <div className="relative flex min-h-[260px] w-full items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-4">
+                    <div className="space-y-3 rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-4">
                         {isLoading ? (
                             <Skeleton className="h-56 w-full rounded-xl" />
-                        ) : imageUrl ? (
-                            <ImageStyled
-                                src={imageUrl}
-                                alt={title}
-                                className="h-auto w-full max-h-[380px] !object-contain"
-                            />
+                        ) : frontImageUrl && backImageUrl ? (
+                            <>
+                                <ImageStyled src={frontImageUrl} alt={title} />
+                                <ImageStyled src={backImageUrl} alt={title} />
+                            </>
                         ) : (
                             <p className="text-center text-sm font-medium text-gray-500">
                                 {emptyMessage}
@@ -94,147 +85,77 @@ export function ImagePreviewModal({
 }
 
 type BasePreviewModalProps = {
-    userId: string
+    user: UserProfileViewRes
     isOpen: boolean
     onClose: () => void
     onOpenChange?: (isOpen: boolean) => void
-    imageUrl?: string | null
-    onUpdated?: (nextUrl: string | null) => void
 }
 
 export function CitizenIdentityPreviewModal({
-    userId,
+    user,
     isOpen,
     onClose,
-    onOpenChange,
-    imageUrl,
-    onUpdated
+    onOpenChange
 }: BasePreviewModalProps) {
     const { t } = useTranslation()
-    const queryClient = useQueryClient()
-    const [currentUrl, setCurrentUrl] = useState<string | null>(imageUrl ?? null)
-
-    const deleteCitizenIdentity = useDeleteCitizenIdById({
-        onSuccess: () => {
-            setCurrentUrl(null)
-            onUpdated?.(null)
-            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
-        }
+    const { data: citizenId, isLoading } = useGetCitizenIdByUserId({
+        userId: user.id,
+        enabled: !!user.citizenUrl
     })
-
-    useEffect(() => {
-        if (isOpen) {
-            setCurrentUrl(imageUrl ?? null)
-        }
-    }, [imageUrl, isOpen])
-
-    const isBusy = deleteCitizenIdentity.isPending
-
-    const handleDelete = async () => {
-        if (!currentUrl) return
-        const confirmed = window.confirm(t("document_preview.delete_confirm"))
-        if (!confirmed) return
-        await deleteCitizenIdentity.mutateAsync(userId)
-    }
 
     return (
         <>
             <ImagePreviewModal
                 title={t("user.citizen_identity")}
                 isOpen={isOpen}
-                onClose={onClose}
                 onOpenChange={onOpenChange}
-                imageUrl={currentUrl ?? undefined}
+                frontImageUrl={citizenId?.frontImageUrl}
+                backImageUrl={citizenId?.backImageUrl}
                 emptyMessage={t("document_preview.empty_citizen_identity")}
                 // actionArea={null}
                 footerContent={
                     <div className="flex w-full items-center justify-end gap-3">
-                        <ButtonStyled
-                            className="bg-danger-500 text-white"
-                            onPress={handleDelete}
-                            isDisabled={isBusy || !currentUrl}
-                        >
-                            {t("common.delete")}
-                        </ButtonStyled>
-                        <ButtonStyled
-                            className="bg-default-200 text-gray-700"
-                            onPress={onClose}
-                            isDisabled={isBusy}
-                        >
+                        <ButtonStyled className="bg-default-200 text-gray-700" onPress={onClose}>
                             {t("common.close")}
                         </ButtonStyled>
                     </div>
                 }
-                isBusy={isBusy}
+                isLoading={isLoading}
             />
         </>
     )
 }
 
 export function DriverLicensePreviewModal({
-    userId,
+    user,
     isOpen,
     onClose,
-    onOpenChange,
-    imageUrl,
-    onUpdated
+    onOpenChange
 }: BasePreviewModalProps) {
     const { t } = useTranslation()
-    const queryClient = useQueryClient()
-    const [currentUrl, setCurrentUrl] = useState<string | null>(imageUrl ?? null)
-
-    const deleteDriverLicense = useDeleteDriverLicenseById({
-        onSuccess: () => {
-            setCurrentUrl(null)
-            onUpdated?.(null)
-            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
-        }
+    const { data: driverLicense, isLoading } = useGetDriverLicenseByUserId({
+        userId: user.id,
+        enabled: !!user.citizenUrl
     })
-
-    useEffect(() => {
-        if (isOpen) {
-            setCurrentUrl(imageUrl ?? null)
-        }
-    }, [imageUrl, isOpen])
-
-    const isBusy = deleteDriverLicense.isPending
-
-    const handleDelete = async () => {
-        if (!currentUrl) return
-        const confirmed = window.confirm(t("document_preview.delete_confirm"))
-        if (!confirmed) return
-        await deleteDriverLicense.mutateAsync(userId)
-    }
 
     return (
         <>
             <ImagePreviewModal
                 title={t("user.driver_license")}
                 isOpen={isOpen}
-                onClose={onClose}
                 onOpenChange={onOpenChange}
-                imageUrl={currentUrl ?? undefined}
+                frontImageUrl={driverLicense?.frontImageUrl}
+                backImageUrl={driverLicense?.backImageUrl}
                 emptyMessage={t("document_preview.empty_driver_license")}
                 // actionArea={null}
                 footerContent={
                     <div className="flex w-full items-center justify-end gap-3">
-                        <ButtonStyled
-                            className="bg-danger-500 text-white"
-                            onPress={handleDelete}
-                            isDisabled={isBusy || !currentUrl}
-                        >
-                            {t("common.delete")}
-                        </ButtonStyled>
-                        <ButtonStyled
-                            className="bg-default-200 text-gray-700"
-                            onPress={onClose}
-                            isDisabled={isBusy}
-                        >
+                        <ButtonStyled className="bg-default-200 text-gray-700" onPress={onClose}>
                             {t("common.close")}
                         </ButtonStyled>
                     </div>
                 }
-                isBusy={isBusy}
+                isLoading={isLoading}
             />
         </>
     )

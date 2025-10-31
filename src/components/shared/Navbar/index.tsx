@@ -68,7 +68,7 @@ export function Navbar() {
 
     // handle navbar animation
     const baseClasses = clsx(
-        "bg-transparent transition-all duration-400 ease-in-out fixed left-0 w-full z-50 h-xl mx-auto",
+        "bg-transparent transition-all duration-400 ease-in-out fixed left-0 w-full z-50 mx-auto",
         "max-w-6xl mt-3 rounded-3xl justify-between",
         "data-[visible=false]:mt-0",
         {
@@ -151,7 +151,7 @@ export function Navbar() {
             <NavbarBrand>
                 <Link href={"/"} className="flex items-center gap-2">
                     <LogoStyled className="w-8 h-8" />
-                    <p className="font-bold text-inherit">{GREENWHEEL}</p>
+                    <p className="hidden sm:block font-bold text-inherit">{GREENWHEEL}</p>
                 </Link>
             </NavbarBrand>
             {/* middle content */}

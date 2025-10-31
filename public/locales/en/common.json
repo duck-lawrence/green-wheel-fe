@@ -243,10 +243,7 @@
         "contact": "Contact",
         "login": "Login",
         "register": "Register",
-        "logout": "Logout",
-        "staff_management": "Staff Management",
-        "staff_profile": "Profile",
-        "staff_contracts": "Rental Booking"
+        "logout": "Logout"
     },
     "table": {
         "order": "Order",
@@ -393,7 +390,16 @@
         "brand_id_require": "Brand is required",
         "segment_id_require": "Segment is required",
 
-        "upload_images": "Upload vehicle model images"
+        "upload_images": "Upload vehicle model images",
+
+        "policy": {
+            "documents": "Documents",
+            "documents_text": "Citizen ID + Driver License (B1 or higher).",
+            "late_return_fee": "Late return fee",
+            "late_return_fee_text": "If the vehicle is returned more than 1 hour later than scheduled, a fee will be applied.",
+            "payment_method": "Payment method",
+            "payment_method_text": "Payment can be made online or in cash. Customers may pay a reservation fee in advance, but must pay the full amount upon receiving the vehicle."
+        }
     },
     "vehicle_model_image": {
         "main_image_not_found": "Main image not found"
@@ -541,7 +547,7 @@
         "invalid_file_type": "Invalid file type"
     },
     "staff": {
-        "sidebar_dashboard": "Dash Board",
+        "dashboard": "Dashboard",
         "sidebar_vehicle_checklists": "Checklists",
         "sidebar_bookings": "Rental Bookings",
         "sidebar_test": "Test",
@@ -612,7 +618,6 @@
     "admin": {
         "dashboard_title": "Admin Dashboard",
         "dashboard_subtitle": "Select a module from the sidebar to get started.",
-        "dropdown_management": "Admin Management",
         "sidebar_fleet": "Fleet",
         "sidebar_staff_management": "Staff Management",
         "staff_management_title": "Staff Management",
