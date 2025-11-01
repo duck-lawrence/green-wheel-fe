@@ -395,8 +395,40 @@
         "main_image_not_found": "Main image not found"
     },
     "vehicle_component": {
-        "not_found": "Vehicke component not found",
-        "component": "Component"
+        "not_found": "Vehicle component not found",
+        "component": "Component",
+        "management_title": "Vehicle components",
+        "management_description": "Manage reusable components for vehicle models.",
+        "create_button": "Add component",
+        "table_name": "Component name",
+        "table_description": "Description",
+        "table_damage_fee": "Damage fee",
+        "table_actions": "Actions",
+        "modal_create_title": "Create vehicle component",
+        "modal_edit_title": "Update vehicle component",
+        "modal_delete_title": "Delete vehicle component",
+        "modal_delete_message": "Are you sure you want to remove \"{{name}}\"? This component will no longer appear in the list.",
+        "form_name_label": "Component Name *",
+        "form_name_placeholder": "Enter component name",
+        "form_name_required": "Component name is required",
+        "form_name_max": "Component name must be at most 100 characters",
+        "form_description_label": "Description",
+        "form_description_placeholder": "Enter description",
+        "form_description_required": "Description is required",
+        "form_description_max": "Description must be at most 255 characters",
+        "form_damage_fee_label": "Damage Fee (₫) *",
+        "form_damage_fee_placeholder": "Enter damage fee",
+        "form_damage_fee_required": "Damage fee must be greater than zero",
+        "form_damage_fee_positive": "Damage fee must be greater than zero",
+        "filter_title": "Component filters",
+        "filter_name_label": "Component name",
+        "filter_name_placeholder": "Enter component name",
+        "empty_state_title": "No components found",
+        "empty_state_description": "Click + to add one.",
+        "table_empty": "No vehicle components found."
+    },
+    "currency": {
+        "vnd": "VND"
     },
     "station": {
         "station": "Station",
@@ -622,7 +654,8 @@
         "vehicle_delete_title": "Delete vehicle",
         "vehicle_delete_confirm": "Are you sure you want to remove this vehicle from the fleet?",
         "dispatch": "Dispatch",
-        "sidebar_vehicle_management": "Vehicle Management"
+        "sidebar_vehicle_management": "Vehicle Management",
+        "sidebar_vehicle_components": "Vehicle Components"
     },
     "footer": {
         "green_wheel_company_name": "GREEN WHEEL Trading and Service Joint Stock Company",
@@ -896,7 +929,7 @@
     "fleet": {
         "page_title": "Fleet Management",
         "filter_title": "Filters",
-        "search_placeholder": "Search vehicle model, brand, etc",
+        "search_placeholder": "Search vehicle model, etc",
         "filter_car_type": "Segment",
         "filter_status": "Status",
         "status_available": "Available",
