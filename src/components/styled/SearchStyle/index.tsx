@@ -1,19 +1,6 @@
 "use client"
 
-/**
- * Usage Guide
- * // Backend example
- * // GET /resource?keyword={value}
- *
- * // Frontend setup
- * // const [keyword, setKeyword] = useState("")
- * // import { SearchStyle } from "@/components"
- * // <SearchStyle
- * //   value={keyword}
- * //   onValueChange={setKeyword}
- * //   placeholder="Search anything..."
- * // />
- */
+
 
 import React from "react"
 import { Input, cn } from "@heroui/react"
@@ -34,8 +21,7 @@ const DEFAULT_CLASSNAMES: SlotOverrides = {
     clearButton: "",
     description: "",
     errorMessage: "",
-    // startContent: "",
-    // endContent: ""
+
 }
 
 const mergeClassNames = (overrides?: SlotOverrides): SlotOverrides => {

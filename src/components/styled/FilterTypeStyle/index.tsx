@@ -1,17 +1,5 @@
 "use client"
 
-/**
- * Usage Guide
- * // Backend example
- * // GET /resource?filter={value}
- *
- * // Frontend setup
- * // const [value, setValue] = useState(new Set(["all"]))
- * // import { FilterTypeStyle } from "@/components"
- * // <FilterTypeStyle selectedKeys={value} onSelectionChange={setValue}>
- * //   <SelectItem key="all">All</SelectItem>
- * // </FilterTypeStyle>
- */
 
 import React from "react"
 import { Select, SelectItem, cn } from "@heroui/react"
