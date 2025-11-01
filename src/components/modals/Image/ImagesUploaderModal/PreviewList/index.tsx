@@ -1,7 +1,7 @@
 "use client"
 
 import React, { memo } from "react"
-import { ButtonStyled, ImageStyled } from "@/components/"
+import { ButtonIconStyled, ImageStyled } from "@/components/"
 import { X } from "@phosphor-icons/react"
 import { cn } from "@heroui/react"
 
@@ -28,12 +28,12 @@ export const PreviewList = memo(function PreviewList({
                         width={cropSize.width}
                         height={cropSize.height}
                     />
-                    <ButtonStyled
-                        className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity min-w-fit min-h-fit h-fit p-2"
+                    <ButtonIconStyled
+                        className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity p-2"
                         onClick={() => onRemove(idx)}
                     >
                         <X size={16} />
-                    </ButtonStyled>
+                    </ButtonIconStyled>
                 </div>
             ))}
         </div>

@@ -1,4 +1,5 @@
-import { AlertStyled, ButtonStyled, CheckboxStyled, DropdownStyled } from "@/components/styled"
+import { AlertModal } from "@/components/modals"
+import { AlertStyled, ButtonStyled, DropdownStyled } from "@/components/styled"
 import { RentalContractStatus, VehicleIssueResolutionOption } from "@/constants/enum"
 import { VehicleStatusLabels } from "@/constants/labels"
 import {
@@ -10,7 +11,7 @@ import {
 import { VehicleChecklistViewRes } from "@/models/checklist/schema/response"
 import { ConfirmContractReq, HandoverContractReq } from "@/models/rental-contract/schema/request"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
-import { DropdownItem, DropdownMenu, DropdownTrigger, Spinner } from "@heroui/react"
+import { DropdownItem, DropdownMenu, DropdownTrigger, Spinner, useDisclosure } from "@heroui/react"
 import { useFormik } from "formik"
 import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
@@ -18,8 +19,6 @@ import { useTranslation } from "react-i18next"
 interface BottomActionButtonsProps {
     isStaff: boolean
     isCustomer: boolean
-    isReturnChecked: boolean
-    setIsReturnChecked: React.Dispatch<React.SetStateAction<boolean>>
     contract: RentalContractViewRes
     handoverFormik: ReturnType<typeof useFormik<HandoverContractReq>>
     hanoverChecklist: VehicleChecklistViewRes | undefined
@@ -28,13 +27,18 @@ interface BottomActionButtonsProps {
 export function BottomActionButtons({
     isStaff,
     isCustomer,
-    isReturnChecked,
-    setIsReturnChecked,
     contract,
     handoverFormik,
     hanoverChecklist
 }: BottomActionButtonsProps) {
     const { t } = useTranslation()
+
+    const {
+        isOpen: isReturnOpen,
+        onOpenChange: onReturnOpenChange,
+        onOpen: onReturnOpen,
+        onClose: onReturnClose
+    } = useDisclosure()
 
     // ======================================= //
     // Confirm
@@ -149,20 +153,13 @@ export function BottomActionButtons({
                     {/* Khi contract đã Active và có thể trả xe */}
                     {contract.actualStartDate &&
                         contract.status === RentalContractStatus.Active && (
-                            <div className="flex flex-col items-center gap-2">
-                                <CheckboxStyled
-                                    checked={isReturnChecked}
-                                    onChange={(e) => setIsReturnChecked(e.target.checked)}
-                                >
-                                    {t("rental_contract.return_comfirm")}
-                                </CheckboxStyled>
-
+                            <>
                                 <ButtonStyled
                                     variant="bordered"
                                     color="primary"
                                     className="hover:text-white hover:bg-primary"
-                                    isDisabled={!isReturnChecked || returnMutation.isPending}
-                                    onPress={handleReturn}
+                                    isDisabled={returnMutation.isPending}
+                                    onPress={onReturnOpen}
                                 >
                                     {returnMutation.isPending ? (
                                         <Spinner />
@@ -170,7 +167,18 @@ export function BottomActionButtons({
                                         t("rental_contract.return")
                                     )}
                                 </ButtonStyled>
-                            </div>
+
+                                <AlertModal
+                                    header={t("rental_contract.return_comfirm")}
+                                    body={t("common.confirm_to_submit_body")}
+                                    isOpen={isReturnOpen}
+                                    onOpenChange={onReturnOpenChange}
+                                    onClose={onReturnClose}
+                                    onConfirm={() => {
+                                        handleReturn()
+                                    }}
+                                />
+                            </>
                         )}
                 </>
             )}

@@ -1,6 +1,6 @@
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { BackendError } from "@/models/common/response"
-import { DispatchQueryParams, UpdateDispatchReq } from "@/models/dispatch/schema/request"
+import { DispatchQueryParams } from "@/models/dispatch/schema/request"
 import { DispatchViewRes } from "@/models/dispatch/schema/response"
 import { dispatchApi } from "@/services/dispathApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
@@ -16,14 +16,17 @@ export const useCreateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => 
     return useMutation({
         mutationFn: dispatchApi.create,
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.DISPATCH_REQUESTS })
-            router.push("/dashboard/dispatch")
+            await queryClient.invalidateQueries({
+                queryKey: QUERY_KEYS.DISPATCH_REQUESTS,
+                exact: false
+            })
             onSuccess?.()
             addToast({
                 title: t("toast.success"),
                 description: t("dispatch.create_success"),
                 color: "success"
             })
+            router.push("/dashboard/dispatch")
         },
         onError: (error: BackendError) => {
             addToast({
@@ -38,14 +41,14 @@ export const useCreateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => 
 export const useUpdateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
-    const router = useRouter()
+    // const router = useRouter()
+
     return useMutation({
-        mutationFn: async ({ id, req }: { id: string; req: UpdateDispatchReq }) => {
-            await dispatchApi.update({ id, req })
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: [...QUERY_KEYS.DISPATCH_REQUESTS]
+        mutationFn: dispatchApi.updateStatus,
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
+                queryKey: QUERY_KEYS.DISPATCH_REQUESTS,
+                exact: false
             })
             onSuccess?.()
             addToast({
@@ -53,7 +56,7 @@ export const useUpdateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => 
                 description: t("dispatch.update_success"),
                 color: "success"
             })
-            router.push("/dashboard/dispatch")
+            // router.push("/dashboard/dispatch")
         },
         onError: (error: BackendError) => {
             addToast({
