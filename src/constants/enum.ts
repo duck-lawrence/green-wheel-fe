@@ -13,8 +13,8 @@ export enum DispatchRequestStatus {
     Pending = 0,
     Approved = 1,
     ConfirmApproved = 2,
-    Rejected = 3,
-    Received = 4,
+    Received = 3,
+    Rejected = 4,
     Cancelled = 5
 }
 

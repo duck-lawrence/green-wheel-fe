@@ -623,7 +623,8 @@
         "user_filter_has_document_license": "Driving License",
         "user_filter_has_document_citizen": "Citizen ID",
         "sidebar_feedback": "Feedback",
-        "user_filter_has_document_none": "No document"
+        "user_filter_has_document_none": "No document",
+        "name": "Staff name"
     },
     "admin": {
         "dashboard_title": "Admin Dashboard",
@@ -812,10 +813,10 @@
         "list_staff": "List staffs",
         "dispatch_detail": "Dispatch Detail",
         "station_information": "Station Information",
-        "station_form": "Station form",
+        "form_station": "From Station",
         "station_id": "Station ID",
         "station_name": "Station name",
-        "to_station": "To station",
+        "to_station": "To Station",
         "cur_status": "Current Status",
         "dispatch_status": "Dispatch Status",
         "assigned_staff": "Assigned Staffs",
@@ -831,7 +832,8 @@
         "vehicle_model_require": "Vehicle model is required",
         "number_vehicle": "Number of vehicles",
         "number_vehicle_require": "Number of vehicles is required",
-        "number_vehicle_min": "Number of vehicles must be at least 1"
+        "number_vehicle_min": "Number of vehicles must be at least 1",
+        "approve": "Approve"
     },
     "document_preview": {
         "upload_image": "Upload image",
@@ -993,8 +995,8 @@
         "create": "Create",
         "update": "Update",
         "delete": "Delete",
-        "success": "successfully",
-        "failed": "failed",
+        "success": "Successfully",
+        "failed": "Failed",
         "error": "Error",
         "create_failed": "Create failed",
         "update_failed": "Update failed",

@@ -21,12 +21,12 @@ import { useTranslation } from "react-i18next"
 export default function DispatchCreatePage() {
     const { t } = useTranslation()
     // const router = useRouter()
-    const { data: user, isLoading: isLoading_1 } = useGetMe()
+    const { data: user, isLoading: isGetMeLoading } = useGetMe()
     const stationIdNow = user?.station?.id
 
     //Station
-    const { data: stations, isLoading: isLoading_2 } = useGetAllStations()
-    const { data: models, isLoading: isLoading_3 } = useGetAllVehicleModels({ query: {} })
+    const { data: stations, isLoading: isStationLoading } = useGetAllStations()
+    const { data: models, isLoading: isModelsLoading } = useGetAllVehicleModels({ query: {} })
 
     const stationDispatch = stationIdNow
         ? (stations || []).filter(({ id }) => id !== stationIdNow) || null
@@ -40,13 +40,6 @@ export default function DispatchCreatePage() {
 
     const handleCreateDispatch = useCallback(
         async (value: CreateDispatchReq) => {
-            console.log({
-                ...value,
-                vehicles: value.vehicles.filter(
-                    (v) => v.numberOfVehicle > 0 && selectVehicles.includes(v.modelId)
-                )
-            })
-
             await createDispatch.mutateAsync({
                 ...value,
                 vehicles: value.vehicles.filter(
@@ -92,7 +85,7 @@ export default function DispatchCreatePage() {
         return formik.isValid && (formik.values.numberOfStaff !== 0 || selectVehicles.length > 0)
     }, [formik.isValid, formik.values.numberOfStaff, selectVehicles.length])
 
-    if (isLoading_1 || isLoading_2 || isLoading_3) return <SpinnerStyled />
+    if (isGetMeLoading || isStationLoading || isModelsLoading) return <SpinnerStyled />
 
     return (
         <div className="max-w-7xl mx-auto w-full bg-white p-8 rounded-2xl shadow-md border border-gray-100">
@@ -158,7 +151,6 @@ export default function DispatchCreatePage() {
 
             <div className="flex justify-center items-center">
                 <ButtonStyled
-                    color="primary"
                     className="p-6 btn-gradient"
                     isDisabled={!formik.isValid || !isSubmitable}
                     onPress={onOpen}

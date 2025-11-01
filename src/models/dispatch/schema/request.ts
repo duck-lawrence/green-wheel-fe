@@ -14,8 +14,10 @@ export type UpdateApproveDispatchReq = {
     description?: string
 }
 
-export type UpdateStatusDispatchReq = {
+export type UpdateDispatchReq = {
     status: DispatchRequestStatus
+    staffIds?: string[]
+    vehicleIds?: string[]
     description?: string
 }
 

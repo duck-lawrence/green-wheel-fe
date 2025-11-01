@@ -144,18 +144,17 @@ export function FilterVehicleRental({
     const { refetch } = useSearchVehicleModels({
         query: filter
     })
-    const handleSearch = useCallback(async (params: SearchModelParams) => {
-        setFilter(params)
-    }, [])
     const debouncedSearch = useMemo(
         () =>
             debouncedWrapper(
-                handleSearch,
-                800,
+                async (params: SearchModelParams) => {
+                    setFilter(params)
+                },
+                500,
                 () => setIsSearching(true),
                 () => setIsSearching(false)
             ),
-        [handleSearch, setIsSearching]
+        [setIsSearching]
     )
 
     // =========================
@@ -314,12 +313,12 @@ export function FilterVehicleRental({
         if (hasLoadInit.current) return
         if (!formik.isValid || !filter.stationId) return
         const run = async () => {
-            await handleSearch(filter)
+            await debouncedSearch(filter)
         }
         run()
         hasLoadInit.current = true
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formik.isValid, handleSearch])
+    }, [formik.isValid, debouncedSearch])
 
     if (
         isGetStationsLoading ||
