@@ -1,6 +1,6 @@
 "use client"
 
-import React, { ReactNode, useCallback, useEffect } from "react"
+import React, { ReactNode, useCallback, useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useFormik } from "formik"
 import * as Yup from "yup"
@@ -12,11 +12,14 @@ import {
     FilterTypeStyle,
     InputStyled,
     ModalFooterStyled,
+    TableSelectionVehicleComponent,
     TextareaStyled
 } from "@/components"
+import { useGetVehicleComponents } from "@/hooks"
 import { BackendError } from "@/models/common/response"
 import { CreateVehicleModelReq } from "@/models/vehicle/schema/request"
 import { CreateVehicleModelRes } from "@/models/vehicle/schema/response"
+import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 
 type SelectOption = {
     id: string
@@ -40,6 +43,7 @@ type FormValues = {
     description: string
     brandId: string
     segmentId: string
+    componentIds: string[]
     costPerDay: string
     depositFee: string
     seatingCapacity: string
@@ -67,6 +71,14 @@ export function VehicleModelCreateForm({
         return value
     }, [])
 
+    const {
+        data: componentData,
+        isLoading: isComponentLoading,
+        error: componentError
+    } = useGetVehicleComponents({
+        enabled: isOpen
+    })
+
     const handleSubmit = useCallback(
         async (values: FormValues) => {
             const payload: CreateVehicleModelReq = {
@@ -81,7 +93,8 @@ export function VehicleModelCreateForm({
                 motorPower: Number(values.motorPower),
                 batteryCapacity: Number(values.batteryCapacity),
                 ecoRangeKm: Number(values.ecoRangeKm),
-                sportRangeKm: Number(values.sportRangeKm)
+                sportRangeKm: Number(values.sportRangeKm),
+                componentIds: values.componentIds ?? []
             }
 
             await createMutation.mutateAsync(payload)
@@ -95,6 +108,7 @@ export function VehicleModelCreateForm({
             description: "",
             brandId: "",
             segmentId: "",
+            componentIds: [],
             costPerDay: "",
             depositFee: "",
             seatingCapacity: "",
@@ -117,6 +131,9 @@ export function VehicleModelCreateForm({
             segmentId: Yup.string()
                 .trim()
                 .required(t("vehicle_model.segment_id_require")),
+            componentIds: Yup.array()
+                .of(Yup.string().trim())
+                .optional(),
 
             costPerDay: Yup.number()
                 .transform(numericTransform)
@@ -183,6 +200,29 @@ export function VehicleModelCreateForm({
         onSubmit: handleSubmit
     })
 
+const componentItems = useMemo(
+  () => (Array.isArray(componentData)
+    ? componentData
+    : componentData?.items ?? []),
+  [componentData]
+)
+
+const componentErrorMessage = useMemo(() => {
+  if (!componentError) return
+  if (typeof componentError === "object" && "detail" in componentError)
+    return translateWithFallback(t, (componentError as BackendError).detail)
+  if (componentError instanceof Error)
+    return componentError.message
+  return t("vehicle_component.fetch_error")
+}, [componentError, t])
+
+const selectedComponentIds = useMemo(
+  () => new Set(formik.values.componentIds),
+  [formik.values.componentIds]
+)
+
+const isComponentLoadingInitial = isComponentLoading && !componentData
+
     // reset form when modal closes, also reset mutation state
     useEffect(() => {
         if (!isOpen) {
@@ -192,6 +232,8 @@ export function VehicleModelCreateForm({
     }, [isOpen, createMutation, formik])
 
     const isSubmitting = formik.isSubmitting || createMutation.isPending
+    const isSubmitDisabled = isSubmitting || !formik.isValid || isComponentLoadingInitial || !!componentErrorMessage
+
 
     return (
         <form onSubmit={formik.handleSubmit} className="flex flex-col gap-6">
@@ -300,6 +342,22 @@ export function VehicleModelCreateForm({
                             isRequired
                         />
                     </div>
+                </div>
+            </FormSection>
+
+            {/* COMPONENTS */}
+            <FormSection title={t("vehicle_component.component", "Components")}>
+                <div className="space-y-4">
+                    <TableSelectionVehicleComponent
+                        items={componentItems}
+                        selectedIds={selectedComponentIds}
+                        onSelectionChange={(next) =>
+                            formik.setFieldValue("componentIds", Array.from(next))
+                        }
+                        isLoading={isComponentLoadingInitial}
+                        error={componentErrorMessage}
+                        showContainer
+                    />
                 </div>
             </FormSection>
 
@@ -503,7 +561,7 @@ export function VehicleModelCreateForm({
                     type="submit"
                     color="primary"
                     className="bg-primary text-white"
-                    isDisabled={isSubmitting || !formik.isValid}
+                    isDisabled={isSubmitDisabled}
                 >
                     {t("common.create")}
                 </ButtonStyled>

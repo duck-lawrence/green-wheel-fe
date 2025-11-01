@@ -22,12 +22,12 @@ export const useGetVehicleComponents = ({
   enabled = true
 }: {
   params?: GetVehicleComponentsParams
-  pagination: PaginationParams
+  pagination?: PaginationParams
   enabled?: boolean
 }) => {
   const queryClient = useQueryClient()
 
-  const queryKey = [...QUERY_KEYS.VEHICLE_COMPONENTS, params, pagination]
+  const queryKey = [...QUERY_KEYS.VEHICLE_COMPONENTS, params ?? {}, pagination ?? null]
   const cached = queryClient.getQueryData<PageResult<VehicleComponentViewRes>>(queryKey)
 
   return useQuery({

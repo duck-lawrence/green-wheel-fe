@@ -27,29 +27,34 @@ import {
     useModalDisclosure,
     VehicleModelDeleteModal,
     VehicleModelEditModal,
-    VehicleSubImagesScroll
+    VehicleSubImagesScroll,
+    EditModelComponentModal
 } from "@/components"
 
 import {
     useDay,
+    useGetAllBrands,
     useGetAllStations,
     useGetAllVehicleModels,
     useGetAllVehicleSegments,
-    useGetAllVehicles
+    useGetAllVehicles,
+    useGetVehicleComponents
 } from "@/hooks"
 
 import { VehicleStatus } from "@/constants/enum"
-import { FALLBACK_IMAGE_URL } from "@/constants/constants"
+import { DEFAULT_VEHICLE_MODEL } from "@/constants/constants"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 
 import {
     VehicleModelViewRes,
-    VehicleViewRes
+    VehicleViewRes,
+    VehicleComponentViewRes
 } from "@/models/vehicle/schema/response"
 import { BackendError } from "@/models/common/response"
 
-import { TableFleetDetail, VehicleRow } from "./TableFleetDetail"
+import { TableFleetVehicle, VehicleRow } from "./TableFleetVehicle"
+import { TableFleetComponent } from "./TableFleetComponent"
 
 /* -------------------------------------------------
    CONSTANT / TYPES / MAPS
@@ -142,6 +147,18 @@ function useFleetData(modelId: string | undefined) {
     })
 
     const {
+        data: componentsPage,
+        isFetching: isFetchingComponents,
+        isLoading: isLoadingComponents,
+        error: componentsError,
+        refetch: refetchComponents
+    } = useGetVehicleComponents({
+        params: modelId ? { modelId } : {},
+        pagination: { pageNumber: 1, pageSize: 100 },
+        enabled: Boolean(modelId)
+    })
+
+    const {
         data: stations = [],
         error: stationsError
     } = useGetAllStations({ enabled: Boolean(modelId) })
@@ -168,6 +185,10 @@ function useFleetData(modelId: string | undefined) {
         })
     }, [modelId, vehiclesPage])
 
+    const componentsOfModel = useMemo(() => {
+        return (componentsPage?.items ?? []) as VehicleComponentViewRes[]
+    }, [componentsPage])
+
     return {
         vehicleModel,
         vehiclesOfModel,
@@ -175,11 +196,16 @@ function useFleetData(modelId: string | undefined) {
         isLoading: isLoadingModels,
         isFetchingAny: isFetchingModels,
         isFetchingVehicles,
+        isFetchingComponents,
+        isLoadingComponents,
         vehicleModelsError,
         vehiclesError,
+        componentsError,
         stationsError,
         vehicleModels: vehicleModelsData,
-        refetchVehicleModels
+        refetchVehicleModels,
+        componentsOfModel,
+        refetchComponents
     }
 }
 
@@ -252,7 +278,7 @@ function FleetInfoHeader(props: {
                     <div className="mx-auto w-full max-w-xl">
                         <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-slate-100">
                             <img
-                                src={subImgUrls[activeImage] ?? FALLBACK_IMAGE_URL}
+                                src={subImgUrls[activeImage] ?? DEFAULT_VEHICLE_MODEL}
                                 alt={vehicleModel.name}
                                 className="h-full w-full object-cover"
                             />
@@ -309,7 +335,7 @@ function FleetInfoHeader(props: {
                             <ButtonStyled
                                 variant="light"
                                 onPress={onEdit}
-                                className="flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1 text-sm font-medium text-slate-600 shadow-none transition-all hover:bg-slate-50 hover:text-slate-700"
+                                className="flex items-center gap-2 rounded-md border border-slate-200 px-3 py-1 text-sm font-medium text-slate-600 shadow-none transition-all hover:bg-slate-50 hover:text-primary"
                                 startContent={
                                     <PencilSimple size={16} weight="bold" />
                                 }
@@ -494,31 +520,34 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
     const {
         vehicleModel,
         vehiclesOfModel,
+        componentsOfModel,
         stationNameById,
         isLoading,
         isFetchingAny,
         isFetchingVehicles,
+        isFetchingComponents,
+        isLoadingComponents,
         vehicleModelsError,
         vehiclesError,
+        componentsError,
         stationsError,
         vehicleModels,
-        refetchVehicleModels
+        refetchVehicleModels,
+        refetchComponents
     } = useFleetData(modelId)
 
+    const { data: brands = [] } = useGetAllBrands()
+
     const brandOptions = useMemo(() => {
-        const unique = new Map<string, string>()
-        vehicleModels.forEach((model) => {
-            if (model.brand?.id && model.brand?.name) {
-                unique.set(model.brand.id, model.brand.name)
-            }
-        })
-        if (vehicleModel?.brand?.id && vehicleModel.brand?.name) {
-            unique.set(vehicleModel.brand.id, vehicleModel.brand.name)
-        }
-        return Array.from(unique.entries())
-            .map(([id, label]) => ({ id, label }))
-            .sort((a, b) => a.label.localeCompare(b.label))
-    }, [vehicleModels, vehicleModel?.brand?.id, vehicleModel?.brand?.name])
+        return brands.map((brand) => ({
+            id: brand.id,
+            label: brand.name,
+            // description: brand.description,
+            // country: brand.country,
+            // foundedYear: brand.foundedYear
+        }))
+        // .sort((a, b) => a.label.localeCompare(b.label))
+    }, [brands])
 
     const segmentOptions = useMemo(() => {
         const unique = new Map<string, string>()
@@ -545,6 +574,13 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
     } = useModalDisclosure()
 
     const {
+        isOpen: isComponentModalOpen,
+        onOpen: onComponentModalOpen,
+        onClose: onComponentModalClose,
+        onOpenChange: onComponentModalOpenChange
+    } = useModalDisclosure()
+
+    const {
         isOpen: isDeleteModalOpen,
         onOpen: onDeleteModalOpen,
         onClose: onDeleteModalClose,
@@ -553,7 +589,8 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
 
     const handleVehicleModelUpdated = useCallback(() => {
         void refetchVehicleModels()
-    }, [refetchVehicleModels])
+        void refetchComponents()
+    }, [refetchVehicleModels, refetchComponents])
 
     const handleVehicleModelDeleted = useCallback(() => {
         router.push("/dashboard/fleet")
@@ -561,7 +598,7 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
 
     // toast all API errors (models / vehicles / stations)
     useApiErrorToasts(
-        [vehicleModelsError, vehiclesError, stationsError],
+        [vehicleModelsError, vehiclesError, componentsError, stationsError],
         t
     )
 
@@ -576,6 +613,18 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
             }),
         [vehiclesOfModel, translate, formatDateTime, stationNameById]
     )
+
+    const componentIdsForModal = useMemo(() => {
+        if (vehicleModel?.componentIds?.length) {
+            return [...vehicleModel.componentIds]
+        }
+        return componentsOfModel.map((component) => component.id)
+    }, [vehicleModel?.componentIds, componentsOfModel])
+
+    const isComponentTableLoading =
+        isLoadingComponents || (isFetchingComponents && componentsOfModel.length === 0)
+
+    const isComponentEditDisabled = !vehicleModel || isLoadingComponents
 
     // availability text (stock or none)
     const availabilityInfo = useMemo(() => {
@@ -595,12 +644,12 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
 
     // images for gallery
     const subImgUrls = useMemo(() => {
-        if (!vehicleModel) return [FALLBACK_IMAGE_URL]
+        if (!vehicleModel) return [DEFAULT_VEHICLE_MODEL]
         const images = [
             vehicleModel.imageUrl,
             ...(vehicleModel.imageUrls ?? [])
         ].filter((src): src is string => Boolean(src))
-        return images.length > 0 ? images : [FALLBACK_IMAGE_URL]
+        return images.length > 0 ? images : [DEFAULT_VEHICLE_MODEL]
     }, [vehicleModel])
 
     const [activeImage, setActiveImage] = useState(0)
@@ -670,10 +719,26 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
                 vehicleModel={vehicleModel}
             />
 
-            <TableFleetDetail
+            <TableFleetVehicle
                 t={translate}
                 rows={vehicleRows}
                 isLoading={isFetchingVehicles}
+            />
+
+            <TableFleetComponent
+                items={componentsOfModel}
+                isLoading={isComponentTableLoading}
+                onEditComponents={onComponentModalOpen}
+                isEditDisabled={isComponentEditDisabled}
+            />
+
+            <EditModelComponentModal
+                isOpen={isComponentModalOpen}
+                onOpenChange={onComponentModalOpenChange}
+                onClose={onComponentModalClose}
+                modelId={vehicleModel.id}
+                selectedComponentIds={componentIdsForModal}
+                onUpdated={handleVehicleModelUpdated}
             />
 
             <VehicleModelEditModal

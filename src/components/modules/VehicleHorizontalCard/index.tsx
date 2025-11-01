@@ -41,22 +41,22 @@ export function VehicleHorizontalCard({
         costPerDay
     } = vehicleModel
 
-    const brandName = brand?.name ?? t("vehicle_model.brand_unknown", "Unknown brand")
-    const segmentName = segment?.name ?? t("vehicle_model.segment_unknown", "Unknown segment")
+    const brandName = brand?.name ?? t("vehicle_model.brand_unknown")
+    const segmentName = segment?.name ?? t("vehicle_model.segment_unknown")
     const isAvailable = availableVehicleCount > 0
     const cover = imageUrl ?? imageUrls?.[0] ?? FALLBACK_IMAGE_URL
-    const unitLabel = t("vehicle_model.unit", "Unit")
+    const unitLabel = t("vehicle_model.unit")
 
     const typeSpec: SpecItem = {
         icon: <SteeringWheel className="h-5 w-5" weight="bold" />,
-        label: t("vehicle_model.segment", "Type car"),
+        label: t("vehicle_model.segment"),
         value: segmentName
     }
 
     const capacitySpec: SpecItem = {
         icon: <UsersFour className="h-5 w-5" weight="bold" />,
-        label: t("vehicle_model.capacity_label", "Capacity"),
-        value: `${seatingCapacity} ${t("vehicle_model.seats", "seats")}`
+        label: t("vehicle_model.capacity_label"),
+        value: `${seatingCapacity} ${t("vehicle_model.seats")}`
     }
 
     return (
@@ -100,8 +100,8 @@ export function VehicleHorizontalCard({
                             )}
                         >
                             {isAvailable
-                                ? t("vehicle_model.available", "Available")
-                                : t("vehicle_model.unavailable", "Unavailable")}
+                                ? t("vehicle_model.available")
+                                : t("vehicle_model.unavailable")}
                         </Chip>
 
                         <Chip
@@ -120,12 +120,12 @@ export function VehicleHorizontalCard({
                 </div>
                 <div className="flex w-full max-w-[160px] flex-col items-center gap-2 text-center lg:ml-auto lg:items-end lg:text-right">
                     <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                        {t("vehicle_model.price_label", "Price")}
+                        {t("vehicle_model.price_label")}
                     </p>
                     <p className="text-2xl font-bold text-slate-900">
                         {formatCurrency(costPerDay)}
                         <span className="ml-1 text-sm font-medium text-slate-500">
-                            /{t("vehicle_model.vnd_per_day", "days")}
+                            /{t("vehicle_model.vnd_per_day")}
                         </span>
                     </p>
                 </div>

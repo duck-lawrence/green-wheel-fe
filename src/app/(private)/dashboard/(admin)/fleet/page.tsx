@@ -1,19 +1,21 @@
 "use client"
 
 import React, { useCallback, useEffect, useMemo, useState } from "react"
-import { AutocompleteItem, type Selection } from "@heroui/react"
+import { AutocompleteItem } from "@heroui/react"
 import { useTranslation } from "react-i18next"
 import VehicleHorizontalCard from "@/components/modules/VehicleHorizontalCard"
 import {
     AutocompleteStyled,
     ButtonStyled,
-    FilterTypeOption,
-    FilterTypeStyle,
     SearchStyle,
     SpinnerStyled,
     VehicleModelCreateModal
 } from "@/components"
-import { useGetAllVehicleModels, useGetAllVehicleSegments } from "@/hooks"
+import {
+    useGetAllBrands,
+    useGetAllVehicleModels,
+    useGetAllVehicleSegments
+} from "@/hooks"
 import { FunnelSimple } from "@phosphor-icons/react"
 import { GetAllModelParams } from "@/models/vehicle/schema/request"
 import toast from "react-hot-toast"
@@ -25,15 +27,13 @@ import { useRouter } from "next/navigation"
 export default function AdminFleetPage() {
     const { t } = useTranslation()
     const router = useRouter()
-    // const [page, setPage] = useState(1)
     const [searchTerm, setSearchTerm] = useState("")
-    // filter
     const [filter, setFilter] = useState<GetAllModelParams>({
         name: undefined,
         segmentId: undefined
     })
     // const [carType, setCarType] = useState<string | undefined>()
-    const [status, setStatus] = useState<string | undefined>()
+    // const [status, setStatus] = useState<string | undefined>()
     const [vehicleModels, setVehicleModels] = useState<VehicleModelViewRes[]>([])
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
@@ -42,19 +42,20 @@ export default function AdminFleetPage() {
         isFetching: isModelsFetching,
         refetch: refetchModels
     } = useGetAllVehicleModels({ query: filter })
+    const { data: brands = [] } = useGetAllBrands()
     const {
         data: vehicleSegments,
         isLoading: isGetVehicleSegmentsLoading,
         error: getVehicleSegmentsError
     } = useGetAllVehicleSegments()
 
-    const statusOptions = useMemo(
-        () => [
-            { key: "available", label: t("fleet.status_available") },
-            { key: "unavailable", label: t("fleet.status_unavailable") }
-        ],
-        [t]
-    )
+    // const statusOptions = useMemo(
+    //     () => [
+    //         { key: "available", label: t("fleet.status_available") },
+    //         { key: "unavailable", label: t("fleet.status_unavailable") }
+    //     ],
+    //     [t]
+    // )
 
     const segmentOptions = useMemo(
         () =>
@@ -67,108 +68,36 @@ export default function AdminFleetPage() {
         [vehicleSegments]
     )
 
+
     const brandOptions = useMemo(() => {
-        const uniqueBrands = new Map<string, string>()
-        vehicleModels.forEach((model) => {
-            const brandId = model.brand?.id
-            const brandName = model.brand?.name
-            if (brandId && brandName) {
-                uniqueBrands.set(brandId, brandName)
-            }
-        })
-        return Array.from(uniqueBrands.entries())
-            .map(([id, label]) => ({
-                id,
-                label
-            }))
-            .sort((a, b) => a.label.localeCompare(b.label))
-    }, [vehicleModels])
-
-    // const carTypeOptions = useMemo(() => {
-    //     if (segmentData.length > 0) {
-    //         return segmentData.map((segment) => ({
-    //             key: segment.id,
-    //             label: segment.name
-    //         }))
-    //     }
-
-    //     const uniqueSegments = new Map<string, string>()
-
-    //     ;(vehicleModels ?? []).forEach((model) => {
-    //         const segmentId = model.segment?.id
-    //         if (segmentId) {
-    //             uniqueSegments.set(segmentId, model.segment.name)
-    //         }
-    //     })
-
-    //     return Array.from(uniqueSegments.entries()).map(([key, label]) => ({
-    //         key,
-    //         label
-    //     }))
-    // }, [segmentData, vehicleModels])
-
-    const normalizedSearch = useMemo(() => searchTerm.trim().toLowerCase(), [searchTerm])
+        return brands.map((brand) => ({
+            id: brand.id,
+            label: brand.name,
+            description: brand.description,
+            country: brand.country,
+            foundedYear: brand.foundedYear
+        }))
+    }, [brands])
 
     const filteredVehicles = useMemo(() => {
-        return (vehicleModels ?? []).filter((model) => {
-            const matchesSearch =
-                !normalizedSearch ||
-                [model.name, model.brand?.name ?? "", model.segment?.name ?? ""]
-                    .filter(Boolean)
-                    .some((value) => value.toLowerCase().includes(normalizedSearch))
+        // Status filtering moved out; backend handles status when re-enabled.
+        return vehicleModels ?? []
+    }, [vehicleModels])
 
-            const matchesStatus =
-                !status ||
-                (status === "available"
-                    ? model.availableVehicleCount > 0
-                    : model.availableVehicleCount === 0)
 
-            return matchesSearch && matchesStatus
+    const handleSearchChange = useCallback((value: string) => {
+        setSearchTerm(value)
+        setFilter((prev) => {
+            const nextName = value.trim() ? value.trim() : undefined
+            if (prev.name === nextName) return prev
+            return {
+                ...prev,
+                name: nextName
+            }
         })
-    }, [vehicleModels, normalizedSearch, status])
+    }, [])
 
-    // const totalVehicles = filteredVehicles.length
-    // const totalPages = Math.max(1, Math.ceil(totalVehicles / DEFAULT_PAGE_SIZE))
 
-    // useEffect(() => {
-    //     setPage(1)
-    // }, [normalizedSearch, carType, status])
-
-    // useEffect(() => {
-    //     if (page > totalPages) {
-    //         setPage(totalPages)
-    //     }
-    // }, [page, totalPages])
-
-    // const currentPage = Math.min(Math.max(page, 1), totalPages)
-
-    // const currentVehicles = useMemo(() => {
-    //     if (totalVehicles === 0) return []
-    //     const start = (currentPage - 1) * DEFAULT_PAGE_SIZE
-    //     return filteredVehicles.slice(start, start + DEFAULT_PAGE_SIZE)
-    // }, [filteredVehicles, currentPage, totalVehicles])
-
-    // const handleCarTypeChange = (keys: Selection) => {
-    //     if (keys === "all") {
-    //         setCarType(undefined)
-    //         return
-    //     }
-    //     const [value] = Array.from(keys)
-    //     setCarType(value != null ? value.toString() : undefined)
-    // }
-
-    const handleStatusChange = (keys: Selection) => {
-        if (keys === "all") {
-            setStatus(undefined)
-            return
-        }
-        const [value] = Array.from(keys)
-        setStatus(value != null ? value.toString() : undefined)
-    }
-
-    // const handlePageChange = (nextPage: number) => {
-    //     setPage(Math.min(Math.max(nextPage, 1), totalPages))
-    // }
 
     // Load segment
     useEffect(() => {
@@ -237,7 +166,7 @@ export default function AdminFleetPage() {
                         <SearchStyle
                             placeholder={t("fleet.search_placeholder")}
                             value={searchTerm}
-                            onValueChange={setSearchTerm}
+                            onValueChange={handleSearchChange}
                             className="sm:w-60 lg:w-72"
                             isClearable
                         />
@@ -262,7 +191,7 @@ export default function AdminFleetPage() {
                             ))}
                         </AutocompleteStyled>
 
-                        <FilterTypeStyle
+                        {/* <FilterTypeStyle
                             placeholder={t("fleet.filter_status")}
                             selectedKeys={status ? new Set([status]) : new Set<string>()}
                             onSelectionChange={handleStatusChange}
@@ -272,7 +201,7 @@ export default function AdminFleetPage() {
                             {statusOptions.map((option) => (
                                 <FilterTypeOption key={option.key}>{option.label}</FilterTypeOption>
                             ))}
-                        </FilterTypeStyle>
+                        </FilterTypeStyle> */}
                     </div>
                     <div className="flex flex-col gap-3 sm:flex-row">
                         <ButtonStyled
@@ -302,18 +231,6 @@ export default function AdminFleetPage() {
                                 />
                             ))}
                         </div>
-
-                        {/* {totalVehicles > DEFAULT_PAGE_SIZE ? (
-                            <div className="flex justify-center pt-2">
-                                <PaginationStyled
-                                    pageNumber={currentPage}
-                                    pageSize={DEFAULT_PAGE_SIZE}
-                                    totalItems={totalVehicles}
-                                    onPageChange={handlePageChange}
-                                    showControls
-                                />
-                            </div>
-                        ) : null} */}
                     </>
                 ) : (
                     <div className="rounded-2xl bg-white p-6 text-center text-sm text-slate-500">
