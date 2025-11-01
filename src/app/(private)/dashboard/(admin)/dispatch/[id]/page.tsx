@@ -10,7 +10,7 @@ import {
 } from "@/components"
 import { DispatchRequestStatus } from "@/constants/enum"
 import { DispatchRequestStatusLabels } from "@/constants/labels"
-import { useGetDispatchById, useGetMe, useUpdateDispatch } from "@/hooks"
+import { useGetDispatchById, useGetMe, useUpdateStatusDispatch } from "@/hooks"
 import { UserSwitch, Car } from "@phosphor-icons/react"
 import { useParams } from "next/navigation"
 import React, { useCallback } from "react"
@@ -25,7 +25,7 @@ export default function DispatchDetailPage() {
     const { data: dispatchDetail } = useGetDispatchById({ id: dispatchId!, enabled: true })
 
     // Update
-    const updateDispatch = useUpdateDispatch({})
+    const updateDispatch = useUpdateStatusDispatch({})
     const handleUpdateDispatch = useCallback(
         async (status: DispatchRequestStatus) => {
             if (!dispatchDetail?.id) return

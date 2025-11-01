@@ -27,7 +27,7 @@ export default function DispatchPage() {
                 <h1 className="text-3xl font-bold text-primary tracking-wide">
                     {t("table.dispatch_managerment")}
                 </h1>
-                <Link href="/dashboard/dispatch/create">
+                <Link href="/dashboard/dispatch/new">
                     <ButtonStyled className="btn-gradient btn-gradient:hover btn-gradient:active text-white font-semibold">
                         + {t("table.create_dispatch")}
                     </ButtonStyled>

@@ -12,9 +12,10 @@ export enum Sex {
 export enum DispatchRequestStatus {
     Pending = 0,
     Approved = 1,
-    Rejected = 2,
-    Received = 3,
-    Cancelled = 4
+    ConfirmApproved = 2,
+    Rejected = 3,
+    Received = 4,
+    Cancelled = 5
 }
 
 export enum DepositStatus {

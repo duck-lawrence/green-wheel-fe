@@ -29,7 +29,7 @@ export default function DashboardPage() {
 
             router.replace("/")
         }
-        if (isAdmin) router.replace("/dashboard/")
+        if (isAdmin) router.replace("/dashboard")
         if (isStaff) router.replace("/dashboard/rental-bookings")
     }, [isAdmin, isStaff, isError, isLoading, router, t])
 

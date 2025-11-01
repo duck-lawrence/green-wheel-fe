@@ -1,23 +1,34 @@
 "use client"
 
-import { PaginationStyled } from "@/components/styled"
+import { NumberInputStyled, PaginationStyled, TableStyled } from "@/components/styled"
 import TableSelectionStyled from "@/components/styled/TableSelectionStyled"
 import { VehicleStatus } from "@/constants/enum"
 import { useGetAllVehicles } from "@/hooks"
 import { PaginationParams } from "@/models/common/request"
-import { Spinner } from "@heroui/react"
+import {
+    getKeyValue,
+    Spinner,
+    TableBody,
+    TableCell,
+    TableColumn,
+    TableHeader,
+    TableRow
+} from "@heroui/react"
+import { useFormik } from "formik"
 import React, { Key, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 type TableSelectionVehicleProps = {
     selectionBehavior?: "toggle" | "replace"
     stationId: string
+    setFieldValue: ReturnType<typeof useFormik>["setFieldValue"]
     onChangeSelected?: (selected: string[]) => void
 }
 
 export function TableSelectionVehicle({
     selectionBehavior,
     stationId,
+    setFieldValue,
     onChangeSelected
 }: TableSelectionVehicleProps) {
     const { t } = useTranslation()
@@ -33,8 +44,7 @@ export function TableSelectionVehicle({
     const rows = (data?.items || []).map((item, index) => ({
         key: item.id,
         id: index + 1,
-        model: item.model.name,
-        licensePlate: item.licensePlate
+        model: item.model.name
     }))
 
     const columns = [
@@ -47,8 +57,8 @@ export function TableSelectionVehicle({
             label: t("table.vehicle_model").toUpperCase()
         },
         {
-            key: "licensePlate",
-            label: t("vehicle.license_plate").toUpperCase()
+            key: "numberOfVehicle",
+            label: t("dispatch.number_vehicle").toUpperCase()
         }
     ]
 
@@ -62,13 +72,59 @@ export function TableSelectionVehicle({
 
     return (
         <>
-            <TableSelectionStyled
-                rows={rows}
-                columns={columns}
-                selectedKeys={selectedKeys}
-                onSelectionChange={handleSelectionChange}
-                selectionBehavior={selectionBehavior}
-            ></TableSelectionStyled>
+            <div className="flex flex-col gap-3">
+                <TableStyled
+                    selectionBehavior={selectionBehavior}
+                    selectionMode="multiple"
+                    selectedKeys={selectedKeys}
+                    onSelectionChange={(keys) => {
+                        let selected: Key[]
+
+                        if (keys === "all") {
+                            selected = rows.map((r) => r.key)
+                        } else {
+                            selected = Array.from(keys)
+                        }
+
+                        handleSelectionChange(selected)
+                    }}
+                >
+                    <TableHeader columns={columns}>
+                        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+                    </TableHeader>
+                    <TableBody items={rows}>
+                        {(item) => (
+                            <TableRow key={item.key}>
+                                <TableCell>{item.id}</TableCell>
+                                <TableCell>{item.model}</TableCell>
+                                <TableCell>
+                                    <NumberInputStyled
+                                        label={t("dispatch.number_vehicle")}
+                                        min={0}
+                                        className="w-full"
+                                        value={formik.values.numberOfStaff}
+                                        onValueChange={(val) => {
+                                            formik.setFieldValue(
+                                                "numberOfStaff",
+                                                Number.isNaN(val) ? undefined : val
+                                            )
+                                        }}
+                                        onBlur={() => formik.setFieldTouched("numberOfStaff", true)}
+                                        isInvalid={
+                                            !!(
+                                                formik.touched.numberOfStaff &&
+                                                formik.errors.numberOfStaff
+                                            )
+                                        }
+                                        errorMessage={formik.errors.numberOfStaff}
+                                        hideStepper
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </TableStyled>
+            </div>
             <div className="mt-6 flex justify-center">
                 <PaginationStyled
                     page={data?.pageNumber ?? 1}

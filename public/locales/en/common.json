@@ -74,7 +74,7 @@
         "edit_user": "Edit User",
         "save_changes": "Save Changes",
         "cancel": "Cancel",
-        "too_many_request": "Too many request. Try again later",
+        "too_many_request": "Too many requests. Please try again later.",
         "unexpected_error": "An unexpected error occurred. Please try again later.",
         "search": "Search",
         "save": "Save",
@@ -88,7 +88,7 @@
         "image": "Image"
     },
     "json": {
-        "parsing_failed": "Failed to parse json"
+        "parsing_failed": "Failed to parse JSON"
     },
     "auth": {
         "only_customer": "Only customer can use this feature",
@@ -116,8 +116,8 @@
         "invalid_otp": "Invalid OTP",
         "otp_can_not_empty": "OTP is required",
         "otp_must_have_6_digits": "OTP must have 6 digits",
-        "rate_limit_otp": "Resend OTP after 1 minute",
-        "attemp_otp": "Too many attemps, please resend to get new OTP",
+        "rate_limit_otp": "You can resend the OTP after 1 minute.",
+        "attemp_otp": "Too many attempts. Please request a new OTP.",
 
         "user_id_is_required": "User ID is required",
 
@@ -126,7 +126,7 @@
         "invalid_email": "Email is invalid",
 
         "password_too_short": "Password must be at least 8 characters",
-        "confirm_password_is_incorrect": "Confirm password must be the same as the new password",
+        "confirm_password_is_incorrect": "The confirmation password does not match the new password.",
         "password_can_not_empty": "Password is required",
         "new_password_can_not_empty": "New password is required",
         "password_strength": "Password must contain at least 1 uppercase letter, 1 number, and 1 special character",
@@ -254,7 +254,7 @@
         "station": "Station",
         "status": "Status",
         "no": "No.",
-        "id": "Id",
+        "id": "ID",
         "name": "Name",
         "email": "Email",
         "start_date": "Start date",
@@ -351,7 +351,7 @@
         "not_include_tax": "Not include tax",
         "not_found": "Vehicle model not found",
         "rent_time_is_not_available": "Rent time is not available",
-        "name": "Model name",
+        "name": "Model Name",
         "name_placeholder": "Enter model name",
         "name_require": "Name is required",
         "description": "Description",
@@ -409,7 +409,7 @@
         "main_image_not_found": "Main image not found"
     },
     "vehicle_component": {
-        "not_found": "Vehicke component not found",
+        "not_found": "Vehicle component not found",
         "component": "Component"
     },
     "station": {
@@ -431,6 +431,7 @@
         "female": "Female",
         "pending": "Pending",
         "approved": "Approved",
+        "confirm_approved": "Confirm Approved",
         "rejected": "Rejected",
         "received": "Received",
         "paid": "Paid",
@@ -547,7 +548,7 @@
         "select_customer": "Select customer"
     },
     "cloudinary": {
-        "file_not_found": "File not fount",
+        "file_not_found": "File not found",
         "invalid_file_type": "Invalid file type"
     },
     "staff": {
@@ -697,7 +698,7 @@
         "create_at": "Created at",
         "user_already_have_contract": "You can only have one pending or active contract at a time",
         "not_found": "Rental Booking not found",
-        "already_process": "This Rental Booking already processes",
+        "already_process": "This Rental Booking has already been processed.",
         "can_not_cancel": "This Rental Booking can not be cancelled",
         "handover": "Handover",
         "return": "Return",
@@ -818,7 +819,15 @@
         "station": "Station",
         "description": "Description",
         "dispatch_table": "Dispatch table",
-        "create": "Create"
+        "create": "Create",
+        "from_station_require": "From station is required",
+        "number_staff": "Number of staffs",
+        "number_staff_require": "Number of staffs is required",
+        "number_staff_min": "Number of staffs must be at least 0",
+        "vehicle_model_require": "Vehicle model is required",
+        "number_vehicle": "Number of vehicles",
+        "number_vehicle_require": "Number of vehicles is required",
+        "number_vehicle_min": "Number of vehicles must be at least 1"
     },
     "document_preview": {
         "upload_image": "Upload image",
@@ -895,7 +904,7 @@
         "signed_by_customer_require": "Customer must sign"
     },
     "review": {
-        "create_successfull": "Create feedback successful",
+        "create_successfull": "Feedback created successfully",
         "rating_required": "Rating required",
         "send_feedback": "Send feedback",
         "customer_review": "Customer reviews",
@@ -905,7 +914,7 @@
         "review": "Review",
         "review_placeholder": "Please enter your review here...",
         "rating": "Rating",
-        "create_title": "Create feedback",
+        "create_title": "Create Feedback",
         "delete_successfull": "Delete feedback successful",
         "feedback": "Feedback"
     },
@@ -970,7 +979,11 @@
         "spec_airbags": "Airbags"
     },
     "reaview": {
-        "create": "Create feedback successful"
+        "create": "Feedback created successfully"
+    },
+    "validation": {
+        "number_type_require": "Must be a number",
+        "integer_require": "Must be an integer"
     },
     "toast": {
         "create": "Create",

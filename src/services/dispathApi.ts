@@ -1,7 +1,8 @@
 import {
     CreateDispatchReq,
     DispatchQueryParams,
-    UpdateDispatchReq
+    UpdateApproveDispatchReq,
+    UpdateStatusDispatchReq
 } from "@/models/dispatch/schema/request"
 import { DispatchViewRes } from "@/models/dispatch/schema/response"
 import axiosInstance from "@/utils/axios"
@@ -13,9 +14,14 @@ export const dispatchApi = {
             await axiosInstance.post("/dispatch-requests", req)
         }),
 
-    update: ({ id, req }: { id: string; req: UpdateDispatchReq }) =>
+    approve: ({ id, req }: { id: string; req: UpdateApproveDispatchReq }) =>
         requestWrapper<void>(async () => {
             await axiosInstance.put(`/dispatch-requests/${id}`, req)
+        }),
+
+    updateStatus: ({ id, req }: { id: string; req: UpdateStatusDispatchReq }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/dispatch-requests/${id}/status`, req)
         }),
 
     getAll: (query: DispatchQueryParams) =>
