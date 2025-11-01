@@ -12,7 +12,9 @@ export const QUERY_KEYS = {
     DISPATCH_REQUESTS: ["dispatchRequests"] as const,
     STATION_FEEDBACKS: ["stationFeedbacks"] as const,
     INVOICES: ["invoices"] as const,
-    TICKETS: ["tickets"] as const
+    TICKETS: ["tickets"] as const,
+    STATISTICS: ["statistics"] as const,
+    BUSINESS_VARIABLES: ["businessVariables"] as const
     // VEHICLE: {
     //     ALL: ["vehicles"] as const,
     //     BY_ID: (id: string) => ["vehicles", id] as const

@@ -507,7 +507,12 @@
         "handover": "Handover",
         "admin": "Admin",
         "staff": "Staff",
-        "customer": "Customer"
+        "customer": "Customer",
+        "late_return_fee_per_hour": "Late Return Fee Per Hour",
+        "cleaning_fee": "Cleaning Fee",
+        "base_vat": "Base VAT",
+        "max_late_return_hours": "Max Late Return Hours",
+        "rental_contract_buffer_day": "Rental Contract Buffer Day"
     },
     "car_rental": {
         "vehicle": "Vehicle",
@@ -621,6 +626,7 @@
         "user_filter_has_document_none": "No document"
     },
     "admin": {
+        "statistic": "Statistic",
         "dashboard_title": "Admin Dashboard",
         "dashboard_subtitle": "Select a module from the sidebar to get started.",
         "sidebar_fleet": "Fleet",
@@ -636,7 +642,8 @@
         "vehicle_delete_title": "Delete vehicle",
         "vehicle_delete_confirm": "Are you sure you want to remove this vehicle from the fleet?",
         "dispatch": "Dispatch",
-        "sidebar_vehicle_management": "Vehicle Management"
+        "sidebar_vehicle_management": "Vehicle Management",
+        "system_setting": "System Setting"
     },
     "footer": {
         "green_wheel_company_name": "GREEN WHEEL Trading and Service Joint Stock Company",
@@ -985,5 +992,14 @@
         "create_success": "Created successfully",
         "update_success": "Updated successfully",
         "delete_success": "Deleted successfully"
+    },
+    "statistic": {
+        "vehicle_count_by_model": "Vehicle Count by Model",
+        "general_statistics": "General Statistics",
+        "monthly_revenue": "Monthly Revenue"
+    },
+    "system": {
+        "system_setting": "System Setting",
+        "business_variables": "Business variables"
     }
 }

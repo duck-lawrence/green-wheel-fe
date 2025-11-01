@@ -1,54 +1,60 @@
 import { TrendCardStyled } from "@/components/styled"
 import React from "react"
 
-type TrendCardProps = {
+// type TrendCardProps = {
+//     title: string
+//     value: string
+//     valueLastMonth: string
+//     change: string
+//     changeType: "positive" | "neutral" | "negative" // đổi màu changeType
+//     trendType: "up" | "neutral" | "down" // đổi dấu mũi tên changeType
+//     trendChipPosition?: "top" // đổi vị trí changeType
+//     trendChipVariant?: "flat" // bg changeType
+// }
+
+export type TrendCardProps = {
     title: string
-    value: string
-    change: string
-    changeType: "positive" | "neutral" | "negative" // đổi màu changeType
-    trendType: "up" | "neutral" | "down" // đổi dấu mũi tên changeType
-    trendChipPosition?: "top" | "bottom" // đổi vị trí changeType
-    trendChipVariant?: "flat" | "light" // bg changeType
+    value: number
+    valueLastMonth: number
+    change: number
+    changeType?: string
+    trendType?: string
+    trendChipPosition?: "top"
+    trendChipVariant?: "flat"
 }
-const data: TrendCardProps[] = [
-    {
-        title: "Total Revenue",
-        value: "$228,451",
-        change: "33%",
-        changeType: "neutral",
-        trendType: "neutral",
+
+export function KpiStat({ data }: { data: TrendCardProps }) {
+    let changType = ""
+    let trendType = ""
+
+    if (data.value - data.valueLastMonth > 0) {
+        changType = "positive"
+        trendType = "up"
+    } else if (data.value - data.valueLastMonth == 0) {
+        changType = "neutral"
+        trendType = "neutral"
+    } else {
+        changType = "negative"
+        trendType = "down"
+    }
+
+    const dataNew: TrendCardProps = {
+        title: data.title,
+        value: data.value,
+        valueLastMonth: data.valueLastMonth,
+        change: data.change,
+        changeType: changType,
+        trendType: trendType,
         trendChipPosition: "top",
         trendChipVariant: "flat"
-    },
-    {
-        title: "Total Contract",
-        value: "$71,887",
-        change: "13.0%",
-        changeType: "negative",
-        trendType: "up"
-    },
-    {
-        title: "Total User with email",
-        value: "$156,540",
-        change: "0.0%",
-        changeType: "neutral",
-        trendType: "neutral"
-    },
-    {
-        title: "New User with amonyous",
-        value: "1,234",
-        change: "1.0%",
-        changeType: "positive",
-        trendType: "up"
     }
-]
 
-export function KpiStat() {
     return (
-        <dl className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {data.map((props, index) => (
+        <dl>
+            {/* {dataNew!.map((props, index) => (
                 <TrendCardStyled key={index} {...props} />
-            ))}
+            ))} */}
+            <TrendCardStyled key={dataNew.title} {...dataNew} />
         </dl>
     )
 }

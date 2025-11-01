@@ -44,9 +44,9 @@ export function DashboardSidebar({ className }: { className?: string }) {
 
     const adminTabs: SidebarItem[] = [
         {
-            key: "/dashboard",
-            label: t("staff.dashboard"),
-            href: "/dashboard"
+            key: "/dashboard/statistic",
+            label: t("admin.statistic"),
+            href: "/dashboard/statistic"
         },
         {
             key: "/dashboard/vehicle-management",
@@ -77,6 +77,11 @@ export function DashboardSidebar({ className }: { className?: string }) {
             key: "/dashboard/reports",
             label: t("staff.sidebar_reports"),
             href: "/dashboard/reports"
+        },
+        {
+            key: "/dashboard/system-setting",
+            label: t("admin.system_setting"),
+            href: "/dashboard/system-setting"
         }
     ]
 

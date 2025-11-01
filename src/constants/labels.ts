@@ -16,7 +16,8 @@ import {
     TicketStatus,
     VehicleChecklistType,
     RoleName,
-    VehicleIssueResolutionOption
+    VehicleIssueResolutionOption,
+    BusinessVariableKey
 } from "./enum"
 
 export const RoleNameLabels: Record<RoleName, string> = {
@@ -178,4 +179,12 @@ export const VehicleChecklistTypeLabels: Record<VehicleChecklistType, string> = 
     [VehicleChecklistType.OutOfContract]: i18n.t("enum.out_of_contract"),
     [VehicleChecklistType.Handover]: i18n.t("enum.handover"),
     [VehicleChecklistType.Return]: i18n.t("enum.return")
+}
+
+export const BusinessVariableKeyLabels: Record<BusinessVariableKey, string> = {
+    [BusinessVariableKey.LateReturnFeePerHour]: i18n.t("enum.late_return_fee_per_hour"),
+    [BusinessVariableKey.CleaningFee]: i18n.t("enum.cleaning_fee"),
+    [BusinessVariableKey.BaseVAT]: i18n.t("enum.base_vat"),
+    [BusinessVariableKey.MaxLateReturnHours]: i18n.t("enum.max_late_return_hours"),
+    [BusinessVariableKey.RentalContractBufferDay]: i18n.t("enum.rental_contract_buffer_day")
 }
