@@ -1,8 +1,10 @@
 "use client"
-import { ButtonStyled, SpinnerStyled, TableStyled } from "@/components"
+import { ButtonIconStyled, ButtonStyled, SpinnerStyled, TableStyled } from "@/components"
 import { DispatchRequestStatusLabels } from "@/constants/labels"
 import { useGetAllDispatch, useGetAllStations, useGetMe } from "@/hooks"
 import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
+import { Plus } from "lucide-react"
+
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import React from "react"
@@ -28,9 +30,12 @@ export default function DispatchPage() {
                     {t("table.dispatch_managerment")}
                 </h1>
                 <Link href="/dashboard/dispatch/new">
-                    <ButtonStyled className="btn-gradient btn-gradient:hover btn-gradient:active text-white font-semibold">
+                    {/* <ButtonStyled className="btn-gradient btn-gradient:hover btn-gradient:active text-white font-semibold">
                         + {t("table.create_dispatch")}
-                    </ButtonStyled>
+                    </ButtonStyled> */}
+                    <ButtonIconStyled className="btn-gradient rounded-lg">
+                        <Plus />
+                    </ButtonIconStyled>
                 </Link>
             </div>
 

@@ -2,6 +2,7 @@ import React from "react"
 
 import { ForgotPasswordModal, LoginModal, RegisterModal } from "./Auth"
 
+export * from "./AlertModal"
 export * from "./ChecklistModal"
 export * from "./CreateInvoiceModal"
 export * from "./CreateRentalContractModal"

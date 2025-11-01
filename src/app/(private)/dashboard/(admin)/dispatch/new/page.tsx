@@ -1,30 +1,22 @@
 "use client"
 import {
+    AlertModal,
     AutocompleteStyled,
     ButtonStyled,
     NumberInputStyled,
     SectionStyled,
     SpinnerStyled,
-    TableSelectionVehicle,
-    TableStyled
+    TableSelectionVehicleModel
 } from "@/components"
-import { useGetAllStations, useGetMe } from "@/hooks"
+import { useGetAllStations, useGetAllVehicleModels, useGetMe } from "@/hooks"
 import { useCreateDispatch } from "@/hooks/queries/useDispatch"
-import { CreateDispatchReq, VehicleDispatchReq } from "@/models/dispatch/schema/request"
-import {
-    AutocompleteItem,
-    TableBody,
-    TableCell,
-    TableColumn,
-    TableHeader,
-    TableRow
-} from "@heroui/react"
+import { CreateDispatchReq } from "@/models/dispatch/schema/request"
+import { AutocompleteItem, useDisclosure } from "@heroui/react"
 import { Car, MapPinAreaIcon } from "@phosphor-icons/react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { UserSwitchIcon } from "@phosphor-icons/react/dist/ssr"
 
 export default function DispatchCreatePage() {
     const { t } = useTranslation()
@@ -34,29 +26,47 @@ export default function DispatchCreatePage() {
 
     //Station
     const { data: stations, isLoading: isLoading_2 } = useGetAllStations()
+    const { data: models, isLoading: isLoading_3 } = useGetAllVehicleModels({ query: {} })
+
     const stationDispatch = stationIdNow
         ? (stations || []).filter(({ id }) => id !== stationIdNow) || null
         : null
-    const [selecedSationId, setSelecedSationId] = useState(stationDispatch?.[0]?.id || "")
 
     //Create
     const createDispatch = useCreateDispatch({})
+    const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure()
     // const [selectStaffs, setSelectStaffs] = useState<string[]>([])
-    // const [selectVehicles, setSelectVehicles] = useState<VehicleDispatchReq[]>([])
+    const [selectVehicles, setSelectVehicles] = useState<string[]>([])
 
     const handleCreateDispatch = useCallback(
         async (value: CreateDispatchReq) => {
-            await createDispatch.mutateAsync(value)
+            console.log({
+                ...value,
+                vehicles: value.vehicles.filter(
+                    (v) => v.numberOfVehicle > 0 && selectVehicles.includes(v.modelId)
+                )
+            })
+
+            await createDispatch.mutateAsync({
+                ...value,
+                vehicles: value.vehicles.filter(
+                    (v) => v.numberOfVehicle > 0 && selectVehicles.includes(v.modelId)
+                )
+            })
         },
-        [createDispatch]
+        [createDispatch, selectVehicles]
     )
 
     const formik = useFormik<CreateDispatchReq>({
         initialValues: {
-            fromStationId: selecedSationId,
+            fromStationId: stationDispatch?.[0]?.id || "",
             numberOfStaff: 0,
-            vehicles: []
+            vehicles: (models || []).map((m) => ({
+                modelId: m.id,
+                numberOfVehicle: 1
+            }))
         },
+        enableReinitialize: true,
         validationSchema: Yup.object().shape({
             fromStationId: Yup.string().required(t("dispatch.from_station_require")),
             numberOfStaff: Yup.number()
@@ -64,23 +74,25 @@ export default function DispatchCreatePage() {
                 .integer(t("validation.integer_require"))
                 .required(t("dispatch.number_staff_require"))
                 .min(0, t("dispatch.number_staff_min")),
-            vehicles: Yup.array()
-                .of(
-                    Yup.object({
-                        modelId: Yup.string().required(t("dispatch.vehicle_model_require")),
-                        numberOfVehicle: Yup.number()
-                            .typeError(t("validation.number_type_require"))
-                            .integer(t("validation.integer_require"))
-                            .required(t("dispatch.number_vehicle_require"))
-                            .min(1, t("dispatch.number_vehicle_min"))
-                    })
-                )
-                .optional()
+            vehicles: Yup.array().of(
+                Yup.object().shape({
+                    modelId: Yup.string().required(t("dispatch.vehicle_model_require")),
+                    numberOfVehicle: Yup.number()
+                        .typeError(t("validation.number_type_require"))
+                        .integer(t("validation.integer_require"))
+                        .required(t("dispatch.number_vehicle_require"))
+                        .min(1, t("dispatch.number_vehicle_min"))
+                })
+            )
         }),
         onSubmit: handleCreateDispatch
     })
 
-    if (isLoading_1 || isLoading_2) return <SpinnerStyled />
+    const isSubmitable = useMemo(() => {
+        return formik.isValid && (formik.values.numberOfStaff !== 0 || selectVehicles.length > 0)
+    }, [formik.isValid, formik.values.numberOfStaff, selectVehicles.length])
+
+    if (isLoading_1 || isLoading_2 || isLoading_3) return <SpinnerStyled />
 
     return (
         <div className="max-w-7xl mx-auto w-full bg-white p-8 rounded-2xl shadow-md border border-gray-100">
@@ -93,17 +105,20 @@ export default function DispatchCreatePage() {
             </div>
 
             {/* Station - number of staffs */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-3">
+            <div className="flex flex-wrap gap-8">
                 <SectionStyled title={t("dispatch.station")} sectionClassName="mb-0">
                     <AutocompleteStyled
                         label={t("vehicle_model.station")}
+                        className="max-w-60 h-20 mr-0"
                         items={stationDispatch ?? []}
                         startContent={<MapPinAreaIcon className="text-xl" />}
-                        selectedKey={selecedSationId}
+                        selectedKey={formik.values.fromStationId}
                         onSelectionChange={(key) => {
-                            setSelecedSationId(key as string)
+                            formik.setFieldValue("fromStationId", key as string)
                         }}
-                        className="max-w-60 h-20 mr-0"
+                        isClearable={false}
+                        isInvalid={!!formik.errors.fromStationId}
+                        errorMessage={formik.errors.fromStationId}
                     >
                         {(stationDispatch ?? []).map((item) => (
                             <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
@@ -113,8 +128,8 @@ export default function DispatchCreatePage() {
                 <SectionStyled title={t("dispatch.number_staff")} sectionClassName="mb-0">
                     <NumberInputStyled
                         label={t("dispatch.number_staff")}
+                        className="max-w-60 h-20 mr-0"
                         min={0}
-                        className="w-full"
                         value={formik.values.numberOfStaff}
                         onValueChange={(val) => {
                             formik.setFieldValue(
@@ -133,8 +148,9 @@ export default function DispatchCreatePage() {
             {/* Tables */}
             <SectionStyled title={t("dispatch.list_vehicle")} icon={Car} sectionClassName="mb-4">
                 <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
-                    <TableSelectionVehicle
-                        stationId={selecedSationId}
+                    <TableSelectionVehicleModel
+                        vehicleModels={models || []}
+                        formik={formik}
                         onChangeSelected={setSelectVehicles}
                     />
                 </div>
@@ -144,10 +160,21 @@ export default function DispatchCreatePage() {
                 <ButtonStyled
                     color="primary"
                     className="p-6 btn-gradient"
-                    onPress={() => formik.handleSubmit()}
+                    isDisabled={!formik.isValid || !isSubmitable}
+                    onPress={onOpen}
                 >
                     {t("dispatch.create")}
                 </ButtonStyled>
+                <AlertModal
+                    header={t("common.confirm_to_submit")}
+                    body={t("common.confirm_to_submit_body")}
+                    isOpen={isOpen && formik.isValid}
+                    onOpenChange={onOpenChange}
+                    onClose={onClose}
+                    onConfirm={() => {
+                        formik.handleSubmit()
+                    }}
+                />
             </div>
         </div>
     )
