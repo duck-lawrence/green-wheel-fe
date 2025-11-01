@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import { PencilSimpleLine, XCircle } from "@phosphor-icons/react"
+import { PencilSimple, TrashSimple } from "@phosphor-icons/react"
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner } from "@heroui/react"
 
 import { VehicleStatus } from "@/constants/enum"
@@ -131,7 +131,7 @@ export function TableVehicleManagement({
                 onClick={() => onEdit?.(vehicle)}
                 className="rounded-full bg-primary/10 p-2 text-primary transition hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               >
-                <PencilSimpleLine size={18} weight="duotone" aria-hidden />
+                <PencilSimple size={16} weight="bold" aria-hidden />
               </button>
 
               <button
@@ -140,7 +140,7 @@ export function TableVehicleManagement({
                 onClick={() => onDelete?.(vehicle)}
                 className="rounded-full bg-rose-50 p-2 text-rose-600 transition hover:bg-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2"
               >
-                <XCircle size={18} weight="duotone" aria-hidden />
+                <TrashSimple size={16} weight="bold" aria-hidden />
               </button>
             </div>
           </TableCell>
