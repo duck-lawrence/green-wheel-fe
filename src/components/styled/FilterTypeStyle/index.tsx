@@ -18,7 +18,7 @@ import { Select, SelectItem, cn } from "@heroui/react"
 import type { SelectProps } from "@heroui/react"
 import { Funnel } from "lucide-react"
 
-type SlotOverrides<T> = NonNullable<SelectProps<T>["classNames"]>
+type SlotOverrides<T> = NonNullable<SelectProps<T extends object ? T : object>["classNames"]>
 
 const DEFAULT_CLASSNAMES: SlotOverrides<any> = {
     base: "",
@@ -52,7 +52,7 @@ const mergeClassNames = <T,>(overrides?: SlotOverrides<T>): SlotOverrides<T> => 
     return result as SlotOverrides<T>
 }
 
-export type FilterTypeStyleProps<T = object> = Omit<
+export type FilterTypeStyleProps<T extends object = object> = Omit<
     SelectProps<T>,
     "variant" | "size" | "radius"
 > & {
@@ -60,7 +60,7 @@ export type FilterTypeStyleProps<T = object> = Omit<
     showIcon?: boolean
 }
 
-export function FilterTypeStyle<T = object>({
+export function FilterTypeStyle<T extends object = object>({
     classNames,
     showIcon = true,
     startContent,

@@ -119,7 +119,7 @@ export function EditStaffModal({ staff, isOpen, onClose, onAfterDelete }: EditSt
 
     const handleCitizenUploadSuccess = useCallback(
         (data: CitizenIdentityViewRes) => {
-            setCitizenUrl(data.imageUrl ?? null)
+            setCitizenUrl(data.frontImageUrl ?? null)
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
         },
         [queryClient]
@@ -127,7 +127,7 @@ export function EditStaffModal({ staff, isOpen, onClose, onAfterDelete }: EditSt
 
     const handleDriverUploadSuccess = useCallback(
         (data: DriverLicenseViewRes) => {
-            setLicenseUrl(data.imageUrl ?? null)
+            setLicenseUrl(data.frontImageUrl ?? null)
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, exact: false })
         },
         [queryClient]
