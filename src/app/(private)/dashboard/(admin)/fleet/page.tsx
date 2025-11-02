@@ -11,11 +11,7 @@ import {
     SpinnerStyled,
     VehicleModelCreateModal
 } from "@/components"
-import {
-    useGetAllBrands,
-    useGetAllVehicleModels,
-    useGetAllVehicleSegments
-} from "@/hooks"
+import { useGetAllBrandes, useGetAllVehicleModels, useGetAllVehicleSegments } from "@/hooks"
 import { FunnelSimple } from "@phosphor-icons/react"
 import { GetAllModelParams } from "@/models/vehicle/schema/request"
 import { BackendError } from "@/models/common/response"
@@ -41,14 +37,12 @@ export default function AdminFleetPage() {
         isFetching: isModelsFetching,
         refetch: refetchModels
     } = useGetAllVehicleModels({ query: filter })
-    const { data: brands = [] } = useGetAllBrands()
+    const { data: brands = [] } = useGetAllBrandes()
     const {
         data: vehicleSegments,
         isLoading: isGetVehicleSegmentsLoading,
         error: getVehicleSegmentsError
     } = useGetAllVehicleSegments()
-
-
 
     const segmentOptions = useMemo(
         () =>
@@ -60,7 +54,6 @@ export default function AdminFleetPage() {
                 .sort((a, b) => a.label.localeCompare(b.label)),
         [vehicleSegments]
     )
-
 
     const brandOptions = useMemo(() => {
         return brands.map((brand) => ({
@@ -77,7 +70,6 @@ export default function AdminFleetPage() {
         return vehicleModels ?? []
     }, [vehicleModels])
 
-
     const handleSearchChange = useCallback((value: string) => {
         setSearchTerm(value)
         setFilter((prev) => {
@@ -89,8 +81,6 @@ export default function AdminFleetPage() {
             }
         })
     }, [])
-
-
 
     // Load segment
     useEffect(() => {
@@ -191,7 +181,6 @@ export default function AdminFleetPage() {
                                 <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
                             ))}
                         </AutocompleteStyled>
-
                     </div>
                     <div className="flex flex-col gap-3 sm:flex-row">
                         <ButtonStyled
@@ -221,8 +210,6 @@ export default function AdminFleetPage() {
                                 />
                             ))}
                         </div>
-
-
                     </>
                 ) : (
                     <div className="rounded-2xl bg-white p-6 text-center text-sm text-slate-500">

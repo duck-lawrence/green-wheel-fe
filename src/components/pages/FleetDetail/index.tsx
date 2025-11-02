@@ -1,11 +1,6 @@
 "use client"
 
-import React, {
-    useCallback,
-    useEffect,
-    useMemo,
-    useState
-} from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Spinner } from "@heroui/react"
 import { useTranslation } from "react-i18next"
@@ -27,7 +22,7 @@ import {
 
 import {
     useDay,
-    useGetAllBrands,
+    useGetAllBrandes,
     useGetAllStations,
     useGetAllVehicleModels,
     useGetAllVehicleSegments,
@@ -39,10 +34,7 @@ import { VehicleStatus } from "@/constants/enum"
 import { DEFAULT_VEHICLE_MODEL } from "@/constants/constants"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 
-import {
-    VehicleViewRes,
-    VehicleComponentViewRes
-} from "@/models/vehicle/schema/response"
+import { VehicleViewRes, VehicleComponentViewRes } from "@/models/vehicle/schema/response"
 import { BackendError } from "@/models/common/response"
 
 import { TableFleetVehicle, VehicleRow } from "./TableFleetVehicle"
@@ -78,14 +70,10 @@ function mapVehiclesToRows(opts: {
 
     return vehicles.map((vehicle) => {
         const status: VehicleStatus | undefined =
-            typeof vehicle.status === "number"
-                ? (vehicle.status as VehicleStatus)
-                : undefined
+            typeof vehicle.status === "number" ? (vehicle.status as VehicleStatus) : undefined
 
         const statusKey =
-            status !== undefined
-                ? VehicleStatus[status]?.toString().toLowerCase()
-                : undefined
+            status !== undefined ? VehicleStatus[status]?.toString().toLowerCase() : undefined
 
         const statusLabel = statusKey
             ? t(`vehicle.status_value_${statusKey}`)
@@ -97,16 +85,13 @@ function mapVehiclesToRows(opts: {
                 : "bg-slate-100 text-slate-600"
 
         const rawUpdatedAt =
-            vehicle.updatedAt ||
-            (vehicle as VehicleViewRes & { updated_at?: string }).updated_at
+            vehicle.updatedAt || (vehicle as VehicleViewRes & { updated_at?: string }).updated_at
 
         const lastUpdatedLabel = rawUpdatedAt
             ? formatDateTime({ date: rawUpdatedAt })
             : t("fleet.vehicle_last_updated_unknown")
 
-        const stationName =
-            stationNameById[vehicle.stationId] ??
-            t("fleet.vehicle_unknown_station")
+        const stationName = stationNameById[vehicle.stationId] ?? t("fleet.vehicle_unknown_station")
 
         return {
             id: vehicle.id,
@@ -150,10 +135,9 @@ function useFleetData(modelId: string | undefined) {
         enabled: Boolean(modelId)
     })
 
-    const {
-        data: stations = [],
-        error: stationsError
-    } = useGetAllStations({ enabled: Boolean(modelId) })
+    const { data: stations = [], error: stationsError } = useGetAllStations({
+        enabled: Boolean(modelId)
+    })
 
     const stationNameById = useMemo(() => {
         return stations.reduce<Record<string, string>>((acc, st) => {
@@ -210,7 +194,6 @@ function useApiErrorToasts(errors: Array<BackendError | unknown>, t: any) {
     }, [errors, t])
 }
 
-
 /* -------------------------------------------------
    MAIN SCREEN COMPONENT (like VehicleChecklistDetail)
 ------------------------------------------------- */
@@ -250,12 +233,12 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
         refetchComponents
     } = useFleetData(modelId)
 
-    const { data: brands = [] } = useGetAllBrands()
+    const { data: brands = [] } = useGetAllBrandes()
 
     const brandOptions = useMemo(() => {
         return brands.map((brand) => ({
             id: brand.id,
-            label: brand.name,
+            label: brand.name
             // description: brand.description,
             // country: brand.country,
             // foundedYear: brand.foundedYear
@@ -274,11 +257,7 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
         return Array.from(unique.entries())
             .map(([id, label]) => ({ id, label }))
             .sort((a, b) => a.label.localeCompare(b.label))
-    }, [
-        vehicleSegments,
-        vehicleModel?.segment?.id,
-        vehicleModel?.segment?.name
-    ])
+    }, [vehicleSegments, vehicleModel?.segment?.id, vehicleModel?.segment?.name])
 
     const {
         isOpen: isEditModalOpen,
@@ -311,10 +290,7 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
     }, [router])
 
     // toast all API errors (models / vehicles / stations)
-    useApiErrorToasts(
-        [vehicleModelsError, vehiclesError, componentsError, stationsError],
-        t
-    )
+    useApiErrorToasts([vehicleModelsError, vehiclesError, componentsError, stationsError], t)
 
     // table rows data
     const vehicleRows: VehicleRow[] = useMemo(
@@ -346,9 +322,7 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
         const hasStock = vehicleModel.availableVehicleCount > 0
         return {
             label: translate(
-                hasStock
-                    ? "fleet.status_available"
-                    : "fleet.status_unavailable",
+                hasStock ? "fleet.status_available" : "fleet.status_unavailable",
                 hasStock ? "Available" : "Unavailable"
             ),
             isAvailable: hasStock
@@ -359,10 +333,9 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
     // images for gallery
     const subImgUrls = useMemo(() => {
         if (!vehicleModel) return [DEFAULT_VEHICLE_MODEL]
-        const images = [
-            vehicleModel.imageUrl,
-            ...(vehicleModel.imageUrls ?? [])
-        ].filter((src): src is string => Boolean(src))
+        const images = [vehicleModel.imageUrl, ...(vehicleModel.imageUrls ?? [])].filter(
+            (src): src is string => Boolean(src)
+        )
         return images.length > 0 ? images : [DEFAULT_VEHICLE_MODEL]
     }, [vehicleModel])
 
@@ -398,10 +371,7 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
                     )}
                 </p>
 
-                <ButtonStyled
-                    color="primary"
-                    onPress={() => router.push("/dashboard/fleet")}
-                >
+                <ButtonStyled color="primary" onPress={() => router.push("/dashboard/fleet")}>
                     {t("fleet.back_to_list")}
                 </ButtonStyled>
             </div>
@@ -428,16 +398,9 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
                 onDelete={onDeleteModalOpen}
             />
 
-            <FleetSpecSection
-                t={translate}
-                vehicleModel={vehicleModel}
-            />
+            <FleetSpecSection t={translate} vehicleModel={vehicleModel} />
 
-            <TableFleetVehicle
-                t={translate}
-                rows={vehicleRows}
-                isLoading={isFetchingVehicles}
-            />
+            <TableFleetVehicle t={translate} rows={vehicleRows} isLoading={isFetchingVehicles} />
 
             <TableFleetComponent
                 items={componentsOfModel}

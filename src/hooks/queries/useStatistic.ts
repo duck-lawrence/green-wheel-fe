@@ -1,6 +1,6 @@
 import { QUERY_KEYS } from "@/constants/queryKey"
 import {
-    CustomerAnonymusRes,
+    CustomerAnonymousRes,
     CustomerRes,
     TotalRevenueRes,
     TotalStatisticRes,
@@ -26,11 +26,11 @@ export const useGetCustomerStatistic = ({ enabled = true }: { enabled?: boolean 
 export const useGetAnonymuousStatistic = ({ enabled = true }: { enabled?: boolean } = {}) => {
     const queryClient = useQueryClient()
     const queryKey = [...QUERY_KEYS.STATISTICS, "anonymuous"]
-    return useQuery<CustomerAnonymusRes>({
+    return useQuery<CustomerAnonymousRes>({
         queryKey: queryKey,
-        queryFn: statisticApi.getAnonymuousStatistic,
+        queryFn: statisticApi.getAnonymousStatistic,
         initialData: () => {
-            return queryClient.getQueryData<CustomerAnonymusRes>(queryKey)
+            return queryClient.getQueryData<CustomerAnonymousRes>(queryKey)
         },
         enabled
     })
