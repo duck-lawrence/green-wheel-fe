@@ -1,7 +1,8 @@
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { BusinessVariableViewRes } from "@/models/business-variables/schema/respone"
 import { businessVariablesApi } from "@/services/businessVariablesApi"
-import { addToast } from "@heroui/toast"
+
+import { addToast, closeAll } from "@heroui/toast"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useQueryClient } from "node_modules/@tanstack/react-query/build/modern/QueryClientProvider"
 import { useTranslation } from "react-i18next"
@@ -28,6 +29,7 @@ export const useUpdateBusinessVariables = () => {
             businessVariablesApi.update(id, value),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.BUSINESS_VARIABLES] })
+            closeAll()
             addToast({
                 title: t("toast.success"),
                 description: t("toast.update_success"),

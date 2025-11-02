@@ -172,7 +172,7 @@ export function CustomerReview() {
                             >
                                 <CardReviewUser
                                     name={item.customerName}
-                                    avatar={item.avartarUrl}
+                                    avatar={item.avatarUrl}
                                     rating={item.rating}
                                     station={
                                         (item.stationId == station?.[0].id

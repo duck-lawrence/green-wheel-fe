@@ -65,12 +65,3 @@ button {
         background-image: url("/textures/diagmonds-light.png");
     }
 }
-
-/* ::-webkit-scrollbar {
-    display: none;
-}
-html,
-body {
-    -ms-overflow-style: none; 
-    scrollbar-width: none; 
-} */

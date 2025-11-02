@@ -5,6 +5,6 @@ export type StationFeedbackRes = {
     stationId: string
     customerId: string
     customerName: string
-    avartarUrl: string
+    avatarUrl: string
     createdAt: string
 }

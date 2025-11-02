@@ -41,8 +41,8 @@ export default function TicketManagement({
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
 
     return (
-        <div className="py-8 px-6 md:px-12 shadow-2xs rounded-2xl bg-white text-center">
-            <div className="text-3xl pb-6 font-bold text-center text-primary">
+        <div className="py-8 px-6 md:px-12 shadow-2xs rounded-2xl bg-white">
+            <div className="text-3xl mb-3 px-4 font-bold">
                 <p>
                     {filter.type === TicketType.CustomerSupport
                         ? t("ticket.customer_support")

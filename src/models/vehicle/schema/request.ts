@@ -18,6 +18,7 @@ export type CreateVehicleModelReq = {
     description: string
     costPerDay: number
     depositFee: number
+    reservationFee: number
     seatingCapacity: number
     numberOfAirbags: number
     motorPower: number
@@ -34,6 +35,7 @@ export type UpdateVehicleModelReq = {
     description?: string
     costPerDay?: number
     depositFee?: number
+    reservationFee?: number
     seatingCapacity?: number
     numberOfAirbags?: number
     motorPower?: number

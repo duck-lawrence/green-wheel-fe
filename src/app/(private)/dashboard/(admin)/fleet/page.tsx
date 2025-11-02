@@ -19,6 +19,7 @@ import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { useRouter } from "next/navigation"
 import { addToast } from "@heroui/toast"
+import { PlusCircle } from "lucide-react"
 
 export default function AdminFleetPage() {
     const { t } = useTranslation()
@@ -141,7 +142,7 @@ export default function AdminFleetPage() {
     if (isGetVehicleSegmentsLoading || getVehicleSegmentsError) return <SpinnerStyled />
 
     return (
-        <div className="flex flex-col gap-6 rounded-3xl bg-white p-6 shadow-sm mb-6">
+        <div className="flex flex-col gap-6 rounded-3xl bg-white p-8 shadow-sm mb-6">
             <div className="space-y-2">
                 <h1 className="text-3xl font-bold text-slate-900">{t("fleet.page_title")}</h1>
             </div>
@@ -187,7 +188,7 @@ export default function AdminFleetPage() {
                             onPress={handleCreateModalOpen}
                             className="btn-gradient btn-gradient:hover btn-gradient:active h-12 px-5 font-semibold text-white sm:ml-3 sm:shrink-0"
                         >
-                            + {t("fleet.add_unit_button")}
+                            <PlusCircle size={18} /> {t("fleet.add_unit_button")}
                         </ButtonStyled>
                     </div>
                 </div>
