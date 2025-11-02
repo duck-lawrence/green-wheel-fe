@@ -7,7 +7,7 @@ import { formatCurrency } from "@/utils/helpers/currency"
 import { CardStyled, ImageStyled } from "@/components"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { Icon } from "@iconify/react"
-import { DEFAULT_VEHICLE_MODEL } from "@/constants/constants"
+// import { DEFAULT_VEHICLE_MODEL } from "@/constants/constants"
 
 // cắt chuỗi để chỉnh format cho đẹp =)
 // function splitTitle(title: string) {
@@ -27,7 +27,7 @@ export function CardVehicalStyled({ vehicleModel }: { vehicleModel: VehicleModel
                 <ImageStyled
                     alt={vehicleModel.name}
                     className="w-[300px] object-cover h-[280px] shadow-lg"
-                    src={vehicleModel.imageUrl || DEFAULT_VEHICLE_MODEL}
+                    src={vehicleModel.imageUrl}
                     width={300}
                     height={280}
                 />

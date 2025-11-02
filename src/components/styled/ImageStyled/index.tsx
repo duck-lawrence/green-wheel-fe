@@ -1,7 +1,7 @@
 import React from "react"
 import Image from "next/image"
 import { cn } from "@heroui/react"
-import { DEFAULT_VEHICLE_MODEL } from "@/constants/constants"
+import { TitleSkeleton } from "../SkeletonStyled"
 
 export function ImageStyled({
     src,
@@ -16,10 +16,11 @@ export function ImageStyled({
     width?: number
     height?: number
 }) {
+    if (!src) return <TitleSkeleton className={`w-[${width}px] h-[${height}px]`} />
     return (
         <Image
             alt={alt}
-            src={src || DEFAULT_VEHICLE_MODEL}
+            src={src}
             className={cn("object-cover rounded-xl", className)}
             width={width || 500}
             height={height || 500}

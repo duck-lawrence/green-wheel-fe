@@ -15,15 +15,22 @@ import {
     useCreateContractManual,
     useUserHelper
 } from "@/hooks"
-import { ButtonStyled, InputStyled, ImageStyled, TextareaStyled, TempInvoice } from "@/components"
+import {
+    ButtonStyled,
+    InputStyled,
+    ImageStyled,
+    TextareaStyled,
+    TempInvoice,
+    TitleSkeleton
+} from "@/components"
 import { Spinner, useDisclosure } from "@heroui/react"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { BackendError } from "@/models/common/response"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { CheckboxStyled, SelectUserModal } from "@/components"
-import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { addToast } from "@heroui/toast"
+import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 
 type FormValues = {
     fullName: string
@@ -346,13 +353,24 @@ export const CreateRentalContractForm = ({
                                                 md:w-56 md:h-36
                                             "
                                         >
-                                            <ImageStyled
-                                                src={modelViewRes.imageUrl || ""}
+                                            {/* <ImageStyled
+                                                src={modelViewRes.imageUrl}
                                                 alt={t("car_rental.vehicle")}
-                                                className="absolute inset-0 w-full h-full object-contain"
-                                                width={800}
-                                                height={520}
-                                            />
+                                                className="absolute inset-0 object-contain"
+                                                width={200}
+                                                height={150}
+                                            /> */}
+                                            {modelViewRes.imageUrl ? (
+                                                <ImageStyled
+                                                    src={modelViewRes.imageUrl}
+                                                    alt={t("car_rental.vehicle")}
+                                                    className="absolute inset-0 object-contain"
+                                                    width={800}
+                                                    height={520}
+                                                />
+                                            ) : (
+                                                <TitleSkeleton />
+                                            )}
                                         </div>
                                         <div>
                                             <h3 className="text-lg font-medium">
