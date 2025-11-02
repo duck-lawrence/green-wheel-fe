@@ -10,6 +10,8 @@ import { useGetVehicleComponents, useUpdateVehicleModelComponents } from "@/hook
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 
+const COMPONENT_PAGE_SIZE = 5
+
 export type EditModelComponentModalProps = {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
@@ -31,9 +33,11 @@ export function EditModelComponentModal({
   const { t } = useTranslation()
 
   // 2) server hooks
-  const { data, isLoading, error: fetchError } = useGetVehicleComponents({
+  const [componentPage, setComponentPage] = useState(1)
+
+  const { data, isLoading, isFetching, error: fetchError } = useGetVehicleComponents({
     enabled: isOpen,
-    pagination: { pageNumber: 1, pageSize: 100 }
+    pagination: { pageNumber: componentPage, pageSize: COMPONENT_PAGE_SIZE }
   })
 
   const updateMutation = useUpdateVehicleModelComponents({
@@ -50,6 +54,8 @@ export function EditModelComponentModal({
   useEffect(() => {
     if (isOpen) {
       setSelection(new Set(selectedComponentIds))
+    } else {
+      setComponentPage(1)
     }
   }, [isOpen, selectedComponentIds])
 
@@ -59,6 +65,11 @@ export function EditModelComponentModal({
     if (Array.isArray(data)) return data
     return data.items ?? []
   }, [data])
+
+  const tableLoading = (isLoading && !data) || isFetching
+  const currentPage = data?.pageNumber ?? componentPage
+  const pageSize = data?.pageSize ?? COMPONENT_PAGE_SIZE
+  const totalPages = data?.totalPages
 
   const errorMessage = useMemo(() => {
     if (!fetchError) return undefined
@@ -84,8 +95,8 @@ export function EditModelComponentModal({
   // 7) derived flags
   const isSubmitting = updateMutation.isPending
   const isSaveDisabled = useMemo(
-    () => isSubmitting || isLoading || Boolean(errorMessage),
-    [isSubmitting, isLoading, errorMessage]
+    () => isSubmitting || tableLoading || Boolean(errorMessage),
+    [isSubmitting, tableLoading, errorMessage]
   )
   return (
     <ModalStyled isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -98,8 +109,12 @@ export function EditModelComponentModal({
             items={items}
             selectedIds={selection}
             onSelectionChange={setSelection}
-            isLoading={isLoading}
+            isLoading={tableLoading}
             error={errorMessage}
+            page={currentPage}
+            pageSize={pageSize}
+            totalPages={totalPages}
+            onPageChange={setComponentPage}
           />
         </ModalBody>
         <ModalFooterStyled className="gap-3">

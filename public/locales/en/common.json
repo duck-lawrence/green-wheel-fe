@@ -71,6 +71,7 @@
         "upload": "Upload",
         "update": "Update",
         "edit": "Edit",
+        "edit_components": "Edit Components",
         "edit_user": "Edit User",
         "save_changes": "Save Changes",
         "cancel": "Cancel",
@@ -85,7 +86,8 @@
         "choose": "Choose",
         "send": "Send",
         "redirecting": "Redirecting...",
-        "image": "Image"
+        "image": "Image",
+        "required": "Required"
     },
     "json": {
         "parsing_failed": "Failed to parse json"
@@ -317,6 +319,14 @@
         "not_found": "Vehicle segment not found"
     },
     "vehicle_model": {
+        "brand_unknown": "Unknown brand",
+        "segment_unknown": "Unknown segment",
+        "unit": "Unit",
+        "capacity_label": "Capacity",
+        "seats": "seats",
+        "available": "Available",
+        "unavailable": "Unavailable",
+        "price_label": "Price",
         "information": "Vehicle information",
         "specs": "Specifications",
         "station": "Station",
@@ -425,7 +435,8 @@
         "filter_name_placeholder": "Enter component name",
         "empty_state_title": "No components found",
         "empty_state_description": "Click + to add one.",
-        "table_empty": "No vehicle components found."
+        "table_empty": "No vehicle components found.",
+        "fetch_error": "Unable to load components. Please try again."
     },
     "currency": {
         "vnd": "VND"
@@ -954,6 +965,10 @@
         "hide_gallery": "Hide images",
         "detail_spec_title": "Technical specifications",
         "detail_about": "About",
+        "detail_component_edit_title": "Edit Components",
+        "detail_component_section_title": "Vehicle components",
+        "detail_component_table_loading": "Loading components...",
+        "detail_component_table_empty": "This vehicle model has no components yet.",
         "detail_description_empty": "This vehicle model has no description yet.",
         "detail_units_unit": "units",
         "detail_unknown": "Updating",
@@ -988,5 +1003,8 @@
     },
     "reaview": {
         "create": "Create feedback successful"
-    }
+    },
+      "validation": {
+    "required": "Required"
+  }
 }

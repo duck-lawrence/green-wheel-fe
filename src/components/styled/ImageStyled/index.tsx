@@ -1,7 +1,7 @@
 import React from "react"
 import Image from "next/image"
 import { cn } from "@heroui/react"
-import { FALLBACK_IMAGE_URL } from "@/constants/constants"
+import { DEFAULT_VEHICLE_MODEL } from "@/constants/constants"
 
 export function ImageStyled({
     src,
@@ -19,7 +19,7 @@ export function ImageStyled({
     return (
         <Image
             alt={alt}
-            src={src || FALLBACK_IMAGE_URL}
+            src={src || DEFAULT_VEHICLE_MODEL}
             className={cn("object-cover rounded-xl", className)}
             width={width || 500}
             height={height || 500}

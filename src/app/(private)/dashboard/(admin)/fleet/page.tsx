@@ -32,8 +32,7 @@ export default function AdminFleetPage() {
         name: undefined,
         segmentId: undefined
     })
-    // const [carType, setCarType] = useState<string | undefined>()
-    // const [status, setStatus] = useState<string | undefined>()
+
     const [vehicleModels, setVehicleModels] = useState<VehicleModelViewRes[]>([])
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
@@ -49,13 +48,7 @@ export default function AdminFleetPage() {
         error: getVehicleSegmentsError
     } = useGetAllVehicleSegments()
 
-    // const statusOptions = useMemo(
-    //     () => [
-    //         { key: "available", label: t("fleet.status_available") },
-    //         { key: "unavailable", label: t("fleet.status_unavailable") }
-    //     ],
-    //     [t]
-    // )
+
 
     const segmentOptions = useMemo(
         () =>
@@ -191,17 +184,6 @@ export default function AdminFleetPage() {
                             ))}
                         </AutocompleteStyled>
 
-                        {/* <FilterTypeStyle
-                            placeholder={t("fleet.filter_status")}
-                            selectedKeys={status ? new Set([status]) : new Set<string>()}
-                            onSelectionChange={handleStatusChange}
-                            className="sm:w-40"
-                            isClearable
-                        >
-                            {statusOptions.map((option) => (
-                                <FilterTypeOption key={option.key}>{option.label}</FilterTypeOption>
-                            ))}
-                        </FilterTypeStyle> */}
                     </div>
                     <div className="flex flex-col gap-3 sm:flex-row">
                         <ButtonStyled

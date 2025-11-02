@@ -17,6 +17,9 @@ export type TableSelectionVehicleComponentProps = {
   error?: string;
   pageSize?: number;
   showContainer?: boolean;
+  page?: number;
+  totalPages?: number;
+  onPageChange?: (page: number) => void;
 };
 
 export function TableSelectionVehicleComponent({
@@ -26,24 +29,37 @@ export function TableSelectionVehicleComponent({
   isLoading = false,
   error,
   pageSize = 5,
-  showContainer = false
+  showContainer = false,
+  page,
+  totalPages: totalPagesProp,
+  onPageChange
 }: TableSelectionVehicleComponentProps) {
   // 1) i18n
   const { t } = useTranslation();
 
-  // 2) local state
-  const [page, setPage] = useState(1);
+  // 2) pagination state (supports controlled + uncontrolled modes)
+  const [localPage, setLocalPage] = useState(1);
+  const isControlledPage = typeof page === "number";
+  const currentPage = isControlledPage ? page! : localPage;
+  const isServerPaginated =
+    typeof totalPagesProp === "number" && typeof onPageChange === "function";
 
   // 3) derived values (memo)
-  const totalPages = useMemo(
-    () => Math.max(1, Math.ceil(items.length / pageSize)),
-    [items.length, pageSize]
-  );
+  const totalPages = useMemo(() => {
+    if (typeof totalPagesProp === "number" && totalPagesProp > 0) {
+      return totalPagesProp;
+    }
+    return Math.max(1, Math.ceil(items.length / pageSize));
+  }, [items.length, pageSize, totalPagesProp]);
 
   const pagedItems = useMemo(() => {
-    const start = (page - 1) * pageSize;
+    if (isServerPaginated) {
+      return items;
+    }
+
+    const start = (currentPage - 1) * pageSize;
     return items.slice(start, start + pageSize);
-  }, [items, page, pageSize]);
+  }, [isServerPaginated, items, currentPage, pageSize]);
 
   const columns = useMemo(
     () => [
@@ -54,33 +70,39 @@ export function TableSelectionVehicleComponent({
     [t]
   );
 
-  const currencySuffix = t("currency.vnd");
-
   const rows = useMemo(
     () =>
       pagedItems.map((component, index) => ({
         key: String(component.id),
-        no: (page - 1) * pageSize + index + 1,
+        no: (currentPage - 1) * pageSize + index + 1,
         component: (
           <div className="flex flex-col gap-1">
             <span className="font-semibold text-slate-900">{component.name}</span>
             {component.description ? (
-              <span className="text-xs text-slate-500 line-clamp-2">{component.description}</span>
+              <span className="text-xs text-slate-500 line-clamp-2">
+                {component.description}
+              </span>
             ) : null}
           </div>
         ),
-        damageFee: `${formatCurrency(component.damageFee)} ${currencySuffix}`
+        damageFee: `${formatCurrency(component.damageFee)}${"VNĐ"}`
       })),
-    [pagedItems, page, pageSize, currencySuffix]
+    [pagedItems, currentPage, pageSize]
   );
 
   const showPagination = totalPages > 1;
-  const shouldWrap = showContainer || showPagination;
+  const shouldWrap = showContainer && showPagination;
 
-  // 4) effects (clamp page khi nguồn dữ liệu đổi)
+  // 4) sync uncontrolled pagination when data size shrinks
   useEffect(() => {
-    setPage((prev) => (prev > totalPages ? totalPages : prev < 1 ? 1 : prev));
-  }, [totalPages]);
+    if (isControlledPage) return;
+
+    setLocalPage((prev) => {
+      if (prev > totalPages) return totalPages;
+      if (prev < 1) return 1;
+      return prev;
+    });
+  }, [isControlledPage, totalPages]);
 
   // 5) callbacks
   const handleSelectionChange = useCallback(
@@ -90,7 +112,18 @@ export function TableSelectionVehicleComponent({
     [onSelectionChange]
   );
 
-  const handlePageChange = useCallback((next: number) => setPage(next), []);
+  const handlePageChange = useCallback(
+    (next: number) => {
+      const clamped = next < 1 ? 1 : next > totalPages ? totalPages : next;
+
+      if (!isControlledPage) {
+        setLocalPage(clamped);
+      }
+
+      onPageChange?.(clamped);
+    },
+    [isControlledPage, onPageChange, totalPages]
+  );
 
   if (isLoading) {
     return (
@@ -127,7 +160,12 @@ export function TableSelectionVehicleComponent({
 
   const paginationContent = showPagination ? (
     <div className="mt-6 flex justify-center">
-      <PaginationStyled page={page} total={totalPages} showControls onChange={handlePageChange} />
+      <PaginationStyled
+        page={currentPage}
+        total={totalPages}
+        showControls
+        onChange={handlePageChange}
+      />
     </div>
   ) : null;
 

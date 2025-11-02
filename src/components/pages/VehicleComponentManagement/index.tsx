@@ -116,15 +116,9 @@ export function VehicleComponentManagement() {
   )
 
   const isListLoading = isLoading || isFetching
-  const items = (
-    Array.isArray(data) ? data : data?.items ?? []
-  ) as VehicleComponentViewRes[]
-  const currentPage = Array.isArray(data)
-    ? 1
-    : data?.pageNumber ?? pagination.pageNumber ?? 1
-  const totalPages = Array.isArray(data)
-    ? 1
-    : data?.totalPages ?? 1
+  const items = (data?.items ?? []) as VehicleComponentViewRes[]
+  const currentPage = data?.pageNumber ?? pagination.pageNumber ?? 1
+  const totalPages = data?.totalPages ?? 1
   const showPagination = totalPages > 1
 
   return (
@@ -133,9 +127,6 @@ export function VehicleComponentManagement() {
         <h1 className="text-3xl font-bold text-slate-900">
           {t("vehicle_component.management_title")}
         </h1>
-        <p className="text-sm text-slate-500">
-          {t("vehicle_component.management_description")}
-        </p>
       </header>
 
       <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-6">
