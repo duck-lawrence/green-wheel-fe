@@ -53,12 +53,22 @@ export function ImagesUploaderModal({
     const isUploadable = useMemo(() => {
         const count = croppedImages.length
 
-        if (minAmount == undefined && maxAmount == undefined) return false
+        if (minAmount == undefined && maxAmount == undefined) return true
+        if (minAmount != undefined && count < minAmount) return true
+        if (maxAmount != undefined && count < maxAmount) return true
+
+        return false
+    }, [croppedImages.length, minAmount, maxAmount])
+
+    const isSubmitable = useMemo(() => {
+        const count = croppedImages.length
+
+        if (minAmount == undefined && maxAmount == undefined) return true
         if (minAmount != undefined && count < minAmount) return false
         if (maxAmount != undefined && count > maxAmount) return false
 
         return true
-    }, [croppedImages.length, minAmount, maxAmount])
+    }, [croppedImages.length, maxAmount, minAmount])
 
     const handleFileSelect = (file: File) => {
         const src = URL.createObjectURL(file)
@@ -130,7 +140,7 @@ export function ImagesUploaderModal({
                         </div>
                     ) : (
                         <div className="flex flex-col gap-4 items-center">
-                            {!isUploadable && (
+                            {isUploadable && (
                                 <ImageUploadButton
                                     onFileSelect={handleFileSelect}
                                     color="secondary"
@@ -151,7 +161,9 @@ export function ImagesUploaderModal({
                                     color="primary"
                                     onPress={handleSubmitAll}
                                     isDisabled={
-                                        isUploadPending || !croppedImages.length || !isUploadable
+                                        isUploadPending ||
+                                        croppedImages.length === 0 ||
+                                        !isSubmitable
                                     }
                                 >
                                     {isUploadPending ? (
