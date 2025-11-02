@@ -103,7 +103,7 @@ export function EditTicketModal({
                             <Chip
                                 color={TicketStatusColorMap[ticket.status]}
                                 size="sm"
-                                variant="solid"
+                                variant="bordered"
                             >
                                 {TicketStatusLabels[ticket.status]}
                             </Chip>

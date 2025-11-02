@@ -56,7 +56,11 @@ export function TicketCard({
                         {/* <Chip size="sm" variant="solid">
                             {TicketTypeLabels[ticket.type]}
                         </Chip> */}
-                        <Chip color={TicketStatusColorMap[ticket.status]} size="sm" variant="solid">
+                        <Chip
+                            color={TicketStatusColorMap[ticket.status]}
+                            size="sm"
+                            variant="bordered"
+                        >
                             {TicketStatusLabels[ticket.status]}
                         </Chip>
                     </div>

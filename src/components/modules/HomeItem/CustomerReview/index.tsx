@@ -1,41 +1,86 @@
 "use client"
 import { motion } from "framer-motion"
 import { ButtonStyled, FeedbackModal, SpacerStyled } from "@/components"
-import React, { useCallback, useRef } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import CardReviewUser from "@/components/styled/GrateStyled"
 import { useTranslation } from "react-i18next"
+import { useInfiniteScroll } from "@heroui/use-infinite-scroll"
 import { Spinner, useDisclosure } from "@heroui/react"
-import { useGetAllFeedback, useGetAllStations, useGetMe, useTokenStore } from "@/hooks"
+import { useGetAllFeedbacks, useGetAllStations, useGetMe, useTokenStore } from "@/hooks"
 import toast from "react-hot-toast"
 import { RoleName } from "@/constants/enum"
 import { scrollItemToCenter } from "@/utils/helpers/scrollToCenter"
+import { PaginationParams } from "@/models/common/request"
+import { StationFeedbackRes } from "@/models/station-feedback/schema/response"
 
 export function CustomerReview() {
     const { t } = useTranslation()
     const isLogined = useTokenStore((s) => !!s.accessToken)
     const { data: user } = useGetMe({ enabled: isLogined })
+    const { data: station, isLoading: isStationLoading } = useGetAllStations()
 
-    const { data: feedbacks, isLoading } = useGetAllFeedback()
+    // Infinite scroll state
+    const [pagination, setPagination] = useState<PaginationParams>({ pageNumber: 1, pageSize: 5 })
+    const [allFeedbacks, setAllFeedbacks] = useState<StationFeedbackRes[]>([])
+    const [hasMore, setHasMore] = useState(true)
 
-    const { data: station, isFetching } = useGetAllStations()
+    const {
+        data: feedbacks,
+        isLoading,
+        refetch
+    } = useGetAllFeedbacks({
+        filter: {},
+        pagination
+    })
+
+    useEffect(() => {
+        refetch()
+    }, [pagination.pageNumber, refetch])
+
+    // Concat new data into list
+    useEffect(() => {
+        if (!feedbacks?.items) return
+
+        setAllFeedbacks((prev) => {
+            const existingIds = new Set(prev.map((item) => item.id))
+            const newItems = feedbacks.items.filter((item) => !existingIds.has(item.id))
+            return [...prev, ...newItems]
+        })
+
+        if (feedbacks.pageNumber >= feedbacks.totalPages) {
+            setHasMore(false)
+        }
+    }, [feedbacks])
+
+    // call when scroll to the end
+    const handleLoadMore = useCallback(async () => {
+        if (hasMore && !isLoading) {
+            setPagination((prev) => ({
+                ...prev,
+                pageNumber: (prev.pageNumber ?? 1) + 1
+            }))
+        }
+    }, [hasMore, isLoading])
+
+    // Hook infinite scroll HeroUI
+    const [loaderRef, scrollerRef] = useInfiniteScroll({
+        hasMore,
+        onLoadMore: handleLoadMore
+    })
+
+    // Modal feedback
     const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure()
     const handleOpen = useCallback(() => {
         if (!isLogined) {
             toast.error(t("login.please_login"))
             return
         }
-
         if (user?.role?.name !== RoleName.Customer) {
             toast.error(t("auth.only_customer"))
             return
         }
         onOpen()
     }, [isLogined, onOpen, t, user?.role?.name])
-
-    //===========ANIMATION==================
-    const containerRef = useRef<HTMLDivElement | null>(null)
-
-    if ((isLoading && isFetching) || (feedbacks || []).length === 0) return <Spinner />
 
     return (
         <motion.section
@@ -63,14 +108,11 @@ export function CustomerReview() {
                 }
             `}</style>
 
-            {/* Màu hiệu ứng backGround */}
-            {/* <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(16,185,129,0.08),transparent_70%)]"></div> */}
-
             {/* Header */}
             <div className="max-w-6xl mx-auto px-6 mb-3 relative z-10">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-6">
                     <h2 className="text-3xl md:text-4xl font-bold text-primary tracking-wide text-center md:text-left">
-                        {t("review.customer_review")}
+                        {t("review.customer_feedback")}
                     </h2>
                     <ButtonStyled
                         variant="ghost"
@@ -102,44 +144,62 @@ export function CustomerReview() {
 
             {/* Reviews scroll list */}
             <div
-                ref={containerRef}
-                className="max-w-7xl mx-auto relative z-10 overflow-hidden py-2 px-1 scrollbar-none 
+                ref={scrollerRef as unknown as React.RefObject<HTMLDivElement>}
+                className="max-w-7xl mx-auto relative z-10 overflow-x-scroll py-2 px-1 scrollbar-hide
                     [mask-image:linear-gradient(to_right,transparent_0%,black_5%,black_95%,transparent_100%)]"
             >
-                <div className="flex gap-6 max-w-full">
-                    <SpacerStyled />
-                    {(feedbacks || []).map((item, idx) => (
-                        <button
-                            key={`${item}-${idx}`}
-                            onClick={(e) => {
-                                const container = containerRef.current
-                                if (!container) return
+                {isLoading || isStationLoading ? (
+                    <div className="text-center">
+                        <Spinner />
+                    </div>
+                ) : (
+                    <div className="flex gap-6 max-w-full">
+                        <SpacerStyled />
 
-                                scrollItemToCenter(container, e.currentTarget)
-                            }}
-                            className="max-h-fit relative flex-shrink-0 overflow-hidden rounded-2xl
+                        {allFeedbacks.map((item, idx) => (
+                            <button
+                                key={`${item.id}-${idx}`}
+                                onClick={(e) => {
+                                    const container = scrollerRef.current
+                                    if (container) scrollItemToCenter(container, e.currentTarget)
+                                }}
+                                className="max-h-fit relative flex-shrink-0 overflow-hidden rounded-2xl
                                 outline-none ring-2 ring-transparent focus:ring-primary
                                 interactive-scale"
-                        >
-                            <CardReviewUser
-                                name={item.customerName}
-                                avatar={item.avartarUrl}
-                                rating={item.rating}
-                                station={
-                                    (item.stationId == station?.[0].id
-                                        ? station?.[0].name
-                                        : station?.[1].name) ?? ""
-                                }
-                                content={item.content}
-                                createdAt={item.createdAt}
-                            />
-                        </button>
-                    ))}
-                    <SpacerStyled />
-                </div>
+                            >
+                                <CardReviewUser
+                                    name={item.customerName}
+                                    avatar={item.avartarUrl}
+                                    rating={item.rating}
+                                    station={
+                                        (item.stationId == station?.[0].id
+                                            ? station?.[0].name
+                                            : station?.[1].name) ?? ""
+                                    }
+                                    content={item.content}
+                                    createdAt={item.createdAt}
+                                />
+                            </button>
+                        ))}
+
+                        {/* Infinite loader */}
+                        {hasMore && (
+                            <div
+                                ref={(el) => {
+                                    ;(loaderRef as React.RefObject<HTMLElement | null>).current = el
+                                }}
+                                className="w-8 flex items-center justify-center"
+                            >
+                                <Spinner size="sm" />
+                            </div>
+                        )}
+
+                        <SpacerStyled />
+                    </div>
+                )}
             </div>
 
-            {/* Decor*/}
+            {/* Decor */}
             <div className="absolute top-10 left-1/4 w-2 h-2 bg-emerald-300 rounded-full opacity-60 animate-[floating_3s_ease-in-out_infinite]" />
             <div className="absolute bottom-20 right-20 w-3 h-3 bg-teal-400 rounded-full opacity-50 animate-[floating_4s_ease-in-out_infinite]" />
             <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-green-400 rounded-full opacity-70 animate-[floating_3.5s_ease-in-out_infinite]" />

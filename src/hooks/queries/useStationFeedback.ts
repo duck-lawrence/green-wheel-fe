@@ -1,5 +1,7 @@
 import { QUERY_KEYS } from "@/constants/queryKey"
+import { PaginationParams } from "@/models/common/request"
 import { BackendError } from "@/models/common/response"
+import { StationFeedbackParams } from "@/models/station-feedback/schema/request"
 import { stationFeedbackApi } from "@/services/stationFeedBackApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { addToast } from "@heroui/toast"
@@ -33,12 +35,19 @@ export const useCreateFeedback = ({ onSuccess }: { onSuccess?: () => void }) => 
     })
 }
 
-export const useGetAllFeedback = ({ enabled = true }: { enabled?: boolean } = {}) => {
+export const useGetAllFeedbacks = ({
+    filter,
+    pagination = {},
+    enabled = true
+}: {
+    filter: StationFeedbackParams
+    pagination: PaginationParams
+    enabled?: boolean
+}) => {
     const query = useQuery({
         queryKey: QUERY_KEYS.STATION_FEEDBACKS,
-        queryFn: stationFeedbackApi.getAll,
-        enabled,
-        refetchOnWindowFocus: true
+        queryFn: async () => await stationFeedbackApi.getAll({ query: filter, pagination }),
+        enabled
     })
     return query
 }
@@ -49,6 +58,9 @@ export const useDeleteFeedback = () => {
     return useMutation({
         mutationFn: stationFeedbackApi.delete,
         onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: QUERY_KEYS.STATION_FEEDBACKS
+            })
             addToast({
                 title: t("toast.success"),
                 description: t("review.delete_successfull"),
@@ -56,9 +68,6 @@ export const useDeleteFeedback = () => {
             })
         },
         onError: (error: BackendError) => {
-            queryClient.invalidateQueries({
-                queryKey: QUERY_KEYS.STATION_FEEDBACKS
-            })
             addToast({
                 title: t("toast.error"),
                 description: translateWithFallback(t, error.detail),

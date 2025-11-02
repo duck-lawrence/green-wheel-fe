@@ -1,11 +1,14 @@
 "use client"
 
 import React from "react"
-import { User } from "@heroui/react"
+import { useDisclosure, User } from "@heroui/react"
 import { Icon } from "@iconify/react"
 import { cn } from "@heroui/react"
 import { useDay } from "@/hooks"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
+import { ButtonStyled } from "../ButtonStyled"
+import { t } from "i18next"
+import { AlertModal } from "@/components/modals"
 
 export type ReviewType = {
     user: {
@@ -16,13 +19,29 @@ export type ReviewType = {
     rating: number
     title: string
     content: string
+    isDeleteable?: boolean
+    onDelete?: () => void
 }
 
 export type ReviewProps = React.HTMLAttributes<HTMLDivElement> & ReviewType
 
 const Review = React.forwardRef<HTMLDivElement, ReviewProps>(
-    ({ children, user, title, content, rating, createdAt, ...props }, ref) => {
+    (
+        {
+            children,
+            user,
+            title,
+            content,
+            rating,
+            createdAt,
+            isDeleteable = false,
+            onDelete = undefined,
+            ...props
+        },
+        ref
+    ) => {
         const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
+        const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure()
 
         return (
             <div ref={ref} {...props}>
@@ -63,6 +82,27 @@ const Review = React.forwardRef<HTMLDivElement, ReviewProps>(
                     </div>
                     <p className="text-left text-default-500 mt-2">{content || children}</p>
                 </div>
+                {isDeleteable && (
+                    <div className="text-right">
+                        <ButtonStyled
+                            color="danger"
+                            variant="ghost"
+                            onPress={() => onOpen()}
+                            className="text-sm px-2 h-8"
+                        >
+                            {t("common.delete")}
+                        </ButtonStyled>
+                        <AlertModal
+                            isOpen={isOpen}
+                            onOpenChange={onOpenChange}
+                            onClose={onClose}
+                            header={t("common.confirm_to_delete")}
+                            body={t("common.confirm_to_delete_body")}
+                            onConfirm={() => onDelete?.()}
+                            btnColor="danger"
+                        />
+                    </div>
+                )}
             </div>
         )
     }

@@ -26,7 +26,8 @@ export const useGetMe = ({ enabled = true }: { enabled?: boolean } = {}) => {
     const query = useQuery({
         queryKey: QUERY_KEYS.ME,
         queryFn: profileApi.getMe,
-        enabled
+        enabled,
+        refetchOnWindowFocus: false
     })
     return query
 }

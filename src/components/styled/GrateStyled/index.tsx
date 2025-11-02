@@ -10,6 +10,8 @@ type CardReviewProps = {
     content: string
     createdAt: string
     className?: string
+    isDeleteable?: boolean
+    onDelete?: () => void
 }
 
 export default function CardReviewUser({
@@ -19,11 +21,17 @@ export default function CardReviewUser({
     station,
     content,
     createdAt,
-    className
+    className,
+    isDeleteable = false,
+    onDelete = undefined
 }: CardReviewProps) {
     return (
         <div
-            className={cn("flex flex-col gap-4 min-w-[200px] sm:min-w-[300px] max-w-sm", className)}
+            className={cn(
+                "flex flex-col gap-4 min-w-[200px] sm:min-w-[300px] max-w-sm",
+                "interactive-scale",
+                className
+            )}
         >
             <CardReview
                 content={content}
@@ -34,6 +42,8 @@ export default function CardReviewUser({
                     name,
                     avatar
                 }}
+                isDeleteable={isDeleteable}
+                onDelete={onDelete}
             />
         </div>
     )

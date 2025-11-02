@@ -1,7 +1,12 @@
-import { StationFeedbackCreateReq } from "@/models/station-feedback/schema/request"
+import { PaginationParams } from "@/models/common/request"
+import { PageResult } from "@/models/common/response"
+import {
+    StationFeedbackCreateReq,
+    StationFeedbackParams
+} from "@/models/station-feedback/schema/request"
 import { StationFeedbackRes } from "@/models/station-feedback/schema/response"
 import axiosInstance from "@/utils/axios"
-import { requestWrapper } from "@/utils/helpers/axiosHelper"
+import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 
 export const stationFeedbackApi = {
     create: (req: StationFeedbackCreateReq) =>
@@ -9,9 +14,19 @@ export const stationFeedbackApi = {
             await axiosInstance.post("/station-feedbacks", req)
         }),
 
-    getAll: () =>
-        requestWrapper<StationFeedbackRes[]>(async () => {
-            const res = await axiosInstance.get("/station-feedbacks")
+    getAll: ({
+        query,
+        pagination = {}
+    }: {
+        query: StationFeedbackParams
+        pagination: PaginationParams
+    }) =>
+        requestWrapper<PageResult<StationFeedbackRes>>(async () => {
+            const params = {
+                ...buildQueryParams(query),
+                ...buildQueryParams(pagination)
+            }
+            const res = await axiosInstance.get("/station-feedbacks", { params })
             return res.data
         }),
     delete: (id: string) =>

@@ -3,3 +3,7 @@ export type StationFeedbackCreateReq = {
     content: string
     rating: number
 }
+
+export type StationFeedbackParams = {
+    stationId?: string
+}

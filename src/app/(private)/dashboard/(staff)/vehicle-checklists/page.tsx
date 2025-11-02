@@ -3,13 +3,22 @@
 import React, { useState } from "react"
 import { EnumPicker, PaginationStyled, TableStyled } from "@/components"
 import { useTranslation } from "react-i18next"
-import { Spinner, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
+import {
+    Chip,
+    Spinner,
+    TableBody,
+    TableCell,
+    TableColumn,
+    TableHeader,
+    TableRow
+} from "@heroui/react"
 import { useRouter } from "next/navigation"
 import { useGetAllVehicleChecklists, useUserHelper } from "@/hooks"
 import { VehicleChecklistType } from "@/constants/enum"
 import { VehicleChecklistTypeLabels } from "@/constants/labels"
 import { GetAllVehicleChecklistParams } from "@/models/checklist/schema/request"
 import { PaginationParams } from "@/models/common/request"
+import { VehicleChecklistTypeColorMap } from "@/constants/colorMap"
 
 export default function VehicleChecklistPage() {
     const { t } = useTranslation()
@@ -102,7 +111,12 @@ export default function VehicleChecklistPage() {
                                     </TableCell>
                                     <TableCell className="text-center">{item.contractId}</TableCell>
                                     <TableCell className="text-center">
-                                        {VehicleChecklistTypeLabels[item.type]}
+                                        <Chip
+                                            variant="bordered"
+                                            color={VehicleChecklistTypeColorMap[item.type]}
+                                        >
+                                            {VehicleChecklistTypeLabels[item.type]}
+                                        </Chip>
                                     </TableCell>
                                 </TableRow>
                             ))}

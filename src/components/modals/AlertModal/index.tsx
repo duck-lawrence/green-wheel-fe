@@ -13,6 +13,7 @@ interface AlertModalProps {
     onOpenChange: () => void
     onClose: () => void
     onConfirm: () => void
+    btnColor?: "success" | "warning" | "danger" | "default" | "primary" | "secondary"
 }
 
 export function AlertModal({
@@ -22,7 +23,8 @@ export function AlertModal({
     isDismissable = true,
     onOpenChange,
     onClose,
-    onConfirm
+    onConfirm,
+    btnColor = "primary"
 }: AlertModalProps) {
     const { t } = useTranslation()
 
@@ -38,7 +40,7 @@ export function AlertModal({
                 <ModalBody>{body}</ModalBody>
                 <ModalFooter>
                     <ButtonStyled
-                        color="primary"
+                        color={btnColor}
                         variant="ghost"
                         onPress={() => {
                             onConfirm()
