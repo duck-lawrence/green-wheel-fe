@@ -17,7 +17,7 @@ import {
     TextareaStyled,
     VehicleSubImagesScroll
 } from "@/components"
-import { FALLBACK_IMAGE_URL } from "@/constants/constants"
+import { DEFAULT_VEHICLE_MODEL } from "@/constants/constants"
 import { BackendError } from "@/models/common/response"
 import { UpdateVehicleModelReq } from "@/models/vehicle/schema/request"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
@@ -222,7 +222,7 @@ export function VehicleModelEditForm({
             ...(vehicleModel.imageUrls ?? [])
         ].filter((url): url is string => Boolean(url))
 
-        return urls.length > 0 ? urls : [FALLBACK_IMAGE_URL]
+        return urls.length > 0 ? urls : [DEFAULT_VEHICLE_MODEL]
     }, [vehicleModel.imageUrl, vehicleModel.imageUrls])
 
     // whenever model changes or modal re-opens, reset active preview to first

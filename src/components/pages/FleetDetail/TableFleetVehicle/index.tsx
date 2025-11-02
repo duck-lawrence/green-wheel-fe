@@ -13,7 +13,7 @@ export type VehicleRow = {
     lastUpdatedLabel: string
 }
 
-export function TableFleetDetail({
+export function TableFleetVehicle({
     t,
     rows,
     isLoading
