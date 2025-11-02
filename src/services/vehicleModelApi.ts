@@ -24,7 +24,7 @@ export const vehicleModelApi = {
 
     getAllImages: () =>
         requestWrapper<VehicleModelMainImageRes[]>(async () => {
-            const res = await axiosInstance.get("/vehicle-models/images")
+            const res = await axiosInstance.get("/vehicle-models/main-images")
             return res.data
         }),
 
