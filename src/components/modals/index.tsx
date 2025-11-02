@@ -2,6 +2,7 @@ import React from "react"
 
 import { ForgotPasswordModal, LoginModal, RegisterModal } from "./Auth"
 
+export * from "./AlertModal"
 export * from "./ChecklistModal"
 export * from "./CreateInvoiceModal"
 export * from "./CreateRentalContractModal"
@@ -16,6 +17,7 @@ export * from "./Ticket"
 export * from "./User"
 export * from "./Vehicle"
 export * from "./VehicleModel"
+export * from "./VehicleComponent"
 
 export const Modals = () => {
     return (

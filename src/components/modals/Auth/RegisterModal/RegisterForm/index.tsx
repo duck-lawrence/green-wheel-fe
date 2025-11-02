@@ -38,7 +38,7 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
     }
 
     return (
-        <div className="flex w-full h-full justify-center items-center">
+        <div className="flex w-full justify-center items-center">
             <div
                 className={cn(
                     "flex flex-col gap-2 rounded-2xl transition-all duration-300 overflow-hidden",
@@ -47,11 +47,11 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
                     step == 2 && "w-125 h-160"
                 )}
             >
-                <div className="mt-6 overflow-hidden">
+                <div className="overflow-hidden hidden md:block">
                     <RowStep n={step} />
                 </div>
 
-                <div className="relative flex-1">
+                <div className="relative flex-1 ">
                     <AnimatePresence mode="wait" custom={direction}>
                         {step === 0 && (
                             <motion.div
@@ -62,7 +62,7 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
                                 animate="center"
                                 exit="exit"
                                 transition={{ duration: 0.4 }}
-                                className="absolute w-full"
+                                className="absolute w-full flex justify-center"
                             >
                                 <RegisterEmail
                                     email={email}
@@ -80,7 +80,7 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
                                 animate="center"
                                 exit="exit"
                                 transition={{ duration: 0.4 }}
-                                className="absolute w-full"
+                                className="absolute w-full flex justify-center"
                             >
                                 <RegisterOTP
                                     email={email}
@@ -98,7 +98,7 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
                                 animate="center"
                                 exit="exit"
                                 transition={{ duration: 0.4 }}
-                                className="absolute w-full"
+                                className="absolute w-full flex justify-center"
                             >
                                 <RegisterInFo onSuccess={onSuccess} />
                             </motion.div>

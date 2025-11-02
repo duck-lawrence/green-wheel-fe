@@ -1,4 +1,5 @@
-import { AlertStyled, ButtonStyled, CheckboxStyled, DropdownStyled } from "@/components/styled"
+import { AlertModal } from "@/components/modals"
+import { AlertStyled, ButtonStyled, DropdownStyled } from "@/components/styled"
 import { RentalContractStatus, VehicleIssueResolutionOption } from "@/constants/enum"
 import { VehicleStatusLabels } from "@/constants/labels"
 import {
@@ -10,7 +11,7 @@ import {
 import { VehicleChecklistViewRes } from "@/models/checklist/schema/response"
 import { ConfirmContractReq, HandoverContractReq } from "@/models/rental-contract/schema/request"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
-import { DropdownItem, DropdownMenu, DropdownTrigger, Spinner } from "@heroui/react"
+import { DropdownItem, DropdownMenu, DropdownTrigger, Spinner, useDisclosure } from "@heroui/react"
 import { useFormik } from "formik"
 import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
@@ -18,8 +19,6 @@ import { useTranslation } from "react-i18next"
 interface BottomActionButtonsProps {
     isStaff: boolean
     isCustomer: boolean
-    isReturnChecked: boolean
-    setIsReturnChecked: React.Dispatch<React.SetStateAction<boolean>>
     contract: RentalContractViewRes
     handoverFormik: ReturnType<typeof useFormik<HandoverContractReq>>
     hanoverChecklist: VehicleChecklistViewRes | undefined
@@ -28,13 +27,18 @@ interface BottomActionButtonsProps {
 export function BottomActionButtons({
     isStaff,
     isCustomer,
-    isReturnChecked,
-    setIsReturnChecked,
     contract,
     handoverFormik,
     hanoverChecklist
 }: BottomActionButtonsProps) {
     const { t } = useTranslation()
+
+    const {
+        isOpen: isReturnOpen,
+        onOpenChange: onReturnOpenChange,
+        onOpen: onReturnOpen,
+        onClose: onReturnClose
+    } = useDisclosure()
 
     // ======================================= //
     // Confirm
@@ -81,47 +85,48 @@ export function BottomActionButtons({
                 <>
                     {/* Khi contract đang Request Pending */}
                     {confirmContract.isPending && <Spinner />}
-                    {contract.status === RentalContractStatus.RequestPending && (
-                        <div className="flex flex-wrap justify-center gap-2">
-                            <ButtonStyled
-                                color="primary"
-                                variant="ghost"
-                                className="py-2 px-4"
-                                onPress={() => {
-                                    handleConfirm(contract.id, { hasVehicle: true })
-                                }}
-                            >
-                                {t("rental_contract.accept")}
-                            </ButtonStyled>
-
-                            {/* Reject */}
-                            <DropdownStyled placement="bottom-end">
-                                <DropdownTrigger>
-                                    <ButtonStyled
-                                        color="danger"
-                                        variant="ghost"
-                                        className="py-2 px-4"
-                                    >
-                                        {t("rental_contract.reject")}
-                                    </ButtonStyled>
-                                </DropdownTrigger>
-
-                                <DropdownMenu
-                                    onAction={(key) => {
-                                        const selected = Number(key)
-                                        handleConfirm(contract.id, {
-                                            hasVehicle: false,
-                                            vehicleStatus: selected
-                                        })
+                    {!confirmContract.isPending &&
+                        contract.status === RentalContractStatus.RequestPending && (
+                            <div className="flex flex-wrap justify-center gap-2">
+                                <ButtonStyled
+                                    color="primary"
+                                    variant="ghost"
+                                    className="py-2 px-4"
+                                    onPress={() => {
+                                        handleConfirm(contract.id, { hasVehicle: true })
                                     }}
                                 >
-                                    {Object.entries(VehicleStatusLabels).map(([key, label]) => (
-                                        <DropdownItem key={key}>{label}</DropdownItem>
-                                    ))}
-                                </DropdownMenu>
-                            </DropdownStyled>
-                        </div>
-                    )}
+                                    {t("rental_contract.accept")}
+                                </ButtonStyled>
+
+                                {/* Reject */}
+                                <DropdownStyled placement="bottom-end">
+                                    <DropdownTrigger>
+                                        <ButtonStyled
+                                            color="danger"
+                                            variant="ghost"
+                                            className="py-2 px-4"
+                                        >
+                                            {t("rental_contract.reject")}
+                                        </ButtonStyled>
+                                    </DropdownTrigger>
+
+                                    <DropdownMenu
+                                        onAction={(key) => {
+                                            const selected = Number(key)
+                                            handleConfirm(contract.id, {
+                                                hasVehicle: false,
+                                                vehicleStatus: selected
+                                            })
+                                        }}
+                                    >
+                                        {Object.entries(VehicleStatusLabels).map(([key, label]) => (
+                                            <DropdownItem key={key}>{label}</DropdownItem>
+                                        ))}
+                                    </DropdownMenu>
+                                </DropdownStyled>
+                            </div>
+                        )}
 
                     {/* Khi chưa bắt đầu và contract đang Active */}
                     {!contract.actualStartDate &&
@@ -148,20 +153,13 @@ export function BottomActionButtons({
                     {/* Khi contract đã Active và có thể trả xe */}
                     {contract.actualStartDate &&
                         contract.status === RentalContractStatus.Active && (
-                            <div className="flex flex-col items-center gap-2">
-                                <CheckboxStyled
-                                    checked={isReturnChecked}
-                                    onChange={(e) => setIsReturnChecked(e.target.checked)}
-                                >
-                                    {t("rental_contract.return_comfirm")}
-                                </CheckboxStyled>
-
+                            <>
                                 <ButtonStyled
                                     variant="bordered"
                                     color="primary"
                                     className="hover:text-white hover:bg-primary"
-                                    isDisabled={!isReturnChecked || returnMutation.isPending}
-                                    onPress={handleReturn}
+                                    isDisabled={returnMutation.isPending}
+                                    onPress={onReturnOpen}
                                 >
                                     {returnMutation.isPending ? (
                                         <Spinner />
@@ -169,7 +167,18 @@ export function BottomActionButtons({
                                         t("rental_contract.return")
                                     )}
                                 </ButtonStyled>
-                            </div>
+
+                                <AlertModal
+                                    header={t("rental_contract.return_comfirm")}
+                                    body={t("common.confirm_to_submit_body")}
+                                    isOpen={isReturnOpen}
+                                    onOpenChange={onReturnOpenChange}
+                                    onClose={onReturnClose}
+                                    onConfirm={() => {
+                                        handleReturn()
+                                    }}
+                                />
+                            </>
                         )}
                 </>
             )}

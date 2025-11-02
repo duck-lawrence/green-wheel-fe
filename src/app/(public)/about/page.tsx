@@ -4,9 +4,10 @@ import { motion } from "framer-motion"
 import { ButtonStyled } from "@/components"
 import { Handshake, Leaf, Lightning } from "@phosphor-icons/react"
 import { useTypewriter } from "@/hooks/reuseable/useTypewriter"
-import { Image } from "@heroui/react"
+
 import Link from "next/link"
 import { useTranslation } from "react-i18next"
+import Image from "next/image"
 
 export default function AboutPage() {
     const { t } = useTranslation()
@@ -34,19 +35,21 @@ export default function AboutPage() {
 
     return (
         <div className="w-full overflow-hidden mt-[-6.25rem]">
-            <div className="relative w-full  max-h-[70vh]  h-auto flex items-center justify-center overflow-hidden ">
-                <Image
-                    width="2000px"
-                    src="https://baovephapluat.vn/data/images/0/2021/11/12/hienbt/8.jpg"
-                    alt="Green Wheel electric cars"
-                    className="object-cover opacity-70  sm:w-[1100px] lg:w-[1905px] h-auto"
-                />
-                <div className="absolute  bg-black/50 z-10   min-w-full inset-0   max-w-full h-auto" />
+            <div className="relative w-full h-[70vh] flex items-center justify-center overflow-hidden ">
+                <div className="absolute inset-0">
+                    <Image
+                        src="https://baovephapluat.vn/data/images/0/2021/11/12/hienbt/8.jpg"
+                        alt="Green Wheel electric cars"
+                        fill
+                        className="object-cover opacity-70"
+                    />
+                </div>
+                <div className="absolute bg-black/50 z-10 min-w-full inset-0 h-full" />
                 <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="absolute z-20 text-center text-white max-w-2xl px-4"
+                    className="absolute z-20 text-center text-white max-w-2xl px-4 my-20"
                 >
                     <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-200">
                         {title}

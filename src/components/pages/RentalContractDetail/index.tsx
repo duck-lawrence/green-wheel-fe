@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useMemo, useRef, useState } from "react"
+import React, { useEffect, useMemo, useRef } from "react"
 import { motion } from "framer-motion"
 import {
     InvoiceAccordion,
@@ -89,8 +89,6 @@ export function RentalContractDetail({
     const { toFullName } = useUserHelper()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
     const { isOpen, onOpen, onOpenChange } = useDisclosure()
-
-    const [isReturnChecked, setIsReturnChecked] = useState(false)
 
     const payload = decodeJwt(useTokenStore((s) => s.accessToken!))
     const { data: contract, isLoading } = useGetRentalContractById({
@@ -270,7 +268,6 @@ export function RentalContractDetail({
                             isReadOnly
                             label={t("rental_contract.vehicle_name")}
                             value={contract.vehicle?.model.name || "-"}
-                            placeholder="VinFast VF8"
                             startContent={
                                 <Car size={22} className="text-primary" weight="duotone" />
                             }
@@ -459,8 +456,6 @@ export function RentalContractDetail({
                     contract={contract}
                     isStaff={isStaff}
                     isCustomer={isCustomer}
-                    isReturnChecked={isReturnChecked}
-                    setIsReturnChecked={setIsReturnChecked}
                     handoverFormik={handoverFormik}
                     hanoverChecklist={hanoverChecklist}
                 />

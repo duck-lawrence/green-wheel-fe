@@ -26,6 +26,7 @@ export type CreateVehicleModelReq = {
     sportRangeKm: number
     brandId: string
     segmentId: string
+    componentIds?: string[]
 }
 
 export type UpdateVehicleModelReq = {
@@ -41,6 +42,10 @@ export type UpdateVehicleModelReq = {
     sportRangeKm?: number
     brandId?: string
     segmentId?: string
+}
+
+export type UpdateModelComponentsReq = {
+    componentIds: string[]
 }
 
 export type DeleteModelImagesReq = {

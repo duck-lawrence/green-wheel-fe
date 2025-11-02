@@ -4,12 +4,21 @@ import "./index.css"
 import { NavbarBrand, NavbarContent, NavbarItem } from "@heroui/react"
 import Link from "next/link"
 import { useTranslation } from "react-i18next"
-import { ButtonStyled, NavbarStyled, LanguageSwitcher, LogoStyled } from "@/components/"
+import {
+    ButtonStyled,
+    NavbarStyled,
+    LanguageSwitcher,
+    LogoStyled,
+    ButtonIconStyled
+} from "@/components/"
 import { useLoginDiscloresureSingleton, useTokenStore } from "@/hooks"
 import { ProfileDropdown } from "./ProfileDropdown"
 import { usePathname } from "next/navigation"
 import { GREENWHEEL } from "@/constants/constants"
 import clsx from "clsx"
+import { X, Menu } from "lucide-react"
+import { motion } from "framer-motion"
+import { createPortal } from "react-dom"
 
 type MenuKey = "home" | "vehicle-rental" | "about" | "contact" | undefined
 type MenuItem = { key: Exclude<MenuKey, undefined>; label: string }
@@ -26,6 +35,7 @@ export function Navbar() {
     const [scrollState, setScroledState] = useState<NavbarState>("default")
     const [isHiddenNavbar, setIsHiddenNavbar] = useState(false)
     const [lastScrollY, setLastScrollY] = useState(0)
+    const [isOpen, setIsOpen] = useState(false) // mobile drawer state
     // set active key
     const { menuKey } = useMemo(() => {
         const segment = pathname.split("/").filter(Boolean)[0]
@@ -151,7 +161,7 @@ export function Navbar() {
             <NavbarBrand>
                 <Link href={"/"} className="flex items-center gap-2">
                     <LogoStyled className="w-8 h-8" />
-                    <p className="hidden sm:block font-bold text-inherit">{GREENWHEEL}</p>
+                    <p className="sm:hidden md:block font-bold text-inherit">{GREENWHEEL}</p>
                 </Link>
             </NavbarBrand>
             {/* middle content */}
@@ -181,7 +191,63 @@ export function Navbar() {
             <NavbarContent justify="end">
                 <LanguageSwitcher
                     isChangeTextColor={scrollState === "top" || scrollState === "middle"}
+                    wrapperClassName="hidden sm:block"
                 />
+                <div className="relative sm:hidden">
+                    {/* Nút mở menu */}
+                    <ButtonIconStyled
+                        onPress={() => setIsOpen((prev) => !prev)}
+                        className="z-[9999]"
+                    >
+                        {isOpen ? <X size={24} /> : <Menu size={24} />}
+                    </ButtonIconStyled>
+
+                    {/* Backdrop */}
+                    {isOpen &&
+                        createPortal(
+                            <div
+                                className="fixed inset-0 bg-black/40 z-40 backdrop-blur-sm"
+                                onClick={() => setIsOpen(false)}
+                            />,
+                            document.body
+                        )}
+
+                    {/* Menu trượt xuống */}
+                    <motion.div
+                        initial={{ y: "-100%", opacity: 0 }}
+                        animate={isOpen ? { y: 0, opacity: 1 } : { y: "-100%", opacity: 0 }}
+                        transition={{ type: "spring", stiffness: 260, damping: 25 }}
+                        className="fixed top-19 left-0 w-full bg-white shadow-lg flex flex-col items-center z-[999] pb-3"
+                    >
+                        {menus.map((menu) => {
+                            const isActive =
+                                pathname === (menu.key === "home" ? "/" : `/${menu.key}`)
+                            return (
+                                <button
+                                    key={menu.key}
+                                    className={`text-lg block w-full py-2 text-center font-medium ${
+                                        isActive
+                                            ? "text-white font-semibold bg-primary"
+                                            : "text-black hover:text-white hover:bg-primary"
+                                    }`}
+                                >
+                                    <Link
+                                        href={menu.key === "home" ? "/" : "/" + menu.key}
+                                        onClick={() => setIsOpen(false)}
+                                    >
+                                        {menu.label}
+                                    </Link>
+                                </button>
+                            )
+                        })}
+                        <LanguageSwitcher
+                            isChangeTextColor={false}
+                            wrapperClassName="px-4"
+                            onClick={() => setIsOpen(false)}
+                        />
+                    </motion.div>
+                </div>
+
                 <NavbarItem className="flex items-center">
                     {isLoggedIn ? (
                         <ProfileDropdown />

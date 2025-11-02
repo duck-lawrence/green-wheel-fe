@@ -22,7 +22,9 @@ export default function CardReviewUser({
     className
 }: CardReviewProps) {
     return (
-        <div className={cn("flex flex-col gap-4 min-w-[300px] max-w-sm", className)}>
+        <div
+            className={cn("flex flex-col gap-4 min-w-[200px] sm:min-w-[300px] max-w-sm", className)}
+        >
             <CardReview
                 content={content}
                 createdAt={createdAt}

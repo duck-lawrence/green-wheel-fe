@@ -13,7 +13,7 @@ export const dispatchApi = {
             await axiosInstance.post("/dispatch-requests", req)
         }),
 
-    update: ({ id, req }: { id: string; req: UpdateDispatchReq }) =>
+    updateStatus: ({ id, req }: { id: string; req: UpdateDispatchReq }) =>
         requestWrapper<void>(async () => {
             await axiosInstance.put(`/dispatch-requests/${id}`, req)
         }),

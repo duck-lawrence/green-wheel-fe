@@ -71,10 +71,15 @@
         "upload": "Upload",
         "update": "Update",
         "edit": "Edit",
+        "edit_components": "Edit Components",
         "edit_user": "Edit User",
         "save_changes": "Save Changes",
+        "confirm": "Confirm",
+        "confirm_to_submit": "Confirm to submit",
+        "confirm_to_submit_body": "Please confirm you want to submit",
+        "confirm_to_update": "Confirm to update",
         "cancel": "Cancel",
-        "too_many_request": "Too many request. Try again later",
+        "too_many_request": "Too many requests. Please try again later.",
         "unexpected_error": "An unexpected error occurred. Please try again later.",
         "search": "Search",
         "save": "Save",
@@ -85,10 +90,11 @@
         "choose": "Choose",
         "send": "Send",
         "redirecting": "Redirecting...",
-        "image": "Image"
+        "image": "Image",
+        "required": "Required"
     },
     "json": {
-        "parsing_failed": "Failed to parse json"
+        "parsing_failed": "Failed to parse JSON"
     },
     "auth": {
         "only_customer": "Only customer can use this feature",
@@ -116,8 +122,8 @@
         "invalid_otp": "Invalid OTP",
         "otp_can_not_empty": "OTP is required",
         "otp_must_have_6_digits": "OTP must have 6 digits",
-        "rate_limit_otp": "Resend OTP after 1 minute",
-        "attemp_otp": "Too many attemps, please resend to get new OTP",
+        "rate_limit_otp": "You can resend the OTP after 1 minute.",
+        "attemp_otp": "Too many attempts. Please request a new OTP.",
 
         "user_id_is_required": "User ID is required",
 
@@ -126,7 +132,7 @@
         "invalid_email": "Email is invalid",
 
         "password_too_short": "Password must be at least 8 characters",
-        "confirm_password_is_incorrect": "Confirm password must be the same as the new password",
+        "confirm_password_is_incorrect": "The confirmation password does not match the new password.",
         "password_can_not_empty": "Password is required",
         "new_password_can_not_empty": "New password is required",
         "password_strength": "Password must contain at least 1 uppercase letter, 1 number, and 1 special character",
@@ -224,7 +230,7 @@
         "enter_required_info": "Please complete your profile with your citizen ID, driver’s license, phone number, and date of birth to continue booking."
     },
     "login": {
-        "welcome": "Welcome Back",
+        "welcome": "Welcome!",
         "login_continue": "Login to your account to continue",
         "please_login": "Please login",
         "remember": "Remember Me",
@@ -254,7 +260,7 @@
         "station": "Station",
         "status": "Status",
         "no": "No.",
-        "id": "Id",
+        "id": "ID",
         "name": "Name",
         "email": "Email",
         "start_date": "Start date",
@@ -323,6 +329,14 @@
         "not_found": "Vehicle segment not found"
     },
     "vehicle_model": {
+        "brand_unknown": "Unknown brand",
+        "segment_unknown": "Unknown segment",
+        "unit": "Unit",
+        "capacity_label": "Capacity",
+        "seats": "seats",
+        "available": "Available",
+        "unavailable": "Unavailable",
+        "price_label": "Price",
         "information": "Vehicle information",
         "specs": "Specifications",
         "station": "Station",
@@ -352,7 +366,7 @@
         "not_include_tax": "Not include tax",
         "not_found": "Vehicle model not found",
         "rent_time_is_not_available": "Rent time is not available",
-        "name": "Model name",
+        "name": "Model Name",
         "name_placeholder": "Enter model name",
         "name_require": "Name is required",
         "description": "Description",
@@ -410,8 +424,41 @@
         "main_image_not_found": "Main image not found"
     },
     "vehicle_component": {
-        "not_found": "Vehicke component not found",
-        "component": "Component"
+        "not_found": "Vehicle component not found",
+        "component": "Component",
+        "management_title": "Vehicle components",
+        "management_description": "Manage reusable components for vehicle models.",
+        "create_button": "Add component",
+        "table_name": "Component name",
+        "table_description": "Description",
+        "table_damage_fee": "Damage fee",
+        "table_actions": "Actions",
+        "modal_create_title": "Create vehicle component",
+        "modal_edit_title": "Update vehicle component",
+        "modal_delete_title": "Delete vehicle component",
+        "modal_delete_message": "Are you sure you want to remove \"{{name}}\"? This component will no longer appear in the list.",
+        "form_name_label": "Component Name *",
+        "form_name_placeholder": "Enter component name",
+        "form_name_required": "Component name is required",
+        "form_name_max": "Component name must be at most 100 characters",
+        "form_description_label": "Description",
+        "form_description_placeholder": "Enter description",
+        "form_description_required": "Description is required",
+        "form_description_max": "Description must be at most 255 characters",
+        "form_damage_fee_label": "Damage Fee (₫) *",
+        "form_damage_fee_placeholder": "Enter damage fee",
+        "form_damage_fee_required": "Damage fee must be greater than zero",
+        "form_damage_fee_positive": "Damage fee must be greater than zero",
+        "filter_title": "Component filters",
+        "filter_name_label": "Component name",
+        "filter_name_placeholder": "Enter component name",
+        "empty_state_title": "No components found",
+        "empty_state_description": "Click + to add one.",
+        "table_empty": "No vehicle components found.",
+        "fetch_error": "Unable to load components. Please try again."
+    },
+    "currency": {
+        "vnd": "VND"
     },
     "station": {
         "station": "Station",
@@ -432,6 +479,7 @@
         "female": "Female",
         "pending": "Pending",
         "approved": "Approved",
+        "confirm_approved": "Confirm Approved",
         "rejected": "Rejected",
         "received": "Received",
         "paid": "Paid",
@@ -553,7 +601,7 @@
         "select_customer": "Select customer"
     },
     "cloudinary": {
-        "file_not_found": "File not fount",
+        "file_not_found": "File not found",
         "invalid_file_type": "Invalid file type"
     },
     "staff": {
@@ -624,7 +672,8 @@
         "user_filter_has_document_license": "Driving License",
         "user_filter_has_document_citizen": "Citizen ID",
         "sidebar_feedback": "Feedback",
-        "user_filter_has_document_none": "No document"
+        "user_filter_has_document_none": "No document",
+        "name": "Staff name"
     },
     "admin": {
         "statistic": "Statistic",
@@ -644,7 +693,8 @@
         "vehicle_delete_confirm": "Are you sure you want to remove this vehicle from the fleet?",
         "dispatch": "Dispatch",
         "sidebar_vehicle_management": "Vehicle Management",
-        "system_setting": "System Setting"
+        "system_setting": "System Setting",
+        "sidebar_vehicle_components": "Vehicle Components"
     },
     "footer": {
         "green_wheel_company_name": "GREEN WHEEL Trading and Service Joint Stock Company",
@@ -705,7 +755,7 @@
         "create_at": "Created at",
         "user_already_have_contract": "You can only have one pending or active contract at a time",
         "not_found": "Rental Booking not found",
-        "already_process": "This Rental Booking already processes",
+        "already_process": "This Rental Booking has already been processed.",
         "can_not_cancel": "This Rental Booking can not be cancelled",
         "handover": "Handover",
         "return": "Return",
@@ -815,10 +865,10 @@
         "list_staff": "List staffs",
         "dispatch_detail": "Dispatch Detail",
         "station_information": "Station Information",
-        "station_form": "Station form",
+        "form_station": "From Station",
         "station_id": "Station ID",
         "station_name": "Station name",
-        "to_station": "To station",
+        "to_station": "To Station",
         "cur_status": "Current Status",
         "dispatch_status": "Dispatch Status",
         "assigned_staff": "Assigned Staffs",
@@ -826,7 +876,16 @@
         "station": "Station",
         "description": "Description",
         "dispatch_table": "Dispatch table",
-        "create": "Create"
+        "create": "Create",
+        "from_station_require": "From station is required",
+        "number_staff": "Number of staffs",
+        "number_staff_require": "Number of staffs is required",
+        "number_staff_min": "Number of staffs must be at least 0",
+        "vehicle_model_require": "Vehicle model is required",
+        "number_vehicle": "Number of vehicles",
+        "number_vehicle_require": "Number of vehicles is required",
+        "number_vehicle_min": "Number of vehicles must be at least 1",
+        "approve": "Approve"
     },
     "document_preview": {
         "upload_image": "Upload image",
@@ -903,24 +962,24 @@
         "signed_by_customer_require": "Customer must sign"
     },
     "review": {
-        "create_successfull": "Create feedback successful",
+        "create_successfull": "Feedback created successfully",
         "rating_required": "Rating required",
         "send_feedback": "Send feedback",
         "customer_review": "Customer reviews",
         "station_required": "Station required",
-        "content_required": "content required",
+        "content_required": "Content required",
         "submit": "Submit review",
         "review": "Review",
         "review_placeholder": "Please enter your review here...",
         "rating": "Rating",
-        "create_title": "Create feedback",
+        "create_title": "Create Feedback",
         "delete_successfull": "Delete feedback successful",
         "feedback": "Feedback"
     },
     "fleet": {
         "page_title": "Fleet Management",
         "filter_title": "Filters",
-        "search_placeholder": "Search vehicle model, brand, etc",
+        "search_placeholder": "Search vehicle model, etc",
         "filter_car_type": "Segment",
         "filter_status": "Status",
         "status_available": "Available",
@@ -945,6 +1004,10 @@
         "hide_gallery": "Hide images",
         "detail_spec_title": "Technical specifications",
         "detail_about": "About",
+        "detail_component_edit_title": "Edit Components",
+        "detail_component_section_title": "Vehicle components",
+        "detail_component_table_loading": "Loading components...",
+        "detail_component_table_empty": "This vehicle model has no components yet.",
         "detail_description_empty": "This vehicle model has no description yet.",
         "detail_units_unit": "units",
         "detail_unknown": "Updating",
@@ -978,7 +1041,12 @@
         "spec_airbags": "Airbags"
     },
     "reaview": {
-        "create": "Create feedback successful"
+        "create": "Feedback created successfully"
+    },
+    "validation": {
+        "number_type_require": "Must be a number",
+        "integer_require": "Must be an integer",
+        "required": "Required"
     },
     "toast": {
         "create": "Create",

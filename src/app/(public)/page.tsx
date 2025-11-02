@@ -9,7 +9,6 @@ import {
     WhyChoose
 } from "@/components"
 import React, { useEffect, useRef } from "react"
-import { slides } from "@/../public/cars"
 import { useTranslation } from "react-i18next"
 import { useRouter, useSearchParams } from "next/navigation"
 import { addToast } from "@heroui/toast"
@@ -56,7 +55,7 @@ export default function HomePage() {
 
                 {/* Carousel */}
                 <section className="bg-gradient-to-b from-green-100/70 via-white/80 to-transparent py-20">
-                    <Carousel slides={slides} />
+                    <Carousel />
                 </section>
 
                 {/* Stations */}
