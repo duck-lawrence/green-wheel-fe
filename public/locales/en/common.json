@@ -639,7 +639,7 @@
         "handovers_table_range_separator": "to",
         "dashboard_title": "Staff dashboard",
         "dashboard_subtitle": "Select a module from the sidebar to get started.",
-        "user_management_title": "User Management",
+        "customer_management_title": "Customer Management",
         "user_management_description": "Manage customer records and adjust their permissions when needed.",
         "user_management_placeholder": "This module is ready for integration with account management APIs.",
         "user_management_empty": "No users found",

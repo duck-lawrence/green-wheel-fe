@@ -183,7 +183,11 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
     return (
         <div className="rounded-2xl bg-white shadow-sm px-6 py-6">
             <div className="text-3xl mb-3 px-4 font-bold">
-                <p>{t("staff.user_management_title")}</p>
+                <p>
+                    {isCustomerManagement
+                        ? t("staff.customer_management_title")
+                        : t("admin.staff_management_title")}
+                </p>
             </div>
 
             <div className="mb-4">
