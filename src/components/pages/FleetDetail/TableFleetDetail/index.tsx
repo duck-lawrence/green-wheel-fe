@@ -1,8 +1,6 @@
 "use client"
 
 import React from "react"
-import { VehicleStatus } from "@/constants/enum"
-import { useDay } from "@/hooks"
 
 type TranslateFn = (key: string, fallback?: string) => string
 

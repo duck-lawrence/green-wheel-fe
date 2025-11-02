@@ -40,7 +40,6 @@ export function VehicleEditModal({
     isOpen,
     onOpenChange,
     onClose,
-    stationOptions,
     statusOptions,
     vehicleModelOptions,
     isModelLoading,
