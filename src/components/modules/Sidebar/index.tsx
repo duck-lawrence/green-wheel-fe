@@ -133,11 +133,11 @@ export function Sidebar({ tabs, selectedKey, className = "" }: SidebarProps) {
                             {tabs.map((item) => {
                                 const isActive = activeKey === item.key
                                 return (
-                                    <button
+                                    <motion.button
                                         key={item.key}
                                         onClick={() => handleSelection(item.key)}
                                         className={cn(
-                                            "relative w-full overflow-hidden px-3 py-2 text-xl font-medium mb-2",
+                                            "relative w-full overflow-hidden px-3 py-2 text-xl font-medium",
                                             "flex items-center justify-start whitespace-nowrap transition-colors duration-150",
                                             isActive
                                                 ? "bg-primary text-white"
@@ -145,7 +145,7 @@ export function Sidebar({ tabs, selectedKey, className = "" }: SidebarProps) {
                                         )}
                                     >
                                         {item.label}
-                                    </button>
+                                    </motion.button>
                                 )
                             })}
                         </motion.div>
