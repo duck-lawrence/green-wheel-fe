@@ -76,6 +76,8 @@ export function Navbar() {
         setActiveMenuKey(menuKey)
     }, [menuKey])
 
+    const isCollapse = scrollState === "top" || scrollState === "middle"
+
     // handle navbar animation
     const baseClasses = clsx(
         "bg-transparent transition-all duration-400 ease-in-out fixed left-0 w-full z-50 mx-auto",
@@ -85,8 +87,8 @@ export function Navbar() {
             "-translate-y-full opacity-0": isHiddenNavbar,
             "translate-y-0 opacity-100": !isHiddenNavbar,
             "text-white rounded-3xl bg-[#080808]/60 backdrop-blur-md mx-auto max-w-3xl scale-95":
-                scrollState === "top" || scrollState === "middle",
-            "backdrop-blur-none": !(scrollState === "top" || scrollState === "middle"),
+                isCollapse,
+            "backdrop-blur-none": !isCollapse,
             "text-white": menuKey === "about"
         }
     )
@@ -165,7 +167,7 @@ export function Navbar() {
                     onClick={() => setIsOpen(false)}
                 >
                     <LogoStyled className="w-12 h-12" />
-                    <p className="hidden md:block font-bold text-inherit">{GREENWHEEL}</p>
+                    <p className="font-bold text-inherit">{isCollapse ? "GW" : GREENWHEEL}</p>
                 </Link>
             </NavbarBrand>
             {/* middle content */}
@@ -175,11 +177,7 @@ export function Navbar() {
                         key={menu.key}
                         isActive={activeMenuKey == menu.key}
                         className={`""text-center px-3 w-fit"
-                            ${
-                                scrollState === "top" || scrollState === "middle"
-                                    ? "text-white"
-                                    : "text-inherit"
-                            }`}
+                            ${isCollapse ? "text-white" : "text-inherit"}`}
                     >
                         <Link
                             href={menu.key === "home" ? "/" : "/" + menu.key}
@@ -194,7 +192,7 @@ export function Navbar() {
             {/* end content */}
             <NavbarContent justify="end">
                 <LanguageSwitcher
-                    isChangeTextColor={scrollState === "top" || scrollState === "middle"}
+                    isChangeTextColor={isCollapse}
                     wrapperClassName="hidden sm:block z-[9999]"
                 />
                 <div className="relative sm:hidden">
