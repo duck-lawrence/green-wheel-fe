@@ -159,9 +159,13 @@ export function Navbar() {
         >
             {/* start content */}
             <NavbarBrand>
-                <Link href={"/"} className="flex items-center gap-2">
-                    <LogoStyled className="w-8 h-8" />
-                    <p className="sm:hidden md:block font-bold text-inherit">{GREENWHEEL}</p>
+                <Link
+                    href={"/"}
+                    className="flex items-center gap-2 z-[9999]"
+                    onClick={() => setIsOpen(false)}
+                >
+                    <LogoStyled className="w-12 h-12" />
+                    <p className="hidden md:block font-bold text-inherit">{GREENWHEEL}</p>
                 </Link>
             </NavbarBrand>
             {/* middle content */}
@@ -191,7 +195,7 @@ export function Navbar() {
             <NavbarContent justify="end">
                 <LanguageSwitcher
                     isChangeTextColor={scrollState === "top" || scrollState === "middle"}
-                    wrapperClassName="hidden sm:block"
+                    wrapperClassName="hidden sm:block z-[9999]"
                 />
                 <div className="relative sm:hidden">
                     {/* Nút mở menu */}
@@ -248,12 +252,15 @@ export function Navbar() {
                     </motion.div>
                 </div>
 
-                <NavbarItem className="flex items-center">
+                <NavbarItem className="flex items-center z-[9999]">
                     {isLoggedIn ? (
-                        <ProfileDropdown />
+                        <ProfileDropdown onOpen={() => setIsOpen(false)} />
                     ) : (
                         <ButtonStyled
-                            onPress={onOpenLogin}
+                            onPress={() => {
+                                onOpenLogin()
+                                setIsOpen(false)
+                            }}
                             color="primary"
                             variant="solid"
                             className="rounded-3xl opacity-97"

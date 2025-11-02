@@ -51,7 +51,7 @@ export const buildItems = ({
     return uniqueItems
 }
 
-export function ProfileDropdown() {
+export function ProfileDropdown({ onOpen = undefined }: { onOpen?: () => void }) {
     const { t } = useTranslation()
     const router = useRouter()
     const logoutMutation = useLogout({ onSuccess: () => router.replace("/") })
@@ -142,6 +142,7 @@ export function ProfileDropdown() {
                         classNames={{
                             name: "hidden sm:block text-[16px] font-bold"
                         }}
+                        onClick={() => onOpen?.()}
                     />
                 </DropdownTrigger>
                 <DropdownMenu className="max-w-fit" variant="flat">
