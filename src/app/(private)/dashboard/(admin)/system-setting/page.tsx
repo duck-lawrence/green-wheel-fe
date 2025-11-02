@@ -15,6 +15,7 @@ export default function SystemSettingPage() {
     const updateBusinessVariables = useUpdateBusinessVariables()
 
     const [values, setValues] = useState<Record<string, string>>({})
+
     const handleChange = (id: string, value: string) => {
         setValues((prev) => ({ ...prev, [id]: value }))
     }
