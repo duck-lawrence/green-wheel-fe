@@ -1,6 +1,7 @@
 "use client"
 
 import React from "react"
+import Image from "next/image"
 import {
     BatteryCharging,
     CheckCircle,
@@ -87,11 +88,14 @@ export function FleetInfoHeader(props: FleetInfoHeaderProps) {
             <div className="space-y-6">
                 <div className="w-full">
                     <div className="mx-auto w-full max-w-xl">
-                        <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-slate-100">
-                            <img
+                        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-slate-100">
+                            <Image
                                 src={subImgUrls[activeImage] ?? DEFAULT_VEHICLE_MODEL}
                                 alt={vehicleModel.name}
-                                className="h-full w-full object-cover"
+                                fill
+                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 75vw, 640px"
+                                className="object-cover"
+                                priority
                             />
                         </div>
                     </div>

@@ -197,11 +197,19 @@ export const useUpdateVehicleModelComponents = ({
             vehicleModelApi.updateComponents({ id, payload }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
-            toast.success(t("success.update"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.update"),
+                color: "success"
+            })
             onSuccess?.()
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
             onError?.()
         }
     })

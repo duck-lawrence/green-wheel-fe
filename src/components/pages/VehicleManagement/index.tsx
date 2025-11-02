@@ -95,23 +95,26 @@ export function AdminVehicleManagementView() {
   )
 
 
-const STATUS_LABEL_MAP: Record<VehicleStatus, string> = {
-  [VehicleStatus.Available]: t("vehicle.status_value_available"),
-  [VehicleStatus.Unavailable]: t("vehicle.status_value_unavailable"),
-  [VehicleStatus.Rented]: t("vehicle.status_value_rented"),
-  [VehicleStatus.Maintenance]: t("vehicle.status_value_maintenance"),
-  [VehicleStatus.MissingNoReason]: t("vehicle.status_value_missingnoreason"),
-  [VehicleStatus.LateReturn]: t("vehicle.status_value_latereturn")
-}
+  const statusLabelMap = useMemo<Record<VehicleStatus, string>>(
+    () => ({
+      [VehicleStatus.Available]: t("vehicle.status_value_available"),
+      [VehicleStatus.Unavailable]: t("vehicle.status_value_unavailable"),
+      [VehicleStatus.Rented]: t("vehicle.status_value_rented"),
+      [VehicleStatus.Maintenance]: t("vehicle.status_value_maintenance"),
+      [VehicleStatus.MissingNoReason]: t("vehicle.status_value_missingnoreason"),
+      [VehicleStatus.LateReturn]: t("vehicle.status_value_latereturn")
+    }),
+    [t]
+  )
 
-const statusOptions = useMemo(
-  () =>
-    STATUS_VALUES.map((s) => ({
-      key: s.toString(),
-      label: STATUS_LABEL_MAP[s] ?? t("vehicle.status_value_unknown")
-    })),
-  [t]
-)
+  const statusOptions = useMemo(
+    () =>
+      STATUS_VALUES.map((s) => ({
+        key: s.toString(),
+        label: statusLabelMap[s] ?? t("vehicle.status_value_unknown")
+      })),
+    [statusLabelMap, t]
+  )
 
   const vehicleModelsById = useMemo(
     () => vehicleModels.reduce<Record<string, VehicleModelViewRes>>((acc, m) => { acc[m.id] = m; return acc }, {}),

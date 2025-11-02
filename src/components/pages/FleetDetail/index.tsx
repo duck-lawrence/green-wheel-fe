@@ -40,7 +40,6 @@ import { DEFAULT_VEHICLE_MODEL } from "@/constants/constants"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 
 import {
-    VehicleModelViewRes,
     VehicleViewRes,
     VehicleComponentViewRes
 } from "@/models/vehicle/schema/response"
@@ -195,7 +194,6 @@ function useFleetData(modelId: string | undefined) {
         vehiclesError,
         componentsError,
         stationsError,
-        vehicleModels: vehicleModelsData,
         refetchVehicleModels,
         componentsOfModel,
         refetchComponents
@@ -248,7 +246,6 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
         vehiclesError,
         componentsError,
         stationsError,
-        vehicleModels,
         refetchVehicleModels,
         refetchComponents
     } = useFleetData(modelId)
