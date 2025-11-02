@@ -3,17 +3,19 @@ import { Chip, cn } from "@heroui/react"
 import React from "react"
 import { CardStyled } from "../CardStyled"
 import { Icon } from "@iconify/react"
+import { TrendCardProps } from "@/components/modules"
+import { Percent } from "lucide-react"
 
 // đưa cái này vô models
-type TrendCardProps = {
-    title: string
-    value: string
-    change: string
-    changeType: "positive" | "neutral" | "negative" // đổi màu changeType
-    trendType: "up" | "neutral" | "down" // đổi dấu mũi tên changeType
-    trendChipPosition?: "top" | "bottom" // đổi vị trí changeType
-    trendChipVariant?: "flat" | "light" // bg changeType
-}
+// type TrendCardProps = {
+//     title: string
+//     value: string
+//     change: string
+//     changeType: "positive" | "neutral" | "negative" // đổi màu changeType
+//     trendType: "up" | "neutral" | "down" // đổi dấu mũi tên changeType
+//     trendChipPosition?: "top" | "bottom" // đổi vị trí changeType
+//     trendChipVariant?: "flat" | "light" // bg changeType
+// }
 
 export function TrendCardStyled({
     title,
@@ -29,12 +31,16 @@ export function TrendCardStyled({
             <div className="flex p-4">
                 <div className="flex flex-col gap-y-2">
                     <dt className="text-small text-default-500 font-medium">{title}</dt>
-                    <dd className="text-default-700 text-2xl font-semibold">{value}</dd>
+                    <dd className="text-default-700 text-2xl font-semibold">
+                        {value}{" "}
+                        {title !== "Anonymous" && title !== "Member" ? (
+                            <span style={{ fontWeight: 600 }}>₫</span>
+                        ) : null}
+                    </dd>
                 </div>
                 <Chip
                     className={cn("absolute right-4", {
-                        "top-4": trendChipPosition === "top",
-                        "bottom-4": trendChipPosition === "bottom"
+                        "top-4": trendChipPosition === "top"
                     })}
                     classNames={{
                         content: "font-medium text-[0.65rem]"
@@ -59,7 +65,11 @@ export function TrendCardStyled({
                     }
                     variant={trendChipVariant}
                 >
-                    {change}
+                    <span className="flex">
+                        {change}
+                        <Percent size={10} className="mt-1" />
+                    </span>
+                    {/* <span style={{ fontWeight: 600 }}>%</span> */}
                 </Chip>
             </div>
         </CardStyled>

@@ -288,7 +288,8 @@
         "rating": "Rating",
         "feedback": "Feedback",
         "content": "Content",
-        "station_feedbacks": "Station Feedbacks"
+        "station_feedbacks": "Station Feedbacks",
+        "country": "Country"
     },
     "contral_form": {
         "full_name_require": "Full name is required",
@@ -555,7 +556,12 @@
         "handover": "Handover",
         "admin": "Admin",
         "staff": "Staff",
-        "customer": "Customer"
+        "customer": "Customer",
+        "late_return_fee_per_hour": "Late Return Fee Per Hour",
+        "cleaning_fee": "Cleaning Fee",
+        "base_vat": "Base VAT",
+        "max_late_return_hours": "Max Late Return Hours",
+        "rental_contract_buffer_day": "Rental Contract Buffer Day"
     },
     "car_rental": {
         "vehicle": "Vehicle",
@@ -670,6 +676,7 @@
         "name": "Staff name"
     },
     "admin": {
+        "statistic": "Statistic",
         "dashboard_title": "Admin Dashboard",
         "dashboard_subtitle": "Select a module from the sidebar to get started.",
         "sidebar_fleet": "Fleet",
@@ -686,6 +693,7 @@
         "vehicle_delete_confirm": "Are you sure you want to remove this vehicle from the fleet?",
         "dispatch": "Dispatch",
         "sidebar_vehicle_management": "Vehicle Management",
+        "system_setting": "System Setting",
         "sidebar_vehicle_components": "Vehicle Components"
     },
     "footer": {
@@ -1053,5 +1061,37 @@
         "create_success": "Created successfully",
         "update_success": "Updated successfully",
         "delete_success": "Deleted successfully"
+    },
+    "statistic": {
+        "vehicle_count_by_model": "Vehicle Count by Model",
+        "general_statistics": "General Statistics",
+        "monthly_revenue": "Monthly Revenue",
+        "maintenance": "Maintenance",
+        "available": "Available",
+        "rented": "Rented"
+    },
+    "system": {
+        "system_setting": "System Setting",
+        "business_variables": "Business variables",
+        "create_brand": "Create Brand",
+        "update_brand": "Update Brand",
+        "create_brand_description": "Add a new vehicle brand to the system.",
+        "update_brand_description": "Modify existing vehicle brand information.",
+        "brand_name": "Brand Name",
+        "brand_country": "Country",
+        "brand_founded_year": "Founded Year",
+        "brand_description": "Description",
+        "brand_description_placeholder": "Describe the brand...",
+        "brand": "Brand",
+        "vehicle_segment": "Vehicle Segment",
+        "create_segment": "Create Segment",
+        "update_segment": "Update Segment",
+        "create_vehicle_segment": "Create Vehicle Segment",
+        "update_vehicle_segment": "Update Vehicle Segment",
+        "vehicle_segment_description": " Add or modify a vehicle segment in the system.",
+        "segment_name": "Segment name",
+        "create_vehicle_segment_description": "Add a new vehicle segment to the system.",
+        "update_vehicle_segment_description": "Modify existing vehicle segment information.",
+        "vehicle_segment_description_placeholder": "Describe the vehicle segment..."
     }
 }

@@ -135,3 +135,11 @@ export enum VehicleChecklistType {
     Handover = 1,
     Return = 2
 }
+
+export enum BusinessVariableKey {
+    LateReturnFeePerHour = 0,
+    CleaningFee = 1,
+    BaseVAT = 2,
+    MaxLateReturnHours = 3,
+    RentalContractBufferDay = 4
+}
