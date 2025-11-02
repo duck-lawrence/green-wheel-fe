@@ -13,6 +13,7 @@ import { ButtonStyled, TableStyled } from "@/components/styled"
 import { CreateBrandModal } from "@/components/modals/SystemSettingModal/CreateBrandModal"
 import { UpdateBrandModal } from "@/components/modals/SystemSettingModal/UpdateBrandModal"
 import { useGetAllBrandes } from "@/hooks/queries/useBrand"
+import { Pencil, PlusCircle } from "lucide-react"
 
 export function Brand() {
     const { t } = useTranslation()
@@ -31,8 +32,9 @@ export function Brand() {
                 <ButtonStyled
                     color="primary"
                     onPress={onOpenCreate}
-                    className="m-2 hover:text-black"
+                    className="m-2 btn-gradient btn-gradient:hover btn-gradient:active"
                 >
+                    <PlusCircle size={18} />
                     {t("common.create")}
                 </ButtonStyled>
             </div>
@@ -55,7 +57,7 @@ export function Brand() {
                         <TableColumn className="text-center text-gray-700 font-semibold">
                             {t("table.description")}
                         </TableColumn>
-                        <TableColumn className="text-center text-gray-700 font-semibold">
+                        <TableColumn className="text-center text-gray-700 font-semibold w-36">
                             {t("table.action")}
                         </TableColumn>
                     </TableHeader>
@@ -74,14 +76,14 @@ export function Brand() {
                                 </TableCell>
                                 <TableCell className="text-center">
                                     <ButtonStyled
-                                        color="primary"
-                                        variant="bordered"
-                                        className="h-8 w-18 font-medium rounded-full"
+                                        variant="flat"
+                                        className="h-8 w-auto px-4 rounded-full border border-primary text-green-600 hover:bg-green-100transition"
                                         onPress={() => {
                                             setSelectedId(item.id)
                                             onOpenUpdate()
                                         }}
                                     >
+                                        <Pencil size={15} className="mr-1" />
                                         {t("common.update")}
                                     </ButtonStyled>
                                 </TableCell>

@@ -3,7 +3,7 @@ import { Brand, ButtonStyled, InputStyled, SectionStyled, VehicleSegment } from 
 import { BusinessVariableKey } from "@/constants/enum"
 import { BusinessVariableKeyLabels } from "@/constants/labels"
 import { useGetBusinessVariables, useUpdateBusinessVariables } from "@/hooks"
-import { Pencil, Save, Settings } from "lucide-react"
+import { Car, Pencil, Save, Settings } from "lucide-react"
 import React, { useCallback, useState } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -81,7 +81,7 @@ export default function SystemSettingPage() {
                 <Brand />
             </SectionStyled>
 
-            <SectionStyled title={t("system.vehicle_segment")}>
+            <SectionStyled title={t("system.vehicle_segment")} icon={Car}>
                 <VehicleSegment />
             </SectionStyled>
         </div>
