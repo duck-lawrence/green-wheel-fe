@@ -2,6 +2,7 @@ import { QUERY_KEYS } from "@/constants/queryKey"
 import {
     CustomerAnonymousRes,
     CustomerRes,
+    RevenueByYearRes,
     TotalRevenueRes,
     TotalStatisticRes,
     VehicleModelStatisticRes,
@@ -83,6 +84,19 @@ export const useGetVehicleModelStatistic = ({ enabled = true }: { enabled?: bool
         queryFn: statisticApi.getVehicleModelStatistic,
         initialData: () => {
             return queryClient.getQueryData<VehicleModelStatisticRes[]>(queryKey)
+        },
+        enabled
+    })
+}
+
+export const useGetRevenueByYear = ({ enabled = true }: { enabled?: boolean } = {}) => {
+    const queryClient = useQueryClient()
+    const queryKey = [...QUERY_KEYS.STATISTICS, "revenue-by-year"]
+    return useQuery<RevenueByYearRes[]>({
+        queryKey: queryKey,
+        queryFn: statisticApi.getRevenueByYear,
+        initialData: () => {
+            return queryClient.getQueryData<RevenueByYearRes[]>(queryKey)
         },
         enabled
     })

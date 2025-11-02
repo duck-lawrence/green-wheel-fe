@@ -15,6 +15,7 @@ export default function SystemSettingPage() {
     const updateBusinessVariables = useUpdateBusinessVariables()
 
     const [values, setValues] = useState<Record<string, string>>({})
+
     const handleChange = (id: string, value: string) => {
         setValues((prev) => ({ ...prev, [id]: value }))
     }
@@ -29,54 +30,57 @@ export default function SystemSettingPage() {
         <div className="max-w-6xl mx-auto w-full bg-white/70 p-10 rounded-2xl shadow-md border border-gray-100">
             <header className="mb-8 flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+                    <h1 className="text-3xl mb-3 px-4 font-bold flex gap-1">
                         <span>
-                            <Settings size={25} className="mt-1" />
+                            <Settings size={25} className="mt-2" />
                         </span>
                         {t("system.system_setting")}
                     </h1>
                 </div>
             </header>
 
-            <SectionStyled title={t("system.business_variables")}>
-                <div className="flex justify-end m-2">
-                    {!isEditing ? (
-                        <ButtonStyled
-                            onPress={() => setEditing(true)}
-                            className="border border-primary text-primary hover:bg-primary/10 flex items-center gap-2"
-                        >
-                            <Pencil className="w-4 h-4" />
-                            {t("common.edit")}
-                        </ButtonStyled>
-                    ) : (
-                        <ButtonStyled
-                            onPress={() => {
-                                handleUpdate()
-                                setEditing(!isEditing)
-                            }}
-                            color="primary"
-                            className="flex items-center gap-2 hover:text-black"
-                        >
-                            <Save className="w-4 h-4" />
-                            {t("common.save")}
-                        </ButtonStyled>
-                    )}
-                </div>
+            <div className="bg-white w-full h-full shadow-lg rounded-2xl p-6 mb-6">
+                <SectionStyled title={t("system.business_variables")}>
+                    <div className="flex justify-end m-2">
+                        {!isEditing ? (
+                            <ButtonStyled
+                                onPress={() => setEditing(true)}
+                                className="border border-primary text-primary hover:bg-primary/10 flex items-center gap-2"
+                            >
+                                <Pencil className="w-4 h-4" />
+                                {t("common.edit")}
+                            </ButtonStyled>
+                        ) : (
+                            <ButtonStyled
+                                onPress={() => {
+                                    handleUpdate()
+                                    setEditing(!isEditing)
+                                }}
+                                color="primary"
+                                className="flex items-center gap-2 hover:text-black"
+                            >
+                                <Save className="w-4 h-4" />
+                                {t("common.save")}
+                            </ButtonStyled>
+                        )}
+                    </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
-                    {businessVariables?.map((variable) => (
-                        <InputStyled
-                            key={variable.id}
-                            disabled={!isEditing}
-                            label={BusinessVariableKeyLabels[variable.key as BusinessVariableKey]}
-                            defaultValue={variable.value}
-                            onChange={(e) => handleChange(variable.id, e.target.value)}
-                            className={`transition-all `}
-                        />
-                    ))}
-                </div>
-            </SectionStyled>
-
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {businessVariables?.map((variable) => (
+                            <InputStyled
+                                key={variable.id}
+                                disabled={!isEditing}
+                                label={
+                                    BusinessVariableKeyLabels[variable.key as BusinessVariableKey]
+                                }
+                                defaultValue={variable.value}
+                                onChange={(e) => handleChange(variable.id, e.target.value)}
+                                className={`transition-all `}
+                            />
+                        ))}
+                    </div>
+                </SectionStyled>
+            </div>
             <SectionStyled title={t("system.brand")}>
                 <Brand />
             </SectionStyled>

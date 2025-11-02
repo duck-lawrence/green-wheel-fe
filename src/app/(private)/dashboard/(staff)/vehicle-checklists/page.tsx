@@ -34,8 +34,8 @@ export default function VehicleChecklistPage() {
     } = useGetAllVehicleChecklists({ query: filters, pagination })
 
     return (
-        <div className="px-3 py-2 md:py-8 md:px-12 shadow-2xs rounded-2xl bg-white text-center">
-            <div className="text-3xl pb-6 font-bold text-center text-primary">
+        <div className="px-3 py-2 md:py-8 md:px-12 shadow-2xs rounded-2xl bg-white ">
+            <div className="text-3xl mb-3 px-4 font-bold">
                 <p>{t("vehicle_checklist.checklist")}</p>
             </div>
 

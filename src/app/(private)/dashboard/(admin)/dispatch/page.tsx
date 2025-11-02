@@ -28,9 +28,7 @@ export default function DispatchPage() {
         <div className="max-w-6xl mx-auto w-full bg-white p-10 rounded-2xl shadow-md border border-gray-100">
             {/* Header */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-3 mb-6">
-                <h1 className="text-3xl font-bold text-primary tracking-wide">
-                    {t("table.dispatch_managerment")}
-                </h1>
+                <h1 className="text-3xl mb-3 px-4 font-bold">{t("table.dispatch_managerment")}</h1>
                 <Link href="/dashboard/dispatch/new">
                     {/* <ButtonStyled className="btn-gradient btn-gradient:hover btn-gradient:active text-white font-semibold">
                         + {t("table.create_dispatch")}

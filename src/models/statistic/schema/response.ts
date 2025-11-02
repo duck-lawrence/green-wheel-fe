@@ -40,3 +40,8 @@ export type VehicleModelStatisticRes = {
     numberOfRented: number
     numberOfMaintenance: number
 }
+
+export type RevenueByYearRes = {
+    month: number
+    revenue: number
+}

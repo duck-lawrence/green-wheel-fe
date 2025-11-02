@@ -77,7 +77,7 @@ export default function FeedbackPage() {
                                 <CardReviewUser
                                     key={item.id}
                                     name={item.customerName}
-                                    avatar={item.avartarUrl}
+                                    avatar={item.avatarUrl}
                                     rating={item.rating}
                                     station={
                                         (item.stationId == stations?.[0].id

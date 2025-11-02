@@ -1,6 +1,6 @@
 "use client"
 import { motion } from "framer-motion"
-import { ButtonStyled, FeedbackModal, SpacerStyled } from "@/components"
+import { ButtonStyled, CreateFeedbackModal, SpacerStyled } from "@/components"
 import React, { useCallback, useEffect, useState } from "react"
 import CardReviewUser from "@/components/styled/GrateStyled"
 import { useTranslation } from "react-i18next"
@@ -15,6 +15,7 @@ import { StationFeedbackRes } from "@/models/station-feedback/schema/response"
 
 export function CustomerReview() {
     const { t } = useTranslation()
+
     const isLogined = useTokenStore((s) => !!s.accessToken)
     const { data: user } = useGetMe({ enabled: isLogined })
     const { data: station, isLoading: isStationLoading } = useGetAllStations()
@@ -39,6 +40,8 @@ export function CustomerReview() {
 
     // Concat new data into list
     useEffect(() => {
+        console.log(feedbacks?.items)
+
         if (!feedbacks?.items) return
 
         setAllFeedbacks((prev) => {
@@ -122,8 +125,8 @@ export function CustomerReview() {
                     >
                         {t("review.send_feedback")}
                     </ButtonStyled>
-                    <FeedbackModal
-                        id="feedback-modal"
+                    <CreateFeedbackModal
+                        setAllFeedbacks={setAllFeedbacks}
                         isOpen={isOpen}
                         onOpenChange={onOpenChange}
                         onClose={onClose}
@@ -148,7 +151,7 @@ export function CustomerReview() {
                 className="max-w-7xl mx-auto relative z-10 overflow-x-scroll py-2 px-1 scrollbar-hide
                     [mask-image:linear-gradient(to_right,transparent_0%,black_5%,black_95%,transparent_100%)]"
             >
-                {isLoading || isStationLoading ? (
+                {isStationLoading ? (
                     <div className="text-center">
                         <Spinner />
                     </div>
@@ -169,7 +172,7 @@ export function CustomerReview() {
                             >
                                 <CardReviewUser
                                     name={item.customerName}
-                                    avatar={item.avartarUrl}
+                                    avatar={item.avatarUrl}
                                     rating={item.rating}
                                     station={
                                         (item.stationId == station?.[0].id

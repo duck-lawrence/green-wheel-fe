@@ -17,6 +17,7 @@ export function NumberInputStyled(props: NumberInputProps) {
                 label: cn("text-gray-700", props.classNames?.label),
                 input: cn("text-gray-900", props.classNames?.input)
             }}
+            hideStepper={true}
         />
     )
 }

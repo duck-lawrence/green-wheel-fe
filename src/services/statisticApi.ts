@@ -3,6 +3,7 @@ import { requestWrapper } from "@/utils/helpers/axiosHelper"
 import {
     CustomerAnonymousRes,
     CustomerRes,
+    RevenueByYearRes,
     TotalRevenueRes,
     TotalStatisticRes,
     VehicleModelStatisticRes,
@@ -41,6 +42,11 @@ export const statisticApi = {
     getVehicleModelStatistic: () =>
         requestWrapper<VehicleModelStatisticRes[]>(async () => {
             const res = await axiosInstance.get("/statistic/vehicle-models")
+            return res.data
+        }),
+    getRevenueByYear: () =>
+        requestWrapper<RevenueByYearRes[]>(async () => {
+            const res = await axiosInstance.get("/statistic/revenue-by-year")
             return res.data
         })
 }

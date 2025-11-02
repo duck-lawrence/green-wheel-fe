@@ -27,7 +27,6 @@ import { ROLE_CUSTOMER, ROLE_STAFF } from "@/constants/constants"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { Icon } from "@iconify/react"
-import { slides } from "public/cars"
 import { addToast } from "@heroui/toast"
 import { useUserHelper } from "@/hooks/"
 
@@ -69,10 +68,6 @@ export default function VehicleDetailPage() {
             endDate: endDate || ""
         }
     })
-    const subImgUrls = useMemo(() => {
-        if (!model) return []
-        return [model.imageUrl, ...model.imageUrls, ...slides].filter((img) => !!img)
-    }, [model])
 
     // redirect if filter not valid
     useEffect(() => {
@@ -232,18 +227,18 @@ export default function VehicleDetailPage() {
                                 initial={{ opacity: 0, scale: 1.02 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.35 }}
-                                src={subImgUrls[active]}
+                                src={model.imageUrls[active]}
                                 alt={`${model.name} - ${active + 1}`}
                                 className="h-full w-full object-cover"
                             />
                         </div>
 
                         {/* List sub img */}
-                        {subImgUrls.length > 0 && (
+                        {model.imageUrls.length > 0 && (
                             <VehicleSubImagesScroll
                                 active={active}
                                 setActive={setActive}
-                                subImgUrls={subImgUrls}
+                                subImgUrls={model.imageUrls}
                             />
                         )}
                     </div>

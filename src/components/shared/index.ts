@@ -1,6 +1,5 @@
 export * from "./Carousel"
 export * from "./ClientHydration"
-export * from "./CreateFeedback"
 export * from "./CustomerTable"
 
 export * from "./DashBoard"

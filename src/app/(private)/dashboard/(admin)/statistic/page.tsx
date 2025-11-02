@@ -3,6 +3,7 @@ import { KpiStat } from "@/components"
 import {
     useGetAnonymuousStatistic,
     useGetCustomerStatistic,
+    useGetRevenueByYear,
     useGetTotalInvoiceStatistic,
     useGetTotalRevenueStatistic,
     useGetVehicleModelStatistic
@@ -30,12 +31,7 @@ export default function StatisticPage() {
     const { data: totalRevenue } = useGetTotalRevenueStatistic()
     const { data: totalInvoice } = useGetTotalInvoiceStatistic()
     const { data: vehicleModelStatistic } = useGetVehicleModelStatistic()
-
-    console.log("totalCustomer", totalCustomer)
-    console.log("totalAnonymous", totalAnonymous)
-    console.log("totalRevenue", totalRevenue)
-    console.log("totalInvoice", totalInvoice)
-    console.log("vehicleModelStatistic", vehicleModelStatistic)
+    const { data: revenueOverMonths } = useGetRevenueByYear()
 
     const dataKpi = [
         {
@@ -72,22 +68,10 @@ export default function StatisticPage() {
         numberOfMaintenance: item.numberOfMaintenance
     }))
 
-    // const dataMonths = mockData.map((item) => ({ month: item.month, revenue: item.active }))
-
-    const mockData1 = [
-        { month: "Jan", revenue: 120 },
-        { month: "Feb", revenue: 150 },
-        { month: "Mar", revenue: 180 },
-        { month: "Apr", revenue: 220 },
-        { month: "May", revenue: 260 },
-        { month: "Jun", revenue: 240 },
-        { month: "Jul", revenue: 280 },
-        { month: "Aug", revenue: 300 },
-        { month: "Sep", revenue: 350 },
-        { month: "Oct", revenue: 400 },
-        { month: "Nov", revenue: 420 },
-        { month: "Dec", revenue: 500 }
-    ]
+    const dataMonths = revenueOverMonths?.map((item) => ({
+        month: item.month,
+        revenue: item.revenue
+    }))
 
     return (
         <div className="max-w-6xl mx-auto w-full bg-white/70 p-10 rounded-2xl shadow-md border border-gray-100">
@@ -174,7 +158,7 @@ export default function StatisticPage() {
                 </h3>
 
                 <ResponsiveContainer width="100%" height={320}>
-                    <LineChart data={mockData1}>
+                    <LineChart data={dataMonths}>
                         <defs>
                             <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
                                 <stop offset="0%" stopColor="#16A34A" stopOpacity={0.9} />

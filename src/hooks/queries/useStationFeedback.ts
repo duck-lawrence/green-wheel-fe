@@ -10,15 +10,11 @@ import { useTranslation } from "react-i18next"
 
 export const useCreateFeedback = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
-    const queryClient = useQueryClient()
 
     return useMutation({
         mutationFn: stationFeedbackApi.create,
         onSuccess: () => {
             onSuccess?.()
-            queryClient.invalidateQueries({
-                queryKey: QUERY_KEYS.STATION_FEEDBACKS
-            })
             addToast({
                 title: t("toast.success"),
                 description: t("review.create_successfull"),
@@ -45,7 +41,7 @@ export const useGetAllFeedbacks = ({
     enabled?: boolean
 }) => {
     const query = useQuery({
-        queryKey: QUERY_KEYS.STATION_FEEDBACKS,
+        queryKey: [...QUERY_KEYS.STATION_FEEDBACKS, filter, pagination],
         queryFn: async () => await stationFeedbackApi.getAll({ query: filter, pagination }),
         enabled
     })
@@ -59,7 +55,8 @@ export const useDeleteFeedback = () => {
         mutationFn: stationFeedbackApi.delete,
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: QUERY_KEYS.STATION_FEEDBACKS
+                queryKey: QUERY_KEYS.STATION_FEEDBACKS,
+                exact: false
             })
             addToast({
                 title: t("toast.success"),
