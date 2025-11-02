@@ -3,6 +3,7 @@ import {
     DeleteModelImagesReq,
     GetAllModelParams,
     SearchModelParams,
+    UpdateModelComponentsReq,
     UpdateVehicleModelReq
 } from "@/models/vehicle/schema/request"
 import {
@@ -51,6 +52,11 @@ export const vehicleModelApi = {
     update: ({ id, payload }: { id: string; payload: UpdateVehicleModelReq }) =>
         requestWrapper<void>(async () => {
             await axiosInstance.patch(`/vehicle-models/${id}`, payload)
+        }),
+
+    updateComponents: ({ id, payload }: { id: string; payload: UpdateModelComponentsReq }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.put(`/vehicle-models/${id}/components`, payload)
         }),
 
     uploadAllImages: ({ id, formData }: { id: string; formData: FormData }) =>

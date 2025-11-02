@@ -71,6 +71,7 @@
         "upload": "Upload",
         "update": "Update",
         "edit": "Edit",
+        "edit_components": "Edit Components",
         "edit_user": "Edit User",
         "save_changes": "Save Changes",
         "confirm": "Confirm",
@@ -89,7 +90,8 @@
         "choose": "Choose",
         "send": "Send",
         "redirecting": "Redirecting...",
-        "image": "Image"
+        "image": "Image",
+        "required": "Required"
     },
     "json": {
         "parsing_failed": "Failed to parse JSON"
@@ -326,6 +328,14 @@
         "not_found": "Vehicle segment not found"
     },
     "vehicle_model": {
+        "brand_unknown": "Unknown brand",
+        "segment_unknown": "Unknown segment",
+        "unit": "Unit",
+        "capacity_label": "Capacity",
+        "seats": "seats",
+        "available": "Available",
+        "unavailable": "Unavailable",
+        "price_label": "Price",
         "information": "Vehicle information",
         "specs": "Specifications",
         "station": "Station",
@@ -414,7 +424,40 @@
     },
     "vehicle_component": {
         "not_found": "Vehicle component not found",
-        "component": "Component"
+        "component": "Component",
+        "management_title": "Vehicle components",
+        "management_description": "Manage reusable components for vehicle models.",
+        "create_button": "Add component",
+        "table_name": "Component name",
+        "table_description": "Description",
+        "table_damage_fee": "Damage fee",
+        "table_actions": "Actions",
+        "modal_create_title": "Create vehicle component",
+        "modal_edit_title": "Update vehicle component",
+        "modal_delete_title": "Delete vehicle component",
+        "modal_delete_message": "Are you sure you want to remove \"{{name}}\"? This component will no longer appear in the list.",
+        "form_name_label": "Component Name *",
+        "form_name_placeholder": "Enter component name",
+        "form_name_required": "Component name is required",
+        "form_name_max": "Component name must be at most 100 characters",
+        "form_description_label": "Description",
+        "form_description_placeholder": "Enter description",
+        "form_description_required": "Description is required",
+        "form_description_max": "Description must be at most 255 characters",
+        "form_damage_fee_label": "Damage Fee (₫) *",
+        "form_damage_fee_placeholder": "Enter damage fee",
+        "form_damage_fee_required": "Damage fee must be greater than zero",
+        "form_damage_fee_positive": "Damage fee must be greater than zero",
+        "filter_title": "Component filters",
+        "filter_name_label": "Component name",
+        "filter_name_placeholder": "Enter component name",
+        "empty_state_title": "No components found",
+        "empty_state_description": "Click + to add one.",
+        "table_empty": "No vehicle components found.",
+        "fetch_error": "Unable to load components. Please try again."
+    },
+    "currency": {
+        "vnd": "VND"
     },
     "station": {
         "station": "Station",
@@ -642,7 +685,8 @@
         "vehicle_delete_title": "Delete vehicle",
         "vehicle_delete_confirm": "Are you sure you want to remove this vehicle from the fleet?",
         "dispatch": "Dispatch",
-        "sidebar_vehicle_management": "Vehicle Management"
+        "sidebar_vehicle_management": "Vehicle Management",
+        "sidebar_vehicle_components": "Vehicle Components"
     },
     "footer": {
         "green_wheel_company_name": "GREEN WHEEL Trading and Service Joint Stock Company",
@@ -927,7 +971,7 @@
     "fleet": {
         "page_title": "Fleet Management",
         "filter_title": "Filters",
-        "search_placeholder": "Search vehicle model, brand, etc",
+        "search_placeholder": "Search vehicle model, etc",
         "filter_car_type": "Segment",
         "filter_status": "Status",
         "status_available": "Available",
@@ -952,6 +996,10 @@
         "hide_gallery": "Hide images",
         "detail_spec_title": "Technical specifications",
         "detail_about": "About",
+        "detail_component_edit_title": "Edit Components",
+        "detail_component_section_title": "Vehicle components",
+        "detail_component_table_loading": "Loading components...",
+        "detail_component_table_empty": "This vehicle model has no components yet.",
         "detail_description_empty": "This vehicle model has no description yet.",
         "detail_units_unit": "units",
         "detail_unknown": "Updating",
@@ -989,7 +1037,8 @@
     },
     "validation": {
         "number_type_require": "Must be a number",
-        "integer_require": "Must be an integer"
+        "integer_require": "Must be an integer",
+        "required": "Required"
     },
     "toast": {
         "create": "Create",

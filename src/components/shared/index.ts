@@ -24,6 +24,7 @@ export * from "./StaffTable"
 
 export * from "./TableContractStaff"
 export * from "./TableVehicleManagement"
+export * from "./TableVehicleComponent"
 export * from "./TicketCard"
 
 export * from "../modules/VehicleSubImagesScroll"

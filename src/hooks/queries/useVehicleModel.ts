@@ -5,6 +5,7 @@ import {
     DeleteModelImagesReq,
     GetAllModelParams,
     SearchModelParams,
+    UpdateModelComponentsReq,
     UpdateVehicleModelReq
 } from "@/models/vehicle/schema/request"
 import {
@@ -176,6 +177,31 @@ export const useUpdateVehicleModel = ({
                 color: "danger"
             })
 
+            onError?.()
+        }
+    })
+}
+
+export const useUpdateVehicleModelComponents = ({
+    onSuccess,
+    onError
+}: {
+    onSuccess?: () => void
+    onError?: () => void
+} = {}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: ({ id, payload }: { id: string; payload: UpdateModelComponentsReq }) =>
+            vehicleModelApi.updateComponents({ id, payload }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
+            toast.success(t("success.update"))
+            onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            toast.error(translateWithFallback(t, error.detail))
             onError?.()
         }
     })

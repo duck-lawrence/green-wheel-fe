@@ -18,6 +18,8 @@ export type VehicleModelViewRes = {
     brand: BrandViewRes
     segment: VehicleSegmentViewRes
     availableVehicleCount: number
+    componentIds?: string[]
+    components?: VehicleComponentViewRes[]
 }
 
 export type VehicleModelMainImageRes = {
