@@ -48,15 +48,15 @@ export function ForgotInFo({ onSuccess }: ForgotInfoProps) {
     })
 
     return (
-        <form onSubmit={formik.handleSubmit} className="flex flex-col">
+        <form onSubmit={formik.handleSubmit} className="flex flex-col w-full max-w-110">
             {/* Title */}
             <div className="mx-auto mt-2 mb-2">
                 <div className="text-center">{t("auth.please_reset_password")}</div>
             </div>
 
             {/* Input InFo */}
-            <div className="w-110 mx-auto">
-                {/* <div className="w-110 mx-auto">
+            <div className="w-full mx-auto">
+                {/* <div className="w-full mx-auto">
                     <InputStyled
                         isDisabled
                         // className="my-3"
@@ -107,21 +107,15 @@ export function ForgotInFo({ onSuccess }: ForgotInfoProps) {
                 />
             </div>
 
-            <div className="mx-auto">
-                {/* <ButtonStyled onPress={handleBack} className="w-5 h-16 mx-auto mt-0">
-                    <ArrowLeftIcon />
-                </ButtonStyled> */}
-
-                <ButtonStyled
-                    type="submit"
-                    className="w-110 h-10 mx-auto mt-4"
-                    isLoading={formik.isSubmitting}
-                    color="primary"
-                    isDisabled={!formik.isValid}
-                >
-                    {t("auth.reset_password")}
-                </ButtonStyled>
-            </div>
+            <ButtonStyled
+                type="submit"
+                className="w-full h-10 mx-auto mt-4"
+                isLoading={formik.isSubmitting}
+                color="primary"
+                isDisabled={!formik.isValid}
+            >
+                {t("auth.reset_password")}
+            </ButtonStyled>
         </form>
     )
 }

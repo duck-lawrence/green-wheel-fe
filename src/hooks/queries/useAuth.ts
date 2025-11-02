@@ -1,4 +1,3 @@
-import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 import { authApi } from "@/services/authApi"
 import { useMutation } from "@tanstack/react-query"
@@ -6,6 +5,7 @@ import { BackendError } from "@/models/common/response"
 // import { UserProfileViewRes } from "@/models/user/schema/response"
 import { useInvalidateMeQuery, useRemoveMeQuery, useTokenStore } from "@/hooks"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
+import { addToast } from "@heroui/toast"
 // ===== Login and logout =====
 export const useLogin = ({
     rememberMe,
@@ -24,10 +24,18 @@ export const useLogin = ({
             setAccessToken(data.accessToken, rememberMe)
             invalidateAuthQuery()
             onSuccess?.()
-            toast.success(t("success.login"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.login"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -43,10 +51,18 @@ export const useLogout = ({ onSuccess }: { onSuccess?: () => void }) => {
             onSuccess?.()
             removeAccessToken()
             removeMeQuery()
-            toast.success(t("success.logout"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.logout"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -68,10 +84,18 @@ export const useLoginGoogle = ({
             setAccessToken(data.accessToken, rememberMe)
             invalidateAuthQuery()
             onSuccess?.()
-            toast.success(t("success.login"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.login"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -84,7 +108,11 @@ export const useRegister = ({ onSuccess }: { onSuccess?: () => void }) => {
         mutationFn: authApi.register,
         onSuccess: onSuccess,
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -96,7 +124,11 @@ export const useRegisterVerify = ({ onSuccess }: { onSuccess?: () => void }) => 
         mutationFn: authApi.registerVerify,
         onSuccess: onSuccess,
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -112,10 +144,18 @@ export const useRegisterComplete = ({ onSuccess }: { onSuccess?: () => void }) =
             setAccessToken(data.accessToken)
             invalidateAuthQuery()
             onSuccess?.()
-            toast.success(t("success.register"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.register"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -128,7 +168,11 @@ export const useForgotPassword = ({ onSuccess }: { onSuccess?: () => void }) => 
         mutationFn: authApi.forgotPassword,
         onSuccess: onSuccess,
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -140,7 +184,11 @@ export const useForgotPasswordVerify = ({ onSuccess }: { onSuccess?: () => void 
         mutationFn: authApi.forgotPasswordVerify,
         onSuccess: onSuccess,
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -152,10 +200,18 @@ export const useResetPassword = ({ onSuccess }: { onSuccess?: () => void }) => {
         mutationFn: authApi.resetPassword,
         onSuccess: () => {
             onSuccess?.()
-            toast.success(t("success.reset_password"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.reset_password"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -171,10 +227,18 @@ export const useChangePassword = ({ onSuccess }: { onSuccess?: () => void }) => 
             removeAccessToken()
             removeMeQuery()
             onSuccess?.()
-            toast.success(t("success.change_password"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.change_password"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }

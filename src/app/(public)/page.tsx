@@ -9,10 +9,9 @@ import {
     WhyChoose
 } from "@/components"
 import React, { useEffect, useRef } from "react"
-import { slides } from "@/../public/cars"
 import { useTranslation } from "react-i18next"
 import { useRouter, useSearchParams } from "next/navigation"
-import toast from "react-hot-toast"
+import { addToast } from "@heroui/toast"
 
 export default function HomePage() {
     const { t } = useTranslation()
@@ -24,7 +23,11 @@ export default function HomePage() {
         if (hasShownToast.current) return
         const reason = params.get("reason")
         if (reason === "expired" || reason === "no_token") {
-            toast.error(t("login.please_login"))
+            addToast({
+                title: t("toast.error"),
+                description: t("login.please_login"),
+                color: "danger"
+            })
             hasShownToast.current = true
         }
 
@@ -38,7 +41,7 @@ export default function HomePage() {
     }, [params, t, router])
 
     return (
-        <div className="relative z-10">
+        <div className="relative z-10 max-w-screen">
             <HeroSection />
 
             <div className="relative z-10">
@@ -52,7 +55,7 @@ export default function HomePage() {
 
                 {/* Carousel */}
                 <section className="bg-gradient-to-b from-green-100/70 via-white/80 to-transparent py-20">
-                    <Carousel slides={slides} />
+                    <Carousel />
                 </section>
 
                 {/* Stations */}

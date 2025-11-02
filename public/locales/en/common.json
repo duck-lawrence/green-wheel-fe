@@ -74,8 +74,12 @@
         "edit_components": "Edit Components",
         "edit_user": "Edit User",
         "save_changes": "Save Changes",
+        "confirm": "Confirm",
+        "confirm_to_submit": "Confirm to submit",
+        "confirm_to_submit_body": "Please confirm you want to submit",
+        "confirm_to_update": "Confirm to update",
         "cancel": "Cancel",
-        "too_many_request": "Too many request. Try again later",
+        "too_many_request": "Too many requests. Please try again later.",
         "unexpected_error": "An unexpected error occurred. Please try again later.",
         "search": "Search",
         "save": "Save",
@@ -90,7 +94,7 @@
         "required": "Required"
     },
     "json": {
-        "parsing_failed": "Failed to parse json"
+        "parsing_failed": "Failed to parse JSON"
     },
     "auth": {
         "only_customer": "Only customer can use this feature",
@@ -118,8 +122,8 @@
         "invalid_otp": "Invalid OTP",
         "otp_can_not_empty": "OTP is required",
         "otp_must_have_6_digits": "OTP must have 6 digits",
-        "rate_limit_otp": "Resend OTP after 1 minute",
-        "attemp_otp": "Too many attemps, please resend to get new OTP",
+        "rate_limit_otp": "You can resend the OTP after 1 minute.",
+        "attemp_otp": "Too many attempts. Please request a new OTP.",
 
         "user_id_is_required": "User ID is required",
 
@@ -128,7 +132,7 @@
         "invalid_email": "Email is invalid",
 
         "password_too_short": "Password must be at least 8 characters",
-        "confirm_password_is_incorrect": "Confirm password must be the same as the new password",
+        "confirm_password_is_incorrect": "The confirmation password does not match the new password.",
         "password_can_not_empty": "Password is required",
         "new_password_can_not_empty": "New password is required",
         "password_strength": "Password must contain at least 1 uppercase letter, 1 number, and 1 special character",
@@ -172,6 +176,8 @@
         "nationality": "Nationality",
         "expires_at": "Expires at",
 
+        "upload_first_then_back_image": "Please upload the front image first, followed by the back image",
+
         "citizen_identity": "Cititzen Identity",
         "upload_citizen_identity": "Upload Cititzen Identity",
         "please_upload_citizen_identity": "Please upload your Cititzen Identity to booking",
@@ -181,6 +187,7 @@
         "invalid_citizen_identity_data": "Invalid citizen identity data",
         "citizen_identity_not_found": "Citizen identity not found",
         "citizen_identity_duplicate": "This citizen identity already exists",
+        "invalid_citizen_identity_images_amount": "Invalid citizen identity images amount",
 
         "driver_license": "Driver License",
         "upload_driver_license": "Upload Driver License",
@@ -193,6 +200,7 @@
         "invalid_driver_license_data": "Invalid driver license data",
         "driver_license_not_found": "Driver license not found",
         "driver_license_duplicate": "This driver license already exists",
+        "invalid_driver_license_images_amount": "Invalid driver license images amount",
 
         "station_require": "Station is required",
 
@@ -222,7 +230,7 @@
         "enter_required_info": "Please complete your profile with your citizen ID, driver’s license, phone number, and date of birth to continue booking."
     },
     "login": {
-        "welcome": "Welcome Back",
+        "welcome": "Welcome!",
         "login_continue": "Login to your account to continue",
         "please_login": "Please login",
         "remember": "Remember Me",
@@ -241,10 +249,7 @@
         "contact": "Contact",
         "login": "Login",
         "register": "Register",
-        "logout": "Logout",
-        "staff_management": "Staff Management",
-        "staff_profile": "Profile",
-        "staff_contracts": "Rental Booking"
+        "logout": "Logout"
     },
     "table": {
         "order": "Order",
@@ -255,7 +260,7 @@
         "station": "Station",
         "status": "Status",
         "no": "No.",
-        "id": "Id",
+        "id": "ID",
         "name": "Name",
         "email": "Email",
         "start_date": "Start date",
@@ -279,7 +284,11 @@
         "to_station": "To Station",
         "view_detail": "View Detail",
         "dispatch_managerment": "Dispatch Management",
-        "create_dispatch": "Create Dispatch"
+        "create_dispatch": "Create Dispatch",
+        "rating": "Rating",
+        "feedback": "Feedback",
+        "content": "Content",
+        "station_feedbacks": "Station Feedbacks"
     },
     "contral_form": {
         "full_name_require": "Full name is required",
@@ -356,7 +365,7 @@
         "not_include_tax": "Not include tax",
         "not_found": "Vehicle model not found",
         "rent_time_is_not_available": "Rent time is not available",
-        "name": "Model name",
+        "name": "Model Name",
         "name_placeholder": "Enter model name",
         "name_require": "Name is required",
         "description": "Description",
@@ -399,7 +408,16 @@
         "brand_id_require": "Brand is required",
         "segment_id_require": "Segment is required",
 
-        "upload_images": "Upload vehicle model images"
+        "upload_images": "Upload vehicle model images",
+
+        "policy": {
+            "documents": "Documents",
+            "documents_text": "Citizen ID + Driver License (B1 or higher).",
+            "late_return_fee": "Late return fee",
+            "late_return_fee_text": "If the vehicle is returned more than 1 hour later than scheduled, a fee will be applied.",
+            "payment_method": "Payment method",
+            "payment_method_text": "Payment can be made online or in cash. Customers may pay a reservation fee in advance, but must pay the full amount upon receiving the vehicle."
+        }
     },
     "vehicle_model_image": {
         "main_image_not_found": "Main image not found"
@@ -460,6 +478,7 @@
         "female": "Female",
         "pending": "Pending",
         "approved": "Approved",
+        "confirm_approved": "Confirm Approved",
         "rejected": "Rejected",
         "received": "Received",
         "paid": "Paid",
@@ -576,11 +595,11 @@
         "select_customer": "Select customer"
     },
     "cloudinary": {
-        "file_not_found": "File not fount",
+        "file_not_found": "File not found",
         "invalid_file_type": "Invalid file type"
     },
     "staff": {
-        "sidebar_dashboard": "Dash Board",
+        "dashboard": "Dashboard",
         "sidebar_vehicle_checklists": "Checklists",
         "sidebar_bookings": "Rental Bookings",
         "sidebar_test": "Test",
@@ -646,12 +665,13 @@
         "user_filter_has_document_both": "Both Documents",
         "user_filter_has_document_license": "Driving License",
         "user_filter_has_document_citizen": "Citizen ID",
-        "user_filter_has_document_none": "No document"
+        "sidebar_feedback": "Feedback",
+        "user_filter_has_document_none": "No document",
+        "name": "Staff name"
     },
     "admin": {
         "dashboard_title": "Admin Dashboard",
         "dashboard_subtitle": "Select a module from the sidebar to get started.",
-        "dropdown_management": "Admin Management",
         "sidebar_fleet": "Fleet",
         "sidebar_staff_management": "Staff Management",
         "staff_management_title": "Staff Management",
@@ -727,7 +747,7 @@
         "create_at": "Created at",
         "user_already_have_contract": "You can only have one pending or active contract at a time",
         "not_found": "Rental Booking not found",
-        "already_process": "This Rental Booking already processes",
+        "already_process": "This Rental Booking has already been processed.",
         "can_not_cancel": "This Rental Booking can not be cancelled",
         "handover": "Handover",
         "return": "Return",
@@ -837,10 +857,10 @@
         "list_staff": "List staffs",
         "dispatch_detail": "Dispatch Detail",
         "station_information": "Station Information",
-        "station_form": "Station form",
+        "form_station": "From Station",
         "station_id": "Station ID",
         "station_name": "Station name",
-        "to_station": "To station",
+        "to_station": "To Station",
         "cur_status": "Current Status",
         "dispatch_status": "Dispatch Status",
         "assigned_staff": "Assigned Staffs",
@@ -848,7 +868,16 @@
         "station": "Station",
         "description": "Description",
         "dispatch_table": "Dispatch table",
-        "create": "Create"
+        "create": "Create",
+        "from_station_require": "From station is required",
+        "number_staff": "Number of staffs",
+        "number_staff_require": "Number of staffs is required",
+        "number_staff_min": "Number of staffs must be at least 0",
+        "vehicle_model_require": "Vehicle model is required",
+        "number_vehicle": "Number of vehicles",
+        "number_vehicle_require": "Number of vehicles is required",
+        "number_vehicle_min": "Number of vehicles must be at least 1",
+        "approve": "Approve"
     },
     "document_preview": {
         "upload_image": "Upload image",
@@ -925,17 +954,19 @@
         "signed_by_customer_require": "Customer must sign"
     },
     "review": {
-        "create_successfull": "Create feedback successful",
+        "create_successfull": "Feedback created successfully",
         "rating_required": "Rating required",
         "send_feedback": "Send feedback",
         "customer_review": "Customer reviews",
         "station_required": "Station required",
-        "content_required": "content required",
+        "content_required": "Content required",
         "submit": "Submit review",
         "review": "Review",
         "review_placeholder": "Please enter your review here...",
         "rating": "Rating",
-        "create_title": "Create feedback"
+        "create_title": "Create Feedback",
+        "delete_successfull": "Delete feedback successful",
+        "feedback": "Feedback"
     },
     "fleet": {
         "page_title": "Fleet Management",
@@ -1002,9 +1033,25 @@
         "spec_airbags": "Airbags"
     },
     "reaview": {
-        "create": "Create feedback successful"
+        "create": "Feedback created successfully"
     },
-      "validation": {
-    "required": "Required"
-  }
+    "validation": {
+        "number_type_require": "Must be a number",
+        "integer_require": "Must be an integer",
+        "required": "Required"
+    },
+    "toast": {
+        "create": "Create",
+        "update": "Update",
+        "delete": "Delete",
+        "success": "Successfully",
+        "failed": "Failed",
+        "error": "Error",
+        "create_failed": "Create failed",
+        "update_failed": "Update failed",
+        "delete_failed": "Delete failed",
+        "create_success": "Created successfully",
+        "update_success": "Updated successfully",
+        "delete_success": "Deleted successfully"
+    }
 }

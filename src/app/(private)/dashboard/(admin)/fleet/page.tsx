@@ -18,11 +18,11 @@ import {
 } from "@/hooks"
 import { FunnelSimple } from "@phosphor-icons/react"
 import { GetAllModelParams } from "@/models/vehicle/schema/request"
-import toast from "react-hot-toast"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { useRouter } from "next/navigation"
+import { addToast } from "@heroui/toast"
 
 export default function AdminFleetPage() {
     const { t } = useTranslation()
@@ -96,7 +96,11 @@ export default function AdminFleetPage() {
     useEffect(() => {
         if (getVehicleSegmentsError) {
             const error = getVehicleSegmentsError as BackendError
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     }, [getVehicleSegmentsError, t])
 
@@ -107,7 +111,11 @@ export default function AdminFleetPage() {
             setVehicleModels(data || [])
         } catch (error) {
             const backendError = error as BackendError
-            toast.error(translateWithFallback(t, backendError.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, backendError.detail),
+                color: "danger"
+            })
         }
     }, [refetchModels, t])
 
@@ -213,6 +221,8 @@ export default function AdminFleetPage() {
                                 />
                             ))}
                         </div>
+
+
                     </>
                 ) : (
                     <div className="rounded-2xl bg-white p-6 text-center text-sm text-slate-500">

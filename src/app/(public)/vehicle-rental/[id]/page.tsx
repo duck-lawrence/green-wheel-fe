@@ -24,11 +24,11 @@ import { useTranslation } from "react-i18next"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { Spinner, useDisclosure } from "@heroui/react"
 import { ROLE_CUSTOMER, ROLE_STAFF } from "@/constants/constants"
-import toast from "react-hot-toast"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { Icon } from "@iconify/react"
 import { slides } from "public/cars"
+import { addToast } from "@heroui/toast"
 import { useUserHelper } from "@/hooks/"
 
 export default function VehicleDetailPage() {
@@ -77,12 +77,21 @@ export default function VehicleDetailPage() {
     // redirect if filter not valid
     useEffect(() => {
         if (!stationId || !startDate || !endDate) {
-            toast.error(t("vehicle_filter.require"))
+            addToast({
+                title: t("toast.error"),
+                description: t("vehicle_filter.require"),
+                color: "danger"
+            })
             router.replace("/vehicle-rental")
         }
         if (modelError) {
             const error = modelError as BackendError
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
+
             router.replace("/vehicle-rental")
         }
     }, [endDate, modelError, router, startDate, stationId, t])
@@ -99,7 +108,11 @@ export default function VehicleDetailPage() {
 
     const handleClickBooking = useCallback(() => {
         if (isCustomer && !isUserValidForBooking(user)) {
-            toast.error(t("user.enter_required_info"))
+            addToast({
+                title: t("toast.error"),
+                description: t("user.enter_required_info"),
+                color: "danger"
+            })
         } else {
             onOpen()
         }
@@ -142,15 +155,18 @@ export default function VehicleDetailPage() {
 
     // const basePolicies = (deposite: number) => [
     const basePolicies = () => [
-        { title: "Giấy tờ", text: "CCCD gắn chip + GPLX B1 trở lên." },
-        // { title: "Cọc", text: `${deposite}đ hoặc xe máy giấy tờ chính chủ. ` },
+        { title: t("fleet.detail_brand"), text: model?.brand.name || "" },
         {
-            title: "Phụ phí",
-            text: "Phát sinh giờ: quá 45 phút tính phụ phí 10%/giờ, quá 5 giờ tính 1 ngày."
+            title: t("vehicle_model.policy.documents"),
+            text: t("vehicle_model.policy.documents_text")
         },
         {
-            title: "Hình thức thanh toán",
-            text: "Trả trước. Thời hạn thanh toán: đặt cọc giữ xe thanh toán 100% khi kí hợp đồng và nhận xe"
+            title: t("vehicle_model.policy.late_return_fee"),
+            text: t("vehicle_model.policy.late_return_fee_text")
+        },
+        {
+            title: t("vehicle_model.policy.payment_method"),
+            text: t("vehicle_model.policy.payment_method_text")
         }
     ]
 
@@ -250,7 +266,7 @@ export default function VehicleDetailPage() {
 
                     {/*================ Policies =======================*/}
                     <section className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
-                        <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-3 md:grid-cols-2">
                             {basePolicies().map((p) => (
                                 <div key={p.title} className="rounded-2xl bg-white p-5 shadow-sm">
                                     <h3 className="font-semibold">{p.title}</h3>

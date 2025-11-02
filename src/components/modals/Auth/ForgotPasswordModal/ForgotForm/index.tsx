@@ -38,7 +38,7 @@ export function ForgotForm({ onSuccess }: { onSuccess?: () => void }) {
     }
 
     return (
-        <div className="flex w-full h-full justify-center items-center">
+        <div className="flex w-full justify-center items-center">
             <div
                 className={cn(
                     "flex flex-col gap-2 rounded-2xl transition-all duration-300 overflow-hidden",
@@ -47,7 +47,7 @@ export function ForgotForm({ onSuccess }: { onSuccess?: () => void }) {
                     step == 2 && "w-125 h-160"
                 )}
             >
-                <div className="mt-6 overflow-hidden">
+                <div className="overflow-hidden hidden md:block">
                     <RowStep n={step} />
                 </div>
 
@@ -62,7 +62,7 @@ export function ForgotForm({ onSuccess }: { onSuccess?: () => void }) {
                                 animate="center"
                                 exit="exit"
                                 transition={{ duration: 0.4 }}
-                                className="absolute w-full"
+                                className="absolute w-full flex justify-center"
                             >
                                 <FortgotEmail
                                     email={email}
@@ -80,7 +80,7 @@ export function ForgotForm({ onSuccess }: { onSuccess?: () => void }) {
                                 animate="center"
                                 exit="exit"
                                 transition={{ duration: 0.4 }}
-                                className="absolute w-full"
+                                className="absolute w-full flex justify-center"
                             >
                                 <ForgotOTP
                                     email={email}
@@ -98,7 +98,7 @@ export function ForgotForm({ onSuccess }: { onSuccess?: () => void }) {
                                 animate="center"
                                 exit="exit"
                                 transition={{ duration: 0.4 }}
-                                className="absolute w-full"
+                                className="absolute w-full flex justify-center"
                             >
                                 <ForgotInFo onSuccess={onSuccess} />
                             </motion.div>

@@ -50,14 +50,14 @@ export function FortgotEmail({ email, setEmail, onSuccess }: FortgotEmailProps) 
     })
 
     return (
-        <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 w-full max-w-110">
             {/* Title */}
             {/* <div className="mx-8 mt-2 mb-0">
                 <h1 className="font-bold text-xl">{t("auth.forgot_step1")}</h1>
             </div> */}
 
             {/* Input email */}
-            <div className="w-110 mx-auto">
+            <div className="w-full mx-auto">
                 <InputStyled
                     // className="my-3"
                     variant="bordered"
@@ -75,7 +75,7 @@ export function FortgotEmail({ email, setEmail, onSuccess }: FortgotEmailProps) 
             {/* Button submit */}
             <ButtonStyled
                 type="submit"
-                className="w-110 h-10 mx-auto mt-4"
+                className="w-full h-10 mx-auto mt-4"
                 isLoading={formik.isSubmitting}
                 color="primary"
                 isDisabled={!formik.isValid}

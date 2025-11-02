@@ -4,7 +4,7 @@ import { CitizenIdentityViewRes } from "@/models/citizen-identity/schema/respons
 import { BackendError } from "@/models/common/response"
 import { UpdateDriverLicenseReq } from "@/models/driver-license/schema/request"
 import { DriverLicenseViewRes } from "@/models/driver-license/schema/response"
-import { UpdateBankAccountReq, UserUpdateReq } from "@/models/user/schema/request"
+import { UserUpdateReq } from "@/models/user/schema/request"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import axiosInstance from "@/utils/axios"
 import { requestWrapper } from "@/utils/helpers/axiosHelper"
@@ -40,15 +40,15 @@ export const profileApi = {
             await axiosInstance.patch("/me", req)
         }),
 
-    updateBankAccount: (req: UpdateBankAccountReq) =>
-        requestWrapper<void>(async () => {
-            await axiosInstance.put("/me/bank-account", req)
-        }),
+    // updateBankAccount: (req: UpdateBankAccountReq) =>
+    //     requestWrapper<void>(async () => {
+    //         await axiosInstance.put("/me/bank-account", req)
+    //     }),
 
-    deleteBankAccount: () =>
-        requestWrapper<void>(async () => {
-            await axiosInstance.delete("/me/bank-account")
-        }),
+    // deleteBankAccount: () =>
+    //     requestWrapper<void>(async () => {
+    //         await axiosInstance.delete("/me/bank-account")
+    //     }),
 
     // avatar
     uploadAvatar: (formData: FormData) =>

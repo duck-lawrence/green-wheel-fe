@@ -13,7 +13,9 @@ import {
     useModalDisclosure,
     CreateUserModal,
     StaffTable,
-    ButtonIconStyled
+    ButtonIconStyled,
+    CitizenIdentityPreviewModal,
+    DriverLicensePreviewModal
 } from "@/components"
 import { useCreateNewUser, useGetAllUsers } from "@/hooks"
 import { UserProfileViewRes } from "@/models/user/schema/response"
@@ -23,10 +25,18 @@ import { PaginationParams } from "@/models/common/request"
 import { UserFilterParams } from "@/models/user/schema/request"
 import { useDisclosure } from "@heroui/react"
 
-
+// type UserFilterFormValues = {
+//     name: string
+//     phone: string
+//     hasDocument?: "both" | "license" | "citizen" | "none"
+// }
 
 export function UserManagement({ isCustomerManagement = true }: { isCustomerManagement: boolean }) {
     const { t } = useTranslation()
+    const [previewDocument, setPreviewDocument] = useState<{
+        user: UserProfileViewRes
+        type: "citizen" | "driver"
+    } | null>(null)
 
     const [editingUser, setEditingUser] = useState<UserProfileViewRes | null>(null)
     const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useModalDisclosure()
@@ -59,6 +69,9 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
             phone: Yup.string().trim(),
             citizenIdNumber: Yup.string().trim(),
             driverLicenseNumber: Yup.string().trim()
+            // hasDocument: Yup.mixed<"both" | "license" | "citizen" | "none">()
+            //     .oneOf(["both", "license", "citizen", "none"] as const)
+            //     .optional()
         })
     }, [])
 
@@ -85,7 +98,74 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
         onSubmit: handleSubmit
     })
 
-   
+    // const handleDocumentFilterChange = useCallback(
+    //     async (keys: Selection) => {
+    //         if (keys === "all") {
+    //             await formik.setFieldValue("hasDocument", undefined)
+    //             formik.handleSubmit()
+    //             return
+    //         }
+
+    //         const values = Array.from(keys)
+
+    //         if (values.length === 0) {
+    //             await formik.setFieldValue("hasDocument", undefined)
+    //             formik.handleSubmit()
+    //             return
+    //         }
+
+    //         const key = values[0]
+    //         const value = typeof key === "string" ? key : key != null ? key.toString() : undefined
+
+    //         await formik.setFieldValue("hasDocument", value as UserFilterFormValues["hasDocument"])
+    //         formik.handleSubmit()
+    //     },
+    //     [formik]
+    // )
+
+    // ====================
+    // Preview document modal
+    // ====================
+
+    const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
+    const handleOpenDocumentPreview = useCallback(
+        (payload: { user: UserProfileViewRes; type: "citizen" | "driver" }) => {
+            setPreviewDocument({ user: payload.user, type: payload.type })
+            onOpen()
+        },
+        [onOpen]
+    )
+
+    // const handleDocumentStateUpdate = useCallback(
+    //     (userId: string, type: "citizen" | "driver", nextUrl: string | null) => {
+    //         setUsers((prev) =>
+    //             prev.map((item) => {
+    //                 if (item.id !== userId) return item
+    //                 if (type === "citizen") {
+    //                     return {
+    //                         ...item,
+    //                         citizenUrl: nextUrl ?? undefined
+    //                     }
+    //                 }
+    //                 return {
+    //                     ...item,
+    //                     licenseUrl: nextUrl ?? undefined
+    //                 }
+    //             })
+    //         )
+
+    //         setPreviewDocument((prev) => {
+    //             if (!prev || prev.user.id !== userId) return prev
+    //             const updatedUser =
+    //                 type === "citizen"
+    //                     ? { ...prev.user, citizenUrl: nextUrl ?? undefined }
+    //                     : { ...prev.user, licenseUrl: nextUrl ?? undefined }
+
+    //             return { ...prev, user: updatedUser }
+    //         })
+    //     },
+    //     []
+    // )
 
     const handleOpenEditUser = useCallback(
         (user: UserProfileViewRes) => {
@@ -136,10 +216,38 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
                             }
                             onClear={() => formik.setFieldValue("driverLicenseNumber", "")}
                         />
-                      
+                        {/* <FilterTypeStyle
+                            label={t("staff.user_filter_has_document_label")}
+                            placeholder={t("staff.user_filter_has_document_placeholder")}
+                            // className="sm:w-52"
+                            selectedKeys={
+                                formik.values.hasDocument
+                                    ? new Set([formik.values.hasDocument])
+                                    : new Set([])
+                            }
+                            disallowEmptySelection={false}
+                            isClearable
+                            onSelectionChange={handleDocumentFilterChange}
+                        >
+                            <FilterTypeOption key="both">
+                                {t("staff.user_filter_has_document_both")}
+                            </FilterTypeOption>
+                            <FilterTypeOption key="license">
+                                {t("staff.user_filter_has_document_license")}
+                            </FilterTypeOption>
+                            <FilterTypeOption key="citizen">
+                                {t("staff.user_filter_has_document_citizen")}
+                            </FilterTypeOption>
+                            <FilterTypeOption key="none">
+                                {t("staff.user_filter_has_document_none")}
+                            </FilterTypeOption>
+                        </FilterTypeStyle> */}
                     </div>
                     <div className="flex items-center justify-between gap-2">
-                       
+                        {/* <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                            <FunnelSimple size={22} className="text-primary" />
+                            {t("staff.user_filter_title")}
+                        </h3> */}
                         <ButtonIconStyled
                             type="submit"
                             isLoading={isLoading}
@@ -170,7 +278,7 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
             {isCustomerManagement ? (
                 <CustomerTable
                     users={data?.items ?? []}
-                    // onPreviewDocument={handleOpenDocumentPreview}
+                    onPreviewDocument={handleOpenDocumentPreview}
                     onEditUser={handleOpenEditUser}
                 />
             ) : (
@@ -189,9 +297,26 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
                             }
                         })
                     }
-                    showControls
                 />
             </div>
+
+            {previewDocument && previewDocument.type === "citizen" ? (
+                <CitizenIdentityPreviewModal
+                    user={previewDocument.user}
+                    isOpen={isOpen}
+                    onOpenChange={onOpenChange}
+                    onClose={onClose}
+                />
+            ) : null}
+
+            {previewDocument && previewDocument.type === "driver" ? (
+                <DriverLicensePreviewModal
+                    user={previewDocument.user}
+                    isOpen={isOpen}
+                    onOpenChange={onOpenChange}
+                    onClose={onClose}
+                />
+            ) : null}
 
             <EditUserModal user={editingUser} isOpen={isEditOpen} onClose={handleCloseEditUser} />
         </div>

@@ -1,4 +1,27 @@
-import { RentalContractStatus, TicketStatus } from "./enum"
+import { DamageStatus, DispatchRequestStatus, RentalContractStatus, TicketStatus } from "./enum"
+
+export const DamageStatusColorMap: Record<
+    DamageStatus,
+    "success" | "warning" | "default" | "danger"
+> = {
+    [DamageStatus.Good]: "success",
+    [DamageStatus.Minor]: "default",
+    [DamageStatus.Moderate]: "warning",
+    [DamageStatus.Severe]: "danger",
+    [DamageStatus.Totaled]: "danger"
+}
+
+export const DispatchRequestStatusColorMap: Record<
+    DispatchRequestStatus,
+    "warning" | "success" | "danger" | "default"
+> = {
+    [DispatchRequestStatus.Pending]: "default",
+    [DispatchRequestStatus.Approved]: "warning",
+    [DispatchRequestStatus.ConfirmApproved]: "success",
+    [DispatchRequestStatus.Rejected]: "danger",
+    [DispatchRequestStatus.Received]: "success",
+    [DispatchRequestStatus.Cancelled]: "default"
+}
 
 export const TicketStatusColorMap: Record<TicketStatus, "warning" | "success" | "danger"> = {
     [TicketStatus.Pending]: "warning",

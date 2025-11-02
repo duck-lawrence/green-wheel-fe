@@ -12,19 +12,20 @@ import {
 } from "@phosphor-icons/react"
 import { useDisclosure } from "@heroui/react"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
-import { formatCurrency } from "@/utils/helpers/currency"
+import { formatCurrencyWithSymbol } from "@/utils/helpers/currency"
 import { InvoiceItemType, InvoiceStatus } from "@/constants/enum"
 import { useTranslation } from "react-i18next"
+import { TaxInput } from "../TaxInput"
 
 export * from "./DetailDamage"
 
 export function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes }) {
     const { t } = useTranslation()
     const { isOpen, onOpen, onOpenChange } = useDisclosure()
-    const clean = formatCurrency(
+    const clean = formatCurrencyWithSymbol(
         invoice.invoiceItems.find((item) => item.type === InvoiceItemType.Cleaning)?.subTotal ?? 0
     )
-    const lateReturn = formatCurrency(
+    const lateReturn = formatCurrencyWithSymbol(
         invoice.invoiceItems.find((item) => item.type === InvoiceItemType.LateReturn)?.subTotal ?? 0
     )
 
@@ -51,7 +52,7 @@ export function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes }) {
             <div className="flex gap-3 items-center">
                 <InputStyled
                     label={t("invoice.damage_fee")}
-                    value={formatCurrency(totalDamage)}
+                    value={formatCurrencyWithSymbol(totalDamage)}
                     startContent={<Wrench size={22} className="text-primary" weight="duotone" />}
                     variant="bordered"
                     isIncludeTax={true}
@@ -69,19 +70,22 @@ export function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes }) {
 
             <DetailDamageModal isOpen={isOpen} onOpenChange={onOpenChange} invoiceId={invoice.id} />
 
-            <InputStyled
-                label={t("invoice.total")}
-                value={formatCurrency(invoice.total)}
-                startContent={<Money size={22} className="text-primary" weight="duotone" />}
-                variant="bordered"
-            />
+            <div className="flex gap-3">
+                <TaxInput invoice={invoice} />
+                <InputStyled
+                    label={t("invoice.total")}
+                    value={formatCurrencyWithSymbol(invoice.total)}
+                    startContent={<Money size={22} className="text-primary" weight="duotone" />}
+                    variant="bordered"
+                />
+            </div>
             {invoice.status === InvoiceStatus.Paid && (
                 <>
                     <div></div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <InputStyled
                             label={t("invoice.paid_amount")}
-                            value={formatCurrency(invoice.paidAmount)}
+                            value={formatCurrencyWithSymbol(invoice.paidAmount)}
                             startContent={
                                 <ClipboardText
                                     size={22}
@@ -93,7 +97,7 @@ export function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes }) {
                         />
                         <InputStyled
                             label={t("invoice.return_amount")}
-                            value={formatCurrency(invoice.paidAmount - invoice.total)}
+                            value={formatCurrencyWithSymbol(invoice.paidAmount - invoice.total)}
                             startContent={
                                 <ArrowUDownLeft
                                     size={22}

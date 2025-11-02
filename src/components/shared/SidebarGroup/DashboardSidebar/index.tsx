@@ -7,9 +7,7 @@ export function DashboardSidebar({ className }: { className?: string }) {
     const { data: user } = useGetMe()
     const { t } = useTranslation()
 
-    const defaultTabs: SidebarItem[] = [
-        { key: "/dashboard", label: t("staff.sidebar_dashboard"), href: "/dashboard" }
-    ]
+    const defaultTabs: SidebarItem[] = []
 
     const staffTabs: SidebarItem[] = [
         {
@@ -36,13 +34,18 @@ export function DashboardSidebar({ className }: { className?: string }) {
             key: "/dashboard/reports",
             label: t("staff.sidebar_reports"),
             href: "/dashboard/reports"
+        },
+        {
+            key: "/dashboard/feedback",
+            label: t("staff.sidebar_feedback"),
+            href: "/dashboard/feedback"
         }
     ]
 
     const adminTabs: SidebarItem[] = [
         {
             key: "/dashboard",
-            label: t("staff.sidebar_dashboard"),
+            label: t("staff.dashboard"),
             href: "/dashboard"
         },
         {

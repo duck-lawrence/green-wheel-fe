@@ -6,9 +6,16 @@ import * as Yup from "yup"
 import React, { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { InvoiceItemTypeLabels, InvoiceTypeLabels } from "@/constants/labels"
-import { ButtonStyled, NumberInputStyled, TableStyled, TextareaStyled } from "@/components/styled"
+import {
+    ButtonIconStyled,
+    ButtonStyled,
+    NumberInputStyled,
+    TableStyled,
+    TextareaStyled
+} from "@/components/styled"
 import { Spinner, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { EnumPicker } from "@/components/modules"
+import { X } from "@phosphor-icons/react"
 
 type CreateInvoiceItemUI = CreateInvoiceReq["items"][number] & { _id: string }
 type CreateInvoiceFormValues = Omit<CreateInvoiceReq, "items"> & {
@@ -193,11 +200,9 @@ export function CreateInvoiceForm({
 
                                 {/* delete btn */}
                                 <TableCell className="text-center align-top text-gray-700 font-medium">
-                                    <ButtonStyled
-                                        type="button"
-                                        variant="bordered"
+                                    <ButtonIconStyled
+                                        variant="ghost"
                                         color="danger"
-                                        className="hover:text-white hover:bg-red-600"
                                         onPress={() =>
                                             formik.setFieldValue(
                                                 "items",
@@ -205,8 +210,8 @@ export function CreateInvoiceForm({
                                             )
                                         }
                                     >
-                                        {t("common.delete")}
-                                    </ButtonStyled>
+                                        <X size={18} />
+                                    </ButtonIconStyled>
                                 </TableCell>
                             </TableRow>
                         )

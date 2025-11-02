@@ -4,18 +4,18 @@ import { useFormik } from "formik"
 import * as Yup from "yup"
 import { fromDate } from "@internationalized/date"
 import { useTranslation } from "react-i18next"
-import { AutocompleteItem, cn, Spinner } from "@heroui/react"
+import { AutocompleteItem, cn, DateValue, Spinner } from "@heroui/react"
 import { MapPinAreaIcon } from "@phosphor-icons/react"
 import { AutocompleteStyled, DateTimeStyled } from "@/components"
 import { useBookingFilterStore, useDay, useGetAllStations, useGetAllVehicleSegments } from "@/hooks"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
-import toast from "react-hot-toast"
 import { DEFAULT_TIMEZONE, MAX_HOUR, MIN_HOUR } from "@/constants/constants"
 import dayjs from "dayjs"
 import { useSearchVehicleModels } from "@/hooks/queries/useVehicleModel"
 import { SearchModelParams } from "@/models/vehicle/schema/request"
 import { debouncedWrapper } from "@/utils/helpers/axiosHelper"
+import { addToast } from "@heroui/toast"
 
 function calcDates() {
     const zonedNow = fromDate(new Date(), DEFAULT_TIMEZONE)
@@ -112,7 +112,12 @@ export function FilterVehicleRental({
         }
         if (getStationsError) {
             const error = getStationsError as BackendError
-            toast.error(translateWithFallback(t, error.detail))
+            // toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     }, [getStationsError, isGetStationsLoading, setStationId, stationId, stations, t])
 
@@ -120,7 +125,11 @@ export function FilterVehicleRental({
     useEffect(() => {
         if (getVehicleSegmentsError) {
             const error = getVehicleSegmentsError as BackendError
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     }, [getVehicleSegmentsError, t])
 
@@ -135,18 +144,17 @@ export function FilterVehicleRental({
     const { refetch } = useSearchVehicleModels({
         query: filter
     })
-    const handleSearch = useCallback(async (params: SearchModelParams) => {
-        setFilter(params)
-    }, [])
     const debouncedSearch = useMemo(
         () =>
             debouncedWrapper(
-                handleSearch,
-                800,
+                async (params: SearchModelParams) => {
+                    setFilter(params)
+                },
+                500,
                 () => setIsSearching(true),
                 () => setIsSearching(false)
             ),
-        [handleSearch, setIsSearching]
+        [setIsSearching]
     )
 
     // =========================
@@ -222,6 +230,66 @@ export function FilterVehicleRental({
         }
     })
 
+    const handleStartDateChange = useCallback(
+        async (value: DateValue | null) => {
+            if (!value) {
+                formik.setFieldValue("startDate", null)
+                return
+            }
+
+            const prevValue = toZonedDateTime(formik.values.startDate)
+            const rounded = normalizeDateByMinuteStep(value, prevValue || undefined)
+
+            const date = formatDateTime({ date: rounded })
+            await formik.setFieldValue("startDate", date)
+
+            // if start date > end date, then update end date
+            if (
+                !dayjs(date).isBefore(dayjs(formik.values.endDate).add(-1, "day").add(1, "minute"))
+            ) {
+                const newEndDate = formatDateTime({
+                    date: rounded.add({ days: 1 })
+                })
+                await formik.setFieldValue("endDate", newEndDate)
+                formik.validateField("endDate")
+            }
+            formik.handleSubmit()
+        },
+        [formatDateTime, formik, normalizeDateByMinuteStep, toZonedDateTime]
+    )
+
+    const handleEndDateChange = useCallback(
+        async (value: DateValue | null) => {
+            if (!value) {
+                formik.setFieldValue("endDate", null)
+                return
+            }
+
+            const prevValue = toZonedDateTime(formik.values.endDate)
+            const rounded = normalizeDateByMinuteStep(value, prevValue || undefined)
+
+            const date = formatDateTime({ date: rounded })
+            await formik.setFieldValue("endDate", date)
+
+            // if end date < start date, then update start date
+            if (
+                !dayjs(formik.values.startDate).isBefore(
+                    dayjs(date).add(-1, "day").add(1, "minute")
+                )
+            ) {
+                const newStartDate = formatDateTime({
+                    date: rounded.add({ days: -1 })
+                })
+                await formik.setFieldValue("startDate", newStartDate)
+                formik.validateField("startDate")
+            }
+
+            formik.handleSubmit()
+        },
+        [formatDateTime, formik, normalizeDateByMinuteStep, toZonedDateTime]
+    )
+
+    // revalidate if min start date is change
     useEffect(() => {
         formik.validateField("startDate")
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -245,12 +313,12 @@ export function FilterVehicleRental({
         if (hasLoadInit.current) return
         if (!formik.isValid || !filter.stationId) return
         const run = async () => {
-            await handleSearch(filter)
+            await debouncedSearch(filter)
         }
         run()
         hasLoadInit.current = true
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formik.isValid, handleSearch])
+    }, [formik.isValid, debouncedSearch])
 
     if (
         isGetStationsLoading ||
@@ -322,33 +390,7 @@ export function FilterVehicleRental({
                             minValue={minStartDate}
                             isInvalid={!!formik.errors.startDate}
                             onChange={async (value) => {
-                                if (!value) {
-                                    formik.setFieldValue("startDate", null)
-                                    return
-                                }
-
-                                const prevValue = toZonedDateTime(formik.values.startDate)
-                                const rounded = normalizeDateByMinuteStep(
-                                    value,
-                                    prevValue || undefined
-                                )
-
-                                const date = formatDateTime({ date: rounded })
-                                await formik.setFieldValue("startDate", date)
-
-                                // if start date > end date, then update end date
-                                if (
-                                    !dayjs(date).isBefore(
-                                        dayjs(formik.values.endDate).add(-1, "day").add(1, "minute")
-                                    )
-                                ) {
-                                    const newEndDate = formatDateTime({
-                                        date: rounded.add({ days: 1 })
-                                    })
-                                    await formik.setFieldValue("endDate", newEndDate)
-                                    formik.validateField("endDate")
-                                }
-                                formik.handleSubmit()
+                                await handleStartDateChange(value)
                             }}
                             isRequired
                         />
@@ -363,34 +405,7 @@ export function FilterVehicleRental({
                             }
                             isInvalid={!!formik.errors.endDate}
                             onChange={async (value) => {
-                                if (!value) {
-                                    formik.setFieldValue("endDate", null)
-                                    return
-                                }
-
-                                const prevValue = toZonedDateTime(formik.values.endDate)
-                                const rounded = normalizeDateByMinuteStep(
-                                    value,
-                                    prevValue || undefined
-                                )
-
-                                const date = formatDateTime({ date: rounded })
-                                await formik.setFieldValue("endDate", date)
-
-                                // if end date < start date, then update start date
-                                if (
-                                    !dayjs(formik.values.startDate).isBefore(
-                                        dayjs(date).add(-1, "day").add(1, "minute")
-                                    )
-                                ) {
-                                    const newStartDate = formatDateTime({
-                                        date: rounded.add({ days: -1 })
-                                    })
-                                    await formik.setFieldValue("startDate", newStartDate)
-                                    formik.validateField("startDate")
-                                }
-
-                                formik.handleSubmit()
+                                await handleEndDateChange(value)
                             }}
                             isRequired
                         />

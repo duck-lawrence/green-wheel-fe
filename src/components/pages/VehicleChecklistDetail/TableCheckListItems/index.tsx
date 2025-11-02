@@ -6,7 +6,7 @@ import { VehicleChecklistItemViewRes } from "@/models/checklist/schema/response"
 import { DamageStatusLabels } from "@/constants/labels"
 import { TextareaStyled, ChecklistItemUploader, EnumPicker, TableStyled } from "@/components/"
 import { DamageStatus, VehicleChecklistType } from "@/constants/enum"
-import { formatCurrencyWithSymbol } from "@/utils/helpers/currency"
+import { calculateCompensation, formatCurrencyWithSymbol } from "@/utils/helpers/currency"
 
 export function TableCheckListItems({
     isEditable = false,
@@ -24,7 +24,7 @@ export function TableCheckListItems({
     const { t } = useTranslation()
     return (
         <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
-            <TableStyled className="min-w-full text-sm md:text-base" removeWrapper>
+            <TableStyled className="min-w-xl text-sm md:text-base" removeWrapper>
                 <TableHeader>
                     <TableColumn className="text-center text-gray-700 font-semibold w-12">
                         {t("table.no")}
@@ -35,7 +35,7 @@ export function TableCheckListItems({
                     <TableColumn className="text-center text-gray-700 font-semibold w-38">
                         {t("table.status")}
                     </TableColumn>
-                    <TableColumn className="text-center text-gray-700 font-semibold">
+                    <TableColumn className="text-center text-gray-700 font-semibold w-60">
                         {t("table.notes")}
                     </TableColumn>
                     <TableColumn className="text-center text-gray-700 font-semibold w-50">
@@ -46,6 +46,11 @@ export function TableCheckListItems({
                 <TableBody>
                     {vehicleCheckListItem &&
                         vehicleCheckListItem.map((item, index) => {
+                            const damageFee = calculateCompensation(
+                                item.component.damageFee,
+                                item.status
+                            )
+
                             return (
                                 <TableRow key={item.id}>
                                     {/* No. */}
@@ -58,9 +63,11 @@ export function TableCheckListItems({
                                         <div className="text-gray-800 font-semibold">
                                             {item.component.name}
                                         </div>
-                                        <div className="text-gray-800">
-                                            {formatCurrencyWithSymbol(item.component.damageFee)}
-                                        </div>
+                                        {checklistType === VehicleChecklistType.Return && (
+                                            <div className="text-gray-800">
+                                                {formatCurrencyWithSymbol(damageFee)}
+                                            </div>
+                                        )}
                                     </TableCell>
 
                                     {/* Damage Status */}

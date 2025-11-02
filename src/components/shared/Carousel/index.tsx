@@ -3,12 +3,10 @@ import React, { useEffect, useMemo, useRef, useState } from "react"
 import { ImageStyled } from "@/components/styled"
 import { GREENWHEEL } from "@/constants/constants"
 import { useTranslation } from "react-i18next"
+import { useGetAllVehicleModelImages } from "@/hooks"
+import { slides as defaultSlides } from "@/../public/cars"
 
-type CarouselProps = {
-    slides: string[]
-}
-
-export const Carousel: React.FC<CarouselProps> = ({ slides }) => {
+export const Carousel = () => {
     const { t } = useTranslation()
     const [currentIndex, setCurrentIndex] = useState(0)
     const [slidesPerView, setSlidesPerView] = useState(1)
@@ -16,6 +14,13 @@ export const Carousel: React.FC<CarouselProps> = ({ slides }) => {
     const [isVisible, setIsVisible] = useState(false)
     const startX = useRef<number | null>(null)
     const sectionRef = useRef<HTMLDivElement>(null)
+
+    const { data } = useGetAllVehicleModelImages()
+
+    const slides = useMemo(() => {
+        if (!data || data.length === 0) return defaultSlides
+        return data.map((item) => item.imageUrl)
+    }, [data])
 
     // Observer: fade in khi vào viewport
     useEffect(() => {

@@ -4,9 +4,9 @@ import { invoiceApi } from "@/services/invoiceApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
-import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 import { useInvalidateContractQueries } from "./useRentalContract"
+import { addToast } from "@heroui/toast"
 
 export const useGetInvoiceById = ({ id, enabled = true }: { id: string; enabled?: boolean }) => {
     const query = useQuery({
@@ -32,11 +32,19 @@ export const usePayInvoice = ({ contractId }: { contractId: string }) => {
                 router.push(data.link)
             } else {
                 invalidateById(contractId)
-                toast.success(t("success.payment"))
+                addToast({
+                    title: t("toast.success"),
+                    description: t("success.payment"),
+                    color: "success"
+                })
             }
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -56,10 +64,18 @@ export const useCreateInvoice = ({
         onSuccess: async () => {
             await invalidateById(contractId)
             onSuccess?.()
-            toast.success(t("success.create"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.create"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }
@@ -83,10 +99,18 @@ export const useUploadInvoiceImage = ({
         onSuccess: async () => {
             await invalidateById(contractId)
             onSuccess?.()
-            toast.success(t("success.upload"))
+            addToast({
+                title: t("toast.success"),
+                description: t("success.upload"),
+                color: "success"
+            })
         },
         onError: (error: BackendError) => {
-            toast.error(translateWithFallback(t, error.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
         }
     })
 }

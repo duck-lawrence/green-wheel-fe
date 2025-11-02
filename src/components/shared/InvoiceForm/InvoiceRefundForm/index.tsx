@@ -3,7 +3,7 @@ import React, { useMemo } from "react"
 import { ImageStyled, InputStyled, TableStyled } from "@/components"
 import { Money, WarningCircle, ArrowUDownLeft, ClipboardText } from "@phosphor-icons/react"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
-import { formatCurrency } from "@/utils/helpers/currency"
+import { formatCurrencyWithSymbol } from "@/utils/helpers/currency"
 import { useTranslation } from "react-i18next"
 import { AlertStyled } from "@/components"
 import { InvoiceItemType, InvoiceStatus } from "@/constants/enum"
@@ -43,7 +43,7 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                     {/* Deposit */}
                     <InputStyled
                         label={t("invoice.initial_deposit_amount")}
-                        value={formatCurrency(refundItem?.subTotal ?? 0)}
+                        value={formatCurrencyWithSymbol(refundItem?.subTotal ?? 0)}
                         startContent={<Money size={22} className="text-primary" weight="duotone" />}
                         variant="bordered"
                     />
@@ -51,7 +51,7 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                     {/* Penalty subtotal */}
                     <InputStyled
                         label={t("invoice.penalty_total")}
-                        value={formatCurrency(invoice.subtotal)}
+                        value={formatCurrencyWithSymbol(invoice.subtotal)}
                         startContent={
                             <WarningCircle size={22} className="text-primary" weight="duotone" />
                         }
@@ -64,7 +64,7 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                                 ? t("invoice.amount_customer_must_pay")
                                 : t("invoice.amount_refunded_to_customer")
                         }
-                        value={formatCurrency(invoice.total)}
+                        value={formatCurrencyWithSymbol(invoice.total)}
                         startContent={
                             <ArrowUDownLeft size={22} className="text-primary" weight="duotone" />
                         }
@@ -106,13 +106,13 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                                         {InvoiceItemTypeLabels[item.type]}
                                     </TableCell>
                                     <TableCell className="text-center align-top text-gray-700">
-                                        {formatCurrency(item.unitPrice)}
+                                        {formatCurrencyWithSymbol(item.unitPrice)}
                                     </TableCell>
                                     <TableCell className="text-center align-top text-gray-700">
-                                        {formatCurrency(item.quantity)}
+                                        {formatCurrencyWithSymbol(item.quantity)}
                                     </TableCell>
                                     <TableCell className="text-center align-top text-gray-700">
-                                        {formatCurrency(item.subTotal)}
+                                        {formatCurrencyWithSymbol(item.subTotal)}
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -125,7 +125,7 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <InputStyled
                                 label={t("invoice.paid_amount")}
-                                value={formatCurrency(invoice.paidAmount)}
+                                value={formatCurrencyWithSymbol(invoice.paidAmount)}
                                 startContent={
                                     <ClipboardText
                                         size={22}
@@ -137,7 +137,7 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                             />
                             <InputStyled
                                 label={t("invoice.return_amount")}
-                                value={formatCurrency(invoice.paidAmount - invoice.total)}
+                                value={formatCurrencyWithSymbol(invoice.paidAmount - invoice.total)}
                                 startContent={
                                     <ArrowUDownLeft
                                         size={22}

@@ -36,7 +36,6 @@ export const userApi = {
             return res.data
         }),
 
-    // create: (req: CreateUserReq) =>
     create: (req: CreateUserReq) =>
         requestWrapper<{ userId: string }>(async () => {
             console.log(req)
@@ -49,11 +48,22 @@ export const userApi = {
         requestWrapper<void>(async () => {
             await axiosInstance.patch(`/users/${id}`, req)
         }),
+
+    deleteById: (userId: string) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.delete(`/users/${userId}`)
+        }),
+
+    // ========================
+    // Citizen Id
+    // ========================
+    getCitizenIdByUserId: ({ userId }: { userId: string }) =>
+        requestWrapper<CitizenIdentityViewRes>(async () => {
+            const res = await axiosInstance.get(`/users/${userId}/citizen-identity`)
+            return res.data
+        }),
     uploadCitizenIdById: ({ userId, formData }: { userId: string; formData: FormData }) =>
         requestWrapper<CitizenIdentityViewRes>(async () => {
-            // const res = await axiosInstance.put(`/users/${userId}/citizen-identity`, formData)
-            // axiosInstance đặt Content-Type mặc định là application/json.
-            // Khi upload FormData phải override sang multipart/form-data, nếu không server không nhận file.
             const res = await axiosInstance.put(`/users/${userId}/citizen-identity`, formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             })
@@ -74,6 +84,15 @@ export const userApi = {
         requestWrapper<void>(async () => {
             await axiosInstance.delete(`/users/${userId}/citizen-identity`)
         }),
+
+    // ========================
+    // Driver license
+    // ========================
+    getDriverLisenseByUserId: ({ userId }: { userId: string }) =>
+        requestWrapper<DriverLicenseViewRes>(async () => {
+            const res = await axiosInstance.get(`/users/${userId}/driver-license`)
+            return res.data
+        }),
     uploadDriverLicenseById: ({ userId, formData }: { userId: string; formData: FormData }) =>
         requestWrapper<DriverLicenseViewRes>(async () => {
             // const res = await axiosInstance.put(`/users/${userId}/driver-license`, formData)
@@ -90,9 +109,5 @@ export const userApi = {
     deleteDriverLicenseById: (userId: string) =>
         requestWrapper<void>(async () => {
             await axiosInstance.delete(`/users/${userId}/driver-license`)
-        }),
-    deleteById: (userId: string) =>
-        requestWrapper<void>(async () => {
-            await axiosInstance.delete(`/users/${userId}`)
         })
 }

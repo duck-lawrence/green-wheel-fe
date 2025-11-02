@@ -27,7 +27,7 @@ export function CreateFeedback({ onClose }: { onClose: () => void }) {
 
     const formik = useFormik({
         initialValues: {
-            stationId: "",
+            stationId: stations?.[0].id || "",
             content: "",
             rating: 0
         },
@@ -64,6 +64,9 @@ export function CreateFeedback({ onClose }: { onClose: () => void }) {
                     selectedKey={formik.values.stationId}
                     onSelectionChange={(key) => formik.setFieldValue("stationId", key)}
                     className="w-full"
+                    isClearable={false}
+                    isInvalid={!!(formik.touched.stationId && formik.errors.stationId)}
+                    errorMessage={formik.errors.stationId}
                 >
                     {(stations ?? []).map((item) => (
                         <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
@@ -79,7 +82,7 @@ export function CreateFeedback({ onClose }: { onClose: () => void }) {
                     onBlur={formik.handleBlur("content")}
                     isInvalid={!!(formik.touched.content && formik.errors.content)}
                     errorMessage={formik.errors.content}
-                    className="h-24"
+                    className="min-h-24"
                 />
 
                 {/* Rating */}

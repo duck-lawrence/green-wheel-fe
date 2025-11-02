@@ -50,14 +50,14 @@ export function RegisterEmail({ email, setEmail, onSuccess }: RegisterEmailProps
     })
 
     return (
-        <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 w-full max-w-110">
             {/* Title */}
             {/* <div className="mx-8 mt-2 mb-0">
                 <h1 className="text-center font-bold text-xl">{t("auth.security_verification")}</h1>
             </div> */}
 
             {/* Input email */}
-            <div className="w-110 mx-auto">
+            <div className="w-full mx-auto">
                 <InputStyled
                     // className="my-3"
                     variant="bordered"
@@ -74,7 +74,7 @@ export function RegisterEmail({ email, setEmail, onSuccess }: RegisterEmailProps
             {/* Button submit */}
             <ButtonStyled
                 type="submit"
-                className="w-110 h-10 mx-auto mt-4"
+                className="w-full h-10 mx-auto mt-4"
                 isLoading={formik.isSubmitting}
                 color="primary"
                 isDisabled={!formik.isValid}
