@@ -1,7 +1,7 @@
 import axiosInstance from "@/utils/axios"
 import { requestWrapper } from "@/utils/helpers/axiosHelper"
 import {
-    CustomerAnonymusRes,
+    CustomerAnonymousRes,
     CustomerRes,
     TotalRevenueRes,
     TotalStatisticRes,
@@ -16,14 +16,14 @@ export const statisticApi = {
             return res.data
         }),
 
-    getAnonymuousStatistic: () =>
-        requestWrapper<CustomerAnonymusRes>(async () => {
-            const res = await axiosInstance.get("/statistic/customers/anonymuous")
+    getAnonymousStatistic: () =>
+        requestWrapper<CustomerAnonymousRes>(async () => {
+            const res = await axiosInstance.get("/statistic/customers/anonymous")
             return res.data
         }),
     getTotalRevenueStatistic: () =>
         requestWrapper<TotalRevenueRes>(async () => {
-            const res = await axiosInstance.get("/statistis/revenues")
+            const res = await axiosInstance.get("/statistic/revenue")
             return res.data
         }),
     getTotalInvoiceStatistic: () =>

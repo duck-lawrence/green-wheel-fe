@@ -14,7 +14,8 @@ export const QUERY_KEYS = {
     INVOICES: ["invoices"] as const,
     TICKETS: ["tickets"] as const,
     STATISTICS: ["statistics"] as const,
-    BUSINESS_VARIABLES: ["businessVariables"] as const
+    BUSINESS_VARIABLES: ["businessVariables"] as const,
+    BRANCHS: ["branchs"] as const
     // VEHICLE: {
     //     ALL: ["vehicles"] as const,
     //     BY_ID: (id: string) => ["vehicles", id] as const

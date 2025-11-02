@@ -66,3 +66,8 @@ export type GetVehicleParams = {
     licensePlate?: string
     modelId?: string
 }
+
+export type VehicleSegmentReq = {
+    name: string
+    description: string
+}

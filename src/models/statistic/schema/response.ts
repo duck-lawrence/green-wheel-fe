@@ -4,7 +4,7 @@ export type CustomerRes = {
     changeRate: number
 }
 
-export type CustomerAnonymusRes = {
+export type CustomerAnonymousRes = {
     customerAnonymusInThisMonth: number
     customerAnonymusInLastMonth: number
     changeRate: number

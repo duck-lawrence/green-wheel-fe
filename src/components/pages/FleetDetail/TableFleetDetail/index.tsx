@@ -56,26 +56,18 @@ export function TableFleetDetail({
                     <tbody className="divide-y divide-slate-100">
                         {isLoading ? (
                             <tr>
-                                <td
-                                    colSpan={4}
-                                    className="py-6 text-center text-sm text-slate-500"
-                                >
+                                <td colSpan={4} className="py-6 text-center text-sm text-slate-500">
                                     {t("fleet.detail_vehicle_table_loading")}
                                 </td>
                             </tr>
                         ) : rows.length > 0 ? (
                             rows.map((row) => (
-                                <tr
-                                    key={row.id}
-                                    className="transition-colors hover:bg-slate-50"
-                                >
+                                <tr key={row.id} className="transition-colors hover:bg-slate-50">
                                     <td className="py-3 px-4 font-semibold text-slate-900">
                                         {row.licensePlate}
                                     </td>
 
-                                    <td className="py-3 px-4 text-slate-700">
-                                        {row.stationName}
-                                    </td>
+                                    <td className="py-3 px-4 text-slate-700">{row.stationName}</td>
 
                                     <td className="py-3 px-4 text-center">
                                         <span
@@ -92,10 +84,7 @@ export function TableFleetDetail({
                             ))
                         ) : (
                             <tr>
-                                <td
-                                    colSpan={4}
-                                    className="py-6 text-center text-sm text-slate-500"
-                                >
+                                <td colSpan={4} className="py-6 text-center text-sm text-slate-500">
                                     {t("fleet.detail_vehicle_table_empty")}
                                 </td>
                             </tr>

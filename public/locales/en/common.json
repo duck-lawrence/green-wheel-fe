@@ -282,7 +282,8 @@
         "rating": "Rating",
         "feedback": "Feedback",
         "content": "Content",
-        "station_feedbacks": "Station Feedbacks"
+        "station_feedbacks": "Station Feedbacks",
+        "country": "Country"
     },
     "contral_form": {
         "full_name_require": "Full name is required",
@@ -996,10 +997,33 @@
     "statistic": {
         "vehicle_count_by_model": "Vehicle Count by Model",
         "general_statistics": "General Statistics",
-        "monthly_revenue": "Monthly Revenue"
+        "monthly_revenue": "Monthly Revenue",
+        "maintenance": "Maintenance",
+        "available": "Available",
+        "rented": "Rented"
     },
     "system": {
         "system_setting": "System Setting",
-        "business_variables": "Business variables"
+        "business_variables": "Business variables",
+        "create_brand": "Create Brand",
+        "update_brand": "Update Brand",
+        "create_brand_description": "Add a new vehicle brand to the system.",
+        "update_brand_description": "Modify existing vehicle brand information.",
+        "brand_name": "Brand Name",
+        "brand_country": "Country",
+        "brand_founded_year": "Founded Year",
+        "brand_description": "Description",
+        "brand_description_placeholder": "Describe the brand...",
+        "brand": "Brand",
+        "vehicle_segment": "Vehicle Segment",
+        "create_segment": "Create Segment",
+        "update_segment": "Update Segment",
+        "create_vehicle_segment": "Create Vehicle Segment",
+        "update_vehicle_segment": "Update Vehicle Segment",
+        "vehicle_segment_description": " Add or modify a vehicle segment in the system.",
+        "segment_name": "Segment name",
+        "create_vehicle_segment_description": "Add a new vehicle segment to the system.",
+        "update_vehicle_segment_description": "Modify existing vehicle segment information.",
+        "vehicle_segment_description_placeholder": "Describe the vehicle segment..."
     }
 }

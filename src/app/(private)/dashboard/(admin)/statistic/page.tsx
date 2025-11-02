@@ -24,19 +24,18 @@ import {
 
 export default function StatisticPage() {
     const { t } = useTranslation()
+
     const { data: totalCustomer } = useGetCustomerStatistic()
     const { data: totalAnonymous } = useGetAnonymuousStatistic()
     const { data: totalRevenue } = useGetTotalRevenueStatistic()
     const { data: totalInvoice } = useGetTotalInvoiceStatistic()
-
-    // const { data: vehicleStatistic } = useGetVehicleStatistic()
-    // const { data: allVehicleModels } = useGetAllVehicleModels({ query: {}, enabled: true })
     const { data: vehicleModelStatistic } = useGetVehicleModelStatistic()
 
-    // console.log("vehicleStatistic", vehicleStatistic)
-    // console.log("allVehicleModels", allVehicleModels)
+    console.log("totalCustomer", totalCustomer)
+    console.log("totalAnonymous", totalAnonymous)
+    console.log("totalRevenue", totalRevenue)
+    console.log("totalInvoice", totalInvoice)
     console.log("vehicleModelStatistic", vehicleModelStatistic)
-
     const dataKpi = [
         {
             title: "Revenue",
@@ -64,26 +63,26 @@ export default function StatisticPage() {
         }
     ]
 
-    // const dataVehicleModel = [
-    //     vehicleModelStatistic?.map((item) => ({
-    //         modelId: item.modelId,
-    //         modelName: item.modelName,
-    //         numberOfAvailable: item.numberOfAvailable,
-    //         numberOfRented: item.numberOfRented,
-    //         numberOfMaintenance: item.numberOfMaintenance
-    //     }))
-    // ]
-
-    const mockData = [
-        { month: "Jan", active: 12, available: 18, maintenance: 4 },
-        { month: "Feb", active: 20, available: 25, maintenance: 3 },
-        { month: "Mar", active: 15, available: 30, maintenance: 5 },
-        { month: "Apr", active: 22, available: 28, maintenance: 2 },
-        { month: "May", active: 18, available: 32, maintenance: 4 },
-        { month: "Jun", active: 25, available: 35, maintenance: 3 }
+    const dataVehicleModel = [
+        vehicleModelStatistic?.map((item) => ({
+            modelId: item.modelId,
+            modelName: item.modelName,
+            numberOfAvailable: item.numberOfAvailable,
+            numberOfRented: item.numberOfRented,
+            numberOfMaintenance: item.numberOfMaintenance
+        }))
     ]
 
     // const dataMonths = mockData.map((item) => ({ month: item.month, revenue: item.active }))
+
+    // const mockData = [
+    //     { month: "Jan", active: 12, available: 18, maintenance: 4 },
+    //     { month: "Feb", active: 20, available: 25, maintenance: 3 },
+    //     { month: "Mar", active: 15, available: 30, maintenance: 5 },
+    //     { month: "Apr", active: 22, available: 28, maintenance: 2 },
+    //     { month: "May", active: 18, available: 32, maintenance: 4 },
+    //     { month: "Jun", active: 25, available: 35, maintenance: 3 }
+    // ]
 
     const mockData1 = [
         { month: "Jan", revenue: 120 },
@@ -117,15 +116,13 @@ export default function StatisticPage() {
 
                 <ResponsiveContainer width="100%" height={350}>
                     <BarChart
-                        //dataVehicleModel
-                        data={mockData}
+                        data={dataVehicleModel}
                         barSize={40}
                         className="bg-white rounded-2xl mt-4"
                     >
                         <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                         <XAxis
-                            //modelName
-                            dataKey="month"
+                            dataKey="modelName"
                             tick={{ fill: "#94a3b8", fontSize: 13 }}
                             axisLine={false}
                         />
@@ -149,27 +146,27 @@ export default function StatisticPage() {
                         />
                         <Bar
                             //numberOfMaintenance
-                            dataKey="maintenance"
+                            dataKey="numberOfMaintenance"
                             stackId="1"
                             fill="#FACC15"
-                            name="Bảo trì"
+                            name={t("statistic.maintenance")}
                             radius={[0, 0, 8, 8]}
                         />
 
                         <Bar
                             //numberOfAvailable
-                            dataKey="available"
+                            dataKey="numberOfAvailable"
                             stackId="1"
                             fill="#4ADE80"
-                            name="Chưa thuê"
+                            name={t("statistic.available")}
                         />
                         <Bar
                             //numberOfRented
-                            dataKey="active"
+                            dataKey="numberOfRented"
                             stackId="1"
                             // fill="#16a34a"
                             fill="#16A34A"
-                            name="Đang thuê"
+                            name={t("statistic.rented")}
                             radius={[8, 8, 0, 0]}
                         />
                     </BarChart>
