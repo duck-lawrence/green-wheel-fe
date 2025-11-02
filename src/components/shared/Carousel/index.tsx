@@ -195,11 +195,11 @@ export const Carousel = () => {
                                     key={i}
                                     className={`flex items-center justify-center p-6 transition-transform duration-500 ${
                                         isCenter ? "scale-110 z-10" : "scale-90 opacity-70"
-                                    }`}
+                                    } overflow-hidden rounded-xl`}
                                     style={{ flex: `0 0 ${100 / slidesPerView}%` }}
                                 >
                                     <div className="relative overflow-hidden bg-white rounded-xl shadow-lg w-fit h-fit">
-                                        <ImageStyled src={src} alt="" />
+                                        <ImageStyled src={src} alt="" width={460} height={350} />
                                     </div>
                                 </div>
                             )

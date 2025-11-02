@@ -13,7 +13,8 @@ import {
     InputStyled,
     ModelImagesUploader,
     ModalFooterStyled,
-    TextareaStyled
+    TextareaStyled,
+    NumberInputStyled
 } from "@/components"
 import { DEFAULT_VEHICLE_MODEL } from "@/constants/constants"
 import { BackendError } from "@/models/common/response"
@@ -44,35 +45,36 @@ export interface VehicleModelEditFormProps {
     onUpdated?: () => void
 }
 
-type FormValues = {
-    name: string
-    description: string
-    brandId: string
-    segmentId: string
-    costPerDay: string
-    depositFee: string
-    seatingCapacity: string
-    numberOfAirbags: string
-    motorPower: string
-    batteryCapacity: string
-    ecoRangeKm: string
-    sportRangeKm: string
-}
+// type FormValues = {
+//     name: string
+//     description: string
+//     brandId: string
+//     segmentId: string
+//     costPerDay: string
+//     depositFee: number
+//     reservationFee: string
+//     seatingCapacity: string
+//     numberOfAirbags: string
+//     motorPower: string
+//     batteryCapacity: string
+//     ecoRangeKm: string
+//     sportRangeKm: string
+// }
 
-function buildInitialValues(model: VehicleModelViewRes): FormValues {
+function buildInitialValues(model: VehicleModelViewRes): UpdateVehicleModelReq {
     return {
         name: model.name ?? "",
         description: model.description ?? "",
         brandId: model.brand?.id ?? "",
         segmentId: model.segment?.id ?? "",
-        costPerDay: model.costPerDay != null ? model.costPerDay.toString() : "",
-        depositFee: model.depositFee != null ? model.depositFee.toString() : "",
-        seatingCapacity: model.seatingCapacity != null ? model.seatingCapacity.toString() : "",
-        numberOfAirbags: model.numberOfAirbags != null ? model.numberOfAirbags.toString() : "",
-        motorPower: model.motorPower != null ? model.motorPower.toString() : "",
-        batteryCapacity: model.batteryCapacity != null ? model.batteryCapacity.toString() : "",
-        ecoRangeKm: model.ecoRangeKm != null ? model.ecoRangeKm.toString() : "",
-        sportRangeKm: model.sportRangeKm != null ? model.sportRangeKm.toString() : ""
+        costPerDay: model.costPerDay != null ? model.costPerDay : 0,
+        depositFee: model.depositFee != null ? model.depositFee : 0,
+        seatingCapacity: model.seatingCapacity != null ? model.seatingCapacity : 0,
+        numberOfAirbags: model.numberOfAirbags != null ? model.numberOfAirbags : 0,
+        motorPower: model.motorPower != null ? model.motorPower : 0,
+        batteryCapacity: model.batteryCapacity != null ? model.batteryCapacity : 0,
+        ecoRangeKm: model.ecoRangeKm != null ? model.ecoRangeKm : 0,
+        sportRangeKm: model.sportRangeKm != null ? model.sportRangeKm : 0
     }
 }
 
@@ -96,31 +98,16 @@ export function VehicleModelEditForm({
     }, [])
 
     const handleSubmit = useCallback(
-        async (values: FormValues) => {
-            const payload: UpdateVehicleModelReq = {
-                name: values.name.trim(),
-                description: values.description.trim(),
-                brandId: values.brandId,
-                segmentId: values.segmentId,
-                costPerDay: Number(values.costPerDay),
-                depositFee: Number(values.depositFee),
-                seatingCapacity: Number(values.seatingCapacity),
-                numberOfAirbags: Number(values.numberOfAirbags),
-                motorPower: Number(values.motorPower),
-                batteryCapacity: Number(values.batteryCapacity),
-                ecoRangeKm: Number(values.ecoRangeKm),
-                sportRangeKm: Number(values.sportRangeKm)
-            }
-
+        async (values: UpdateVehicleModelReq) => {
             await updateMutation.mutateAsync({
                 id: vehicleModel.id,
-                payload
+                payload: values
             })
         },
         [updateMutation, vehicleModel.id]
     )
 
-    const formik = useFormik<FormValues>({
+    const formik = useFormik<UpdateVehicleModelReq>({
         initialValues: buildInitialValues(vehicleModel),
         enableReinitialize: true,
         validationSchema: Yup.object({
@@ -139,7 +126,11 @@ export function VehicleModelEditForm({
                 .typeError(t("vehicle_model.deposit_fee_require"))
                 .required(t("vehicle_model.deposit_fee_require"))
                 .moreThan(0, t("vehicle_model.deposit_fee_positive")),
-
+            reservationFee: Yup.number()
+                .transform(numericTransform)
+                .typeError(t("vehicle_model.reservation_fee_require"))
+                .required(t("vehicle_model.reservation_fee_require"))
+                .moreThan(0, t("vehicle_model.reservation_fee_positive")),
             seatingCapacity: Yup.number()
                 .transform(numericTransform)
                 .typeError(t("vehicle_model.seating_capacity_require"))
@@ -319,9 +310,8 @@ export function VehicleModelEditForm({
                 <div className="grid gap-4 md:grid-cols-12">
                     {/* costPerDay */}
                     <div className="md:col-span-6">
-                        <InputStyled
-                            type="number"
-                            step="0.01"
+                        <NumberInputStyled
+                            step={1}
                             min={0}
                             label={t("vehicle_model.cost_per_day")}
                             placeholder={t("vehicle_model.cost_per_day_placeholder")}
@@ -335,10 +325,9 @@ export function VehicleModelEditForm({
                     </div>
 
                     {/* depositFee */}
-                    <div className="md:col-span-6">
-                        <InputStyled
-                            type="number"
-                            step="0.01"
+                    <div className="flex gap-2 md:col-span-6">
+                        <NumberInputStyled
+                            step={1}
                             min={0}
                             label={t("vehicle_model.deposit_fee")}
                             placeholder={t("vehicle_model.deposit_fee_placeholder")}
@@ -347,6 +336,21 @@ export function VehicleModelEditForm({
                             isInvalid={!!(formik.touched.depositFee && formik.errors.depositFee)}
                             errorMessage={formik.errors.depositFee}
                             onBlur={() => formik.setFieldTouched("depositFee")}
+                            isRequired
+                        />
+
+                        <NumberInputStyled
+                            step={1}
+                            min={0}
+                            label={t("vehicle_model.reservation_fee")}
+                            placeholder={t("vehicle_model.reservation_fee_placeholder")}
+                            value={formik.values.reservationFee}
+                            onValueChange={(value) => formik.setFieldValue("reservationFee", value)}
+                            isInvalid={
+                                !!(formik.touched.reservationFee && formik.errors.reservationFee)
+                            }
+                            errorMessage={formik.errors.reservationFee}
+                            onBlur={() => formik.setFieldTouched("reservationFee")}
                             isRequired
                         />
                     </div>
@@ -358,8 +362,8 @@ export function VehicleModelEditForm({
                 <div className="grid gap-4 md:grid-cols-12">
                     {/* seatingCapacity */}
                     <div className="md:col-span-4">
-                        <InputStyled
-                            type="number"
+                        <NumberInputStyled
+                            step={1}
                             min={0}
                             label={t("vehicle_model.seating_capacity")}
                             placeholder={t("vehicle_model.seating_capacity_placeholder")}
@@ -378,8 +382,8 @@ export function VehicleModelEditForm({
 
                     {/* numberOfAirbags */}
                     <div className="md:col-span-4">
-                        <InputStyled
-                            type="number"
+                        <NumberInputStyled
+                            step={1}
                             min={0}
                             label={t("vehicle_model.airbag")}
                             placeholder={t("vehicle_model.airbag_placeholder")}
@@ -398,9 +402,8 @@ export function VehicleModelEditForm({
 
                     {/* motorPower */}
                     <div className="md:col-span-4">
-                        <InputStyled
-                            type="number"
-                            step="0.1"
+                        <NumberInputStyled
+                            step={0.1}
                             min={0}
                             label={t("vehicle_model.motor_power")}
                             placeholder={t("vehicle_model.motor_power_placeholder")}
@@ -415,9 +418,8 @@ export function VehicleModelEditForm({
 
                     {/* batteryCapacity */}
                     <div className="md:col-span-4">
-                        <InputStyled
-                            type="number"
-                            step="0.1"
+                        <NumberInputStyled
+                            step={0.1}
                             min={0}
                             label={t("vehicle_model.battery_capacity")}
                             placeholder={t("vehicle_model.battery_capacity_placeholder")}
@@ -436,9 +438,8 @@ export function VehicleModelEditForm({
 
                     {/* ecoRangeKm */}
                     <div className="md:col-span-4">
-                        <InputStyled
-                            type="number"
-                            step="0.1"
+                        <NumberInputStyled
+                            step={0.1}
                             min={0}
                             label={t("vehicle_model.eco_range_km")}
                             placeholder={t("vehicle_model.eco_range_km_placeholder")}
@@ -453,9 +454,8 @@ export function VehicleModelEditForm({
 
                     {/* sportRangeKm */}
                     <div className="md:col-span-4">
-                        <InputStyled
-                            type="number"
-                            step="0.1"
+                        <NumberInputStyled
+                            step={0.1}
                             min={0}
                             label={t("vehicle_model.sport_range_km")}
                             placeholder={t("vehicle_model.sport_range_km_placeholder")}
