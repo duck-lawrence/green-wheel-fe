@@ -26,6 +26,7 @@ export const VehicleSubImagesScroll: React.FC<VehicleSubImagesScrollProps> = ({
                 {subImgUrls.map((src, idx) => (
                     <button
                         key={`${src}-${idx}`}
+                        type="button"
                         onClick={(e) => {
                             const container = containerRef.current
                             if (!container) return

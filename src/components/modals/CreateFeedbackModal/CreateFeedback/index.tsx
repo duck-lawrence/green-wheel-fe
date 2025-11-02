@@ -9,8 +9,15 @@ import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import * as Yup from "yup"
 import { motion } from "framer-motion"
+import { StationFeedbackRes } from "@/models/station-feedback/schema/response"
 
-export function CreateFeedback({ onClose }: { onClose: () => void }) {
+export function CreateFeedback({
+    setAllFeedbacks,
+    onClose
+}: {
+    setAllFeedbacks: React.Dispatch<React.SetStateAction<StationFeedbackRes[]>>
+    onClose: () => void
+}) {
     const { t } = useTranslation()
     const { data: stations } = useGetAllStations()
     const createFeedback = useCreateFeedback({})
@@ -21,7 +28,8 @@ export function CreateFeedback({ onClose }: { onClose: () => void }) {
         content: string
         rating: number
     }) => {
-        await createFeedback.mutateAsync(values)
+        const res = await createFeedback.mutateAsync(values)
+        setAllFeedbacks((prev) => [res, ...prev])
         onClose()
     }
 

@@ -4,12 +4,12 @@ import { ForgotPasswordModal, LoginModal, RegisterModal } from "./Auth"
 
 export * from "./AlertModal"
 export * from "./ChecklistModal"
+export * from "./CreateFeedbackModal"
 export * from "./CreateInvoiceModal"
 export * from "./CreateRentalContractModal"
 export * from "./SystemSettingModal"
 export * from "./DetailDamageModal"
 export * from "./DocumentPreview"
-export * from "./FeedbackModal"
 
 export * from "./Image"
 export * from "./Staff"

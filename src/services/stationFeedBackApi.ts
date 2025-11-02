@@ -10,8 +10,9 @@ import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 
 export const stationFeedbackApi = {
     create: (req: StationFeedbackCreateReq) =>
-        requestWrapper<void>(async () => {
-            await axiosInstance.post("/station-feedbacks", req)
+        requestWrapper<StationFeedbackRes>(async () => {
+            const res = await axiosInstance.post("/station-feedbacks", req)
+            return res.data
         }),
 
     getAll: ({
