@@ -53,9 +53,9 @@ export function ImagesUploaderModal({
     const isUploadable = useMemo(() => {
         const count = croppedImages.length
 
-        if (minAmount == null && maxAmount == null) return true
-        if (minAmount != null && count < minAmount) return false
-        if (maxAmount != null && count > maxAmount) return false
+        if (minAmount == undefined && maxAmount == undefined) return false
+        if (minAmount != undefined && count < minAmount) return false
+        if (maxAmount != undefined && count > maxAmount) return false
 
         return true
     }, [croppedImages.length, minAmount, maxAmount])

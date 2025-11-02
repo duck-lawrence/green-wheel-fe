@@ -41,7 +41,7 @@ export default function HomePage() {
     }, [params, t, router])
 
     return (
-        <div className="relative z-10 max-w-screen">
+        <div className="relative z-10 max-w-screen w-screen">
             <HeroSection />
 
             <div className="relative z-10">

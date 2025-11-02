@@ -141,7 +141,7 @@ export default function AdminFleetPage() {
     if (isGetVehicleSegmentsLoading || getVehicleSegmentsError) return <SpinnerStyled />
 
     return (
-        <div className="flex flex-col gap-6 rounded-3xl bg-white p-6 shadow-sm mb-6">
+        <div className="flex flex-col gap-6 rounded-3xl bg-white p-8 shadow-sm mb-6">
             <div className="space-y-2">
                 <h1 className="text-3xl font-bold text-slate-900">{t("fleet.page_title")}</h1>
             </div>

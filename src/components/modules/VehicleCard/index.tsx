@@ -26,10 +26,10 @@ export function CardVehicalStyled({ vehicleModel }: { vehicleModel: VehicleModel
             <CardBody className="overflow-visible ">
                 <ImageStyled
                     alt={vehicleModel.name}
-                    className="w-[300px] object-cover h-[280px] shadow-lg"
+                    className="w-[300px] object-cover h-[188px] shadow-lg"
                     src={vehicleModel.imageUrl}
                     width={300}
-                    height={280}
+                    height={188}
                 />
                 {vehicleModel.availableVehicleCount === 0 && (
                     <span className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 text-xs rounded z-10">
