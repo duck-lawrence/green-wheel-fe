@@ -1203,5 +1203,9 @@
         "not_found": "Setting not found",
         "value_is_required": "Value is required",
         "value_must_be_greater_than_zero": "Value must be greater than 0"
+    },
+    "errors": {
+        "not_found": "Oops! Page Not Found",
+        "not_found_description": "The page you’re looking for might have been moved or deleted."
     }
 }
