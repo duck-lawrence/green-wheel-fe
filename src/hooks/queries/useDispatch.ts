@@ -26,7 +26,7 @@ export const useCreateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => 
                 description: t("dispatch.create_success"),
                 color: "success"
             })
-            router.push("/dashboard/dispatch")
+            router.push("/dashboard/dispatchs")
         },
         onError: (error: BackendError) => {
             addToast({
@@ -56,7 +56,6 @@ export const useUpdateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => 
                 description: t("dispatch.update_success"),
                 color: "success"
             })
-            // router.push("/dashboard/dispatch")
         },
         onError: (error: BackendError) => {
             addToast({

@@ -21,7 +21,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         if (isLoading) return
 
         if (isStaff) {
-            router.replace("/dashboard/user-management")
+            router.replace("/dashboard/users")
             return
         }
 

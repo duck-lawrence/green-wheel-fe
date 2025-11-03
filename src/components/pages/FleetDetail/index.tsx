@@ -116,7 +116,7 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
     }, [refetchVehicleModels, refetchComponents])
 
     const handleVehicleModelDeleted = useCallback(() => {
-        router.push("/dashboard/fleet")
+        router.push("/dashboard/fleets")
     }, [router])
 
     // toast all API errors (models / vehicles / stations)
@@ -201,7 +201,7 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
                     )}
                 </p>
 
-                <ButtonStyled color="primary" onPress={() => router.push("/dashboard/fleet")}>
+                <ButtonStyled color="primary" onPress={() => router.push("/dashboard/fleets")}>
                     {t("fleet.back_to_list")}
                 </ButtonStyled>
             </div>
@@ -212,7 +212,7 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
     return (
         <FleetDetailLayout>
             <FleetBackButton
-                onBack={() => router.push("/dashboard/fleet")}
+                onBack={() => router.push("/dashboard/fleets")}
                 label={t("fleet.back_to_list")}
             />
 

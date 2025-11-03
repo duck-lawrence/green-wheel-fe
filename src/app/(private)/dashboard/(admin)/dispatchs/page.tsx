@@ -28,7 +28,7 @@ export default function DispatchPage() {
             {/* Header */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-3 mb-6">
                 <h1 className="text-3xl font-bold">{t("table.dispatch_managerment")}</h1>
-                <Link href="/dashboard/dispatch/new">
+                <Link href="/dashboard/dispatchs/new">
                     {/* <ButtonStyled className="btn-gradient  text-white font-semibold">
                         + {t("table.create_dispatch")}
                     </ButtonStyled> */}
@@ -98,7 +98,7 @@ export default function DispatchPage() {
                                             key={item.id}
                                             className="hover:bg-white transition-all duration-200 border-b border-gray-200 cursor-pointer"
                                             onMouseDown={handleNavigateClick(
-                                                `/dashboard/dispatch/${item.id}`
+                                                `/dashboard/dispatchs/${item.id}`
                                             )}
                                         >
                                             <TableCell className="text-center text-gray-700 font-medium">
@@ -121,7 +121,7 @@ export default function DispatchPage() {
                                                 </Chip>
                                             </TableCell>
                                             <TableCell className="text-center">
-                                                <Link href={`/dashboard/dispatch/${item.id}`}>
+                                                <Link href={`/dashboard/dispatchs/${item.id}`}>
                                                     <ButtonIconStyled
                                                         className="p-4"
                                                         variant="bordered"
