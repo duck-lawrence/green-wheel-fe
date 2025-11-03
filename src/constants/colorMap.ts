@@ -3,7 +3,8 @@ import {
     DispatchRequestStatus,
     RentalContractStatus,
     TicketStatus,
-    VehicleChecklistType
+    VehicleChecklistType,
+    VehicleStatus
 } from "./enum"
 
 export const DamageStatusColorMap: Record<
@@ -53,4 +54,13 @@ export const RentalContractStatusColorMap: Record<RentalContractStatus, string> 
     [RentalContractStatus.Cancelled]: "bg-red-100 text-red-700",
     [RentalContractStatus.UnavailableVehicle]: "bg-gray-200 text-gray-700",
     [RentalContractStatus.RefundPending]: "bg-orange-100 text-orange-700"
+}
+
+export const VehicleStatusColorMap: Record<VehicleStatus, string> = {
+    [VehicleStatus.Available]: "bg-emerald-100 text-emerald-700",
+    [VehicleStatus.Unavailable]: "bg-slate-200 text-slate-600",
+    [VehicleStatus.Rented]: "bg-blue-100 text-blue-700",
+    [VehicleStatus.Maintenance]: "bg-orange-100 text-orange-700",
+    [VehicleStatus.MissingNoReason]: "bg-rose-100 text-rose-700",
+    [VehicleStatus.LateReturn]: "bg-purple-100 text-purple-700"
 }

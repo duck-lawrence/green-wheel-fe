@@ -12,8 +12,7 @@ import {
     TableHeader,
     TableRow
 } from "@heroui/react"
-import { useRouter } from "next/navigation"
-import { useGetAllVehicleChecklists, useUserHelper } from "@/hooks"
+import { useGetAllVehicleChecklists, useUserHelper, useNavigateOnClick } from "@/hooks"
 import { VehicleChecklistType } from "@/constants/enum"
 import { VehicleChecklistTypeLabels } from "@/constants/labels"
 import { GetAllVehicleChecklistParams } from "@/models/checklist/schema/request"
@@ -22,8 +21,8 @@ import { VehicleChecklistTypeColorMap } from "@/constants/colorMap"
 
 export default function VehicleChecklistPage() {
     const { t } = useTranslation()
-    const router = useRouter()
     const { toFullName } = useUserHelper()
+    const handleNavigateClick = useNavigateOnClick()
     const [pagination, setPagination] = useState<PaginationParams>({ pageSize: 5 })
     const [filters, setFilter] = useState<GetAllVehicleChecklistParams>({})
 
@@ -34,12 +33,12 @@ export default function VehicleChecklistPage() {
     } = useGetAllVehicleChecklists({ query: filters, pagination })
 
     return (
-        <div className="px-3 py-2 md:py-8 md:px-12 shadow-2xs rounded-2xl bg-white ">
-            <div className="text-3xl mb-3 px-4 font-bold">
+        <div>
+            <div className="text-3xl mb-6 font-bold">
                 <p>{t("vehicle_checklist.checklist")}</p>
             </div>
 
-            <div className="mb-3 flex gap-2 px-4">
+            <div className="mb-3 flex gap-2">
                 <EnumPicker
                     label={t("table.type")}
                     labels={VehicleChecklistTypeLabels}
@@ -88,9 +87,9 @@ export default function VehicleChecklistPage() {
                                 <TableRow
                                     key={item.id}
                                     className="border-b border-gray-300 cursor-pointer hover:bg-gray-50"
-                                    onClick={() =>
-                                        router.push(`/dashboard/vehicle-checklists/${item.id}`)
-                                    }
+                                    onMouseDown={handleNavigateClick(
+                                        `/dashboard/vehicle-checklists/${item.id}`
+                                    )}
                                 >
                                     <TableCell className="text-center w-fit">{item.id}</TableCell>
                                     <TableCell className="text-center">

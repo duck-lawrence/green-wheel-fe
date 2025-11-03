@@ -1,8 +1,9 @@
 "use client"
 
+import { TableStyled } from "@/components"
+import { Spinner, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import React from "react"
-
-type TranslateFn = (key: string, fallback?: string) => string
+import { useTranslation } from "react-i18next"
 
 export type VehicleRow = {
     id: string
@@ -13,83 +14,72 @@ export type VehicleRow = {
     lastUpdatedLabel: string
 }
 
-export function TableFleetVehicle({
-    t,
-    rows,
-    isLoading
-}: {
-    t: TranslateFn
-    rows: VehicleRow[]
-    isLoading: boolean
-}) {
+export function TableFleetVehicle({ rows, isLoading }: { rows: VehicleRow[]; isLoading: boolean }) {
+    const { t } = useTranslation()
+
     return (
         <section className="space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                    <h2 className="pl-5 text-2xl font-bold uppercase tracking-wide text-slate-950">
+                    <h2 className="text-2xl font-bold uppercase tracking-wide text-slate-950">
                         {t("fleet.detail_vehicle_table_title")}
                     </h2>
                 </div>
             </div>
 
-            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-                <table className="min-w-full divide-y divide-slate-200 text-sm">
-                    <thead className="bg-slate-50">
-                        <tr>
-                            <th className="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
-                                {t("vehicle.license_plate")}
-                            </th>
-                            <th className="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
-                                {t("vehicle.station_name")}
-                            </th>
-                            <th className="py-3 px-4 text-center text-xs font-semibold uppercase tracking-wide text-slate-600">
-                                {t("vehicle.status_label")}
-                            </th>
-                            <th className="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
-                                {t("fleet.detail_vehicle_last_updated")}
-                            </th>
-                        </tr>
-                    </thead>
+            <TableStyled
+                className="text-sm"
+                classNames={{
+                    base: "max-h-[400px] overflow-scroll",
+                    table: "min-h-[380px]"
+                }}
+            >
+                <TableHeader className="bg-slate-50">
+                    <TableColumn className="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
+                        {t("vehicle.license_plate")}
+                    </TableColumn>
+                    <TableColumn className="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
+                        {t("vehicle.station_name")}
+                    </TableColumn>
+                    <TableColumn className="py-3 px-4 text-center text-xs font-semibold uppercase tracking-wide text-slate-600">
+                        {t("vehicle.status_label")}
+                    </TableColumn>
+                    <TableColumn className="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
+                        {t("fleet.detail_vehicle_last_updated")}
+                    </TableColumn>
+                </TableHeader>
 
-                    <tbody className="divide-y divide-slate-100">
-                        {isLoading ? (
-                            <tr>
-                                <td colSpan={4} className="py-6 text-center text-sm text-slate-500">
-                                    {t("fleet.detail_vehicle_table_loading")}
-                                </td>
-                            </tr>
-                        ) : rows.length > 0 ? (
-                            rows.map((row) => (
-                                <tr key={row.id} className="transition-colors hover:bg-slate-50">
-                                    <td className="py-3 px-4 font-semibold text-slate-900">
-                                        {row.licensePlate}
-                                    </td>
+                <TableBody
+                    loadingContent={<Spinner />}
+                    loadingState={isLoading ? "loading" : "idle"}
+                    emptyContent={t("fleet.detail_vehicle_table_empty")}
+                    items={rows}
+                >
+                    {(item) => (
+                        <TableRow key={item.id} className="transition-colors hover:bg-slate-50">
+                            <TableCell className="py-3 px-4 font-semibold text-slate-900">
+                                {item.licensePlate}
+                            </TableCell>
 
-                                    <td className="py-3 px-4 text-slate-700">{row.stationName}</td>
+                            <TableCell className="py-3 px-4 text-slate-700">
+                                {item.stationName}
+                            </TableCell>
 
-                                    <td className="py-3 px-4 text-center">
-                                        <span
-                                            className={`inline-flex min-w-[110px] items-center justify-center rounded-full px-3 py-1 text-xs font-semibold ${row.statusClasses}`}
-                                        >
-                                            {row.statusLabel}
-                                        </span>
-                                    </td>
+                            <TableCell className="py-3 px-4 text-center">
+                                <span
+                                    className={`inline-flex min-w-[110px] items-center justify-center rounded-full px-3 py-1 text-xs font-semibold ${item.statusClasses}`}
+                                >
+                                    {item.statusLabel}
+                                </span>
+                            </TableCell>
 
-                                    <td className="py-3 px-4 text-slate-700">
-                                        {row.lastUpdatedLabel}
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan={4} className="py-6 text-center text-sm text-slate-500">
-                                    {t("fleet.detail_vehicle_table_empty")}
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
+                            <TableCell className="py-3 px-4 text-slate-700">
+                                {item.lastUpdatedLabel}
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </TableStyled>
         </section>
     )
 }

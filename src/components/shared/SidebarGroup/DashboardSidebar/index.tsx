@@ -21,9 +21,9 @@ export function DashboardSidebar({ className }: { className?: string }) {
             href: "/dashboard/vehicle-checklists"
         },
         {
-            key: "/dashboard/user-management",
+            key: "/dashboard/users",
             label: t("staff.sidebar_user_management"),
-            href: "/dashboard/user-management"
+            href: "/dashboard/users"
         },
         {
             key: "/dashboard/customer-supports",
@@ -31,14 +31,14 @@ export function DashboardSidebar({ className }: { className?: string }) {
             href: "/dashboard/customer-supports"
         },
         {
-            key: "/dashboard/reports",
-            label: t("staff.sidebar_reports"),
-            href: "/dashboard/reports"
-        },
-        {
             key: "/dashboard/feedbacks",
             label: t("staff.sidebar_feedback"),
             href: "/dashboard/feedbacks"
+        },
+        {
+            key: "/dashboard/reports",
+            label: t("staff.sidebar_reports"),
+            href: "/dashboard/reports"
         }
     ]
 
@@ -49,9 +49,14 @@ export function DashboardSidebar({ className }: { className?: string }) {
             href: "/dashboard/statistic"
         },
         {
-            key: "/dashboard/vehicle-management",
+            key: "/dashboard/fleets",
+            label: t("admin.sidebar_fleet", "Fleet"),
+            href: "/dashboard/fleets"
+        },
+        {
+            key: "/dashboard/vehicles",
             label: t("admin.sidebar_vehicle_management"),
-            href: "/dashboard/vehicle-management"
+            href: "/dashboard/vehicles"
         },
         {
             key: "/dashboard/vehicle-components",
@@ -59,24 +64,14 @@ export function DashboardSidebar({ className }: { className?: string }) {
             href: "/dashboard/vehicle-components"
         },
         {
-            key: "/dashboard/staff-management",
+            key: "/dashboard/staffs",
             label: t("admin.sidebar_staff_management"),
-            href: "/dashboard/staff-management"
+            href: "/dashboard/staffs"
         },
         {
-            key: "/dashboard/dispatch",
+            key: "/dashboard/dispatchs",
             label: t("admin.dispatch"),
-            href: "/dashboard/dispatch"
-        },
-        {
-            key: "/dashboard/fleet",
-            label: t("admin.sidebar_fleet", "Fleet"),
-            href: "/dashboard/fleet"
-        },
-        {
-            key: "/dashboard/customer-supports",
-            label: t("staff.sidebar_customer_supports"),
-            href: "/dashboard/customer-supports"
+            href: "/dashboard/dispatchs"
         },
         {
             key: "/dashboard/reports",
@@ -84,9 +79,14 @@ export function DashboardSidebar({ className }: { className?: string }) {
             href: "/dashboard/reports"
         },
         {
-            key: "/dashboard/system-setting",
+            key: "/dashboard/customer-supports",
+            label: t("staff.sidebar_customer_supports"),
+            href: "/dashboard/customer-supports"
+        },
+        {
+            key: "/dashboard/system-settings",
             label: t("admin.system_setting"),
-            href: "/dashboard/system-setting"
+            href: "/dashboard/system-settings"
         }
     ]
 

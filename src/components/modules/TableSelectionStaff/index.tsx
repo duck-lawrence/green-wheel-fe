@@ -1,7 +1,6 @@
 "use client"
 
-import { InputStyled, PaginationStyled } from "@/components/styled"
-import TableSelectionStyled from "@/components/styled/TableSelectionStyled"
+import { InputStyled, PaginationStyled, TableSelectionStyled } from "@/components/styled"
 import { useGetAllStaffs, useUserHelper } from "@/hooks"
 import { PaginationParams } from "@/models/common/request"
 import { DispatchStaffRes } from "@/models/dispatch/schema/response"

@@ -14,10 +14,9 @@ import {
 import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { RentalContractViewRes } from "@/models/rental-contract/schema/response"
-import { useConfirmContract, useDay, useGetMe, useUserHelper } from "@/hooks"
+import { useConfirmContract, useDay, useGetMe, useUserHelper, useNavigateOnClick } from "@/hooks"
 import { RentalContractStatusLabels, VehicleStatusLabels } from "@/constants/labels"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
-import { useRouter } from "next/navigation"
 import { ButtonIconStyled, DropdownStyled, TableStyled } from "@/components/styled"
 import { ConfirmContractReq, ContractQueryParams } from "@/models/rental-contract/schema/request"
 import { PaginationParams } from "@/models/common/request"
@@ -36,7 +35,7 @@ export function TableContractStaff({
 }) {
     const { t } = useTranslation()
     const { toFullName } = useUserHelper()
-    const router = useRouter()
+    const handleNavigateClick = useNavigateOnClick()
     // const { acceptContract, rejectContract } = useConfirmContract({ params, pagination })
     const confirmContract = useConfirmContract({ params, pagination })
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
@@ -108,7 +107,9 @@ export function TableContractStaff({
                         <TableRow
                             key={item.id}
                             className="hover:bg-gray-50 transition-colors border-b border-gray-100 cursor-pointer"
-                            onClick={() => router.push(`/dashboard/rental-bookings/${item.id}`)}
+                            onMouseDown={handleNavigateClick(
+                                `/dashboard/rental-bookings/${item.id}`
+                            )}
                         >
                             <TableCell className="text-center text-gray-700">{index + 1}</TableCell>
                             <TableCell className="text-center text-gray-700 font-medium">

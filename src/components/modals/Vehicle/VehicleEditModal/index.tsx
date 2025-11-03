@@ -121,7 +121,7 @@ export function VehicleEditModal({
                                 formik.values.status ? new Set([formik.values.status]) : new Set([])
                             }
                             disallowEmptySelection={false}
-                            isClearable
+                            isClearable={false}
                             onSelectionChange={(keys) => {
                                 if (keys === "all") {
                                     formik.setFieldValue("status", null)
@@ -142,20 +142,20 @@ export function VehicleEditModal({
                     </ModalBodyStyled>
                     <ModalFooterStyled className="gap-3">
                         <ButtonStyled
-                            type="button"
-                            color="secondary"
-                            onPress={onClose}
-                            className="bg-slate-200 text-slate-700"
-                        >
-                            {t("common.cancel")}
-                        </ButtonStyled>
-                        <ButtonStyled
                             type="submit"
                             color="primary"
                             isDisabled={isSubmitting}
                             className="bg-primary text-white"
                         >
                             {t("common.update")}
+                        </ButtonStyled>
+                        <ButtonStyled
+                            type="button"
+                            color="secondary"
+                            onPress={onClose}
+                            className="bg-slate-200 text-slate-700"
+                        >
+                            {t("common.cancel")}
                         </ButtonStyled>
                     </ModalFooterStyled>
                 </form>

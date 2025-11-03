@@ -181,8 +181,8 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
     }, [onEditClose])
 
     return (
-        <div className="rounded-2xl bg-white shadow-sm px-6 py-6">
-            <div className="text-3xl mb-3 px-4 font-bold">
+        <div>
+            <div className="text-3xl mb-6 font-bold">
                 <p>
                     {isCustomerManagement
                         ? t("staff.customer_management_title")

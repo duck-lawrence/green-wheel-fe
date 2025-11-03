@@ -37,8 +37,8 @@ export default function FeedbackPage() {
     )
 
     return (
-        <div className="rounded-2xl bg-white shadow-sm px-6 py-6 space-y-3">
-            <div className="text-3xl mb-3 px-4 font-bold">
+        <div className="space-y-3">
+            <div className="text-3xl mb-6 font-bold">
                 <p>{t("review.feedback")}</p>
             </div>
             <AutocompleteStyled

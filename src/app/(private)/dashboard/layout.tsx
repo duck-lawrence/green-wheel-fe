@@ -10,7 +10,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <aside className="self-start lg:sticky lg:top-10">
                 <DashboardSidebar className="min-w-fit w-40 text-sm" />
             </aside>
-            <div className="w-full">{children}</div>
+            <div className="w-full px-3 py-2 md:py-8 md:px-12 bg-white rounded-2xl">{children}</div>
         </div>
     )
 }

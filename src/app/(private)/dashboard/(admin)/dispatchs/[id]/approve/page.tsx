@@ -62,7 +62,7 @@ export default function DispatchCreatePage() {
     if (isGetMeLoading || !stationIdNow) return <SpinnerStyled />
 
     return (
-        <div className="max-w-7xl mx-auto w-full bg-white p-8 rounded-2xl shadow-md border border-gray-100">
+        <div className="max-w-7xl mx-auto w-full">
             {/* Header */}
             <div className="text-center mb-10">
                 <h1 className="text-3xl font-bold text-primary tracking-wide">

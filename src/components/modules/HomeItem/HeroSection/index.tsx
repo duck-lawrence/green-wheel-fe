@@ -187,7 +187,7 @@ export function HeroSection() {
                         as={Link}
                         className="
                             text-base md:text-lg font-semibold px-8 py-3 rounded-xl 
-                            btn-gradient btn-gradient:hover btn-gradient:active
+                            btn-gradient 
                             transition-all duration-400 shadow-lg hover:shadow-teal-500/30 
                             text-center w-full sm:w-auto
                         "

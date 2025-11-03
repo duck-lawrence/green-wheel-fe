@@ -23,7 +23,7 @@ export type TableSelectionStyledProps = {
     onSelectionChange?: (keys: Key[]) => void
 }
 
-export default function TableSelectionStyled({
+export function TableSelectionStyled({
     columns,
     rows,
     className,

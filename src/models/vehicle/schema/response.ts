@@ -7,6 +7,7 @@ export type VehicleModelViewRes = {
     description: string
     costPerDay: number
     depositFee: number
+    reservationFee: number
     seatingCapacity: number
     numberOfAirbags: number
     motorPower: number
