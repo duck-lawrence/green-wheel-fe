@@ -69,6 +69,10 @@ export default function VehicleDetailPage() {
         }
     })
 
+    const modelImages = [model?.imageUrl, ...(model?.imageUrls ?? [])].filter(
+        (url): url is string => Boolean(url)
+    )
+
     // redirect if filter not valid
     useEffect(() => {
         if (!stationId || !startDate || !endDate) {
@@ -204,13 +208,28 @@ export default function VehicleDetailPage() {
                         </p>
                     </div>
                     {/*  font-extrabold*/}
-                    <div className="text-right">
+                    <div className="text-right space-y-2">
                         <p className="text-2xl sm:text-3xl font-semibold text-emerald-600">
-                            {formatCurrency(model.costPerDay)} &nbsp;
-                            <span className="text-base font-normal text-neutral-500">
+                            {formatCurrency(model.costPerDay)}
+                            <span className="ml-1 text-base font-normal text-neutral-500">
                                 {t("vehicle_model.vnd_per_day")}
                             </span>
                         </p>
+                        <div className="flex gap-2">
+                            <p className="text-xs text-slate-500">
+                                {t("fleet.detail_deposit_fee")}:{" "}
+                                <strong className="text-slate-700">
+                                    {formatCurrency(model.depositFee)}
+                                </strong>
+                            </p>
+                            <div className="hidden md:block w-[2px] bg-default self-stretch"></div>
+                            <p className="text-xs text-slate-500">
+                                {t("fleet.detail_reservation_fee")}:{" "}
+                                <strong className="text-slate-70">
+                                    {formatCurrency(model.reservationFee)}
+                                </strong>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -227,18 +246,18 @@ export default function VehicleDetailPage() {
                                 initial={{ opacity: 0, scale: 1.02 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.35 }}
-                                src={model.imageUrls[active]}
+                                src={modelImages[active]}
                                 alt={`${model.name} - ${active + 1}`}
                                 className="h-full w-full object-cover"
                             />
                         </div>
 
                         {/* List sub img */}
-                        {model.imageUrls.length > 0 && (
+                        {modelImages.length > 0 && (
                             <VehicleSubImagesScroll
                                 active={active}
                                 setActive={setActive}
-                                subImgUrls={model.imageUrls}
+                                subImgUrls={modelImages}
                             />
                         )}
                     </div>

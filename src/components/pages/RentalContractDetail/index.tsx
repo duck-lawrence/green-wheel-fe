@@ -211,10 +211,10 @@ export function RentalContractDetail({
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="relative min-h-screen w-full max-w-6xl bg-white shadow-xl rounded-2xl border border-gray-200 px-3 py-2 pt-12 md:px-12"
+            className="relative min-h-screen w-full max-w-6xl pt-12"
         >
             <Link
-                className="absolute top-3 left-5 hover:cursor-pointer text-gray-500 italic hidden sm:block"
+                className="absolute top-0 left-0 hover:cursor-pointer text-gray-500 italic hidden sm:block"
                 href={returnPath}
             >
                 {t("rental_contract.back_to_rental_contract")}

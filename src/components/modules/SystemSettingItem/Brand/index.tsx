@@ -29,11 +29,7 @@ export function Brand() {
     return (
         <div>
             <div className="flex justify-end">
-                <ButtonStyled
-                    color="primary"
-                    onPress={onOpenCreate}
-                    className="m-2 btn-gradient btn-gradient:hover btn-gradient:active"
-                >
+                <ButtonStyled color="primary" onPress={onOpenCreate} className="m-2 btn-gradient">
                     <PlusCircle size={18} />
                     {t("common.create")}
                 </ButtonStyled>

@@ -3,18 +3,17 @@ import { ButtonIconStyled, EnumPicker, SpinnerStyled, TableStyled } from "@/comp
 import { DispatchRequestStatusColorMap } from "@/constants/colorMap"
 import { DispatchRequestStatus } from "@/constants/enum"
 import { DispatchRequestStatusLabels } from "@/constants/labels"
-import { useGetAllDispatch, useGetAllStations, useGetMe } from "@/hooks"
+import { useGetAllDispatch, useGetAllStations, useGetMe, useNavigateOnClick } from "@/hooks"
 import { DispatchQueryParams } from "@/models/dispatch/schema/request"
 import { Chip, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { EyeIcon, Plus } from "lucide-react"
 
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 
 export default function DispatchPage() {
-    const router = useRouter()
+    const handleNavigateClick = useNavigateOnClick()
     const { t } = useTranslation()
     const { data: user } = useGetMe()
     const { data: stations = [] } = useGetAllStations()
@@ -25,12 +24,12 @@ export default function DispatchPage() {
     })
 
     return (
-        <div className="max-w-6xl mx-auto w-full bg-white p-10 rounded-2xl shadow-md border border-gray-100">
+        <div className="max-w-6xl mx-auto w-full">
             {/* Header */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-3 mb-6">
-                <h1 className="text-3xl mb-3 px-4 font-bold">{t("table.dispatch_managerment")}</h1>
+                <h1 className="text-3xl font-bold">{t("table.dispatch_managerment")}</h1>
                 <Link href="/dashboard/dispatch/new">
-                    {/* <ButtonStyled className="btn-gradient btn-gradient:hover btn-gradient:active text-white font-semibold">
+                    {/* <ButtonStyled className="btn-gradient  text-white font-semibold">
                         + {t("table.create_dispatch")}
                     </ButtonStyled> */}
                     <ButtonIconStyled className="btn-gradient rounded-lg">
@@ -98,9 +97,9 @@ export default function DispatchPage() {
                                         <TableRow
                                             key={item.id}
                                             className="hover:bg-white transition-all duration-200 border-b border-gray-200 cursor-pointer"
-                                            onClick={() =>
-                                                router.push(`/dashboard/dispatch/${item.id}`)
-                                            }
+                                            onMouseDown={handleNavigateClick(
+                                                `/dashboard/dispatch/${item.id}`
+                                            )}
                                         >
                                             <TableCell className="text-center text-gray-700 font-medium">
                                                 {index + 1}

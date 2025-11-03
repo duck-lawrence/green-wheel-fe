@@ -74,7 +74,7 @@ export default function StatisticPage() {
     }))
 
     return (
-        <div className="max-w-6xl mx-auto w-full bg-white/70 p-10 rounded-2xl shadow-md border border-gray-100">
+        <div className="max-w-6xl mx-auto w-full">
             <h2 className="text-3xl font-bold mb-6">{t("statistic.general_statistics")}</h2>
             <dl className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {dataKpi.map((item) => (

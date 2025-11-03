@@ -1,7 +1,6 @@
 "use client"
 
-import { InputStyled, PaginationStyled } from "@/components/styled"
-import TableSelectionStyled from "@/components/styled/TableSelectionStyled"
+import { InputStyled, PaginationStyled, TableSelectionStyled } from "@/components/styled"
 import { VehicleStatus } from "@/constants/enum"
 import { useGetAllVehicles } from "@/hooks"
 import { PaginationParams } from "@/models/common/request"

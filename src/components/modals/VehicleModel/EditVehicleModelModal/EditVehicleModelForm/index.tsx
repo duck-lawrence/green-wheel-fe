@@ -45,22 +45,6 @@ export interface VehicleModelEditFormProps {
     onUpdated?: () => void
 }
 
-// type FormValues = {
-//     name: string
-//     description: string
-//     brandId: string
-//     segmentId: string
-//     costPerDay: string
-//     depositFee: number
-//     reservationFee: string
-//     seatingCapacity: string
-//     numberOfAirbags: string
-//     motorPower: string
-//     batteryCapacity: string
-//     ecoRangeKm: string
-//     sportRangeKm: string
-// }
-
 function buildInitialValues(model: VehicleModelViewRes): UpdateVehicleModelReq {
     return {
         name: model.name ?? "",
@@ -69,6 +53,7 @@ function buildInitialValues(model: VehicleModelViewRes): UpdateVehicleModelReq {
         segmentId: model.segment?.id ?? "",
         costPerDay: model.costPerDay != null ? model.costPerDay : 0,
         depositFee: model.depositFee != null ? model.depositFee : 0,
+        reservationFee: model.reservationFee != null ? model.reservationFee : 0,
         seatingCapacity: model.seatingCapacity != null ? model.seatingCapacity : 0,
         numberOfAirbags: model.numberOfAirbags != null ? model.numberOfAirbags : 0,
         motorPower: model.motorPower != null ? model.motorPower : 0,
@@ -478,7 +463,10 @@ export function VehicleModelEditForm({
                     type="button"
                     color="secondary"
                     className="bg-slate-200 text-slate-700"
-                    onPress={onClose}
+                    onPress={() => {
+                        onClose()
+                        formik.resetForm()
+                    }}
                     isDisabled={isSubmitting}
                 >
                     {t("common.cancel")}

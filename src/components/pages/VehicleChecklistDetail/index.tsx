@@ -12,7 +12,8 @@ import {
     useDay,
     useGetVehicleChecklistById,
     useUserHelper,
-    useUpdateVehicleChecklist
+    useUpdateVehicleChecklist,
+    useSignByCustomer
 } from "@/hooks"
 import { UpdateVehicleChecklistReq } from "@/models/checklist/schema/request"
 import { useFormik } from "formik"
@@ -25,10 +26,12 @@ import { DamageStatus, VehicleChecklistType } from "@/constants/enum"
 import Link from "next/link"
 import { fromDate } from "@internationalized/date"
 import { DEFAULT_DATE_FORMAT, DEFAULT_TIMEZONE } from "@/constants/constants"
-import toast from "react-hot-toast"
+import { addToast } from "@heroui/toast"
+import { useRouter } from "next/navigation"
 
 export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; isStaff?: boolean }) {
     const { t } = useTranslation()
+    const router = useRouter()
     const { toFullName } = useUserHelper()
     const { formatDateTime: formatDate, toDate } = useDay({
         defaultFormat: DEFAULT_DATE_FORMAT
@@ -62,35 +65,51 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
     )
 
     const updateChecklist = useUpdateVehicleChecklist({ id })
+    const signByCustomer = useSignByCustomer({ id })
     const changeVehicle = useChangeVehicleByContractId({ id: checklist?.contractId || "" })
     const handleUpdate = useCallback(
         async (value: UpdateVehicleChecklistReq) => {
-            const maintainDateTimeZoned = toZonedDateTime(value.maintainUntil)
-            const formatMaintainDate =
-                maintainDateTimeZoned && hasItemsDamaged
-                    ? formatDateTime({
-                          date: maintainDateTimeZoned.set({ hour: 23, minute: 59, second: 59 })
-                      })
-                    : undefined
+            if (!isStaff) {
+                await signByCustomer.mutateAsync()
+            } else {
+                const maintainDateTimeZoned = toZonedDateTime(value.maintainUntil)
+                const formatMaintainDate =
+                    maintainDateTimeZoned && hasItemsDamaged
+                        ? formatDateTime({
+                              date: maintainDateTimeZoned.set({ hour: 23, minute: 59, second: 59 })
+                          })
+                        : undefined
 
-            await updateChecklist.mutateAsync({
-                checklistItems: value.checklistItems,
-                isSignedByCustomer: value.isSignedByCustomer,
-                isSignedByStaff: value.isSignedByStaff,
-                maintainUntil: formatMaintainDate
-            })
+                await updateChecklist.mutateAsync({
+                    checklistItems: value.checklistItems,
+                    isSignedByCustomer: value.isSignedByCustomer,
+                    isSignedByStaff: value.isSignedByStaff,
+                    maintainUntil: formatMaintainDate
+                })
 
-            if (checklist?.type == VehicleChecklistType.Return && formatMaintainDate != undefined) {
-                await changeVehicle.mutateAsync()
+                if (
+                    checklist?.type == VehicleChecklistType.Return &&
+                    formatMaintainDate != undefined
+                ) {
+                    await changeVehicle.mutateAsync()
+                }
             }
 
-            toast.success(t("success.update"))
+            router.refresh()
+            addToast({
+                title: t("toast.success"),
+                description: t("success.update"),
+                color: "success"
+            })
         },
         [
             changeVehicle,
             checklist?.type,
             formatDateTime,
             hasItemsDamaged,
+            isStaff,
+            router,
+            signByCustomer,
             t,
             toZonedDateTime,
             updateChecklist
@@ -136,10 +155,7 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
     }
 
     return (
-        <form
-            onSubmit={formik.handleSubmit}
-            className="rounded-2xl bg-white px-3 py-2 md:px-8 md:py-10 max-w-full md:max-w-6xl mx-auto"
-        >
+        <form onSubmit={formik.handleSubmit} className="max-w-full md:max-w-6xl mx-auto">
             {/* Header */}
             {/* <div className="flex flex-col md:flex-row items-center justify-between mb-8"> */}
             <div className="flex flex-col gap-2 mb-8">

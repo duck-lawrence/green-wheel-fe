@@ -17,8 +17,7 @@ import {
     TableHeader,
     TableRow
 } from "@heroui/react"
-import { useRouter } from "next/navigation"
-import { useDay, useGetAllStations, useGetMyContracts } from "@/hooks"
+import { useDay, useGetAllStations, useGetMyContracts, useNavigateOnClick } from "@/hooks"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { RentalContractStatusLabels } from "@/constants/labels"
@@ -32,7 +31,7 @@ import { RentalContractStatus } from "@/constants/enum"
 
 export default function RentalContractPage() {
     const { t } = useTranslation()
-    const router = useRouter()
+    const handleNavigateClick = useNavigateOnClick()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
 
     const [filter, setFilter] = useState<ContractQueryParams>({})
@@ -166,7 +165,7 @@ export default function RentalContractPage() {
                                 <TableRow
                                     key={item.id}
                                     className="hover:bg-gray-50 transition-colors border-b border-gray-100 cursor-pointer"
-                                    onClick={() => router.push(`/rental-bookings/${item.id}`)}
+                                    onMouseDown={handleNavigateClick(`/rental-bookings/${item.id}`)}
                                 >
                                     <TableCell className="text-center text-gray-700">
                                         {index + 1}

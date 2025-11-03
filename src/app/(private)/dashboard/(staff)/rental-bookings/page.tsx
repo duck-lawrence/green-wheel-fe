@@ -66,8 +66,8 @@ export default function StaffContractsPage() {
     }, [getStationsError, isGetStationsLoading, stations, t])
 
     return (
-        <div className="rounded-2xl bg-white shadow-sm px-6 py-6">
-            <div className="text-3xl mb-3 px-4 font-bold">
+        <div>
+            <div className="text-3xl mb-6 font-bold">
                 <p>{t("staff.sidebar_bookings")}</p>
             </div>
 

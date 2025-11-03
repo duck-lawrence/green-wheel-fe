@@ -1,5 +1,7 @@
+import { BusinessVariableKey } from "@/constants/enum"
+
 export type BusinessVariableViewRes = {
     id: string
-    key: number
+    key: BusinessVariableKey
     value: string
 }

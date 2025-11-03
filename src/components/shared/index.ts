@@ -1,31 +1,31 @@
+/* ========================= C ========================= */
 export * from "./Carousel"
 export * from "./ClientHydration"
 export * from "./CustomerTable"
 
-export * from "./DashBoard"
-
+/* ========================= F ========================= */
 export * from "./FilterVehicleRental"
 export * from "./Footer"
 
+/* ========================= I ========================= */
 export * from "./ImageUploader"
 export * from "./InvoiceForm"
 
+/* ========================= L ========================= */
 export * from "./LanguageSwitcher"
 
+/* ========================= N ========================= */
 export * from "./Navbar"
 
+/* ========================= P ========================= */
 export * from "./Profile"
 
-export * from "./Navbar"
-
+/* ========================= S ========================= */
 export * from "./SidebarGroup"
 export * from "./StaffTable"
 
+/* ========================= T ========================= */
 export * from "./TableContractStaff"
-export * from "./TableVehicleManagement"
 export * from "./TableVehicleComponent"
+export * from "./TableVehicleManagement"
 export * from "./TicketCard"
-
-export * from "../modules/VehicleSubImagesScroll"
-
-// export * from "./Detail"

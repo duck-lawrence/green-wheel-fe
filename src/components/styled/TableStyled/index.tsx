@@ -2,8 +2,18 @@
 import { Table, TableProps, cn } from "@heroui/react"
 import React from "react"
 
-export function TableStyled(props: TableProps) {
+export function TableStyled({ className, children, ...rest }: TableProps) {
     return (
-        <Table isHeaderSticky {...props} className={cn("overflow-auto w-full", props.className)} />
+        <Table
+            isHeaderSticky
+            {...rest}
+            className={cn("overflow-auto w-full", className)}
+            classNames={{
+                ...rest.classNames,
+                wrapper: cn("p-0", rest.classNames?.wrapper)
+            }}
+        >
+            {children}
+        </Table>
     )
 }

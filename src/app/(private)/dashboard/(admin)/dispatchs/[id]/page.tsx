@@ -52,7 +52,7 @@ export default function DispatchDetailPage() {
     if (!dispatchId || !dispatch) return <SpinnerStyled />
 
     return (
-        <div className="max-w-6xl mx-auto w-full bg-white p-10 rounded-2xl shadow-md border border-gray-100">
+        <div className="max-w-6xl mx-auto w-full">
             {/* Header */}
             <div className="text-center mb-10 space-y-2">
                 <h1 className="text-3xl font-bold text-primary tracking-wide">
