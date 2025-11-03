@@ -46,6 +46,7 @@ import { HandoverContractReq } from "@/models/rental-contract/schema/request"
 import { BottomActionButtons } from "./BottomActionButtons"
 import { addToast } from "@heroui/toast"
 import { useDisclosure } from "@heroui/react"
+import { cn } from "node_modules/@heroui/theme/dist/utils/cn"
 
 function getChecklistDisplay(status?: RentalContractStatus) {
     const handoverStatuses = [
@@ -70,11 +71,13 @@ function getChecklistDisplay(status?: RentalContractStatus) {
 export function RentalContractDetail({
     contractId,
     isCustomer = false,
-    isStaff = false
+    isStaff = false,
+    className = ""
 }: {
     contractId: string
     isCustomer?: boolean
     isStaff?: boolean
+    className?: string
 }) {
     const searchParams = useSearchParams()
     const pathName = usePathname()
@@ -211,7 +214,7 @@ export function RentalContractDetail({
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="relative min-h-screen w-full max-w-6xl pt-12"
+            className={cn("relative min-h-screen w-full max-w-6xl pt-12", className)}
         >
             <Link
                 className="absolute top-0 left-0 hover:cursor-pointer text-gray-500 italic hidden sm:block"

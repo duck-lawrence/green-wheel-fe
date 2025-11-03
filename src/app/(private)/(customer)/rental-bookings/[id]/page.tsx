@@ -10,7 +10,7 @@ export default function RentalContractDetailPage() {
     if (!contractId) return <SpinnerStyled />
 
     return (
-        <div className="max-w-screen md:max-w-3xl">
+        <div className="max-w-screen w-fit md:max-w-3xl bg-white px-14 py-6 rounded-2xl">
             <RentalContractDetail isCustomer={true} contractId={contractId} />
         </div>
     )
