@@ -9,7 +9,6 @@ import {
 import {
     CreateVehicleModelRes,
     VehicleModelImagesRes,
-    VehicleModelMainImageRes,
     VehicleModelViewRes
 } from "@/models/vehicle/schema/response"
 import axiosInstance from "@/utils/axios"
@@ -24,7 +23,7 @@ export const vehicleModelApi = {
         }),
 
     getAllImages: () =>
-        requestWrapper<VehicleModelMainImageRes[]>(async () => {
+        requestWrapper<string[]>(async () => {
             const res = await axiosInstance.get("/vehicle-models/main-images")
             return res.data
         }),

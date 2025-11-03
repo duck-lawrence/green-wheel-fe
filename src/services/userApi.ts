@@ -38,8 +38,6 @@ export const userApi = {
 
     create: (req: CreateUserReq) =>
         requestWrapper<{ userId: string }>(async () => {
-            console.log(req)
-
             const res = await axiosInstance.post("/users", req)
             return res.data
         }),

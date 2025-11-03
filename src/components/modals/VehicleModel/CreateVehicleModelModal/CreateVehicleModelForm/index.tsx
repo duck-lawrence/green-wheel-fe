@@ -144,13 +144,15 @@ export function VehicleModelCreateForm({
                 .transform(numericTransform)
                 .typeError(t("vehicle_model.motor_power_require"))
                 .required(t("vehicle_model.motor_power_require"))
-                .moreThan(0, t("vehicle_model.motor_power_can_not_negative")),
+                .moreThan(0, t("vehicle_model.motor_power_can_not_negative"))
+                .lessThan(9999.99, t("vehicle_model.motor_power_max")),
 
             batteryCapacity: Yup.number()
                 .transform(numericTransform)
                 .typeError(t("vehicle_model.battery_capacity_require"))
                 .required(t("vehicle_model.battery_capacity_require"))
-                .moreThan(0, t("vehicle_model.battery_capacity_can_not_negative")),
+                .moreThan(0, t("vehicle_model.battery_capacity_can_not_negative"))
+                .lessThan(9999.99, t("vehicle_model.battery_capacity_max")),
 
             ecoRangeKm: Yup.number()
                 .transform(numericTransform)
@@ -418,10 +420,13 @@ export function VehicleModelCreateForm({
                         <NumberInputStyled
                             step={0.1}
                             min={0}
+                            max={9999.9}
                             label={t("vehicle_model.motor_power")}
                             placeholder={t("vehicle_model.motor_power_placeholder")}
                             value={formik.values.motorPower}
-                            onValueChange={(value) => formik.setFieldValue("motorPower", value)}
+                            onValueChange={(value) => {
+                                formik.setFieldValue("motorPower", value)
+                            }}
                             isInvalid={!!(formik.touched.motorPower && formik.errors.motorPower)}
                             errorMessage={formik.errors.motorPower}
                             onBlur={() => formik.setFieldTouched("motorPower")}
@@ -437,9 +442,9 @@ export function VehicleModelCreateForm({
                             label={t("vehicle_model.battery_capacity")}
                             placeholder={t("vehicle_model.battery_capacity_placeholder")}
                             value={formik.values.batteryCapacity}
-                            onValueChange={(value) =>
+                            onValueChange={(value) => {
                                 formik.setFieldValue("batteryCapacity", value)
-                            }
+                            }}
                             isInvalid={
                                 !!(formik.touched.batteryCapacity && formik.errors.batteryCapacity)
                             }

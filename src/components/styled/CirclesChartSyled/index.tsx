@@ -146,24 +146,19 @@ export function CircleChartStyled({
                 </ResponsiveContainer>
 
                 <div className="text-tiny text-default-500 flex w-full flex-col justify-center gap-4 p-4 lg:p-0">
-                    {categories.map(
-                        (category, index) => (
-                            console.log(category),
-                            (
-                                <div key={index} className="flex items-center gap-2">
-                                    <span
-                                        className="h-2 w-2 rounded-full"
-                                        style={{
-                                            backgroundColor: `hsl(var(--heroui-${color}-${
-                                                (index + 1) * 200
-                                            }))`
-                                        }}
-                                    />
-                                    <span className="capitalize">{category}</span>
-                                </div>
-                            )
-                        )
-                    )}
+                    {categories.map((category, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                            <span
+                                className="h-2 w-2 rounded-full"
+                                style={{
+                                    backgroundColor: `hsl(var(--heroui-${color}-${
+                                        (index + 1) * 200
+                                    }))`
+                                }}
+                            />
+                            <span className="capitalize">{category}</span>
+                        </div>
+                    ))}
                 </div>
             </div>
         </CardStyled>

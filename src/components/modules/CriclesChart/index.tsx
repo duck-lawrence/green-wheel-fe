@@ -59,7 +59,6 @@ export function CriclesChart() {
 
     const handleChartChange = useCallback((title: string, value: string) => {
         setSelectedRanges((prev) => ({ ...prev, [title]: value }))
-        // console.log(selectedRanges)
     }, [])
 
     const handleSubmit = useCallback(() => {

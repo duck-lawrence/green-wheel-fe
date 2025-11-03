@@ -31,8 +31,6 @@ export function CreateUserForm({ isCreateCustomer = true, createMutation }: Crea
 
     const handleSubmit = useCallback(
         async (value: CreateUserReq) => {
-            console.log(value)
-
             await createMutation.mutateAsync(value)
         },
         [createMutation]

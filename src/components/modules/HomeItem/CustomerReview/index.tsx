@@ -40,8 +40,6 @@ export function CustomerReview() {
 
     // Concat new data into list
     useEffect(() => {
-        console.log(feedbacks?.items)
-
         if (!feedbacks?.items) return
 
         setAllFeedbacks((prev) => {

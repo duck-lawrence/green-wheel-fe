@@ -336,7 +336,10 @@
         "status_value_unknown": "Unknown"
     },
     "vehicle_segment": {
-        "not_found": "Vehicle segment not found"
+        "not_found": "Vehicle segment not found",
+        "name_required": "Name is required",
+        "description_required": "Description is required",
+        "name_already_exists": "This segment already exists"
     },
     "vehicle_model": {
         "brand_unknown": "Unknown brand",
@@ -411,11 +414,13 @@
         "motor_power_placeholder": "Enter motor power (kW)",
         "motor_power_require": "Motor power is required",
         "motor_power_can_not_negative": "Motor power must be greater than 0",
+        "motor_power_max": "Motor power must be less than 9999,99",
 
         "battery_capacity": "Battery capacity",
         "battery_capacity_placeholder": "Enter battery capacity (kWh)",
         "battery_capacity_require": "Battery capacity is required",
         "battery_capacity_can_not_negative": "Battery capacity must be greater than 0",
+        "battery_capacity_max": "Battery capacity must be less than 9999,99",
 
         "eco_range_km": "Eco range (km)",
         "eco_range_km_placeholder": "Enter eco range (km)",
@@ -463,22 +468,27 @@
         "form_name_label": "Component Name *",
         "form_name_placeholder": "Enter component name",
         "form_name_required": "Component name is required",
+        "name_required": "Component name is required",
         "form_name_max": "Component name must be at most 100 characters",
         "form_description_label": "Description",
         "form_description_placeholder": "Enter description",
         "form_description_required": "Description is required",
+        "description_required": "Description is required",
         "form_description_max": "Description must be at most 255 characters",
         "form_damage_fee_label": "Damage Fee (₫) *",
         "form_damage_fee_placeholder": "Enter damage fee",
         "form_damage_fee_required": "Damage fee must be greater than zero",
+        "damage_fee_required": "Damage fee must be greater than zero",
         "form_damage_fee_positive": "Damage fee must be greater than zero",
+        "damage_fee_must_be_non_negative": "Damage fee must be greater than zero",
         "filter_title": "Component filters",
         "filter_name_label": "Component name",
         "filter_name_placeholder": "Enter component name",
         "empty_state_title": "No components found",
         "empty_state_description": "Click + to add one.",
         "table_empty": "No vehicle components found.",
-        "fetch_error": "Unable to load components. Please try again."
+        "fetch_error": "Unable to load components. Please try again.",
+        "invalid_component_ids": "Invalid components"
     },
     "currency": {
         "vnd": "VND"
@@ -750,6 +760,7 @@
     },
     "rental_contract": {
         "id": "Contract ID",
+        "id_required": "Contract ID is required",
         "back_to_rental_contract": "Back to Rental Booking",
         "please_login": "Please login to rent",
         "rent": "Rent this vehicle",
@@ -772,8 +783,10 @@
         "contract_description": "Contract description",
         "rental_duration": "Rental duration",
         "start_date": "Start date",
+        "start_date_must_be_future": "Pick-up time must be at least 3 hours from now and within 7 AM - 5 PM",
         "actual_start_date": "Actual start date",
         "end_date": "End date",
+        "end_date_must_be_after_start": "The return day must be after the pick-up day at least 24 hours",
         "actual_end_date": "Actual end date",
         "staff": "Processing staff",
         "vehicle_handover_staff": "Vehicle handover staff",
@@ -788,11 +801,20 @@
         "return": "Return",
         "return_comfirm": "Confirm return",
         "confirm_change_vehicle": "Your previously reserved vehicle is no longer available. You can choose to switch to another car of the same model or request a refund.\nWe sincerely apologize for the inconvenience.",
-        "unavailable_vehicle_refund": "Your reserved vehicle is no longer available, and no suitable replacement is available.\nA refund will be issued. We sincerely apologize for the inconvenience."
+        "unavailable_vehicle_refund": "Your reserved vehicle is no longer available, and no suitable replacement is available.\nA refund will be issued. We sincerely apologize for the inconvenience.",
+        "vehicle_status_required_when_has_vehicle": "Vehicle status is required when don't has vehicle",
+        "invalid_vehicle_status": "Invalid vehicle status",
+        "model_id_required": "Model is required",
+        "station_id_required": "Station is required",
+        "at_least_one_party_must_sign": "At least one party must sign",
+        "not_start_yet": "This contract is not start yet"
     },
     "invoice": {
         "not_found": "Invoice not found",
         "this_invoice_was_paid_or_cancel": "This invoice was paid or cancelled",
+        "not_handover_payment": "This invoice is not a handover payment",
+        "invalid_invoice_type": "Invalid invoice type",
+        "forbidden_invoice_access": "You do not have permission to access this invoice.",
 
         "paid_amount": "Paid amount",
         "return_amount": "Return amount",
@@ -800,6 +822,8 @@
         "rental_fee": "Base rental fee",
         "vat_tax": "VAT tax",
         "amount": "Amount",
+        "amount_required": "Amount is required",
+        "invalid_amount": "Invalid amount",
         "total_amount": "Total amount",
         "note": "Note",
         "incident_cause": "Incident cause",
@@ -825,11 +849,14 @@
         "unit_price": "Unit price",
         "unit_price_require": "Unit price is required",
         "unit_price_min": "Unit price must be greater than 0",
+        "invalid_unit_price": "Unit price is invalid",
         "quantity": "Quantity",
         "quantity_require": "Quantity is required",
         "quantity_min": "Quantity must be greater than 0",
+        "invalid_quantity": "Quantity is invalid",
         "item_type": "Item type",
         "item_type_require": "Invoice item type is required",
+        "invalid_type": "Invalid invoice type",
         "add_item": "Add new item",
         "create_refund": "Create refund invoice",
         "subtotal": "Subtotal",
@@ -842,7 +869,11 @@
         "missing_access_key_partner_code_secret_key": "Missing required keys",
         "not_have_permission": "Permission denied",
         "invalid_end_point": "Invalid end point",
-        "failed_to_create_momo_payment": "Failed to create momo payment"
+        "failed_to_create_momo_payment": "Failed to create momo payment",
+        "invoice_id_required": "Invoice ID is required",
+        "fallback_url_required": "Fallback URL is required",
+        "fallback_url_invalid": "Fallback URL is invalid",
+        "invalid_payment_method": "Invalid payment method"
     },
     "ticket": {
         "not_found": "Ticket not found",
@@ -854,18 +885,24 @@
         "staff_report": "Staff Report",
         "title": "Title",
         "title_require": "Title is required",
+        "title_required": "Title is required",
+        "title_too_long": "Title is too long",
         "description": "Description",
         "description_placeholder": "Describe your problem in detail...",
         "description_require": "Description is required",
+        "description_required": "Description is required",
         "reply": "Reply",
         "reply_placeholder": "Enter your reply here...",
         "wait_for_reply": "Please wait for reply...",
         "reply_require": "Reply is required",
+        "invalid_type": "Invalid type",
         "requester": "Requester",
         "assignee": "Assignee"
     },
     "station_feedback": {
-        "not_found": "Station feedback not found"
+        "not_found": "Station feedback not found",
+        "invalid_rating": "Rating range is invalid",
+        "content_too_long": "Content is too long"
     },
     "about_us": {
         "green_wheel_description": "Green Wheel — Vietnam’s leading electric car rental platform, delivering an eco-friendly, affordable, and seamless driving experience.",
@@ -894,9 +931,12 @@
         "dispatch_detail": "Dispatch Detail",
         "station_information": "Station Information",
         "form_station": "From Station",
+        "from_station_is_required": "From station is required",
         "station_id": "Station ID",
         "station_name": "Station name",
         "to_station": "To Station",
+        "to_station_require": "To station is required",
+        "to_station_must_different": "To station must be different",
         "cur_status": "Current Status",
         "dispatch_status": "Dispatch Status",
         "assigned_staff": "Assigned Staffs",
@@ -909,10 +949,25 @@
         "number_staff": "Number of staffs",
         "number_staff_require": "Number of staffs is required",
         "number_staff_min": "Number of staffs must be at least 0",
+        "staff_not_enought_in_from_station": "Number of staffs is not enough in from station",
         "vehicle_model_require": "Vehicle model is required",
+        "vehicle_not_in_from_station": "Vehicle is not in from station",
         "number_vehicle": "Number of vehicles",
         "number_vehicle_require": "Number of vehicles is required",
         "number_vehicle_min": "Number of vehicles must be at least 1",
+
+        "vehicle_or_staff_not_in_from_station": "Vehicle or staff is not in from station",
+        "only_pending_can_approve_reject": "Only pending dispatch can be approved or rejected",
+        "only_approved_can_receive": "Only approved dispatch can be received",
+        "only_pending_can_cancel": "Only pending dispatch can be cancelled",
+        "only_approved_can_confirm": "Only approved dispatch can be confirmed",
+        "only_confirm_can_receive": "Only confirmed dispatch can be received",
+
+        "must_be_to_station_admin": "Must be to station admin to approve",
+        "must_be_from_station_admin": "Must be from station admin to reject",
+
+        "invalid_status": "Invalid status",
+        "id_null": "Id is not found",
         "approve": "Approve"
     },
     "document_preview": {
@@ -963,6 +1018,9 @@
     },
     "vehicle_checklist": {
         "not_found": "Vehicle checklist not found",
+        "already_process": "This checklist has already been processed.",
+        "at_least_one_party_must_sign": "At least one party must sign",
+        "invalid_type": "Invalid checklist type",
         "vehicle_checklist": "Vehicle checklist",
         "checklist": "Checklist",
         "checklist_type": "Checklist type",
@@ -981,6 +1039,11 @@
         "maintain_until": "Maintain until",
         "maintain_until_require": "Maintain date is required",
         "invalid_maintain_until": "Maintain date must be at least 30 minutes from now"
+    },
+    "vehicle_checklist_item": {
+        "not_found": "Vehicle checklist item not found",
+        "invalid_status": "Invalid status",
+        "item_id_required": "Item ID is required"
     },
     "signature": {
         "signature": "Signature",
@@ -1077,6 +1140,13 @@
         "integer_require": "Must be an integer",
         "required": "Required"
     },
+    "brand": {
+        "name_require": "Name is required",
+        "description_require": "Description is required",
+        "founded_year_require": "Founded year is required",
+        "country_require": "Country is required",
+        "not_found": "Brand is not found"
+    },
     "toast": {
         "create": "Create",
         "update": "Update",
@@ -1097,7 +1167,13 @@
         "monthly_revenue": "Monthly Revenue",
         "maintenance": "Maintenance",
         "available": "Available",
-        "rented": "Rented"
+        "rented": "Rented",
+        "no_customer_data": "No customer data available",
+        "no_invoice_data": "No invoice data available",
+        "no_vehicle_data": "No vehicle data available",
+        "failed_to_calculate_revenue": "Failed to calculate revenue",
+        "failed_to_calculate_customer_change": "Failed to calculate customer change",
+        "failed_to_calculate_invoice_change": "Failed to calculate invoice change"
     },
     "system": {
         "system_setting": "System Setting",
@@ -1122,5 +1198,10 @@
         "create_vehicle_segment_description": "Add a new vehicle segment to the system.",
         "update_vehicle_segment_description": "Modify existing vehicle segment information.",
         "vehicle_segment_description_placeholder": "Describe the vehicle segment..."
+    },
+    "business_variable": {
+        "not_found": "Setting not found",
+        "value_is_required": "Value is required",
+        "value_must_be_greater_than_zero": "Value must be greater than 0"
     }
 }
