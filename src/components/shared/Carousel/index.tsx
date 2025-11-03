@@ -27,7 +27,7 @@ export const Carousel = () => {
 
     const slides = useMemo(() => {
         if (!data || data.length === 0) return defaultSlides
-        return data.map((item) => item)
+        return data
     }, [data])
 
     // Observer: fade in khi vào viewport
