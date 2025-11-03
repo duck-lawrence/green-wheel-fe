@@ -134,7 +134,7 @@ export default function AdminFleetPage() {
 
     const handleVehicleSelect = useCallback(
         (vehicleModel: VehicleModelViewRes) => {
-            router.push(`/dashboard/fleet/${vehicleModel.id}`)
+            router.push(`/dashboard/fleets/${vehicleModel.id}`)
         },
         [router]
     )

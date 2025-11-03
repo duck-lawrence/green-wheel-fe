@@ -10,6 +10,7 @@ export function PaginationStyled({ page, onChange, className, ...rest }: Paginat
 
     return (
         <Pagination
+            hidden={rest.total <= 0}
             {...rest}
             page={page}
             onChange={handleClick}

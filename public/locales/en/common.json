@@ -168,6 +168,7 @@
 
         "sex": "Sex",
         "sex_require": "Sex is required",
+        "sex_can_not_empty": "Sex is required",
         "choose_sex": "Choose Sex",
 
         "avatar_not_found": "Avatar not found",
@@ -190,6 +191,7 @@
         "citizen_identity_not_found": "Citizen identity not found",
         "citizen_identity_duplicate": "This citizen identity already exists",
         "invalid_citizen_identity_images_amount": "Invalid citizen identity images amount",
+        "invalid_citizen_id_document_type": "Invalid citizen id document type",
 
         "driver_license": "Driver License",
         "upload_driver_license": "Upload Driver License",
@@ -203,8 +205,10 @@
         "driver_license_not_found": "Driver license not found",
         "driver_license_duplicate": "This driver license already exists",
         "invalid_driver_license_images_amount": "Invalid driver license images amount",
+        "invalid_driver_license_document_type": "Invalid driver license document type",
 
         "station_require": "Station is required",
+        "station_id_require": "Station is required",
 
         "bank_account_info": "Bank account info",
         "bank_name": "Bank name",
@@ -229,7 +233,8 @@
         "create_staff": "Create new staff",
         "create_anonymous": "Create anonymous user",
         "edit_information": "Edit Information",
-        "enter_required_info": "Please complete your profile with your citizen ID, driver’s license, phone number, and date of birth to continue booking."
+        "enter_required_info": "Please complete your profile with your citizen ID, driver’s license, phone number, and date of birth to continue booking.",
+        "google_credential_required": "Please link your Google account to continue."
     },
     "login": {
         "welcome": "Welcome!",
@@ -309,12 +314,15 @@
         "license_plate_is_exist": "This license plate already exists",
         "license_plate": "License plate",
         "license_plate_placeholder": "Enter license plate",
+        "license_plate_required": "License plate is required",
         "model_id": "Model ID",
         "model_id_placeholder": "Enter model ID",
+        "model_id_required": "Model is required",
         "model_name": "Vehicle model",
         "model_name_placeholder": "Select model",
         "station_name": "Station",
         "station_placeholder": "Select station",
+        "station_id_required": "Station is required",
         "status_label": "Status",
         "status_placeholder": "Select status",
         "management_empty": "No found vehicles.",
@@ -352,19 +360,26 @@
         "vnd_per_day": "VND/Day",
         "vehicle_information": "Vehicle information",
         "unit_price": "Unit price",
+
         "cost_per_day": "Cost per day",
         "cost_per_day_placeholder": "Enter cost per day",
         "cost_per_day_require": "Cost per day is required",
         "cost_per_day_positive": "Cost per day must be greater than 0",
+        "cost_per_day_invalid": "Cost per day is invalid",
+
         "number_of_days": "Number of days",
         "deposit_fee": "Deposit fee",
         "deposit_fee_placeholder": "Enter deposit fee",
         "deposit_fee_require": "Deposit fee is required",
         "deposit_fee_positive": "Deposit fee must be greater than 0",
+        "deposit_fee_invalid": "Deposit fee is invalid",
+
         "reservation_fee": "Reservation fee",
         "reservation_fee_placeholder": "Enter reservation fee",
         "reservation_fee_require": "Reservation fee is required",
         "reservation_fee_positive": "Reservation fee must be greater than 0",
+        "reservation_fee_invalid": " Reservation fee is invalid",
+
         "temporary_total": "Total",
         "similar_vehicles": "Similar vehicles",
         "view_all": "View all",
@@ -416,6 +431,8 @@
         "segment_id_require": "Segment is required",
 
         "upload_images": "Upload vehicle model images",
+
+        "image_ids_required": "Images are required",
 
         "policy": {
             "documents": "Documents",
@@ -609,6 +626,10 @@
     "cloudinary": {
         "file_not_found": "File not found",
         "invalid_file_type": "Invalid file type"
+    },
+    "upload": {
+        "file_required": "File is required",
+        "file_empty": "File is empty"
     },
     "staff": {
         "dashboard": "Dashboard",
@@ -863,6 +884,7 @@
         "contact_us": "Contact Us"
     },
     "dispatch": {
+        "not_found": "Dispatch is not found",
         "create_success": "Create dispatch successfully",
         "update_success": "Update dispatch successfully",
         "dispatch": "Dispatch",

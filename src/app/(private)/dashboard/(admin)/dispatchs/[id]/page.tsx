@@ -110,82 +110,6 @@ export default function DispatchDetailPage() {
                         />
                     </div>
                 </SectionStyled>
-                {/* <div className="hidden sm:block w-[5px] bg-default self-stretch"></div>
-                
-                <SectionStyled title={t("table.action")} sectionClassName="w-full">
-                    <div className="flex flex-wrap gap-3">
-                        {pendingApproveDisplay && (
-                            <>
-                                <Link href={`/dashboard/dispatch/${dispatch.id}/approve`}>
-                                    <ButtonStyled
-                                        className="btn-gradient
-                           text-white font-semibold px-6 py-2 rounded-lg transition-all duration-300"
-                                    >
-                                        {t("enum.approved")}
-                                    </ButtonStyled>
-                                </Link>
-
-                                <ButtonStyled
-                                    variant="ghost"
-                                    color="danger"
-                                    className="font-semibold px-6 py-2 rounded-lg transition-all duration-300"
-                                    onPress={() =>
-                                        handleUpdateDispatch(DispatchRequestStatus.Cancelled)
-                                    }
-                                >
-                                    {t("enum.rejected")}
-                                </ButtonStyled>
-                            </>
-                        )}
-                        {cancelDisplay && (
-                            <ButtonStyled
-                                variant="ghost"
-                                className="font-semibold px-6 py-2 rounded-lg transition-all duration-300"
-                                onPress={() =>
-                                    handleUpdateDispatch(DispatchRequestStatus.Cancelled)
-                                }
-                            >
-                                {t("enum.cancelled")}
-                            </ButtonStyled>
-                        )}
-                        {confirmDisplay && dispatch.status === DispatchRequestStatus.Approved ? (
-                            <>
-                                <ButtonStyled
-                                    className="btn-gradient
-                                    text-white font-semibold px-6 py-2 rounded-lg transition-all duration-300"
-                                    onPress={() =>
-                                        handleUpdateDispatch(DispatchRequestStatus.ConfirmApproved)
-                                    }
-                                >
-                                    {t("enum.confirm_approved")}
-                                </ButtonStyled>
-                                <ButtonStyled
-                                    variant="ghost"
-                                    className="font-semibold px-6 py-2 rounded-lg transition-all duration-300"
-                                    onPress={() =>
-                                        handleUpdateDispatch(DispatchRequestStatus.Cancelled)
-                                    }
-                                >
-                                    {t("enum.cancelled")}
-                                </ButtonStyled>
-                            </>
-                        ) : (
-                            dispatch.status === DispatchRequestStatus.ConfirmApproved && (
-                                <>
-                                    <ButtonStyled
-                                        className="btn-gradient
-                                            text-white font-semibold px-6 py-2 rounded-lg transition-all duration-300"
-                                        onPress={() =>
-                                            handleUpdateDispatch(DispatchRequestStatus.Received)
-                                        }
-                                    >
-                                        {t("enum.received")}
-                                    </ButtonStyled>
-                                </>
-                            )
-                        )}
-                    </div>
-                </SectionStyled> */}
             </div>
 
             {/* Tables */}
@@ -224,7 +148,7 @@ export default function DispatchDetailPage() {
             <div className="flex flex-wrap gap-3 justify-center">
                 {pendingApproveDisplay && (
                     <>
-                        <Link href={`/dashboard/dispatch/${dispatch.id}/approve`}>
+                        <Link href={`/dashboard/dispatchs/${dispatch.id}/approve`}>
                             <ButtonStyled
                                 className="btn-gradient
                            text-white font-semibold px-6 py-2 rounded-lg transition-all duration-300"
