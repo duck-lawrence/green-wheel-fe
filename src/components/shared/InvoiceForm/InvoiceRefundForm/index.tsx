@@ -55,7 +55,7 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                     />
 
                     {/* ===============Total pennalty================= */}
-                    <SectionStyled title="Penalty" icon={ReceiptText}>
+                    <SectionStyled title="Penalty" icon={ReceiptText} sectionClassName="mb-0">
                         {penaltyItems.map((item, index) => (
                             <div key={index} className="grid grid-cols-3 gap-3">
                                 <InputStyled
@@ -89,9 +89,9 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                             </div>
                         ))}
                     </SectionStyled>
-
                     {/* ===============Total pennalty================= */}
-                    <hr className="text-gray-400 border-2 rounded-2xl" />
+
+                    <hr className="text-gray-400 border-2 rounded-2xl " />
                     {/* Penalty subtotal */}
                     <InputStyled
                         label={t("invoice.penalty_total")}

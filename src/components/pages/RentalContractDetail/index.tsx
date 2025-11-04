@@ -411,6 +411,7 @@ export function RentalContractDetail({
                     contractId={contract.id}
                     contractStatus={contract.status}
                     isReturnChecklistExists={!!returnChecklist}
+                    className="mb-3"
                 />
                 {isStaff &&
                     // contract.status == RentalContractStatus.Returned &&

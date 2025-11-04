@@ -110,7 +110,7 @@ export function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceViewRes }) {
                 <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-3">
                     <div className="md:col-span-2 sm:col-span-1">
                         <InputStyled
-                            label={t("invoice.vat_tax")}
+                            label={t("invoice.tax_amount")}
                             value={formatCurrencyWithSymbol(invoice.tax * invoice.subtotal)}
                             startContent={
                                 <Money size={22} className="text-primary" weight="duotone" />
