@@ -27,12 +27,6 @@ export function TableSelectionVehicleModel({
     const { t } = useTranslation()
 
     const [selectedKeys, setSelectedKeys] = useState<string[]>([])
-    // const [filter, setFilter] = useState<StaffReq>({ stationId })
-    // const [pagination, setPagination] = useState<PaginationParams>({ pageSize: 5 })
-    // const { data, isLoading } = useGetAllVehicles({
-    //     params: { stationId, status: VehicleStatus.Available },
-    //     pagination
-    // })
 
     const rows = vehicleModels
         .filter((m) => vehicles.filter((v) => v.model.id === m.id).length ?? 0 > 0)
@@ -90,6 +84,10 @@ export function TableSelectionVehicleModel({
                             const error =
                                 formik.touched.vehicles?.[item.index]?.numberOfVehicle &&
                                 (formik.errors.vehicles?.[item.index] as any)?.numberOfVehicle
+
+                            const maxNumberOfVehicles =
+                                vehicles.filter((v) => v.model.id === item.id).length - 1
+
                             return (
                                 <TableRow key={item.id}>
                                     <TableCell>{item.index + 1}</TableCell>
@@ -97,7 +95,8 @@ export function TableSelectionVehicleModel({
                                     <TableCell>
                                         <NumberInputStyled
                                             // label={t("dispatch.number_vehicle")}
-                                            min={0}
+                                            minValue={0}
+                                            maxValue={maxNumberOfVehicles}
                                             className="w-full"
                                             classNames={{
                                                 inputWrapper: "h-10"
@@ -105,10 +104,7 @@ export function TableSelectionVehicleModel({
                                             value={
                                                 formik.values.vehicles[item.index]?.numberOfVehicle
                                             }
-                                            endContent={`/${
-                                                vehicles.filter((v) => v.model.id === item.id)
-                                                    .length ?? 0
-                                            }`}
+                                            endContent={`/${maxNumberOfVehicles}`}
                                             onValueChange={(val) => {
                                                 const num = Number(val)
                                                 formik.setFieldValue(
@@ -134,20 +130,6 @@ export function TableSelectionVehicleModel({
                     </TableBody>
                 </TableStyled>
             </div>
-            {/* <div className="mt-6 flex justify-center">
-                <PaginationStyled
-                    page={data?.pageNumber ?? 1}
-                    total={data?.totalPages ?? 10}
-                    onChange={(page: number) =>
-                        setPagination((prev) => {
-                            return {
-                                ...prev,
-                                pageNumber: page
-                            }
-                        })
-                    }
-                />
-            </div> */}
         </>
     )
 }

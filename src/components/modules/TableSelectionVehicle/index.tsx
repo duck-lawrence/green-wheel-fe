@@ -35,7 +35,7 @@ export function TableSelectionVehicle({
     const { data, isLoading } = useGetAllVehicles({
         params: filter,
         pagination,
-        enabled: vehicles?.length === 0
+        enabled: vehicles === undefined
     })
 
     const [isTyping, setIsTyping] = useState(false)
@@ -54,7 +54,7 @@ export function TableSelectionVehicle({
 
     const rows = useMemo(() => {
         const items =
-            vehicles?.length === 0
+            vehicles === undefined
                 ? data?.items.map((item, index) => ({
                       key: item.id,
                       id: index + 1,

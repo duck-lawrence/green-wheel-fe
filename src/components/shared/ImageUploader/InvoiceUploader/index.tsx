@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { useImageUploadModal, useUploadInvoiceImage } from "@/hooks"
+import { useImageUploadModal, useUpdateContractStatus, useUploadInvoiceImage } from "@/hooks"
 import { ImageUploadButton, ImageUploaderModal } from "@/components/"
 import { useTranslation } from "react-i18next"
 
@@ -15,9 +15,18 @@ export function InvoiceUploader({
     contractId: string
 }) {
     const { t } = useTranslation()
+    const updateContractStatus = useUpdateContractStatus()
+
     const { imgSrc, setImgSrc, isOpen, onOpenChange, onClose, onFileSelect } = useImageUploadModal()
 
-    const uploadMutation = useUploadInvoiceImage({ id, contractId, onSuccess: onClose })
+    const uploadMutation = useUploadInvoiceImage({
+        id,
+        contractId,
+        onSuccess: () => {
+            updateContractStatus.mutate({ id: contractId })
+            onClose()
+        }
+    })
 
     return (
         <>

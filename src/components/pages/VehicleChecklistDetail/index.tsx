@@ -209,13 +209,15 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
             <hr className="border-gray-200 mb-8" />
 
             {/* Table */}
-            <TableCheckListItems
-                isEditable={isEditable}
-                checklistType={checklist.type}
-                vehicleCheckListItem={formik.values.checklistItems}
-                setFieldValue={formik.setFieldValue}
-                setHasItemsDamaged={setHasItemsDamaged}
-            />
+            {formik.values.checklistItems.length > 0 && (
+                <TableCheckListItems
+                    isEditable={isEditable}
+                    checklistType={checklist.type}
+                    vehicleCheckListItems={formik.values.checklistItems}
+                    setFieldValue={formik.setFieldValue}
+                    setHasItemsDamaged={setHasItemsDamaged}
+                />
+            )}
 
             {hasItemsDamaged && (
                 <DatePickerStyled

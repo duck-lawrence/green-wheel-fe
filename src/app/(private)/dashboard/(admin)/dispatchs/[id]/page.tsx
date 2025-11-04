@@ -2,18 +2,14 @@
 
 import {
     ButtonStyled,
-    InputStyled,
+    DispatchInfo,
     SectionStyled,
     SpinnerStyled,
     TableSelectionStaff,
-    TableSelectionVehicle,
-    TextareaStyled
+    TableSelectionVehicle
 } from "@/components"
-import { DispatchRequestStatusColorMap } from "@/constants/colorMap"
 import { DispatchRequestStatus } from "@/constants/enum"
-import { DispatchRequestStatusLabels } from "@/constants/labels"
 import { useGetDispatchById, useGetMe, useUpdateDispatch } from "@/hooks"
-import { Chip } from "@heroui/react"
 import { UserSwitch, Car } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
@@ -53,64 +49,7 @@ export default function DispatchDetailPage() {
 
     return (
         <div className="max-w-6xl mx-auto w-full">
-            {/* Header */}
-            <div className="text-center mb-10 space-y-2">
-                <h1 className="text-3xl font-bold text-primary tracking-wide">
-                    {t("dispatch.dispatch_detail")}
-                </h1>
-                <Chip variant="bordered" color={DispatchRequestStatusColorMap[dispatch.status]}>
-                    {DispatchRequestStatusLabels[dispatch.status]}
-                </Chip>
-            </div>
-
-            {/* Station Info */}
-            <SectionStyled title={t("dispatch.station_information")}>
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
-                    <div className="flex flex-col gap-3 w-full">
-                        <h3 className="text-gray-800 font-semibold mb-1">
-                            {t("dispatch.form_station")}
-                        </h3>
-                        <InputStyled
-                            label={t("dispatch.station_id")}
-                            value={dispatch?.fromStationId}
-                            readOnly
-                        />
-                        <InputStyled
-                            label={t("dispatch.station_name")}
-                            value={dispatch?.fromStationName}
-                            readOnly
-                        />
-                    </div>
-                    <div className="hidden sm:block w-[5px] bg-default self-stretch"></div>
-                    <div className="flex flex-col gap-3 w-full">
-                        <h3 className="text-gray-800 font-semibold mb-1">
-                            {t("dispatch.to_station")}
-                        </h3>
-                        <InputStyled
-                            label={t("dispatch.station_id")}
-                            value={dispatch?.toStationId}
-                            readOnly
-                        />
-                        <InputStyled
-                            label={t("dispatch.station_name")}
-                            value={dispatch?.toStationName}
-                            readOnly
-                        />
-                    </div>
-                </div>
-            </SectionStyled>
-
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full mb-10">
-                <SectionStyled title={t("dispatch.description")} sectionClassName="w-full">
-                    <div className="flex flex-col gap-3">
-                        <TextareaStyled
-                            label={t("dispatch.description")}
-                            value={dispatch?.description}
-                            readOnly
-                        />
-                    </div>
-                </SectionStyled>
-            </div>
+            <DispatchInfo dispatch={dispatch} />
 
             {/* Tables */}
             <div className="flex flex-col sm:flex-row gap-3 mb-10">
@@ -122,11 +61,7 @@ export default function DispatchDetailPage() {
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
                         <TableSelectionStaff
                             stationId={stationIdNow}
-                            staffs={
-                                dispatch.dispatchRequestStaffs.length === 0
-                                    ? undefined
-                                    : dispatch.dispatchRequestStaffs
-                            }
+                            staffs={dispatch.dispatchRequestStaffs}
                             selectionBehavior="replace"
                         />
                     </div>
@@ -142,11 +77,7 @@ export default function DispatchDetailPage() {
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
                         <TableSelectionVehicle
                             stationId={stationIdNow}
-                            vehicles={
-                                dispatch.dispatchRequestVehicles.length === 0
-                                    ? undefined
-                                    : dispatch.dispatchRequestVehicles
-                            }
+                            vehicles={dispatch.dispatchRequestVehicles}
                             selectionBehavior="replace"
                         />
                     </div>
@@ -157,18 +88,15 @@ export default function DispatchDetailPage() {
                 {pendingApproveDisplay && (
                     <>
                         <Link href={`/dashboard/dispatchs/${dispatch.id}/approve`}>
-                            <ButtonStyled
-                                className="btn-gradient
-                           text-white font-semibold px-6 py-2 rounded-lg transition-all duration-300"
-                            >
-                                {t("enum.approved")}
+                            <ButtonStyled className="btn-gradient px-6 py-2">
+                                {t("dispatch.open_approve_page")}
                             </ButtonStyled>
                         </Link>
 
                         <ButtonStyled
                             variant="ghost"
                             color="danger"
-                            className="font-semibold px-6 py-2 rounded-lg transition-all duration-300"
+                            className="font-semibold px-6 py-2 rounded-xl transition-all duration-300"
                             onPress={() => handleUpdateDispatch(DispatchRequestStatus.Cancelled)}
                         >
                             {t("enum.rejected")}

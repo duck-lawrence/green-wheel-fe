@@ -47,6 +47,8 @@ export default function DispatchCreatePage() {
         pagination: { pageSize: 100 },
         enabled: stationDispatch?.[0]?.id !== undefined
     })
+    const maxNumberOfStaffs = staffs ? staffs.items.length - 1 : 0
+
     const { data: vehicles } = useGetAllVehicles({
         params: {
             stationId: stationDispatch?.[0]?.id,
@@ -74,23 +76,15 @@ export default function DispatchCreatePage() {
         [createDispatch, selectVehicles]
     )
 
-    const formik = useFormik<CreateDispatchReq>({
-        initialValues: {
-            fromStationId: stationDispatch?.[0]?.id || "",
-            numberOfStaff: 0,
-            vehicles: (models || []).map((m) => ({
-                modelId: m.id,
-                numberOfVehicle: 1
-            }))
-        },
-        enableReinitialize: true,
-        validationSchema: Yup.object().shape({
+    const validationSchema = useMemo(() => {
+        return Yup.object().shape({
             fromStationId: Yup.string().required(t("dispatch.from_station_require")),
             numberOfStaff: Yup.number()
                 .typeError(t("validation.number_type_require"))
                 .integer(t("validation.integer_require"))
                 .required(t("dispatch.number_staff_require"))
-                .min(0, t("dispatch.number_staff_min")),
+                .min(0, t("dispatch.number_staff_min"))
+                .max(maxNumberOfStaffs, `${t("dispatch.number_staff_max")} ${maxNumberOfStaffs}`),
             vehicles: Yup.array().of(
                 Yup.object().shape({
                     modelId: Yup.string().required(t("dispatch.vehicle_model_require")),
@@ -98,10 +92,23 @@ export default function DispatchCreatePage() {
                         .typeError(t("validation.number_type_require"))
                         .integer(t("validation.integer_require"))
                         .required(t("dispatch.number_vehicle_require"))
-                        .min(1, t("dispatch.number_vehicle_min"))
+                        .min(0, t("dispatch.number_vehicle_min"))
                 })
             )
-        }),
+        })
+    }, [maxNumberOfStaffs, t])
+
+    const formik = useFormik<CreateDispatchReq>({
+        initialValues: {
+            fromStationId: stationDispatch?.[0]?.id || "",
+            numberOfStaff: 0,
+            vehicles: (models || []).map((m) => ({
+                modelId: m.id,
+                numberOfVehicle: 0
+            }))
+        },
+        enableReinitialize: true,
+        validationSchema,
         onSubmit: handleCreateDispatch
     })
 
@@ -146,19 +153,17 @@ export default function DispatchCreatePage() {
                     <NumberInputStyled
                         label={t("dispatch.number_staff")}
                         className="max-w-60 h-20 mr-0"
-                        min={0}
+                        minValue={0}
+                        maxValue={maxNumberOfStaffs}
                         value={formik.values.numberOfStaff}
-                        endContent={`/${staffs?.items.length ?? 0}`}
+                        endContent={`/${maxNumberOfStaffs}`}
                         onValueChange={(val) => {
-                            formik.setFieldValue(
-                                "numberOfStaff",
-                                Number.isNaN(val) ? undefined : val
-                            )
+                            formik.setFieldValue("numberOfStaff", val)
                         }}
-                        onBlur={() => formik.setFieldTouched("numberOfStaff", true)}
+                        onFocusChange={() => formik.setFieldTouched("numberOfStaff", true)}
                         isInvalid={!!(formik.touched.numberOfStaff && formik.errors.numberOfStaff)}
                         errorMessage={formik.errors.numberOfStaff}
-                        hideStepper
+                        // hideStepper
                     />
                 </SectionStyled>
             </div>

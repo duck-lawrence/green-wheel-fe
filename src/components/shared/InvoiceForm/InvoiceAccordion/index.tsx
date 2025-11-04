@@ -1,6 +1,6 @@
 "use client"
 import React, { useCallback, useMemo, useState } from "react"
-import { Accordion, AccordionItem, Chip, cn } from "@heroui/react"
+import { Accordion, AccordionItem, Chip, cn, Spinner } from "@heroui/react"
 import { InvoiceStatus, InvoiceType, PaymentMethod, RentalContractStatus } from "@/constants/enum"
 import { InvoiceStatusLabels, PaymentMethodLabels } from "@/constants/labels"
 import { useGetMe, usePayInvoice } from "@/hooks"
@@ -220,8 +220,9 @@ export function InvoiceAccordion({
                                                 )}
                                                 <ButtonStyled
                                                     isDisabled={
-                                                        paidAmount !== undefined &&
-                                                        paidAmount < val.invoice.total
+                                                        (paidAmount !== undefined &&
+                                                            paidAmount < val.invoice.total) ||
+                                                        payInvoiceMutation.isPending
                                                     }
                                                     onPress={() =>
                                                         handlePayment({
@@ -237,7 +238,11 @@ export function InvoiceAccordion({
                                                     color="primary"
                                                     className="btn-gradient px-6 py-3"
                                                 >
-                                                    {button.label}
+                                                    {payInvoiceMutation.isPending ? (
+                                                        <Spinner color="white" />
+                                                    ) : (
+                                                        button.label
+                                                    )}
                                                 </ButtonStyled>
                                             </div>
                                         )

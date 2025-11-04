@@ -9,6 +9,7 @@ import { useSideBarItemStore } from "@/hooks"
 import { Menu, X } from "lucide-react"
 import { ButtonIconStyled } from "@/components/styled"
 import { createPortal } from "react-dom"
+import { UserProfileViewRes } from "@/models/user/schema/response"
 
 export type SidebarItem = {
     key: string
@@ -18,6 +19,8 @@ export type SidebarItem = {
 }
 
 export type SidebarProps = {
+    isDashboard?: boolean
+    user?: UserProfileViewRes
     tabs: SidebarItem[]
     selectedKey?: string
     className?: string
@@ -65,7 +68,13 @@ export const buildTabs = ({
     return uniqueTabs
 }
 
-export function Sidebar({ tabs, selectedKey, className = "" }: SidebarProps) {
+export function Sidebar({
+    isDashboard = false,
+    user = undefined,
+    tabs,
+    selectedKey,
+    className = ""
+}: SidebarProps) {
     const pathname = usePathname()
     const router = useRouter()
     const activeMenuKey = useSideBarItemStore((s) => s.activeMenuKey)
@@ -109,11 +118,16 @@ export function Sidebar({ tabs, selectedKey, className = "" }: SidebarProps) {
     return (
         <LayoutGroup id="account-sidebar">
             {/* Nút hamburger chỉ hiển thị ở mobile */}
-            <div className="lg:hidden">
+            <div className="lg:hidden flex gap-2 justify-center items-center">
                 <ButtonIconStyled onPress={() => setIsOpen(!isOpen)}>
                     {isOpen ? <X size={24} /> : <Menu size={24} />}
                 </ButtonIconStyled>
+                {isDashboard && user?.station && (
+                    <span className="font-medium">{user.station.name}</span>
+                )}
             </div>
+
+            {/* Sidebar Mobile */}
             {typeof window !== "undefined" &&
                 createPortal(
                     <>
@@ -161,6 +175,11 @@ export function Sidebar({ tabs, selectedKey, className = "" }: SidebarProps) {
                         className
                     )}
                 >
+                    {isDashboard && user?.station && (
+                        <div className="px-4 py-1 text-center font-medium text-lg text-white bg-gray-500">
+                            {user.station.name}
+                        </div>
+                    )}
                     {tabs.map((item) => {
                         const isActive = activeKey === item.key
                         return (
@@ -169,7 +188,7 @@ export function Sidebar({ tabs, selectedKey, className = "" }: SidebarProps) {
                                 type="button"
                                 onClick={() => handleSelection(item.key)}
                                 className={cn(
-                                    "relative w-full overflow-hidden rounded-xl px-3 py-2 text-xl font-medium",
+                                    "relative w-full overflow-hidden px-3 py-2 text-xl font-medium",
                                     "flex items-center justify-center whitespace-nowrap transition-colors duration-150"
                                 )}
                                 whileHover={{ scale: 1.02 }}
@@ -178,7 +197,7 @@ export function Sidebar({ tabs, selectedKey, className = "" }: SidebarProps) {
                                 {isActive && (
                                     <motion.span
                                         layoutId="account-sidebar-active"
-                                        className="absolute inset-0 rounded-xl bg-primary"
+                                        className="absolute inset-0 bg-primary"
                                         transition={{ type: "spring", stiffness: 350, damping: 30 }}
                                     />
                                 )}
