@@ -141,7 +141,7 @@ export function InvoiceAccordion({
     }
 
     return (
-        <>
+        <div>
             <AlertStyled className="mt-[-0.75rem] mb-3 mx-2">
                 {t("invoice.fees_include_tax")}
             </AlertStyled>
@@ -153,7 +153,7 @@ export function InvoiceAccordion({
                             {t("invoice.visit_station_to_get_refund")}
                         </AlertStyled>
                     )} */}
-            <Accordion variant="splitted" className={cn("w-full", className)}>
+            {/* <Accordion variant="splitted" className={cn("w-full", className)}>
                 {items
                     .sort((a, b) => a.invoice.type - b.invoice.type)
                     .map((val) => (
@@ -245,7 +245,117 @@ export function InvoiceAccordion({
                             </div>
                         </AccordionItem>
                     ))}
-            </Accordion>
-        </>
+            </Accordion> */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+                {items
+                    .sort((a, b) => a.invoice.type - b.invoice.type)
+                    .map((val) => (
+                        <Accordion
+                            key={val.key}
+                            variant="splitted"
+                            className={cn("w-full", className)}
+                        >
+                            <AccordionItem
+                                key={val.key}
+                                aria-label={val.ariaLabel}
+                                className="w-full max-w-[40rem]"
+                                title={
+                                    <div className="flex justify-between items-center ">
+                                        <span className="font-semibold text-base">
+                                            {val.title}
+                                            {isCustomer &&
+                                                refundInvoice &&
+                                                val.invoice.id === refundInvoice.id &&
+                                                refundInvoice.status !== InvoiceStatus.Paid &&
+                                                refundInvoice.total < 0 && (
+                                                    <span className="text-sm font-normal">{` | ${t(
+                                                        "invoice.visit_station_to_get_refund"
+                                                    )}`}</span>
+                                                )}
+                                        </span>
+                                        <div className="flex items-center gap-1">
+                                            {renderStatusChip(val.status)}
+                                            {val.invoice.paymentMethod !== undefined &&
+                                                val.invoice.status === InvoiceStatus.Paid && (
+                                                    <Chip color="primary" variant="bordered">
+                                                        {
+                                                            PaymentMethodLabels[
+                                                                val.invoice.paymentMethod
+                                                            ]
+                                                        }
+                                                    </Chip>
+                                                )}
+                                        </div>
+                                    </div>
+                                }
+                            >
+                                {val.content}
+                                <div className="flex flex-wrap gap-2 my-2 justify-end items-center">
+                                    {isPaidable({
+                                        invoice: val.invoice,
+                                        contractStatus: contractStatus
+                                    }) &&
+                                        paymentButtons.map((button) => {
+                                            const paidAmount = cashAmounts[val.invoice.id]
+                                            return (
+                                                <div
+                                                    key={button.method}
+                                                    className="flex items-center gap-2"
+                                                >
+                                                    {button.method === PaymentMethod.Cash && (
+                                                        <NumberInputStyled
+                                                            label={t("invoice.amount")}
+                                                            minValue={val.invoice.total}
+                                                            value={paidAmount}
+                                                            onValueChange={(value) =>
+                                                                setCashAmounts((prev) => ({
+                                                                    ...prev,
+                                                                    [val.invoice.id]: value
+                                                                }))
+                                                            }
+                                                            labelPlacement="outside-left"
+                                                            className="w-50 h-10"
+                                                            hideStepper
+                                                        />
+                                                    )}
+                                                    <ButtonStyled
+                                                        isDisabled={
+                                                            paidAmount !== undefined &&
+                                                            paidAmount < val.invoice.total
+                                                        }
+                                                        onPress={() =>
+                                                            handlePayment({
+                                                                id: val.invoice.id,
+                                                                paymentMethod: button.method,
+                                                                amount:
+                                                                    button.method ===
+                                                                    PaymentMethod.Cash
+                                                                        ? cashAmounts[
+                                                                              val.invoice.id
+                                                                          ]
+                                                                        : undefined
+                                                            })
+                                                        }
+                                                        size="md"
+                                                        color="primary"
+                                                        className="btn-gradient px-6 py-3"
+                                                    >
+                                                        {button.label}
+                                                    </ButtonStyled>
+                                                </div>
+                                            )
+                                        })}
+                                    {isStaff && isRefundUpload(val.invoice) && (
+                                        <InvoiceUploader
+                                            id={val.invoice.id}
+                                            contractId={contractId}
+                                        />
+                                    )}
+                                </div>
+                            </AccordionItem>
+                        </Accordion>
+                    ))}
+            </div>
+        </div>
     )
 }

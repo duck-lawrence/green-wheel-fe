@@ -1,14 +1,20 @@
 "use client"
 import React, { useMemo } from "react"
-import { ImageStyled, InputStyled, TableStyled } from "@/components"
-import { Money, WarningCircle, ArrowUDownLeft, ClipboardText } from "@phosphor-icons/react"
+import { ImageStyled, InputStyled, SectionStyled } from "@/components"
+import {
+    Money,
+    WarningCircle,
+    ArrowUDownLeft,
+    ClipboardText,
+    NotePencilIcon
+} from "@phosphor-icons/react"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { formatCurrencyWithSymbol } from "@/utils/helpers/currency"
 import { useTranslation } from "react-i18next"
 import { AlertStyled } from "@/components"
 import { InvoiceItemType, InvoiceStatus } from "@/constants/enum"
-import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { InvoiceItemTypeLabels } from "@/constants/labels"
+import { ReceiptText } from "lucide-react"
 
 export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
     const { t } = useTranslation()
@@ -48,6 +54,44 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                         variant="bordered"
                     />
 
+                    {/* ===============Total pennalty================= */}
+                    <SectionStyled title="Penalty" icon={ReceiptText}>
+                        {penaltyItems.map((item, index) => (
+                            <div key={index} className="grid grid-cols-3 gap-3">
+                                <InputStyled
+                                    key={index}
+                                    label={InvoiceItemTypeLabels[item.type]}
+                                    value={formatCurrencyWithSymbol(item.subTotal)}
+                                    startContent={
+                                        <Money
+                                            size={22}
+                                            className="text-primary"
+                                            weight="duotone"
+                                        />
+                                    }
+                                    variant="bordered"
+                                />
+                                <div className="col-span-2">
+                                    <InputStyled
+                                        key={index}
+                                        label={t("table.description")}
+                                        value={item.description || ""}
+                                        startContent={
+                                            <NotePencilIcon
+                                                size={22}
+                                                className="text-primary"
+                                                weight="duotone"
+                                            />
+                                        }
+                                        variant="bordered"
+                                    />
+                                </div>
+                            </div>
+                        ))}
+                    </SectionStyled>
+
+                    {/* ===============Total pennalty================= */}
+                    <hr className="text-gray-400 border-2 rounded-2xl" />
                     {/* Penalty subtotal */}
                     <InputStyled
                         label={t("invoice.penalty_total")}
@@ -71,57 +115,8 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                         variant="bordered"
                     />
                 </div>
-                {penaltyItems && penaltyItems.length > 0 && (
-                    <TableStyled className="text-sm md:text-base mb-3" removeWrapper>
-                        <TableHeader>
-                            <TableColumn className="text-center text-gray-700 font-semibold w-12">
-                                {t("table.no")}
-                            </TableColumn>
-                            <TableColumn className="text-center text-gray-700 font-semibold w-50">
-                                {t("table.description")}
-                            </TableColumn>
-                            <TableColumn className="text-center text-gray-700 font-semibold w-12">
-                                {t("table.type")}
-                            </TableColumn>
-                            <TableColumn className="text-center text-gray-700 font-semibold w-12">
-                                {t("invoice.unit_price")}
-                            </TableColumn>
-                            <TableColumn className="text-center text-gray-700 font-semibold w-12">
-                                {t("invoice.quantity")}
-                            </TableColumn>
-                            <TableColumn className="text-center text-gray-700 font-semibold w-12">
-                                {t("invoice.subtotal")}
-                            </TableColumn>
-                        </TableHeader>
-                        <TableBody>
-                            {penaltyItems.map((item, index) => (
-                                <TableRow key={item.id}>
-                                    <TableCell className="text-center align-top text-gray-700">
-                                        {index + 1}
-                                    </TableCell>
-                                    <TableCell className="text-center align-top text-gray-700">
-                                        {item.description || ""}
-                                    </TableCell>
-                                    <TableCell className="text-center align-top text-gray-700">
-                                        {InvoiceItemTypeLabels[item.type]}
-                                    </TableCell>
-                                    <TableCell className="text-center align-top text-gray-700">
-                                        {formatCurrencyWithSymbol(item.unitPrice)}
-                                    </TableCell>
-                                    <TableCell className="text-center align-top text-gray-700">
-                                        {formatCurrencyWithSymbol(item.quantity)}
-                                    </TableCell>
-                                    <TableCell className="text-center align-top text-gray-700">
-                                        {formatCurrencyWithSymbol(item.subTotal)}
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </TableStyled>
-                )}
                 {invoice.status === InvoiceStatus.Paid && invoice.total >= 0 && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-3">
-                        <div></div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <InputStyled
                                 label={t("invoice.paid_amount")}
