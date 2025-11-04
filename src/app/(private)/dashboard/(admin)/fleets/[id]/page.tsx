@@ -3,7 +3,7 @@
 import React from "react"
 import { useParams } from "next/navigation"
 import { SpinnerStyled } from "@/components"
-import { AdminFleetDetail } from "@/components/pages/FleetDetail"
+import { AdminFleetDetail } from "@/components"
 
 export default function AdminFleetDetailPage() {
     const { id } = useParams()

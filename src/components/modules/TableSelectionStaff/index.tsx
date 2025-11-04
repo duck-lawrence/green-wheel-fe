@@ -32,7 +32,7 @@ export function TableSelectionStaff({
     const { data, isLoading } = useGetAllStaffs({
         params: filter,
         pagination,
-        enabled: !staffs
+        enabled: staffs?.length === 0
     })
 
     const [isTyping, setIsTyping] = useState(false)
@@ -51,7 +51,7 @@ export function TableSelectionStaff({
 
     const rows = useMemo(() => {
         const items =
-            staffs === undefined
+            staffs?.length === 0
                 ? data?.items.map((item, index) => ({
                       key: item.id,
                       id: index + 1,
@@ -60,7 +60,7 @@ export function TableSelectionStaff({
                           lastName: item.lastName
                       })
                   }))
-                : staffs.map((item, index) => ({
+                : (staffs || []).map((item, index) => ({
                       key: item.staff.id,
                       id: index + 1,
                       name: toFullName({
@@ -121,7 +121,7 @@ export function TableSelectionStaff({
                         onSelectionChange={handleSelectionChange}
                         selectionBehavior={selectionBehavior}
                     ></TableSelectionStyled>
-                    {!staffs && (
+                    {rows.length > 0 && (
                         <div className="mt-6 flex justify-center">
                             <PaginationStyled
                                 page={data?.pageNumber ?? 1}

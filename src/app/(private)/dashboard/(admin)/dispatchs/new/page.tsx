@@ -8,7 +8,13 @@ import {
     SpinnerStyled,
     TableSelectionVehicleModel
 } from "@/components"
-import { useGetAllStations, useGetAllVehicleModels, useGetMe } from "@/hooks"
+import {
+    useGetAllStaffs,
+    useGetAllStations,
+    useGetAllVehicleModels,
+    useGetAllVehicles,
+    useGetMe
+} from "@/hooks"
 import { useCreateDispatch } from "@/hooks/queries/useDispatch"
 import { CreateDispatchReq } from "@/models/dispatch/schema/request"
 import { AutocompleteItem, useDisclosure } from "@heroui/react"
@@ -17,6 +23,7 @@ import { useFormik } from "formik"
 import * as Yup from "yup"
 import React, { useCallback, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { VehicleStatus } from "@/constants/enum"
 
 export default function DispatchCreatePage() {
     const { t } = useTranslation()
@@ -31,6 +38,23 @@ export default function DispatchCreatePage() {
     const stationDispatch = stationIdNow
         ? (stations || []).filter(({ id }) => id !== stationIdNow) || null
         : null
+
+    // pre condition
+    const { data: staffs } = useGetAllStaffs({
+        params: {
+            stationId: stationDispatch?.[0]?.id
+        },
+        pagination: { pageSize: 100 },
+        enabled: stationDispatch?.[0]?.id !== undefined
+    })
+    const { data: vehicles } = useGetAllVehicles({
+        params: {
+            stationId: stationDispatch?.[0]?.id,
+            status: VehicleStatus.Available
+        },
+        pagination: { pageSize: 100 },
+        enabled: stationDispatch?.[0]?.id !== undefined
+    })
 
     //Create
     const createDispatch = useCreateDispatch({})
@@ -124,6 +148,7 @@ export default function DispatchCreatePage() {
                         className="max-w-60 h-20 mr-0"
                         min={0}
                         value={formik.values.numberOfStaff}
+                        endContent={`/${staffs?.items.length ?? 0}`}
                         onValueChange={(val) => {
                             formik.setFieldValue(
                                 "numberOfStaff",
@@ -143,6 +168,7 @@ export default function DispatchCreatePage() {
                 <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
                     <TableSelectionVehicleModel
                         vehicleModels={models || []}
+                        vehicles={vehicles?.items || []}
                         formik={formik}
                         onChangeSelected={setSelectVehicles}
                     />

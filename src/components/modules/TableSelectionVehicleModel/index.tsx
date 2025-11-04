@@ -2,7 +2,7 @@
 
 import { NumberInputStyled, TableStyled } from "@/components"
 import { CreateDispatchReq } from "@/models/dispatch/schema/request"
-import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
+import { VehicleModelViewRes, VehicleViewRes } from "@/models/vehicle/schema/response"
 import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { useFormik } from "formik"
 import React, { Key, useState } from "react"
@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next"
 type TableSelectionVehicleModelProps = {
     selectionBehavior?: "toggle" | "replace"
     vehicleModels: VehicleModelViewRes[]
+    vehicles: VehicleViewRes[]
     formik: ReturnType<typeof useFormik<CreateDispatchReq>>
     onChangeSelected?: (selected: string[]) => void
 }
@@ -19,6 +20,7 @@ export function TableSelectionVehicleModel({
     selectionBehavior,
     // stationId,
     vehicleModels,
+    vehicles,
     formik,
     onChangeSelected
 }: TableSelectionVehicleModelProps) {
@@ -32,11 +34,13 @@ export function TableSelectionVehicleModel({
     //     pagination
     // })
 
-    const rows = vehicleModels.map((item, index) => ({
-        id: item.id,
-        index: index,
-        model: item.name
-    }))
+    const rows = vehicleModels
+        .filter((m) => vehicles.filter((v) => v.model.id === m.id).length ?? 0 > 0)
+        .map((item, index) => ({
+            id: item.id,
+            index: index,
+            model: item.name
+        }))
 
     const columns = [
         {
@@ -101,6 +105,10 @@ export function TableSelectionVehicleModel({
                                             value={
                                                 formik.values.vehicles[item.index]?.numberOfVehicle
                                             }
+                                            endContent={`/${
+                                                vehicles.filter((v) => v.model.id === item.id)
+                                                    .length ?? 0
+                                            }`}
                                             onValueChange={(val) => {
                                                 const num = Number(val)
                                                 formik.setFieldValue(

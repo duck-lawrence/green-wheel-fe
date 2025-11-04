@@ -122,7 +122,11 @@ export default function DispatchDetailPage() {
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
                         <TableSelectionStaff
                             stationId={stationIdNow}
-                            staffs={dispatch.dispatchRequestStaffs}
+                            staffs={
+                                dispatch.dispatchRequestStaffs.length === 0
+                                    ? undefined
+                                    : dispatch.dispatchRequestStaffs
+                            }
                             selectionBehavior="replace"
                         />
                     </div>
@@ -138,7 +142,11 @@ export default function DispatchDetailPage() {
                     <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
                         <TableSelectionVehicle
                             stationId={stationIdNow}
-                            vehicles={dispatch.dispatchRequestVehicles}
+                            vehicles={
+                                dispatch.dispatchRequestVehicles.length === 0
+                                    ? undefined
+                                    : dispatch.dispatchRequestVehicles
+                            }
                             selectionBehavior="replace"
                         />
                     </div>

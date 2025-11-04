@@ -35,7 +35,7 @@ export function TableSelectionVehicle({
     const { data, isLoading } = useGetAllVehicles({
         params: filter,
         pagination,
-        enabled: !vehicles
+        enabled: vehicles?.length === 0
     })
 
     const [isTyping, setIsTyping] = useState(false)
@@ -54,14 +54,14 @@ export function TableSelectionVehicle({
 
     const rows = useMemo(() => {
         const items =
-            vehicles === undefined
+            vehicles?.length === 0
                 ? data?.items.map((item, index) => ({
                       key: item.id,
                       id: index + 1,
                       model: item.model.name,
                       licensePlate: item.licensePlate
                   }))
-                : vehicles.map((item, index) => ({
+                : (vehicles || []).map((item, index) => ({
                       key: item.vehicle.id,
                       id: index + 1,
                       model: item.vehicle.model.name,
@@ -120,7 +120,7 @@ export function TableSelectionVehicle({
                         onSelectionChange={handleSelectionChange}
                         selectionBehavior={selectionBehavior}
                     ></TableSelectionStyled>
-                    {!vehicles && (
+                    {rows.length > 0 && (
                         <div className="mt-6 flex justify-center">
                             <PaginationStyled
                                 page={data?.pageNumber ?? 1}
