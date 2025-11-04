@@ -4,6 +4,9 @@ export * from "./AccountPreview"
 /* ========================= C ========================= */
 export * from "./CriclesChart"
 
+/* ========================= D ========================= */
+export * from "./DispatchInfo"
+
 /* ========================= E ========================= */
 export * from "./EnumPicker"
 

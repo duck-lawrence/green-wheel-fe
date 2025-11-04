@@ -81,6 +81,24 @@ export function BottomActionButtons({
     return (
         <>
             {/* STAFF */}
+            {/* Khi chưa bắt đầu và contract đang Active */}
+            {(isStaff || isCustomer) &&
+                !contract.actualStartDate &&
+                contract.status === RentalContractStatus.Active && (
+                    <ButtonStyled
+                        variant="bordered"
+                        color="primary"
+                        className="hover:text-white hover:bg-primary"
+                        isDisabled={
+                            !handoverFormik.isValid ||
+                            handoverFormik.isSubmitting ||
+                            !hanoverChecklist
+                        }
+                        onPress={() => handoverFormik.handleSubmit()}
+                    >
+                        {handoverFormik.isSubmitting ? <Spinner /> : t("rental_contract.handover")}
+                    </ButtonStyled>
+                )}
             {isStaff && (
                 <>
                     {/* Khi contract đang Request Pending */}
@@ -126,28 +144,6 @@ export function BottomActionButtons({
                                     </DropdownMenu>
                                 </DropdownStyled>
                             </div>
-                        )}
-
-                    {/* Khi chưa bắt đầu và contract đang Active */}
-                    {!contract.actualStartDate &&
-                        contract.status === RentalContractStatus.Active && (
-                            <ButtonStyled
-                                variant="bordered"
-                                color="primary"
-                                className="hover:text-white hover:bg-primary"
-                                isDisabled={
-                                    !handoverFormik.isValid ||
-                                    handoverFormik.isSubmitting ||
-                                    !hanoverChecklist
-                                }
-                                onPress={() => handoverFormik.handleSubmit()}
-                            >
-                                {handoverFormik.isSubmitting ? (
-                                    <Spinner />
-                                ) : (
-                                    t("rental_contract.handover")
-                                )}
-                            </ButtonStyled>
                         )}
 
                     {/* Khi contract đã Active và có thể trả xe */}

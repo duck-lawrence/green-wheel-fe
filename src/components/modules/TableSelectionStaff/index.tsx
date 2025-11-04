@@ -32,7 +32,7 @@ export function TableSelectionStaff({
     const { data, isLoading } = useGetAllStaffs({
         params: filter,
         pagination,
-        enabled: staffs?.length === 0
+        enabled: staffs === undefined
     })
 
     const [isTyping, setIsTyping] = useState(false)
@@ -51,7 +51,7 @@ export function TableSelectionStaff({
 
     const rows = useMemo(() => {
         const items =
-            staffs?.length === 0
+            staffs === undefined
                 ? data?.items.map((item, index) => ({
                       key: item.id,
                       id: index + 1,

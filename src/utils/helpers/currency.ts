@@ -17,7 +17,7 @@ export const formatCurrencyWithSymbol = (n: number) => {
 
 export const calculateCompensation = (baseAmount: number, damageStatus: DamageStatus) => {
     const multiplier = (() => {
-        switch (damageStatus) {
+        switch (Number(damageStatus)) {
             case DamageStatus.Good:
                 return 0.0
             case DamageStatus.Minor:

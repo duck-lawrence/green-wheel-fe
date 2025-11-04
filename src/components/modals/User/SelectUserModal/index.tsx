@@ -184,20 +184,22 @@ export function SelectUserModal({ isOpen, onOpenChange, onClose, setUser }: Sele
                                     ))}
                                 </TableBody>
                             </TableStyled>
-                            <div className="mt-6 flex justify-center">
-                                <PaginationStyled
-                                    page={data?.pageNumber ?? 1}
-                                    total={data?.totalPages ?? 10}
-                                    onChange={(page: number) =>
-                                        setPagination((prev) => {
-                                            return {
-                                                ...prev,
-                                                pageNumber: page
-                                            }
-                                        })
-                                    }
-                                />
-                            </div>
+                            {(data?.items || []).length > 0 && (
+                                <div className="mt-6 flex justify-center">
+                                    <PaginationStyled
+                                        page={data?.pageNumber ?? 1}
+                                        total={data?.totalPages ?? 10}
+                                        onChange={(page: number) =>
+                                            setPagination((prev) => {
+                                                return {
+                                                    ...prev,
+                                                    pageNumber: page
+                                                }
+                                            })
+                                        }
+                                    />
+                                </div>
+                            )}
                         </div>
                     )}
 

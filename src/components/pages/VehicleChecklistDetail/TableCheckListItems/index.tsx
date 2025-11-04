@@ -11,17 +11,18 @@ import { calculateCompensation, formatCurrencyWithSymbol } from "@/utils/helpers
 export function TableCheckListItems({
     isEditable = false,
     checklistType,
-    vehicleCheckListItem,
+    vehicleCheckListItems,
     setFieldValue,
     setHasItemsDamaged
 }: {
     isEditable: boolean
     checklistType: VehicleChecklistType
-    vehicleCheckListItem: VehicleChecklistItemViewRes[]
+    vehicleCheckListItems: VehicleChecklistItemViewRes[]
     setFieldValue: (field: string, value: any) => void
     setHasItemsDamaged: (hasItemsDamaged: boolean) => void
 }) {
     const { t } = useTranslation()
+
     return (
         <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
             <TableStyled className="min-w-xl text-sm md:text-base" removeWrapper>
@@ -44,8 +45,8 @@ export function TableCheckListItems({
                 </TableHeader>
 
                 <TableBody>
-                    {vehicleCheckListItem &&
-                        vehicleCheckListItem.map((item, index) => {
+                    {vehicleCheckListItems &&
+                        vehicleCheckListItems.map((item, index) => {
                             const damageFee = calculateCompensation(
                                 item.component.damageFee,
                                 item.status
@@ -82,6 +83,7 @@ export function TableCheckListItems({
                                                     `checklistItems[${index}].status`,
                                                     val
                                                 )
+
                                                 if (
                                                     val &&
                                                     (val as DamageStatus) > DamageStatus.Good
@@ -94,7 +96,7 @@ export function TableCheckListItems({
                                                     setHasItemsDamaged(
                                                         (checklistType !==
                                                             VehicleChecklistType.Handover &&
-                                                            vehicleCheckListItem
+                                                            vehicleCheckListItems
                                                                 .filter(
                                                                     (checklistItem) =>
                                                                         checklistItem.id != item.id

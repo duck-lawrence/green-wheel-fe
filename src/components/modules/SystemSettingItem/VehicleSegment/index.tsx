@@ -41,7 +41,7 @@ export function VehicleSegment() {
                 <TableStyled className="min-w-full text-sm md:text-base" removeWrapper>
                     <TableHeader className="sticky top-0 z-10 bg-gray-50 border-b border-gray-200 shadow-sm">
                         <TableColumn className="text-center text-gray-700 font-semibold">
-                            No.
+                            {t("table.no")}
                         </TableColumn>
                         <TableColumn className="text-center text-gray-700 font-semibold">
                             {t("table.name")}

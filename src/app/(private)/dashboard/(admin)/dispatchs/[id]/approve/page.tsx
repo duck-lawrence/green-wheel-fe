@@ -2,12 +2,11 @@
 import {
     AlertModal,
     ButtonStyled,
-    InputStyled,
+    DispatchInfo,
     SectionStyled,
     SpinnerStyled,
     TableSelectionStaff,
-    TableSelectionVehicle,
-    TextareaStyled
+    TableSelectionVehicle
 } from "@/components"
 import { DispatchRequestStatus } from "@/constants/enum"
 import { useGetMe } from "@/hooks"
@@ -34,18 +33,21 @@ export default function DispatchCreatePage() {
     const [selectStaffs, setSelectStaffs] = useState<string[]>([])
     const [selectVehicles, setSelectVehicles] = useState<string[]>([])
 
-    const handleUpdate = useCallback(async () => {
-        if (!dispatch) return
+    const handleUpdate = useCallback(
+        async (status: DispatchRequestStatus) => {
+            if (!dispatch) return
 
-        await updateMutation.mutateAsync({
-            id: dispatch.id,
-            req: {
-                status: DispatchRequestStatus.Approved,
-                staffIds: selectStaffs,
-                vehicleIds: selectVehicles
-            }
-        })
-    }, [dispatch, updateMutation, selectStaffs, selectVehicles])
+            await updateMutation.mutateAsync({
+                id: dispatch.id,
+                req: {
+                    status,
+                    staffIds: selectStaffs,
+                    vehicleIds: selectVehicles
+                }
+            })
+        },
+        [dispatch, updateMutation, selectStaffs, selectVehicles]
+    )
 
     useEffect(() => {
         if (!stationIdNow || !dispatch) return
@@ -59,64 +61,11 @@ export default function DispatchCreatePage() {
         }
     }, [dispatch, router, stationIdNow, t])
 
-    if (isGetMeLoading || !stationIdNow) return <SpinnerStyled />
+    if (isGetMeLoading || !stationIdNow || !dispatch) return <SpinnerStyled />
 
     return (
         <div className="max-w-7xl mx-auto w-full">
-            {/* Header */}
-            <div className="text-center mb-10">
-                <h1 className="text-3xl font-bold text-primary tracking-wide">
-                    {t("dispatch.dispatch")}
-                </h1>
-                <p className="text-gray-500 text-sm mt-1">{t("dispatch.title")}</p>
-            </div>
-
-            {/* Station Info */}
-            <SectionStyled title={t("dispatch.station_information")}>
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
-                    <div className="flex flex-col gap-3 w-full">
-                        <h3 className="text-gray-800 font-semibold mb-1">
-                            {t("dispatch.form_station")}
-                        </h3>
-                        <InputStyled
-                            label={t("dispatch.station_id")}
-                            value={dispatch?.fromStationId}
-                            readOnly
-                        />
-                        <InputStyled
-                            label={t("dispatch.station_name")}
-                            value={dispatch?.fromStationName}
-                            readOnly
-                        />
-                    </div>
-                    <div className="hidden sm:block w-[5px] bg-default self-stretch"></div>
-                    <div className="flex flex-col gap-3 w-full">
-                        <h3 className="text-gray-800 font-semibold mb-1">
-                            {t("dispatch.to_station")}
-                        </h3>
-                        <InputStyled
-                            label={t("dispatch.station_id")}
-                            value={dispatch?.toStationId}
-                            readOnly
-                        />
-                        <InputStyled
-                            label={t("dispatch.station_name")}
-                            value={dispatch?.toStationName}
-                            readOnly
-                        />
-                    </div>
-                </div>
-            </SectionStyled>
-
-            <SectionStyled title={t("dispatch.description")} sectionClassName="w-full">
-                <div className="flex flex-col gap-3">
-                    <TextareaStyled
-                        label={t("dispatch.description")}
-                        value={dispatch?.description}
-                        readOnly
-                    />
-                </div>
-            </SectionStyled>
+            <DispatchInfo dispatch={dispatch} />
 
             {/* Tables */}
             <SectionStyled
@@ -141,8 +90,8 @@ export default function DispatchCreatePage() {
                 </div>
             </SectionStyled>
 
-            <div className="flex justify-center items-center">
-                <ButtonStyled className="p-6 btn-gradient" onPress={onOpen}>
+            <div className="flex justify-center items-center gap-2">
+                <ButtonStyled className="btn-gradient px-6 py-2" onPress={onOpen}>
                     {t("dispatch.approve")}
                 </ButtonStyled>
                 <AlertModal
@@ -152,9 +101,17 @@ export default function DispatchCreatePage() {
                     onOpenChange={onOpenChange}
                     onClose={onClose}
                     onConfirm={() => {
-                        handleUpdate()
+                        handleUpdate(DispatchRequestStatus.Approved)
                     }}
                 />
+                <ButtonStyled
+                    variant="ghost"
+                    color="danger"
+                    className="font-semibold px-6 py-2 rounded-xl transition-all duration-300"
+                    onPress={() => handleUpdate(DispatchRequestStatus.Cancelled)}
+                >
+                    {t("enum.rejected")}
+                </ButtonStyled>
             </div>
         </div>
     )

@@ -66,19 +66,25 @@ export default function DispatchPage() {
                         removeWrapper
                     >
                         <TableHeader>
-                            <TableColumn className="text-center text-gray-700 font-semibold py-3">
-                                STT
+                            <TableColumn className="text-center text-gray-700 font-semibold">
+                                {t("table.no")}
                             </TableColumn>
-                            <TableColumn className="text-center text-gray-700 font-semibold py-3">
+                            <TableColumn className="text-center text-gray-700 font-semibold">
                                 {t("table.from_station")}
                             </TableColumn>
-                            <TableColumn className="text-center text-gray-700 font-semibold py-3">
+                            <TableColumn className="text-center text-gray-700 font-semibold">
                                 {t("table.to_station")}
                             </TableColumn>
-                            <TableColumn className="text-center text-gray-700 font-semibold py-3">
+                            <TableColumn className="text-center text-gray-700 font-semibold">
+                                {t("dispatch.number_staff")}
+                            </TableColumn>
+                            <TableColumn className="text-center text-gray-700 font-semibold">
+                                {t("dispatch.number_vehicle")}
+                            </TableColumn>
+                            <TableColumn className="text-center text-gray-700 font-semibold">
                                 {t("table.status")}
                             </TableColumn>
-                            <TableColumn className="text-center text-gray-700 font-semibold py-3">
+                            <TableColumn className="text-center text-gray-700 font-semibold">
                                 {t("table.action")}
                             </TableColumn>
                         </TableHeader>
@@ -110,6 +116,15 @@ export default function DispatchPage() {
                                             <TableCell className="text-center text-gray-700">
                                                 {toStation}
                                             </TableCell>
+                                            <TableCell className="text-center text-gray-700">
+                                                {item.description?.numberOfStaff || 0}
+                                            </TableCell>
+                                            <TableCell className="text-center text-gray-700">
+                                                {item.description?.vehicles?.reduce(
+                                                    (sum, v) => sum + v.quantity,
+                                                    0
+                                                ) ?? 0}
+                                            </TableCell>
                                             <TableCell className="text-center">
                                                 <Chip
                                                     variant="bordered"
@@ -136,7 +151,7 @@ export default function DispatchPage() {
                             ) : (
                                 <TableRow>
                                     <TableCell
-                                        colSpan={5}
+                                        colSpan={7}
                                         className="text-center py-10 text-gray-500 italic"
                                     >
                                         ...
