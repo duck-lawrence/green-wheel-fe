@@ -7,9 +7,7 @@ export const useUserHelper = () => {
 
     const isUserValidForBooking = (user?: UserProfileViewRes) => {
         if (!user) return false
-        return !!(
-            user.phone //&& user.citizenUrl && user.licenseUrl
-        )
+        return !!(user.phone && user.dateOfBirth && user.citizenUrl && user.licenseUrl)
     }
 
     return { toFullName, isUserValidForBooking }

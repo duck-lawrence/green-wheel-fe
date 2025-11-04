@@ -97,5 +97,5 @@ export function DashboardSidebar({ className }: { className?: string }) {
         adminTabs
     })
 
-    return <Sidebar tabs={tabs} className={className} />
+    return <Sidebar isDashboard={true} user={user} tabs={tabs} className={className} />
 }

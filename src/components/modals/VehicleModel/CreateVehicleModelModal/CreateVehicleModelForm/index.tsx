@@ -329,7 +329,7 @@ export function VehicleModelCreateForm({
                     <div className="md:col-span-6">
                         <NumberInputStyled
                             step={0.01}
-                            min={0}
+                            minValue={0}
                             label={t("vehicle_model.cost_per_day")}
                             placeholder={t("vehicle_model.cost_per_day_placeholder")}
                             value={formik.values.costPerDay}
@@ -345,7 +345,7 @@ export function VehicleModelCreateForm({
                     <div className="flex gap-2 md:col-span-6">
                         <NumberInputStyled
                             step={1}
-                            min={0}
+                            minValue={0}
                             label={t("vehicle_model.deposit_fee")}
                             placeholder={t("vehicle_model.deposit_fee_placeholder")}
                             value={formik.values.depositFee}
@@ -358,7 +358,7 @@ export function VehicleModelCreateForm({
 
                         <NumberInputStyled
                             step={1}
-                            min={0}
+                            minValue={0}
                             label={t("vehicle_model.reservation_fee")}
                             placeholder={t("vehicle_model.reservation_fee_placeholder")}
                             value={formik.values.reservationFee}
@@ -380,7 +380,7 @@ export function VehicleModelCreateForm({
                     {/* seatingCapacity */}
                     <div className="md:col-span-4">
                         <NumberInputStyled
-                            min={0}
+                            minValue={0}
                             label={t("vehicle_model.seating_capacity")}
                             placeholder={t("vehicle_model.seating_capacity_placeholder")}
                             value={formik.values.seatingCapacity}
@@ -399,7 +399,7 @@ export function VehicleModelCreateForm({
                     {/* numberOfAirbags */}
                     <div className="md:col-span-4">
                         <NumberInputStyled
-                            min={0}
+                            minValue={0}
                             label={t("vehicle_model.airbag")}
                             placeholder={t("vehicle_model.airbag_placeholder")}
                             value={formik.values.numberOfAirbags}
@@ -419,8 +419,8 @@ export function VehicleModelCreateForm({
                     <div className="md:col-span-4">
                         <NumberInputStyled
                             step={0.1}
-                            min={0}
-                            max={9999.9}
+                            minValue={0}
+                            maxValue={9999.9}
                             label={t("vehicle_model.motor_power")}
                             placeholder={t("vehicle_model.motor_power_placeholder")}
                             value={formik.values.motorPower}
@@ -438,7 +438,8 @@ export function VehicleModelCreateForm({
                     <div className="md:col-span-4">
                         <NumberInputStyled
                             step={0.1}
-                            min={0}
+                            minValue={0}
+                            maxValue={9999.9}
                             label={t("vehicle_model.battery_capacity")}
                             placeholder={t("vehicle_model.battery_capacity_placeholder")}
                             value={formik.values.batteryCapacity}
@@ -458,7 +459,7 @@ export function VehicleModelCreateForm({
                     <div className="md:col-span-4">
                         <NumberInputStyled
                             step={0.1}
-                            min={0}
+                            minValue={0}
                             label={t("vehicle_model.eco_range_km")}
                             placeholder={t("vehicle_model.eco_range_km_placeholder")}
                             value={formik.values.ecoRangeKm}
@@ -474,7 +475,7 @@ export function VehicleModelCreateForm({
                     <div className="md:col-span-4">
                         <NumberInputStyled
                             step={0.1}
-                            min={0}
+                            minValue={0}
                             label={t("vehicle_model.sport_range_km")}
                             placeholder={t("vehicle_model.sport_range_km_placeholder")}
                             value={formik.values.sportRangeKm}

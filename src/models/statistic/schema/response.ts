@@ -1,6 +1,6 @@
 export type CustomerRes = {
-    totalCustomerInThisMonth: number
-    totalCustomerInLastMonth: number
+    customerInThisMonth: number
+    customerInLastMonth: number
     changeRate: number
 }
 

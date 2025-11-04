@@ -93,7 +93,8 @@
         "send": "Send",
         "redirecting": "Redirecting...",
         "image": "Image",
-        "required": "Required"
+        "required": "Required",
+        "quantity": "Quantity"
     },
     "json": {
         "parsing_failed": "Failed to parse JSON"
@@ -616,6 +617,7 @@
         "momo_wallet": "MoMo Wallet",
         "agree_terms": "I have read and agree to the",
         "payment_terms": "Payment Terms",
+        "policy_terms": "Policy Terms",
         "data_sharing_terms": "Personal Data Sharing Terms",
         "of_green_wheel": "of Green Wheel",
         "agree_data_policy": "I agree to share my personal information according to the",
@@ -862,7 +864,10 @@
         "subtotal": "Subtotal",
         "temp": "Provisional invoice",
         "image": "Invoice image",
-        "upload_image": "Upload Invoice image"
+        "upload_image": "Upload Invoice image",
+        "deducted_reservation_fee": "Deducted reservation fee",
+        "tax_amount": "Tax amount",
+        "reservation_fee_deduction": "The reservation fee will be deducted from the total payment hanover when the customer receives the vehicle."
     },
     "momo": {
         "invalid_signature": "Invalid signature",
@@ -926,6 +931,7 @@
         "update_success": "Update dispatch successfully",
         "dispatch": "Dispatch",
         "title": "Dispatch staff and vehicles between stations",
+        "requested_staffs_vehicles": "Requested number of staffs and vehicle list",
         "list_vehicle": "List vehicles",
         "list_staff": "List staffs",
         "dispatch_detail": "Dispatch Detail",
@@ -947,15 +953,19 @@
         "create": "Create",
         "from_station_require": "From station is required",
         "number_staff": "Number of staffs",
+        "request_vehicles": "Requested vehicle list",
         "number_staff_require": "Number of staffs is required",
         "number_staff_min": "Number of staffs must be at least 0",
-        "staff_not_enought_in_from_station": "Number of staffs is not enough in from station",
-        "vehicle_model_require": "Vehicle model is required",
-        "vehicle_not_in_from_station": "Vehicle is not in from station",
+        "number_staff_max": "Number of staffs must be at most ",
         "number_vehicle": "Number of vehicles",
         "number_vehicle_require": "Number of vehicles is required",
         "number_vehicle_min": "Number of vehicles must be at least 1",
 
+        "staff_not_enought_in_from_station": "Number of staffs is not enough in from station",
+        "vehicle_model_require": "Vehicle model is required",
+        "vehicle_not_in_from_station": "Vehicle is not in from station",
+        "staff_limit_in_from_station": "Staffs limit in from station",
+        "vehicle_limit_in_from_station": "Vehicles limit in from station",
         "vehicle_or_staff_not_in_from_station": "Vehicle or staff is not in from station",
         "only_pending_can_approve_reject": "Only pending dispatch can be approved or rejected",
         "only_approved_can_receive": "Only approved dispatch can be received",
@@ -968,7 +978,8 @@
 
         "invalid_status": "Invalid status",
         "id_null": "Id is not found",
-        "approve": "Approve"
+        "approve": "Approve",
+        "open_approve_page": "Open approve page"
     },
     "document_preview": {
         "upload_image": "Upload image",

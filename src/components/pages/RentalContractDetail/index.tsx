@@ -47,6 +47,7 @@ import { BottomActionButtons } from "./BottomActionButtons"
 import { addToast } from "@heroui/toast"
 import { useDisclosure } from "@heroui/react"
 import { cn } from "node_modules/@heroui/theme/dist/utils/cn"
+import { UserProfileViewRes } from "@/models/user/schema/response"
 
 function getChecklistDisplay(status?: RentalContractStatus) {
     const handoverStatuses = [
@@ -71,12 +72,12 @@ function getChecklistDisplay(status?: RentalContractStatus) {
 export function RentalContractDetail({
     contractId,
     isCustomer = false,
-    isStaff = false,
+    staff = undefined,
     className = ""
 }: {
     contractId: string
     isCustomer?: boolean
-    isStaff?: boolean
+    staff?: UserProfileViewRes
     className?: string
 }) {
     const searchParams = useSearchParams()
@@ -103,7 +104,7 @@ export function RentalContractDetail({
     // check owner if customer
     useEffect(() => {
         if (!contract || !payload.sid) return
-        if (!isStaff && payload.sid != contract?.customer.id) {
+        if (!staff?.station?.id && payload.sid != contract?.customer.id) {
             router.push("/")
             addToast({
                 title: t("toast.error"),
@@ -111,7 +112,10 @@ export function RentalContractDetail({
                 color: "danger"
             })
         }
-    }, [contract, isStaff, payload.sid, router, t])
+    }, [contract, staff?.station?.id, payload.sid, router, t])
+
+    // check staff station
+    const isStaffInStation = staff !== undefined && contract?.station.id === staff?.station?.id
 
     //======================================= //
     // Invoice accordion
@@ -124,7 +128,6 @@ export function RentalContractDetail({
         content: renderInvoiceForm(invoice),
         invoice: invoice
     }))
-
     const hasRunUpdateRef = useRef(false)
     useEffect(() => {
         const resultCodeRaw = searchParams.get("resultCode")
@@ -155,7 +158,6 @@ export function RentalContractDetail({
     const { isHandoverChecklistDisplay, isReturnChecklistDisplay } = getChecklistDisplay(
         contract?.status
     )
-
     const { data: checklists } = useGetAllVehicleChecklists({
         query: {
             contractId
@@ -172,6 +174,14 @@ export function RentalContractDetail({
     //======================================= //
     // Handover
     //======================================= //
+    const isHandoverStaffEditable = useMemo(() => {
+        return isStaffInStation && !contract?.isSignedByStaff
+    }, [contract?.isSignedByStaff, isStaffInStation])
+
+    const isHandoverCustomerEditable = useMemo(() => {
+        return ((staff && isStaffInStation) || isCustomer) && !contract?.isSignedByCustomer
+    }, [contract?.isSignedByCustomer, isCustomer, isStaffInStation, staff])
+
     const handoverMutation = useHandoverContract({ id: contractId })
     const handoverInitValue = useMemo(() => {
         return {
@@ -179,16 +189,14 @@ export function RentalContractDetail({
             isSignedByCustomer: contract?.isSignedByCustomer ?? false
         }
     }, [contract?.isSignedByCustomer, contract?.isSignedByStaff])
-
     const handoverFormik = useFormik<HandoverContractReq>({
         initialValues: handoverInitValue,
         enableReinitialize: true,
         validationSchema: Yup.object().shape({
             isSignedByStaff: Yup.boolean().oneOf([true], t("signature.signed_by_staff_require")),
-            isSignedByCustomer: Yup.boolean().oneOf(
-                [true],
-                t("signature.signed_by_customer_require")
-            )
+            isSignedByCustomer: isStaffInStation
+                ? Yup.boolean().notRequired()
+                : Yup.boolean().oneOf([true], t("signature.signed_by_customer_require"))
         }),
         onSubmit: async (value) => {
             if (!contract?.id) return
@@ -214,7 +222,7 @@ export function RentalContractDetail({
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className={cn("relative min-h-screen w-full max-w-6xl pt-12", className)}
+            className={cn("relative min-h-screen w-full max-w-7xl pt-12", className)}
         >
             <Link
                 className="absolute top-0 left-0 hover:cursor-pointer text-gray-500 italic hidden sm:block"
@@ -388,7 +396,7 @@ export function RentalContractDetail({
             >
                 {isHandoverChecklistDisplay && (
                     <ChecklistSection
-                        isStaff={isStaff}
+                        isStaff={isStaffInStation}
                         contract={contract}
                         checklist={hanoverChecklist}
                         type={VehicleChecklistType.Handover}
@@ -396,7 +404,7 @@ export function RentalContractDetail({
                 )}
                 {isReturnChecklistDisplay && (
                     <ChecklistSection
-                        isStaff={isStaff}
+                        isStaff={isStaffInStation}
                         contract={contract}
                         checklist={returnChecklist}
                         type={VehicleChecklistType.Return}
@@ -413,8 +421,9 @@ export function RentalContractDetail({
                     isReturnChecklistExists={!!returnChecklist}
                     className="mb-3"
                 />
-                {isStaff &&
-                    // contract.status == RentalContractStatus.Returned &&
+                {isStaffInStation &&
+                    contract.status == RentalContractStatus.Returned &&
+                    returnChecklist &&
                     !contract.invoices.find((item) => item.type == InvoiceType.Refund) && (
                         <CreateInvoiceSection contractId={contract.id} type={InvoiceType.Refund} />
                     )}
@@ -424,7 +433,6 @@ export function RentalContractDetail({
             <SignatureSection
                 // className="pt-10"
                 sectionClassName="mt-8 mb-8"
-                isReadOnly={!isStaff || !!contract.actualStartDate}
                 staffSign={{
                     id: "isSignedByStaff",
                     name: "isSignedByStaff",
@@ -434,6 +442,7 @@ export function RentalContractDetail({
                         handoverFormik.errors.isSignedByStaff
                     ),
                     isSelected: handoverFormik.values.isSignedByStaff,
+                    isReadOnly: !isHandoverStaffEditable,
                     // onValueChange: (value) => handoverFormik.setFieldValue("isSignedByStaff", value)
                     onChange: handoverFormik.handleChange,
                     onBlur: handoverFormik.handleBlur
@@ -447,6 +456,7 @@ export function RentalContractDetail({
                         handoverFormik.errors.isSignedByCustomer
                     ),
                     isSelected: handoverFormik.values.isSignedByCustomer,
+                    isReadOnly: !isHandoverCustomerEditable,
                     // onValueChange: (value) => handoverFormik.setFieldValue("isSignedByCustomer", value)
                     onChange: handoverFormik.handleChange,
                     onBlur: handoverFormik.handleBlur
@@ -457,7 +467,7 @@ export function RentalContractDetail({
             <div className="text-center mb-10">
                 <BottomActionButtons
                     contract={contract}
-                    isStaff={isStaff}
+                    isStaff={isStaffInStation}
                     isCustomer={isCustomer}
                     handoverFormik={handoverFormik}
                     hanoverChecklist={hanoverChecklist}

@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next"
 interface SignatureSectionProps {
     sectionClassName?: string
     childrenClassName?: string
-    isReadOnly: boolean
+    isReadOnly?: boolean
     staffSign: CheckboxStyledProps
     customerSign: CheckboxStyledProps
 }
@@ -15,7 +15,7 @@ interface SignatureSectionProps {
 export function SignatureSection({
     sectionClassName = "",
     childrenClassName = "",
-    isReadOnly,
+    isReadOnly = false,
     staffSign,
     customerSign
 }: SignatureSectionProps) {

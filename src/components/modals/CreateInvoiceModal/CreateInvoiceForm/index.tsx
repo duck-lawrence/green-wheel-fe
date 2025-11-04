@@ -129,6 +129,7 @@ export function CreateInvoiceForm({
                                 {/* Unit price */}
                                 <TableCell className="text-center align-top text-gray-700 font-medium">
                                     <NumberInputStyled
+                                        minValue={1}
                                         value={item.unitPrice}
                                         onValueChange={(val) => {
                                             // if (!val) return
@@ -160,6 +161,7 @@ export function CreateInvoiceForm({
                                 {/* Quantity */}
                                 <TableCell className="text-center align-top text-gray-700 font-medium">
                                     <NumberInputStyled
+                                        minValue={1}
                                         value={item.quantity}
                                         onValueChange={(val) => {
                                             // if (!val) return

@@ -35,7 +35,7 @@ export const VehicleSubImagesScroll: React.FC<VehicleSubImagesScrollProps> = ({
 
                             setActive(idx)
                         }}
-                        className={`relative flex-shrink-0 aspect-[4/3] overflow-hidden rounded-2xl
+                        className={`relative flex-shrink-0 overflow-hidden rounded-2xl
                             outline-none ring-2 ring-transparent focus:ring-primary
                             transition-all interactive-scale
                             ${active === idx ? "ring-primary" : ""}
