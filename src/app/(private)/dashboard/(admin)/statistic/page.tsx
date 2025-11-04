@@ -8,6 +8,7 @@ import {
     useGetTotalRevenueStatistic,
     useGetVehicleModelStatistic
 } from "@/hooks/queries/useStatistic"
+import { formatCurrencyWithSymbol } from "@/utils/helpers/currency"
 import { useTranslation } from "node_modules/react-i18next"
 import React from "react"
 import {
@@ -32,19 +33,12 @@ export default function StatisticPage() {
     const { data: totalInvoice } = useGetTotalInvoiceStatistic()
     const { data: vehicleModelStatistic } = useGetVehicleModelStatistic()
     const { data: revenueOverMonths } = useGetRevenueByYear()
-
-    console.log("totalCustomer", totalCustomer)
-    console.log("totalAnonymous", totalAnonymous)
-    console.log("totalRevenue", totalRevenue)
-    console.log("totalInvoice", totalInvoice)
-    console.log("vehicleModelStatistic", vehicleModelStatistic)
-    console.log("revenueOverMonths", revenueOverMonths)
-
+    formatCurrencyWithSymbol
     const dataKpi = [
         {
             title: "Revenue",
-            value: totalRevenue?.totalRevenueInThisMonth || 0,
-            valueLastMonth: totalRevenue?.totalRevenueInLastMonth || 0,
+            value: totalRevenue?.totalRevenueThisMonth || 0,
+            valueLastMonth: totalRevenue?.totalRevenueLastMonth || 0,
             change: totalRevenue?.changeRate || 0
         },
         {
@@ -55,7 +49,6 @@ export default function StatisticPage() {
         },
         {
             title: "Member",
-            // value: totalCustomer?.totalCustomerInThisMonth || 0,
             value: totalCustomer?.customerInThisMonth || 0,
             valueLastMonth: totalCustomer?.customerInLastMonth || 0,
             change: totalCustomer?.changeRate || 0
@@ -77,8 +70,8 @@ export default function StatisticPage() {
     }))
 
     const dataMonths = revenueOverMonths?.map((item) => ({
-        month: item.month,
-        revenue: item.revenue
+        month: item.monthName,
+        revenue: item.totalRevenue
     }))
 
     return (
@@ -104,7 +97,6 @@ export default function StatisticPage() {
                     >
                         <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                         <XAxis
-                            // dataKey="month"
                             dataKey="modelName"
                             tick={{ fill: "#94a3b8", fontSize: 13 }}
                             axisLine={false}
@@ -114,7 +106,6 @@ export default function StatisticPage() {
                         <Tooltip
                             contentStyle={{
                                 backgroundColor: "#555555",
-                                // backgroundColor: "#f4f4f4",
                                 border: "none",
                                 color: "white",
                                 borderRadius: "8px"
@@ -128,8 +119,6 @@ export default function StatisticPage() {
                             }}
                         />
                         <Bar
-                            //numberOfMaintenance
-                            // dataKey="maintenance"
                             dataKey="numberOfMaintenance"
                             stackId="1"
                             fill="#FACC15"
@@ -138,19 +127,14 @@ export default function StatisticPage() {
                         />
 
                         <Bar
-                            //numberOfAvailable
-                            // dataKey="available"
                             dataKey="numberOfAvailable"
                             stackId="1"
                             fill="#4ADE80"
                             name={t("statistic.available")}
                         />
                         <Bar
-                            //numberOfRented
-                            // dataKey="active"
                             dataKey="numberOfRented"
                             stackId="1"
-                            // fill="#16a34a"
                             fill="#16A34A"
                             name={t("statistic.rented")}
                             radius={[8, 8, 0, 0]}
@@ -183,7 +167,7 @@ export default function StatisticPage() {
                         <YAxis
                             tick={{ fill: "#94a3b8", fontSize: 13 }}
                             axisLine={false}
-                            tickFormatter={(v) => `${v}tr`}
+                            tickFormatter={(v) => `${formatCurrencyWithSymbol(v)}`}
                         />
                         <Tooltip
                             contentStyle={{
@@ -193,7 +177,11 @@ export default function StatisticPage() {
                                 borderRadius: "8px",
                                 boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
                             }}
-                            formatter={(value) => [`${value} triệu ₫`, "Doanh thu"]}
+                            // formatter={(value) => [`${value} triệu ₫`, "Doanh thu"]}
+                            formatter={(value) => [
+                                `${formatCurrencyWithSymbol(value as number)}`,
+                                `${t("statistic.revenue")}`
+                            ]}
                         />
                         <Legend verticalAlign="top" height={36} />
 
@@ -205,7 +193,8 @@ export default function StatisticPage() {
                             strokeWidth={4}
                             dot={{ r: 5, fill: "#16A34A" }}
                             activeDot={{ r: 8, fill: "#22C55E", stroke: "#fff", strokeWidth: 2 }}
-                            name="Tổng doanh thu"
+                            // name="Tổng doanh thu"
+                            name={t("statistic.total_revenue")}
                         />
                     </LineChart>
                 </ResponsiveContainer>

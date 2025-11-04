@@ -1184,7 +1184,9 @@
         "no_vehicle_data": "No vehicle data available",
         "failed_to_calculate_revenue": "Failed to calculate revenue",
         "failed_to_calculate_customer_change": "Failed to calculate customer change",
-        "failed_to_calculate_invoice_change": "Failed to calculate invoice change"
+        "failed_to_calculate_invoice_change": "Failed to calculate invoice change",
+        "total_revenue": "Total Revenue",
+        "revenue": "Revenue"
     },
     "system": {
         "system_setting": "System Setting",
