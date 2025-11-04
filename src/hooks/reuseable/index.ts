@@ -8,6 +8,9 @@ export * from "./useImageUploadModal"
 export * from "./useNavigateOnClick"
 export * from "./useNumber"
 
+/* ========================= O ========================= */
+export * from "./useOpenNewTab"
+
 /* ========================= T ========================= */
 export * from "./useTypewriter"
 

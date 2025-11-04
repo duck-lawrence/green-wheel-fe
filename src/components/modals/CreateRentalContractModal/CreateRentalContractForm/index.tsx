@@ -4,7 +4,8 @@ import React, { useState, useEffect, useCallback, useMemo } from "react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { useTranslation } from "react-i18next"
-import Link from "next/link"
+// import Link from "next/link"
+
 
 import {
     useBookingFilterStore,
@@ -39,8 +40,9 @@ type FormValues = {
     stationId: string
     notes: string
     // paymentMethod: PaymentMethod
-    agreeTerms: boolean
-    agreeDataPolicy: boolean
+    agreePolicy: boolean 
+    // agreeTerms: boolean
+    // agreeDataPolicy: boolean
 }
 
 export const CreateRentalContractForm = ({
@@ -61,6 +63,14 @@ export const CreateRentalContractForm = ({
     const { t } = useTranslation()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
     const { toFullName, isUserValidForBooking } = useUserHelper()
+    const handleOpenPolicy = useCallback(
+        (e: React.MouseEvent<HTMLAnchorElement>) => {
+            e.preventDefault()
+            e.stopPropagation()
+            window.open("/policy", "_blank", "noopener,noreferrer")
+        },
+        []
+    )
     const [mounted, setMounted] = useState(false)
     const createContract = useCreateRentalContract({ onSuccess })
     const createContractManual = useCreateContractManual({ onSuccess })
@@ -178,8 +188,9 @@ export const CreateRentalContractForm = ({
         email: user?.email ?? "",
         stationId: stationId || "",
         notes: "",
-        agreeTerms: false,
-        agreeDataPolicy: false
+        agreePolicy: false,
+        // agreeTerms: false,
+        // agreeDataPolicy: false
     }
 
     const formik = useFormik<FormValues>({
@@ -192,11 +203,12 @@ export const CreateRentalContractForm = ({
             email: Yup.string().trim().email(t("contral_form.email_invalid")),
             stationId: Yup.string().trim().required(t("contral_form.station_require")),
             notes: Yup.string().trim(),
-            agreeTerms: Yup.boolean().oneOf([true], t("contral_form.agree_terms_require")),
-            agreeDataPolicy: Yup.boolean().oneOf(
-                [true],
-                t("contral_form.agree_data_policy_require")
-            )
+            agreePolicy: Yup.boolean().oneOf([true], t("contral_form.agree_terms_require"))
+            // agreeTerms: Yup.boolean().oneOf([true], t("contral_form.agree_terms_require")),
+            // agreeDataPolicy: Yup.boolean().oneOf(
+            //     [true],
+            //     t("contral_form.agree_data_policy_require")
+            // )
         }),
         onSubmit: () => {
             handleSubmit({
@@ -296,7 +308,7 @@ export const CreateRentalContractForm = ({
                                 </div>
 
                                 {/* Policy */}
-                                <div className="mt-6 space-y-4">
+                                    {/* <div className="mt-6 space-y-4">
                                     <CheckboxStyled
                                         id="agreeTerms"
                                         name="agreeTerms"
@@ -315,6 +327,33 @@ export const CreateRentalContractForm = ({
                                         <Link href="#" className="text-blue-600 hover:underline">
                                             {t("car_rental.payment_terms")}
                                         </Link>{" "}
+                                        {t("car_rental.of_green_wheel")}
+                                    </CheckboxStyled> */}
+
+                                <div className="mt-6 space-y-4">
+                                    <CheckboxStyled
+                                        id="agreePolicy"
+                                        name="agreePolicy"
+                                        checked={formik.values.agreePolicy}
+                                        isInvalid={
+                                            !!(
+                                                formik.touched.agreePolicy &&
+                                                formik.errors.agreePolicy
+                                            )
+                                        }
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        className="mt-1"
+                                    >
+                                        {t("car_rental.agree_terms")}{" "}
+                                        <a
+                                            href="/policy"
+                                            onClick={handleOpenPolicy}
+                                            className="text-blue-600 hover:underline pointer-events-auto relative z-10"
+                                        >
+                                            {t("car_rental.policy_terms")}
+                                        </a>{" "}
+                                          {/* </Link>{" "}
                                         {t("car_rental.of_green_wheel")}
                                     </CheckboxStyled>
 
@@ -335,7 +374,7 @@ export const CreateRentalContractForm = ({
                                         {t("car_rental.agree_data_policy")}{" "}
                                         <Link href="#" className="text-blue-600 hover:underline">
                                             {t("car_rental.data_sharing_terms")}
-                                        </Link>{" "}
+                                        </Link>{" "} */}
                                         {t("car_rental.of_green_wheel")}
                                     </CheckboxStyled>
                                 </div>
