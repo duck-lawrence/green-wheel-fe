@@ -34,7 +34,7 @@ export function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes }) {
         .reduce((sum, val) => (sum += val.subTotal), 0)
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3">
             <InputStyled
                 label={t("invoice.cleaning_fee")}
                 value={clean}
@@ -70,31 +70,43 @@ export function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes }) {
 
             <DetailDamageModal isOpen={isOpen} onOpenChange={onOpenChange} invoiceId={invoice.id} />
 
-            <div className="flex gap-3">
+            <div className="grid grid-cols-3 gap-3">
+                <div className="grid col-span-2">
+                    <InputStyled
+                        label={t("invoice.vat_tax")}
+                        value={formatCurrencyWithSymbol(invoice.total)}
+                        startContent={<Money size={22} className="text-primary" weight="duotone" />}
+                        variant="bordered"
+                    />
+                </div>
                 <TaxInput invoice={invoice} />
-                <InputStyled
-                    label={t("invoice.total")}
-                    value={formatCurrencyWithSymbol(invoice.total)}
-                    startContent={<Money size={22} className="text-primary" weight="duotone" />}
-                    variant="bordered"
-                />
             </div>
+
+            <hr className="text-gray-400 border-2 rounded-2xl" />
+
+            <InputStyled
+                label={t("invoice.total")}
+                value={formatCurrencyWithSymbol(invoice.total)}
+                startContent={<Money size={22} className="text-primary" weight="duotone" />}
+                variant="bordered"
+            />
             {invoice.status === InvoiceStatus.Paid && (
                 <>
-                    <div></div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <InputStyled
-                            label={t("invoice.paid_amount")}
-                            value={formatCurrencyWithSymbol(invoice.paidAmount)}
-                            startContent={
-                                <ClipboardText
-                                    size={22}
-                                    className="text-primary"
-                                    weight="duotone"
-                                />
-                            }
-                            variant="bordered"
-                        />
+                    <div className="grid grid-cols-3 gap-3">
+                        <div className="grid col-span-2">
+                            <InputStyled
+                                label={t("invoice.paid_amount")}
+                                value={formatCurrencyWithSymbol(invoice.paidAmount)}
+                                startContent={
+                                    <ClipboardText
+                                        size={22}
+                                        className="text-primary"
+                                        weight="duotone"
+                                    />
+                                }
+                                variant="bordered"
+                            />
+                        </div>
                         <InputStyled
                             label={t("invoice.return_amount")}
                             value={formatCurrencyWithSymbol(invoice.paidAmount - invoice.total)}

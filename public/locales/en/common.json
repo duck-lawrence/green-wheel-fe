@@ -862,7 +862,10 @@
         "subtotal": "Subtotal",
         "temp": "Provisional invoice",
         "image": "Invoice image",
-        "upload_image": "Upload Invoice image"
+        "upload_image": "Upload Invoice image",
+        "deducted_reservation_fee": "Deducted reservation fee",
+        "tax_amount": "Tax amount",
+        "reservation_fee_deduction": "The reservation fee will be deducted from the total payment hanover when the customer receives the vehicle."
     },
     "momo": {
         "invalid_signature": "Invalid signature",

@@ -33,6 +33,13 @@ export default function StatisticPage() {
     const { data: vehicleModelStatistic } = useGetVehicleModelStatistic()
     const { data: revenueOverMonths } = useGetRevenueByYear()
 
+    console.log("totalCustomer", totalCustomer)
+    console.log("totalAnonymous", totalAnonymous)
+    console.log("totalRevenue", totalRevenue)
+    console.log("totalInvoice", totalInvoice)
+    console.log("vehicleModelStatistic", vehicleModelStatistic)
+    console.log("revenueOverMonths", revenueOverMonths)
+
     const dataKpi = [
         {
             title: "Revenue",
@@ -48,8 +55,9 @@ export default function StatisticPage() {
         },
         {
             title: "Member",
-            value: totalCustomer?.totalCustomerInThisMonth || 0,
-            valueLastMonth: totalCustomer?.totalCustomerInLastMonth || 0,
+            // value: totalCustomer?.totalCustomerInThisMonth || 0,
+            value: totalCustomer?.customerInThisMonth || 0,
+            valueLastMonth: totalCustomer?.customerInLastMonth || 0,
             change: totalCustomer?.changeRate || 0
         },
         {
