@@ -1,5 +1,6 @@
 "use client"
 import { KpiStat } from "@/components"
+import { useGetMe } from "@/hooks"
 import {
     useGetAnonymuousStatistic,
     useGetCustomerStatistic,
@@ -27,14 +28,17 @@ import {
 
 export default function StationStatisticPage() {
     const { t } = useTranslation()
+    const { data: me } = useGetMe()
 
-    const { data: totalCustomer } = useGetCustomerStatistic()
+    const { data: totalCustomer } = useGetCustomerStatistic({ stationId: me?.station?.id || "" })
     const { data: totalAnonymous } = useGetAnonymuousStatistic()
-    const { data: totalRevenue } = useGetTotalRevenueStatistic()
-    const { data: totalInvoice } = useGetTotalInvoiceStatistic()
-    const { data: vehicleModelStatistic } = useGetVehicleModelStatistic()
-    const { data: revenueOverMonths } = useGetRevenueByYear()
-    const { data: invoiceOverMonths } = useGetInvoiceByYear()
+    const { data: totalRevenue } = useGetTotalRevenueStatistic({ stationId: me?.station?.id || "" })
+    const { data: totalInvoice } = useGetTotalInvoiceStatistic({ stationId: me?.station?.id || "" })
+    const { data: vehicleModelStatistic } = useGetVehicleModelStatistic({
+        stationId: me?.station?.id || ""
+    })
+    const { data: revenueOverMonths } = useGetRevenueByYear({ stationId: me?.station?.id || "" })
+    const { data: invoiceOverMonths } = useGetInvoiceByYear({ stationId: me?.station?.id || "" })
 
     const dataKpi = [
         {

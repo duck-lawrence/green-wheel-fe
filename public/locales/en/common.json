@@ -297,7 +297,8 @@
         "feedback": "Feedback",
         "content": "Content",
         "station_feedbacks": "Station Feedbacks",
-        "country": "Country"
+        "country": "Country",
+        "address": "Address"
     },
     "contral_form": {
         "full_name_require": "Full name is required",
@@ -1219,7 +1220,14 @@
         "segment_name": "Segment name",
         "create_vehicle_segment_description": "Add a new vehicle segment to the system.",
         "update_vehicle_segment_description": "Modify existing vehicle segment information.",
-        "vehicle_segment_description_placeholder": "Describe the vehicle segment..."
+        "vehicle_segment_description_placeholder": "Describe the vehicle segment...",
+        "station_address": "Station Address",
+        "station": "Station",
+        "create_station": "Create Station",
+        "create_station_description": "Create a new station to expand the rental network.",
+        "update_station": "Update Station",
+        "update_station_description": "Modify existing station information.",
+        "station_name": "Station Name"
     },
     "business_variable": {
         "not_found": "Setting not found",

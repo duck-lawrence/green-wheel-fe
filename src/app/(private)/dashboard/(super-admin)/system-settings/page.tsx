@@ -1,8 +1,15 @@
 "use client"
-import { Brand, ButtonStyled, InputStyled, SectionStyled, VehicleSegment } from "@/components"
+import {
+    Brand,
+    ButtonStyled,
+    InputStyled,
+    SectionStyled,
+    Station,
+    VehicleSegment
+} from "@/components"
 import { BusinessVariableKeyLabels } from "@/constants/labels"
 import { useGetBusinessVariables, useUpdateBusinessVariables } from "@/hooks"
-import { Car, Pencil, Save, Settings } from "lucide-react"
+import { Car, LocateFixed, Pencil, Save, Settings } from "lucide-react"
 import React, { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -107,6 +114,12 @@ export default function SystemSettingPage() {
                             )
                         })}
                     </div>
+                </SectionStyled>
+            </div>
+
+            <div className="w-full shadow-lg rounded-2xl p-6 mb-6">
+                <SectionStyled title={t("system.station")} icon={LocateFixed}>
+                    <Station />
                 </SectionStyled>
             </div>
 
