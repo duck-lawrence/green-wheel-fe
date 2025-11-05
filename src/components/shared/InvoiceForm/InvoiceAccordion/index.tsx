@@ -1,6 +1,6 @@
 "use client"
 import React, { useCallback, useMemo, useState } from "react"
-import { Accordion, AccordionItem, Chip, cn, Spinner } from "@heroui/react"
+import { Accordion, AccordionItem, Chip, cn } from "@heroui/react"
 import { InvoiceStatus, InvoiceType, PaymentMethod, RentalContractStatus } from "@/constants/enum"
 import { InvoiceStatusLabels, PaymentMethodLabels } from "@/constants/labels"
 import { useGetMe, usePayInvoice } from "@/hooks"
@@ -145,7 +145,7 @@ export function InvoiceAccordion({
             <AlertStyled className="mt-[-0.75rem] mb-1 mx-2">
                 {t("invoice.fees_include_tax")}
             </AlertStyled>
-            <AlertStyled className=" mb-3 mx-2">
+            <AlertStyled className="whitespace-break-spaces mb-3 mx-2">
                 {t("invoice.reservation_fee_deduction")}
             </AlertStyled>
             {/* {isCustomer &&
@@ -254,7 +254,7 @@ export function InvoiceAccordion({
                         </AccordionItem>
                     ))}
             </Accordion> */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+            <div className="grid grid-cols-1 md:grid-cols-2">
                 {items
                     .sort((a, b) => a.invoice.type - b.invoice.type)
                     .map((val) => (
@@ -266,7 +266,7 @@ export function InvoiceAccordion({
                             <AccordionItem
                                 key={val.key}
                                 aria-label={val.ariaLabel}
-                                className="w-full max-w-[40rem]"
+                                className="w-full"
                                 title={
                                     <div className="flex justify-between items-center ">
                                         <span className="font-semibold text-base">
@@ -328,8 +328,9 @@ export function InvoiceAccordion({
                                                     )}
                                                     <ButtonStyled
                                                         isDisabled={
-                                                            paidAmount !== undefined &&
-                                                            paidAmount < val.invoice.total
+                                                            (paidAmount !== undefined &&
+                                                                paidAmount < val.invoice.total) ||
+                                                            payInvoiceMutation.isPending
                                                         }
                                                         onPress={() =>
                                                             handlePayment({

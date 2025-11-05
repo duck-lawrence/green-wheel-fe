@@ -867,7 +867,7 @@
         "upload_image": "Upload Invoice image",
         "deducted_reservation_fee": "Deducted reservation fee",
         "tax_amount": "Tax amount",
-        "reservation_fee_deduction": "The reservation fee will be deducted from the total payment hanover when the customer receives the vehicle."
+        "reservation_fee_deduction": "If a reservation payment has been made, the handover invoice will deduct the reservation fee from the total amount.\nHowever, if no reservation payment was made and the vehicle handover is paid directly, the reservation invoice will be canceled and no deduction will be applied to the handover fee."
     },
     "momo": {
         "invalid_signature": "Invalid signature",

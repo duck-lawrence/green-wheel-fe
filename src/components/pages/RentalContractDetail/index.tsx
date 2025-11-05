@@ -361,7 +361,7 @@ export function RentalContractDetail({
 
             {/*Staff Info */}
             <SectionStyled title={t("rental_contract.staff")}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <InputStyled
                         isReadOnly
                         label={t("rental_contract.vehicle_handover_staff")}
@@ -389,10 +389,27 @@ export function RentalContractDetail({
                 </div>
             </SectionStyled>
 
+            {/* Invoice Accordion  isLoading={isFetching}*/}
+            <SectionStyled title={t("rental_contract.payment_invoice_list")}>
+                <InvoiceAccordion
+                    items={invoiceAccordion}
+                    contractId={contract.id}
+                    contractStatus={contract.status}
+                    isReturnChecklistExists={!!returnChecklist}
+                    className="mb-3"
+                />
+                {isStaffInStation &&
+                    contract.status == RentalContractStatus.Returned &&
+                    returnChecklist &&
+                    !contract.invoices.find((item) => item.type == InvoiceType.Refund) && (
+                        <CreateInvoiceSection contractId={contract.id} type={InvoiceType.Refund} />
+                    )}
+            </SectionStyled>
+
             {/* Vehicle checklists */}
             <SectionStyled
                 title={t("vehicle_checklist.vehicle_checklist")}
-                childrenClassName="flex gap-2"
+                childrenClassName="flex flex-wrap gap-2"
             >
                 {isHandoverChecklistDisplay && (
                     <ChecklistSection
@@ -410,23 +427,6 @@ export function RentalContractDetail({
                         type={VehicleChecklistType.Return}
                     />
                 )}
-            </SectionStyled>
-
-            {/* Invoice Accordion  isLoading={isFetching}*/}
-            <SectionStyled title={t("rental_contract.payment_invoice_list")}>
-                <InvoiceAccordion
-                    items={invoiceAccordion}
-                    contractId={contract.id}
-                    contractStatus={contract.status}
-                    isReturnChecklistExists={!!returnChecklist}
-                    className="mb-3"
-                />
-                {isStaffInStation &&
-                    contract.status == RentalContractStatus.Returned &&
-                    returnChecklist &&
-                    !contract.invoices.find((item) => item.type == InvoiceType.Refund) && (
-                        <CreateInvoiceSection contractId={contract.id} type={InvoiceType.Refund} />
-                    )}
             </SectionStyled>
 
             {/* Signature */}

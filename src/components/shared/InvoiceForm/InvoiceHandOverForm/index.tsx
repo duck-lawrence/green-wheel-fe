@@ -1,6 +1,6 @@
 "use client"
 import React from "react"
-import { AlertStyled, InputStyled } from "@/components"
+import { InputStyled } from "@/components"
 import { Money, ClipboardText, Receipt, ArrowUDownLeft } from "@phosphor-icons/react"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { formatCurrencyWithSymbol } from "@/utils/helpers/currency"
@@ -81,11 +81,11 @@ import { TaxInput } from "../TaxInput"
 
 export function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceViewRes }) {
     const { t } = useTranslation()
-    const subStatus =
-        invoice.total ===
-        invoice.subtotal + invoice.deposit!.amount + invoice.tax * invoice.subtotal
-            ? false
-            : true
+    // const subStatus =
+    //     invoice.total ===
+    //     invoice.subtotal + invoice.deposit!.amount + invoice.tax * invoice.subtotal
+    //         ? false
+    //         : true
 
     return (
         <div className="flex  justify-center items-center ">
@@ -131,11 +131,11 @@ export function InvoiceHandOvertForm({ invoice }: { invoice: InvoiceViewRes }) {
                     variant="bordered"
                 />
 
-                {subStatus && (
+                {/* {subStatus && (
                     <AlertStyled className="text-warning mb-3 mx-2">
                         {t("invoice.deducted_reservation_fee")}
                     </AlertStyled>
-                )}
+                )} */}
 
                 {invoice.status === InvoiceStatus.Paid && (
                     <>

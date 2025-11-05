@@ -55,9 +55,14 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                     />
 
                     {/* ===============Total pennalty================= */}
-                    <SectionStyled title="Penalty" icon={ReceiptText} sectionClassName="mb-0">
+                    <SectionStyled
+                        title="Penalty"
+                        icon={ReceiptText}
+                        sectionClassName="mb-0"
+                        childrenClassName="space-y-2"
+                    >
                         {penaltyItems.map((item, index) => (
-                            <div key={index} className="grid grid-cols-3 gap-3">
+                            <div key={index} className="grid grid-cols-3 gap-1">
                                 <InputStyled
                                     key={index}
                                     label={InvoiceItemTypeLabels[item.type]}
@@ -116,8 +121,8 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                     />
                 </div>
                 {invoice.status === InvoiceStatus.Paid && invoice.total >= 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-3">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-3 gap-3">
+                        <div className="grid col-span-2">
                             <InputStyled
                                 label={t("invoice.paid_amount")}
                                 value={formatCurrencyWithSymbol(invoice.paidAmount)}
@@ -130,19 +135,19 @@ export function InvoiceRefundForm({ invoice }: { invoice: InvoiceViewRes }) {
                                 }
                                 variant="bordered"
                             />
-                            <InputStyled
-                                label={t("invoice.return_amount")}
-                                value={formatCurrencyWithSymbol(invoice.paidAmount - invoice.total)}
-                                startContent={
-                                    <ArrowUDownLeft
-                                        size={22}
-                                        className="text-primary"
-                                        weight="duotone"
-                                    />
-                                }
-                                variant="bordered"
-                            />
                         </div>
+                        <InputStyled
+                            label={t("invoice.return_amount")}
+                            value={formatCurrencyWithSymbol(invoice.paidAmount - invoice.total)}
+                            startContent={
+                                <ArrowUDownLeft
+                                    size={22}
+                                    className="text-primary"
+                                    weight="duotone"
+                                />
+                            }
+                            variant="bordered"
+                        />
                     </div>
                 )}
             </div>

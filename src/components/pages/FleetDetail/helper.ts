@@ -1,5 +1,4 @@
 import { useEffect, useMemo } from "react"
-import toast from "react-hot-toast"
 
 import {
     useDay,
@@ -17,6 +16,7 @@ import { BackendError } from "@/models/common/response"
 
 import { VehicleStatusColorMap } from "@/constants/colorMap"
 import { VehicleRow } from "./TableFleetVehicle"
+import { addToast } from "@heroui/toast"
 
 /* -------------------------------------------------
    CONSTANT / TYPES / MAPS
@@ -154,7 +154,11 @@ export function useApiErrorToasts(errors: Array<BackendError | unknown>, t: any)
         errors.forEach((err) => {
             if (!err) return
             const be = err as BackendError
-            toast.error(translateWithFallback(t, be.detail))
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, be.detail),
+                color: "danger"
+            })
         })
     }, [errors, t])
 }

@@ -7,11 +7,11 @@ import { useTranslation } from "react-i18next"
 import { useInfiniteScroll } from "@heroui/use-infinite-scroll"
 import { Spinner, useDisclosure } from "@heroui/react"
 import { useGetAllFeedbacks, useGetAllStations, useGetMe, useTokenStore } from "@/hooks"
-import toast from "react-hot-toast"
 import { RoleName } from "@/constants/enum"
 import { scrollItemToCenter } from "@/utils/helpers/scrollToCenter"
 import { PaginationParams } from "@/models/common/request"
 import { StationFeedbackRes } from "@/models/station-feedback/schema/response"
+import { addToast } from "@heroui/toast"
 
 export function CustomerReview() {
     const { t } = useTranslation()
@@ -73,11 +73,19 @@ export function CustomerReview() {
     const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure()
     const handleOpen = useCallback(() => {
         if (!isLogined) {
-            toast.error(t("login.please_login"))
+            addToast({
+                title: t("toast.error"),
+                description: t("login.please_login"),
+                color: "danger"
+            })
             return
         }
         if (user?.role?.name !== RoleName.Customer) {
-            toast.error(t("auth.only_customer"))
+            addToast({
+                title: t("toast.error"),
+                description: t("auth.only_customer"),
+                color: "danger"
+            })
             return
         }
         onOpen()

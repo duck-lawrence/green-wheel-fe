@@ -3,9 +3,9 @@
 import { ROLE_STAFF } from "@/constants/constants"
 import { useGetMe } from "@/hooks"
 import { Spinner } from "@heroui/react"
+import { addToast } from "@heroui/toast"
 import { useRouter } from "next/navigation"
 import React, { useEffect, useMemo } from "react"
-import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
 
 export default function StaffLayout({ children }: { children: React.ReactNode }) {
@@ -20,8 +20,11 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
     useEffect(() => {
         if (isLoading) return
         if (isError || !isStaff) {
-            toast.dismiss()
-            toast.error(t("user.unauthorized"))
+            addToast({
+                title: t("toast.error"),
+                description: t("user.unauthorized"),
+                color: "danger"
+            })
             router.replace("/")
         }
     }, [isError, isLoading, isStaff, router, t])
