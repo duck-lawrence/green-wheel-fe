@@ -82,7 +82,7 @@ export function TableSelectionVehicleModel({
                     <TableHeader columns={columns}>
                         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                     </TableHeader>
-                    <TableBody items={rows}>
+                    <TableBody items={rows} emptyContent={t("dispatch.no_vehicles_requested")}>
                         {(item) => {
                             const error =
                                 formik.touched.vehicles?.[item.index]?.quantity &&

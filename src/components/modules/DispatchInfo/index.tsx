@@ -84,8 +84,11 @@ export function DispatchInfo({ dispatch }: { dispatch: DispatchViewRes }) {
                             <TableColumn>{t("vehicle_model.name")}</TableColumn>
                             <TableColumn>{t("common.quantity")}</TableColumn>
                         </TableHeader>
-                        <TableBody>
-                            {(dispatch.description?.vehicles || []).map((item) => (
+                        <TableBody
+                            items={dispatch.description?.vehicles || []}
+                            emptyContent={t("dispatch.no_vehicles_requested")}
+                        >
+                            {(item) => (
                                 <TableRow key={item.modelId}>
                                     <TableCell className="hidden md:table-cell">
                                         {item.modelId}
@@ -93,7 +96,7 @@ export function DispatchInfo({ dispatch }: { dispatch: DispatchViewRes }) {
                                     <TableCell>{item.modelName}</TableCell>
                                     <TableCell>{item.quantity}</TableCell>
                                 </TableRow>
-                            ))}
+                            )}
                         </TableBody>
                     </TableStyled>
                 </div>

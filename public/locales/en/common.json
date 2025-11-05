@@ -260,6 +260,7 @@
         "logout": "Logout"
     },
     "table": {
+        "empty": "Nothing to display",
         "order": "Order",
         "vehicle_model": "Vehicle Model",
         "pickup_time": "Pickup Time",
@@ -991,6 +992,7 @@
         "reject": "Reject",
         "open_approve_page": "Open approve page",
         "open_assign_page": "Open assign page",
+        "no_vehicles_requested": "No vehicles requested",
         "valid_station": "Valid stations for this dispatch request",
         "no_valid_station": "No valid station for this dispatch request"
     },

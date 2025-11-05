@@ -10,7 +10,8 @@ import {
     getKeyValue,
     cn
 } from "@heroui/react"
-import { TableStyled } from "../TableStyled"
+import { TableStyled } from "@/components"
+import { useTranslation } from "react-i18next"
 
 export type Column = { key: string; label: string }
 export type Row = Record<string, any>
@@ -32,6 +33,8 @@ export function TableSelectionStyled({
     selectionBehavior,
     onSelectionChange
 }: TableSelectionStyledProps) {
+    const { t } = useTranslation()
+
     return (
         <div className={cn("flex flex-col gap-3", className)}>
             <TableStyled
@@ -53,7 +56,7 @@ export function TableSelectionStyled({
                 <TableHeader columns={columns}>
                     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                 </TableHeader>
-                <TableBody items={rows}>
+                <TableBody items={rows} emptyContent={t("table.empty")}>
                     {(item) => (
                         <TableRow key={item.key}>
                             {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
