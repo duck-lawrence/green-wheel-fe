@@ -1,6 +1,6 @@
 "use client"
 
-import { ROLE_ADMIN, ROLE_STAFF } from "@/constants/constants"
+import { RoleName } from "@/constants/enum"
 import { useGetMe } from "@/hooks"
 import { Spinner } from "@heroui/react"
 import { addToast } from "@heroui/toast"
@@ -13,17 +13,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const { t } = useTranslation()
     const { data: user, isLoading, isError } = useGetMe({ enabled: true })
 
-    const roleName = user?.role?.name
-    const isAdmin = roleName === ROLE_ADMIN
-    const isStaff = roleName === ROLE_STAFF
+    const isAdmin = user?.role?.name === RoleName.Admin
 
     useEffect(() => {
         if (isLoading) return
-
-        if (isStaff) {
-            router.replace("/dashboard/users")
-            return
-        }
 
         if (isError || !isAdmin) {
             addToast({
@@ -34,11 +27,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
             router.replace("/")
         }
-    }, [isAdmin, isError, isLoading, isStaff, router, t])
+    }, [isAdmin, isError, isLoading, router, t])
 
-    if (isLoading) return <Spinner />
-
-    if (!isAdmin) return null
+    if (!isAdmin) return <Spinner />
 
     return <>{children}</>
 }

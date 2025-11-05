@@ -6,8 +6,9 @@ import { useTranslation } from "react-i18next"
 import { DropdownStyled } from "@/components"
 import { useGetMe, useLogout, useTokenStore } from "@/hooks"
 import Link from "next/link"
-import { DEFAULT_AVATAR_URL, ROLE_ADMIN, ROLE_CUSTOMER, ROLE_STAFF } from "@/constants/constants"
+import { DEFAULT_AVATAR_URL } from "@/constants/constants"
 import { useRouter } from "next/navigation"
+import { RoleName } from "@/constants/enum"
 
 type DropdownLinkItem = {
     key: string
@@ -32,9 +33,9 @@ export const buildItems = ({
     bottomItems?: DropdownLinkItem[]
 }) => {
     const roleItemsMap: Record<string, DropdownLinkItem[]> = {
-        [ROLE_CUSTOMER]: customerItems,
-        [ROLE_STAFF]: staffItems,
-        [ROLE_ADMIN]: adminItems
+        [RoleName.Customer]: customerItems,
+        [RoleName.Staff]: staffItems,
+        [RoleName.Admin]: adminItems
     }
     const combinedItems = [...defaultItems, ...(roleItemsMap[roleName ?? ""] ?? [])]
 

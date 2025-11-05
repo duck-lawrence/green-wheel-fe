@@ -23,12 +23,12 @@ import {
 import { useTranslation } from "react-i18next"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { Spinner, useDisclosure } from "@heroui/react"
-import { ROLE_CUSTOMER, ROLE_STAFF } from "@/constants/constants"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { Icon } from "@iconify/react"
 import { addToast } from "@heroui/toast"
 import { useUserHelper } from "@/hooks/"
+import { RoleName } from "@/constants/enum"
 
 export default function VehicleDetailPage() {
     const { id } = useParams()
@@ -43,10 +43,10 @@ export default function VehicleDetailPage() {
     const { data: user } = useGetMe()
     const isLogined = useTokenStore((s) => !!s.accessToken)
     const isCustomer = useMemo(() => {
-        return user?.role?.name === ROLE_CUSTOMER
+        return user?.role?.name === RoleName.Customer
     }, [user])
     const isStaff = useMemo(() => {
-        return user?.role?.name === ROLE_STAFF
+        return user?.role?.name === RoleName.Staff
     }, [user])
 
     // handle render picture

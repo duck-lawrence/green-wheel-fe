@@ -588,6 +588,7 @@
         "out_of_contract": "Out Of Contract",
         "return": "Return",
         "handover": "Handover",
+        "super_admin": "Super Admin",
         "admin": "Admin",
         "staff": "Staff",
         "customer": "Customer",

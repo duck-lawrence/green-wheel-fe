@@ -3,7 +3,6 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { AppProviders } from "@/providers"
-import { Toaster } from "react-hot-toast"
 import { cookies } from "next/headers"
 import { ClientHydration, Footer, Modals, Navbar, ScrollToTopButton } from "@/components/"
 import Script from "next/script"
@@ -49,13 +48,6 @@ export default async function RootLayout({
                         </div>
                         <Footer />
                         <Modals />
-                        <Toaster
-                            position="bottom-right"
-                            reverseOrder={false}
-                            toastOptions={{
-                                className: "!max-w-[410px]"
-                            }}
-                        />
                     </ClientHydration>
                 </AppProviders>
                 <Script src="https://accounts.google.com/gsi/client" async defer />

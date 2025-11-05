@@ -1,11 +1,11 @@
 "use client"
 
-import { ROLE_STAFF } from "@/constants/constants"
+import { RoleName } from "@/constants/enum"
 import { useGetMe } from "@/hooks"
 import { Spinner } from "@heroui/react"
 import { addToast } from "@heroui/toast"
 import { useRouter } from "next/navigation"
-import React, { useEffect, useMemo } from "react"
+import React, { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
 export default function StaffLayout({ children }: { children: React.ReactNode }) {
@@ -13,9 +13,7 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
     const { t } = useTranslation()
     const { data: user, isLoading, isError } = useGetMe({ enabled: true })
 
-    const isStaff = useMemo(() => {
-        return user?.role?.name === ROLE_STAFF
-    }, [user])
+    const isStaff = user?.role?.name === RoleName.Staff
 
     useEffect(() => {
         if (isLoading) return

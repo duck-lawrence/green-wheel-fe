@@ -20,12 +20,12 @@ export default function PrivateLayout({ children }: { children: React.ReactNode 
     //Nhưng vẫn cần useEffect để redirect, vì redirect không thể thực hiện trong quá trình render
     useEffect(() => {
         if (!isLogined && pathName !== "/") {
-            router.replace("/")
             addToast({
                 title: t("toast.error"),
                 description: t("login.please_login"),
                 color: "danger"
             })
+            router.replace("/")
         }
     }, [isLogined, pathName, router, t])
     //Chặn việc render nội dung khi chưa login đúng role

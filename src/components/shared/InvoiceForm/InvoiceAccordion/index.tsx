@@ -1,14 +1,19 @@
 "use client"
 import React, { useCallback, useMemo, useState } from "react"
 import { Accordion, AccordionItem, Chip, cn } from "@heroui/react"
-import { InvoiceStatus, InvoiceType, PaymentMethod, RentalContractStatus } from "@/constants/enum"
+import {
+    InvoiceStatus,
+    InvoiceType,
+    PaymentMethod,
+    RentalContractStatus,
+    RoleName
+} from "@/constants/enum"
 import { InvoiceStatusLabels, PaymentMethodLabels } from "@/constants/labels"
 import { useGetMe, usePayInvoice } from "@/hooks"
 import { useTranslation } from "react-i18next"
 import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { FRONTEND_API_URL } from "@/constants/env"
 import { usePathname } from "next/navigation"
-import { ROLE_CUSTOMER, ROLE_STAFF } from "@/constants/constants"
 import { AlertStyled, ButtonStyled, InvoiceUploader, NumberInputStyled } from "@/components"
 
 export function InvoiceAccordion({
@@ -39,8 +44,8 @@ export function InvoiceAccordion({
     const { data: user } = useGetMe()
     const { isCustomer, isStaff } = useMemo(() => {
         return {
-            isCustomer: user?.role?.name === ROLE_CUSTOMER,
-            isStaff: user?.role?.name === ROLE_STAFF
+            isCustomer: user?.role?.name === RoleName.Customer,
+            isStaff: user?.role?.name === RoleName.Staff
         }
     }, [user])
 

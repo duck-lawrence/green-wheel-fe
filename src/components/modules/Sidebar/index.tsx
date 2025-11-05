@@ -4,12 +4,12 @@ import React, { useMemo, useCallback, useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { LayoutGroup, motion } from "framer-motion"
 import { cn } from "@heroui/react"
-import { ROLE_ADMIN, ROLE_CUSTOMER, ROLE_STAFF } from "@/constants/constants"
 import { useSideBarItemStore } from "@/hooks"
 import { Menu, X } from "lucide-react"
 import { ButtonIconStyled } from "@/components/styled"
 import { createPortal } from "react-dom"
 import { UserProfileViewRes } from "@/models/user/schema/response"
+import { RoleName } from "@/constants/enum"
 
 export type SidebarItem = {
     key: string
@@ -42,9 +42,9 @@ export const buildTabs = ({
     bottomTabs?: SidebarItem[]
 }) => {
     const roleTabsMap: Record<string, SidebarItem[]> = {
-        [ROLE_CUSTOMER]: customerTabs,
-        [ROLE_STAFF]: staffTabs,
-        [ROLE_ADMIN]: adminTabs
+        [RoleName.Customer]: customerTabs,
+        [RoleName.Staff]: staffTabs,
+        [RoleName.Admin]: adminTabs
     }
     //LỌC TRÙNG CÁC TAB TRONG SIDEBAR
     //HÀM BUILDTABS BAN ĐẦU CHỈ NỐI DEFAULTTABS VỚI CÁC TAB THEO ROLE

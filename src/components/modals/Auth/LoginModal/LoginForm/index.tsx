@@ -15,8 +15,8 @@ import {
     useRegisterDiscloresureSingleton
 } from "@/hooks"
 import { GoogleLoginButton } from "./GoogleLoginButton"
-import { ROLE_ADMIN, ROLE_STAFF } from "@/constants/constants"
 import { EMAIL_REGEX } from "@/constants/regex"
+import { RoleName } from "@/constants/enum"
 
 export function LoginForm({ onSuccess }: { onSuccess?: () => void }) {
     const { t } = useTranslation()
@@ -35,7 +35,8 @@ export function LoginForm({ onSuccess }: { onSuccess?: () => void }) {
     useEffect(() => {
         if (!currentUser) return
         const roleName = currentUser.role?.name
-        const isStaffOrAdmin = roleName === ROLE_ADMIN || roleName === ROLE_STAFF
+        const isStaffOrAdmin =
+            roleName === RoleName.Admin || roleName === RoleName.Staff || RoleName.SuperAdmin
         if (!isStaffOrAdmin) return
         if (pathname.startsWith("/dashboard")) return
         router.replace("/dashboard")
