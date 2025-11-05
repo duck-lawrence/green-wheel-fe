@@ -24,7 +24,7 @@ import {
     YAxis
 } from "recharts"
 
-export default function StatisticPage() {
+export default function StationStatisticPage() {
     const { t } = useTranslation()
 
     const { data: totalCustomer } = useGetCustomerStatistic()
@@ -33,7 +33,7 @@ export default function StatisticPage() {
     const { data: totalInvoice } = useGetTotalInvoiceStatistic()
     const { data: vehicleModelStatistic } = useGetVehicleModelStatistic()
     const { data: revenueOverMonths } = useGetRevenueByYear()
-    formatCurrencyWithSymbol
+
     const dataKpi = [
         {
             title: "Revenue",

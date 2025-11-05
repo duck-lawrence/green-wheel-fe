@@ -734,7 +734,8 @@
         "dispatch": "Dispatchs",
         "sidebar_vehicle_management": "Vehicles",
         "system_setting": "System Settings",
-        "sidebar_vehicle_components": "Vehicle Components"
+        "sidebar_vehicle_components": "Vehicle Components",
+        "sidebar_admin_statistic": "Station Statistic"
     },
     "footer": {
         "green_wheel_company_name": "GREEN WHEEL Trading and Service Joint Stock Company",

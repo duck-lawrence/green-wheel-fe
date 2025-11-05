@@ -11,12 +11,15 @@ import {
 import { statisticApi } from "@/services/statisticApi"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 
-export const useGetCustomerStatistic = ({ enabled = true }: { enabled?: boolean } = {}) => {
+export const useGetCustomerStatistic = ({
+    stationId,
+    enabled = true
+}: { stationId?: string; enabled?: boolean } = {}) => {
     const queryClient = useQueryClient()
     const queryKey = [...QUERY_KEYS.STATISTICS, "customers"]
     return useQuery<CustomerRes>({
         queryKey: queryKey,
-        queryFn: statisticApi.getCustomerStatistic,
+        queryFn: () => statisticApi.getCustomerStatistic({ stationId: stationId || "" }),
         initialData: () => {
             return queryClient.getQueryData<CustomerRes>(queryKey)
         },
@@ -24,12 +27,15 @@ export const useGetCustomerStatistic = ({ enabled = true }: { enabled?: boolean 
     })
 }
 
-export const useGetAnonymuousStatistic = ({ enabled = true }: { enabled?: boolean } = {}) => {
+export const useGetAnonymuousStatistic = ({
+    stationId,
+    enabled = true
+}: { stationId?: string; enabled?: boolean } = {}) => {
     const queryClient = useQueryClient()
     const queryKey = [...QUERY_KEYS.STATISTICS, "anonymuous"]
     return useQuery<CustomerAnonymousRes>({
         queryKey: queryKey,
-        queryFn: statisticApi.getAnonymousStatistic,
+        queryFn: () => statisticApi.getAnonymousStatistic({ stationId: stationId || "" }),
         initialData: () => {
             return queryClient.getQueryData<CustomerAnonymousRes>(queryKey)
         },
@@ -37,12 +43,15 @@ export const useGetAnonymuousStatistic = ({ enabled = true }: { enabled?: boolea
     })
 }
 
-export const useGetTotalRevenueStatistic = ({ enabled = true }: { enabled?: boolean } = {}) => {
+export const useGetTotalRevenueStatistic = ({
+    stationId,
+    enabled = true
+}: { stationId?: string; enabled?: boolean } = {}) => {
     const queryClient = useQueryClient()
     const queryKey = [...QUERY_KEYS.STATISTICS, "revenues"]
     return useQuery<TotalRevenueRes>({
         queryKey: queryKey,
-        queryFn: statisticApi.getTotalRevenueStatistic,
+        queryFn: () => statisticApi.getTotalRevenueStatistic({ stationId: stationId || "" }),
         initialData: () => {
             return queryClient.getQueryData<TotalRevenueRes>(queryKey)
         },
@@ -50,12 +59,15 @@ export const useGetTotalRevenueStatistic = ({ enabled = true }: { enabled?: bool
     })
 }
 
-export const useGetTotalInvoiceStatistic = ({ enabled = true }: { enabled?: boolean } = {}) => {
+export const useGetTotalInvoiceStatistic = ({
+    stationId,
+    enabled = true
+}: { stationId?: string; enabled?: boolean } = {}) => {
     const queryClient = useQueryClient()
     const queryKey = [...QUERY_KEYS.STATISTICS, "invoices"]
     return useQuery<TotalStatisticRes>({
         queryKey: queryKey,
-        queryFn: statisticApi.getTotalInvoiceStatistic,
+        queryFn: () => statisticApi.getTotalInvoiceStatistic({ stationId: stationId || "" }),
         initialData: () => {
             return queryClient.getQueryData<TotalStatisticRes>(queryKey)
         },
@@ -63,12 +75,15 @@ export const useGetTotalInvoiceStatistic = ({ enabled = true }: { enabled?: bool
     })
 }
 
-export const useGetVehicleStatistic = ({ enabled = true }: { enabled?: boolean } = {}) => {
+export const useGetVehicleStatistic = ({
+    stationId,
+    enabled = true
+}: { stationId?: string; enabled?: boolean } = {}) => {
     const queryClient = useQueryClient()
     const queryKey = [...QUERY_KEYS.STATISTICS, "vehicles"]
     return useQuery<VehicleTotalRes>({
         queryKey: queryKey,
-        queryFn: statisticApi.getVehicleStatistic,
+        queryFn: () => statisticApi.getVehicleStatistic({ stationId: stationId || "" }),
         initialData: () => {
             return queryClient.getQueryData<VehicleTotalRes>(queryKey)
         },
@@ -76,12 +91,15 @@ export const useGetVehicleStatistic = ({ enabled = true }: { enabled?: boolean }
     })
 }
 
-export const useGetVehicleModelStatistic = ({ enabled = true }: { enabled?: boolean } = {}) => {
+export const useGetVehicleModelStatistic = ({
+    stationId,
+    enabled = true
+}: { stationId?: string; enabled?: boolean } = {}) => {
     const queryClient = useQueryClient()
     const queryKey = [...QUERY_KEYS.STATISTICS, "vehicle-models"]
     return useQuery<VehicleModelStatisticRes[]>({
         queryKey: queryKey,
-        queryFn: statisticApi.getVehicleModelStatistic,
+        queryFn: () => statisticApi.getVehicleModelStatistic({ stationId: stationId || "" }),
         initialData: () => {
             return queryClient.getQueryData<VehicleModelStatisticRes[]>(queryKey)
         },
@@ -89,12 +107,15 @@ export const useGetVehicleModelStatistic = ({ enabled = true }: { enabled?: bool
     })
 }
 
-export const useGetRevenueByYear = ({ enabled = true }: { enabled?: boolean } = {}) => {
+export const useGetRevenueByYear = ({
+    stationId,
+    enabled = true
+}: { stationId?: string; enabled?: boolean } = {}) => {
     const queryClient = useQueryClient()
     const queryKey = [...QUERY_KEYS.STATISTICS, "revenue-by-year"]
     return useQuery<RevenueByYearRes[]>({
         queryKey: queryKey,
-        queryFn: statisticApi.getRevenueByYear,
+        queryFn: () => statisticApi.getRevenueByYear({ stationId: stationId || "" }),
         initialData: () => {
             return queryClient.getQueryData<RevenueByYearRes[]>(queryKey)
         },

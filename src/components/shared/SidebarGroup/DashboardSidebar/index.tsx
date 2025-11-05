@@ -44,9 +44,9 @@ export function DashboardSidebar({ className }: { className?: string }) {
 
     const adminTabs: SidebarItem[] = [
         {
-            key: "/dashboard/statistic",
-            label: t("admin.statistic"),
-            href: "/dashboard/statistic"
+            key: "/dashboard/station-statistic",
+            label: t("admin.sidebar_admin_statistic"),
+            href: "/dashboard/station-statistic"
         },
         {
             key: "/dashboard/fleets",
