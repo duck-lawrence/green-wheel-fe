@@ -46,7 +46,7 @@ export const useCreateRentalContract = ({ onSuccess }: { onSuccess?: () => void 
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -69,7 +69,7 @@ export const useCreateContractManual = ({ onSuccess }: { onSuccess?: () => void 
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -176,7 +176,7 @@ export const useConfirmContract = ({
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -206,7 +206,7 @@ export const useUpdateContractStatus = ({ onSuccess }: { onSuccess?: () => void 
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -234,7 +234,7 @@ export const useHandoverContract = ({ id, onSuccess }: { id: string; onSuccess?:
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -263,7 +263,7 @@ export const useReturnContract = ({ id, onSuccess }: { id: string; onSuccess?: (
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -291,7 +291,7 @@ export const useCancelContract = ({ id, onSuccess }: { id: string; onSuccess?: (
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -319,7 +319,7 @@ export const useChangeVehicleByContractId = ({
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -351,7 +351,7 @@ export const useConfirmChangeVehicle = ({
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })

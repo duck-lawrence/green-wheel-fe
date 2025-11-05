@@ -32,12 +32,12 @@ export function DispatchInfo({ dispatch }: { dispatch: DispatchViewRes }) {
                         </h3>
                         <InputStyled
                             label={t("dispatch.station_id")}
-                            value={dispatch?.fromStationId}
+                            value={dispatch?.fromStationId || "-"}
                             readOnly
                         />
                         <InputStyled
                             label={t("dispatch.station_name")}
-                            value={dispatch?.fromStationName}
+                            value={dispatch?.fromStationName || "-"}
                             readOnly
                         />
                     </div>

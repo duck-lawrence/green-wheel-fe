@@ -68,7 +68,7 @@ export default function RentalContractPage() {
             const backendErr =
                 (contractsError as BackendError) || (getStationsError as BackendError)
             addToast({
-                title: t("toast.error"),
+                title: backendErr.title || t("toast.error"),
                 description: translateWithFallback(t, backendErr.detail),
                 color: "danger"
             })

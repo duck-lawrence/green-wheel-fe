@@ -88,7 +88,7 @@ export default function AdminFleetPage() {
         if (getVehicleSegmentsError) {
             const error = getVehicleSegmentsError as BackendError
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -103,7 +103,7 @@ export default function AdminFleetPage() {
         } catch (error) {
             const backendError = error as BackendError
             addToast({
-                title: t("toast.error"),
+                title: backendError.title || t("toast.error"),
                 description: translateWithFallback(t, backendError.detail),
                 color: "danger"
             })

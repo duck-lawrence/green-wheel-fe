@@ -6,7 +6,6 @@ import * as Yup from "yup"
 import { useTranslation } from "react-i18next"
 // import Link from "next/link"
 
-
 import {
     useBookingFilterStore,
     useGetAllStations,
@@ -40,7 +39,7 @@ type FormValues = {
     stationId: string
     notes: string
     // paymentMethod: PaymentMethod
-    agreePolicy: boolean 
+    agreePolicy: boolean
     // agreeTerms: boolean
     // agreeDataPolicy: boolean
 }
@@ -63,14 +62,11 @@ export const CreateRentalContractForm = ({
     const { t } = useTranslation()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
     const { toFullName, isUserValidForBooking } = useUserHelper()
-    const handleOpenPolicy = useCallback(
-        (e: React.MouseEvent<HTMLAnchorElement>) => {
-            e.preventDefault()
-            e.stopPropagation()
-            window.open("/policy", "_blank", "noopener,noreferrer")
-        },
-        []
-    )
+    const handleOpenPolicy = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault()
+        e.stopPropagation()
+        window.open("/policy", "_blank", "noopener,noreferrer")
+    }, [])
     const [mounted, setMounted] = useState(false)
     const createContract = useCreateRentalContract({ onSuccess })
     const createContractManual = useCreateContractManual({ onSuccess })
@@ -171,7 +167,7 @@ export const CreateRentalContractForm = ({
         if (userError || stationsError) {
             const error = (userError as BackendError) || (stationsError as BackendError)
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -188,7 +184,7 @@ export const CreateRentalContractForm = ({
         email: user?.email ?? "",
         stationId: stationId || "",
         notes: "",
-        agreePolicy: false,
+        agreePolicy: false
         // agreeTerms: false,
         // agreeDataPolicy: false
     }
@@ -308,7 +304,7 @@ export const CreateRentalContractForm = ({
                                 </div>
 
                                 {/* Policy */}
-                                    {/* <div className="mt-6 space-y-4">
+                                {/* <div className="mt-6 space-y-4">
                                     <CheckboxStyled
                                         id="agreeTerms"
                                         name="agreeTerms"
@@ -353,7 +349,7 @@ export const CreateRentalContractForm = ({
                                         >
                                             {t("car_rental.policy_terms")}
                                         </a>{" "}
-                                          {/* </Link>{" "}
+                                        {/* </Link>{" "}
                                         {t("car_rental.of_green_wheel")}
                                     </CheckboxStyled>
 

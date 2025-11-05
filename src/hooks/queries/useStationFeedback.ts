@@ -23,7 +23,7 @@ export const useCreateFeedback = ({ onSuccess }: { onSuccess?: () => void }) => 
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -66,7 +66,7 @@ export const useDeleteFeedback = () => {
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })

@@ -2,7 +2,7 @@
 
 import { NumberInputStyled, TableStyled } from "@/components"
 import { CreateDispatchReq } from "@/models/dispatch/schema/request"
-import { VehicleModelViewRes, VehicleViewRes } from "@/models/vehicle/schema/response"
+import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { useFormik } from "formik"
 import React, { Key, useState } from "react"
@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next"
 type TableSelectionVehicleModelProps = {
     selectionBehavior?: "toggle" | "replace"
     vehicleModels: VehicleModelViewRes[]
-    vehicles: VehicleViewRes[]
+    // vehicles: VehicleViewRes[]
     formik: ReturnType<typeof useFormik<CreateDispatchReq>>
     onChangeSelected?: (selected: string[]) => void
 }
@@ -20,7 +20,7 @@ export function TableSelectionVehicleModel({
     selectionBehavior,
     // stationId,
     vehicleModels,
-    vehicles,
+    // vehicles,
     formik,
     onChangeSelected
 }: TableSelectionVehicleModelProps) {
@@ -29,7 +29,7 @@ export function TableSelectionVehicleModel({
     const [selectedKeys, setSelectedKeys] = useState<string[]>([])
 
     const rows = vehicleModels
-        .filter((m) => vehicles.filter((v) => v.model.id === m.id).length ?? 0 > 0)
+        // .filter((m) => vehicles.filter((v) => v.model.id === m.id).length ?? 0 > 0)
         .map((item, index) => ({
             id: item.id,
             index: index,
@@ -85,8 +85,8 @@ export function TableSelectionVehicleModel({
                                 formik.touched.vehicles?.[item.index]?.numberOfVehicle &&
                                 (formik.errors.vehicles?.[item.index] as any)?.numberOfVehicle
 
-                            const maxNumberOfVehicles =
-                                vehicles.filter((v) => v.model.id === item.id).length - 1
+                            // const maxNumberOfVehicles =
+                            //     vehicles.filter((v) => v.model.id === item.id).length - 1
 
                             return (
                                 <TableRow key={item.id}>
@@ -96,7 +96,7 @@ export function TableSelectionVehicleModel({
                                         <NumberInputStyled
                                             // label={t("dispatch.number_vehicle")}
                                             minValue={0}
-                                            maxValue={maxNumberOfVehicles}
+                                            // maxValue={maxNumberOfVehicles}
                                             className="w-full"
                                             classNames={{
                                                 inputWrapper: "h-10"
@@ -104,7 +104,7 @@ export function TableSelectionVehicleModel({
                                             value={
                                                 formik.values.vehicles[item.index]?.numberOfVehicle
                                             }
-                                            endContent={`/${maxNumberOfVehicles}`}
+                                            // endContent={`/${maxNumberOfVehicles}`}
                                             onValueChange={(val) => {
                                                 const num = Number(val)
                                                 formik.setFieldValue(

@@ -13,7 +13,7 @@ export enum Sex {
 export enum DispatchRequestStatus {
     Pending = 0,
     Approved = 1,
-    ConfirmApproved = 2,
+    Assigned = 2,
     Received = 3,
     Rejected = 4,
     Cancelled = 5

@@ -136,7 +136,7 @@ export const useCreateVehicleModel = ({
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -172,7 +172,7 @@ export const useUpdateVehicleModel = ({
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -206,7 +206,7 @@ export const useUpdateVehicleModelComponents = ({
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -243,7 +243,7 @@ export const useUploadModelImages = ({
         onError: (error: BackendError) => {
             onError?.()
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -279,7 +279,7 @@ export const useUploadModelMainImage = ({
         onError: (error: BackendError) => {
             onError?.()
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -315,7 +315,7 @@ export const useUploadModelSubImages = ({
         onError: (error: BackendError) => {
             onError?.()
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -350,7 +350,7 @@ export const useDeleteModelImages = ({
         onError: (error: BackendError) => {
             onError?.()
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -381,7 +381,7 @@ export const useDeleteVehicleModel = ({
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })

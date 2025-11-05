@@ -114,7 +114,7 @@ export function FilterVehicleRental({
             const error = getStationsError as BackendError
             // toast.error(translateWithFallback(t, error.detail))
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -126,7 +126,7 @@ export function FilterVehicleRental({
         if (getVehicleSegmentsError) {
             const error = getVehicleSegmentsError as BackendError
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })

@@ -3,26 +3,43 @@ import { ButtonIconStyled, EnumPicker, SpinnerStyled, TableStyled } from "@/comp
 import { DispatchRequestStatusColorMap } from "@/constants/colorMap"
 import { DispatchRequestStatus, RoleName } from "@/constants/enum"
 import { DispatchRequestStatusLabels } from "@/constants/labels"
-import { useGetAllDispatch, useGetAllStations, useGetMe, useNavigateOnClick } from "@/hooks"
+import { useGetAllDispatch, useGetMe, useNavigateOnClick } from "@/hooks"
 import { DispatchQueryParams } from "@/models/dispatch/schema/request"
 import { Chip, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { EyeIcon, Plus } from "lucide-react"
 
 import Link from "next/link"
-import React, { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 export default function DispatchPage() {
     const handleNavigateClick = useNavigateOnClick()
     const { t } = useTranslation()
-    const { data: user } = useGetMe()
+    const { data: user, isLoading: isUserLoading } = useGetMe()
     const isAdmin = user?.role?.name === RoleName.Admin
+    const stationId = isAdmin ? user?.station?.id : undefined
 
-    const { data: stations = [] } = useGetAllStations()
-    const [filter, setFilter] = useState<DispatchQueryParams>({ toStation: user?.station?.id })
+    const [filter, setFilter] = useState<DispatchQueryParams>({
+        fromStation: stationId,
+        toStation: stationId
+    })
     const { data: dispatches, isLoading } = useGetAllDispatch({
         params: filter
     })
+
+    const hasLoadInit = useRef(false)
+    useEffect(() => {
+        if (hasLoadInit.current) return
+        if (isUserLoading) return
+        setFilter((prev) => {
+            return {
+                ...prev,
+                fromStation: stationId,
+                toStation: stationId
+            }
+        })
+        hasLoadInit.current = true
+    }, [isUserLoading, stationId])
 
     return (
         <div className="max-w-6xl mx-auto w-full">
@@ -92,11 +109,8 @@ export default function DispatchPage() {
                         <TableBody>
                             {dispatches?.length ? (
                                 dispatches.map((item, index) => {
-                                    const fromStation =
-                                        stations.find((s) => s.id === item.fromStationId)?.name ||
-                                        "—"
-                                    const toStation =
-                                        stations.find((s) => s.id === item.toStationId)?.name || "—"
+                                    const fromStation = item.fromStationName || "—"
+                                    const toStation = item.toStationName || "—"
                                     const statusLabel = DispatchRequestStatusLabels[item.status]
 
                                     return (
