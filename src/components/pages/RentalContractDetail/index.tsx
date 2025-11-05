@@ -244,14 +244,14 @@ export function RentalContractDetail({
             <SectionStyled title={t("rental_contract.rental_contract_information")}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="sm:col-span-2">
-                        <div onClick={onOpen} className="hover:cursor-pointer">
+                        <span onClick={onOpen} className="hover:cursor-pointer">
                             {t("table.customer")}
                             {": "}
                             {toFullName({
                                 firstName: contract.customer.firstName,
                                 lastName: contract.customer.lastName
                             })}
-                        </div>
+                        </span>
                         <ViewUserModal
                             isOpen={isOpen}
                             onOpenChange={onOpenChange}

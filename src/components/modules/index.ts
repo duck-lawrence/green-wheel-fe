@@ -21,7 +21,6 @@ export * from "./RowSteps"
 
 /* ========================= S ========================= */
 export * from "./ScrollToTopButton"
-export * from "./Sidebar"
 export * from "./SignatureSection"
 export * from "./StepContract"
 export * from "./SystemSettingItem"

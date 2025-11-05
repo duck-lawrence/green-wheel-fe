@@ -1,6 +1,6 @@
 "use client"
 
-import { DashboardSidebar } from "@/components/shared/SidebarGroup/DashboardSidebar"
+import { DashboardSidebar } from "@/components"
 
 import React from "react"
 
