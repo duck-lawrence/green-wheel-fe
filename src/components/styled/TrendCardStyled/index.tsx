@@ -5,6 +5,7 @@ import { CardStyled } from "../CardStyled"
 import { Icon } from "@iconify/react"
 import { TrendCardProps } from "@/components/modules"
 import { Percent } from "lucide-react"
+import { formatCurrency } from "@/utils/helpers/currency"
 
 // đưa cái này vô models
 // type TrendCardProps = {
@@ -32,7 +33,7 @@ export function TrendCardStyled({
                 <div className="flex flex-col gap-y-2">
                     <dt className="text-small text-default-500 font-medium">{title}</dt>
                     <dd className="text-default-700 text-2xl font-semibold">
-                        {value}{" "}
+                        {formatCurrency(value)}
                         {title !== "Anonymous" && title !== "Member" ? (
                             <span style={{ fontWeight: 600 }}>₫</span>
                         ) : null}

@@ -11,8 +11,8 @@ export type CustomerAnonymousRes = {
 }
 
 export type TotalRevenueRes = {
-    totalRevenueInThisMonth: number
-    totalRevenueInLastMonth: number
+    totalRevenueThisMonth: number
+    totalRevenueLastMonth: number
     changeRate: number
 }
 
@@ -42,6 +42,6 @@ export type VehicleModelStatisticRes = {
 }
 
 export type RevenueByYearRes = {
-    month: number
-    revenue: number
+    monthName: number
+    totalRevenue: number
 }
