@@ -34,9 +34,7 @@ export function TrendCardStyled({
                     <dt className="text-small text-default-500 font-medium">{title}</dt>
                     <dd className="text-default-700 text-2xl font-semibold">
                         {formatCurrency(value)}
-                        {title !== "Anonymous" && title !== "Member" ? (
-                            <span style={{ fontWeight: 600 }}>₫</span>
-                        ) : null}
+                        {title === "Revenue" ? <span style={{ fontWeight: 600 }}>₫</span> : null}
                     </dd>
                 </div>
                 <Chip

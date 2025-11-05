@@ -3,6 +3,7 @@ import { KpiStat } from "@/components"
 import {
     useGetAnonymuousStatistic,
     useGetCustomerStatistic,
+    useGetInvoiceByYear,
     useGetRevenueByYear,
     useGetTotalInvoiceStatistic,
     useGetTotalRevenueStatistic,
@@ -33,6 +34,7 @@ export default function StationStatisticPage() {
     const { data: totalInvoice } = useGetTotalInvoiceStatistic()
     const { data: vehicleModelStatistic } = useGetVehicleModelStatistic()
     const { data: revenueOverMonths } = useGetRevenueByYear()
+    const { data: invoiceOverMonths } = useGetInvoiceByYear()
 
     const dataKpi = [
         {
@@ -69,9 +71,14 @@ export default function StationStatisticPage() {
         numberOfMaintenance: item.numberOfMaintenance
     }))
 
-    const dataMonths = revenueOverMonths?.map((item) => ({
+    const dataMonthsRevenue = revenueOverMonths?.map((item) => ({
         month: item.monthName,
         revenue: item.totalRevenue
+    }))
+
+    const dataMonthsInvoice = invoiceOverMonths?.map((item) => ({
+        month: item.monthName,
+        invoices: item.totalInvoice
     }))
 
     return (
@@ -144,13 +151,13 @@ export default function StationStatisticPage() {
             </div>
 
             {/* Chart for total revenue over months */}
-            <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md  m-4">
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md  m-4 w-full max-w-[60rem]">
                 <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
                     {t("statistic.monthly_revenue")}
                 </h3>
 
                 <ResponsiveContainer width="100%" height={320}>
-                    <LineChart data={dataMonths}>
+                    <LineChart data={dataMonthsRevenue} className="bg-white rounded-2xl mt-4">
                         <defs>
                             <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
                                 <stop offset="0%" stopColor="#16A34A" stopOpacity={0.9} />
@@ -162,11 +169,11 @@ export default function StationStatisticPage() {
                         <XAxis
                             dataKey="month"
                             tick={{ fill: "#94a3b8", fontSize: 13 }}
-                            axisLine={false}
+                            axisLine={true}
                         />
                         <YAxis
-                            tick={{ fill: "#94a3b8", fontSize: 13 }}
-                            axisLine={false}
+                            tick={{ fill: "#94a3b8", fontSize: 11 }}
+                            axisLine={true}
                             tickFormatter={(v) => `${formatCurrencyWithSymbol(v)}`}
                         />
                         <Tooltip
@@ -195,6 +202,63 @@ export default function StationStatisticPage() {
                             activeDot={{ r: 8, fill: "#22C55E", stroke: "#fff", strokeWidth: 2 }}
                             // name="Tổng doanh thu"
                             name={t("statistic.total_revenue")}
+                        />
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
+
+            {/* Chart total invoice for month */}
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md  m-4 w-full max-w-[60rem]">
+                <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
+                    {t("statistic.monthly_invoices")}
+                </h3>
+
+                <ResponsiveContainer width="100%" height={320}>
+                    <LineChart data={dataMonthsInvoice}>
+                        <defs>
+                            <linearGradient id="invoicesGradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#16A34A" stopOpacity={0.9} />
+                                <stop offset="100%" stopColor="#4ADE80" stopOpacity={0.2} />
+                            </linearGradient>
+                        </defs>
+
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                        <XAxis
+                            dataKey="month"
+                            tick={{ fill: "#94a3b8", fontSize: 13 }}
+                            axisLine={true}
+                        />
+                        <YAxis
+                            tick={{ fill: "#94a3b8", fontSize: 11 }}
+                            axisLine={true}
+                            tickFormatter={(v) => `${formatCurrencyWithSymbol(v)}`}
+                        />
+                        <Tooltip
+                            contentStyle={{
+                                backgroundColor: "#555555",
+                                border: "none",
+                                color: "#fff",
+                                borderRadius: "8px",
+                                boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
+                            }}
+                            // formatter={(value) => [`${value} triệu ₫`, "Doanh thu"]}
+                            formatter={(value) => [
+                                `${formatCurrencyWithSymbol(value as number)}`,
+                                `${t("statistic.invoices")}`
+                            ]}
+                        />
+                        <Legend verticalAlign="top" height={36} />
+
+                        {/* Line biểu thị doanh thu */}
+                        <Line
+                            type="monotone"
+                            dataKey="invoices"
+                            stroke="url(#invoicesGradient)"
+                            strokeWidth={4}
+                            dot={{ r: 5, fill: "#16A34A" }}
+                            activeDot={{ r: 8, fill: "#22C55E", stroke: "#fff", strokeWidth: 2 }}
+                            // name="Tổng doanh thu"
+                            name={t("statistic.total_invoices")}
                         />
                     </LineChart>
                 </ResponsiveContainer>

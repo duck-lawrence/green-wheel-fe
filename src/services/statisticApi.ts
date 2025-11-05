@@ -3,6 +3,7 @@ import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 import {
     CustomerAnonymousRes,
     CustomerRes,
+    InvoiceByYearRes,
     RevenueByYearRes,
     TotalRevenueRes,
     TotalStatisticRes,
@@ -59,6 +60,13 @@ export const statisticApi = {
         requestWrapper<RevenueByYearRes[]>(async () => {
             const params = buildQueryParams(query)
             const res = await axiosInstance.get("/statistic/revenue-by-year", { params })
+            return res.data
+        }),
+
+    getInvoiceByYear: (query: { stationId: string }) =>
+        requestWrapper<InvoiceByYearRes[]>(async () => {
+            const params = buildQueryParams(query)
+            const res = await axiosInstance.get("/statistic/invoice-by-year", { params })
             return res.data
         })
 }

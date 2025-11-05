@@ -735,7 +735,8 @@
         "sidebar_vehicle_management": "Vehicles",
         "system_setting": "System Settings",
         "sidebar_vehicle_components": "Vehicle Components",
-        "sidebar_admin_statistic": "Station Statistic"
+        "sidebar_admin_statistic": "Station Statistic",
+        "admin_management": "Admin Management"
     },
     "footer": {
         "green_wheel_company_name": "GREEN WHEEL Trading and Service Joint Stock Company",
@@ -1188,7 +1189,10 @@
         "failed_to_calculate_customer_change": "Failed to calculate customer change",
         "failed_to_calculate_invoice_change": "Failed to calculate invoice change",
         "total_revenue": "Total Revenue",
-        "revenue": "Revenue"
+        "revenue": "Revenue",
+        "invoices": "Invoices",
+        "total_invoices": "Total Invoices",
+        "monthly_invoices": "Monthly Invoices"
     },
     "system": {
         "system_setting": "System Setting",

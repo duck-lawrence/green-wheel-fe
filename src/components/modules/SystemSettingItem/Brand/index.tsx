@@ -2,6 +2,7 @@
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
+    Spinner,
     TableBody,
     TableCell,
     TableColumn,
@@ -24,7 +25,14 @@ export function Brand() {
 
     const { data: brands, isLoading } = useGetAllBrandes()
 
-    if (isLoading) return <div>Loading...</div>
+    console.log("brand", brands)
+
+    if (isLoading)
+        return (
+            <>
+                <Spinner />
+            </>
+        )
 
     return (
         <div>
