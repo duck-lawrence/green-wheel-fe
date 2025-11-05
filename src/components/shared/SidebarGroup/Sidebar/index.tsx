@@ -31,34 +31,29 @@ export const buildTabs = ({
     defaultTabs,
     customerTabs = [],
     staffTabs = [],
+    superAdminTabs = [],
     adminTabs = [],
     bottomTabs = []
 }: {
-    roleName?: string
+    roleName?: RoleName
     defaultTabs: SidebarItem[]
     customerTabs?: SidebarItem[]
     staffTabs?: SidebarItem[]
+    superAdminTabs?: SidebarItem[]
     adminTabs?: SidebarItem[]
     bottomTabs?: SidebarItem[]
 }) => {
-    const roleTabsMap: Record<string, SidebarItem[]> = {
+    const roleTabsMap: Record<RoleName, SidebarItem[]> = {
         [RoleName.Customer]: customerTabs,
         [RoleName.Staff]: staffTabs,
+        [RoleName.SuperAdmin]: superAdminTabs,
         [RoleName.Admin]: adminTabs
     }
-    //LỌC TRÙNG CÁC TAB TRONG SIDEBAR
-    //HÀM BUILDTABS BAN ĐẦU CHỈ NỐI DEFAULTTABS VỚI CÁC TAB THEO ROLE
-    //NAY SỬA LẠI ĐỂ LỌC TRÙNG
-    //VD: ROLE_ADMIN CÓ ADMIN TABS LÀ /DASHBOARD, NẾU DEFAULT TABS CŨNG CÓ /DASHBOARD THÌ CHỈ LẤY 1 TAB
-    //ROLE_STAFF CÓ STAFF TABS LÀ /DASHBOARD, NẾU DEFAULT TABS CŨNG CÓ /DASHBOARD THÌ CHỈ LẤY 1 TAB
-    const combinedTabs = [...defaultTabs, ...(roleTabsMap[roleName ?? ""] ?? []), ...bottomTabs]
+    const combinedTabs = [...defaultTabs, ...(roleName ? roleTabsMap[roleName] : []), ...bottomTabs]
 
     const uniqueTabs: SidebarItem[] = []
     const seenKeys = new Set<string>()
-    //LUỒNG HOẠT ĐỘNG:
-    // DUYỆT QUA TẤT CẢ CÁC TAB TRONG COMBINEDTABS
-    // NẾU CHƯA XUẤT HIỆN TRONG SEENKEYS THÌ THÊM VÀO UNIQUE TABS VÀ ĐÁNH DẤU ĐÃ XUẤT HIỆN
-    // NẾU ĐÃ XUẤT HIỆN RỒI THÌ BỎ QUA
+
     for (const tab of combinedTabs) {
         if (seenKeys.has(tab.key)) continue
         seenKeys.add(tab.key)

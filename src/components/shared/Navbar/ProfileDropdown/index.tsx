@@ -23,21 +23,24 @@ export const buildItems = ({
     customerItems = [],
     staffItems = [],
     adminItems = [],
+    superAdminItems = [],
     bottomItems = []
 }: {
-    roleName?: string
+    roleName?: RoleName
     defaultItems: DropdownLinkItem[]
     customerItems?: DropdownLinkItem[]
     staffItems?: DropdownLinkItem[]
     adminItems?: DropdownLinkItem[]
+    superAdminItems?: DropdownLinkItem[]
     bottomItems?: DropdownLinkItem[]
 }) => {
-    const roleItemsMap: Record<string, DropdownLinkItem[]> = {
+    const roleItemsMap: Record<RoleName, DropdownLinkItem[]> = {
         [RoleName.Customer]: customerItems,
         [RoleName.Staff]: staffItems,
+        [RoleName.SuperAdmin]: superAdminItems,
         [RoleName.Admin]: adminItems
     }
-    const combinedItems = [...defaultItems, ...(roleItemsMap[roleName ?? ""] ?? [])]
+    const combinedItems = [...defaultItems, ...(roleName ? roleItemsMap[roleName] : [])]
 
     const uniqueItems: DropdownLinkItem[] = []
     const seenKeys = new Set<string>()
@@ -63,9 +66,6 @@ export function ProfileDropdown({ onOpen = undefined }: { onOpen?: () => void })
         isLoading: isGetMeLoading,
         isError: isGetMeError
     } = useGetMe({ enabled: isLoggedIn })
-
-    // const roleDetail = (user as Partial<{ roleDetail?: MaybeRoleDetail }> | null | undefined)
-    //     ?.roleDetail
 
     const defaultItems: DropdownLinkItem[] = [
         {
@@ -94,7 +94,15 @@ export function ProfileDropdown({ onOpen = undefined }: { onOpen?: () => void })
 
     const adminItems: DropdownLinkItem[] = [
         {
-            key: "admin_management",
+            key: "dashboard",
+            href: "/dashboard",
+            label: t("staff.dashboard")
+        }
+    ]
+
+    const superAdminItems: DropdownLinkItem[] = [
+        {
+            key: "dashboard",
             href: "/dashboard",
             label: t("staff.dashboard")
         }
@@ -102,15 +110,16 @@ export function ProfileDropdown({ onOpen = undefined }: { onOpen?: () => void })
 
     const staffItems: DropdownLinkItem[] = [
         {
-            key: "staff_management",
+            key: "dashboard",
             href: "/dashboard",
             label: t("staff.dashboard")
         }
     ]
 
     const dropdownItems = buildItems({
-        roleName: user?.role?.name,
+        roleName: user?.role?.name as RoleName | undefined,
         defaultItems,
+        superAdminItems,
         adminItems,
         staffItems,
         customerItems,

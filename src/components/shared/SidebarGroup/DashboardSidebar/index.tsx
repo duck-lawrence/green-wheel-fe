@@ -1,4 +1,5 @@
 import { buildTabs, Sidebar, SidebarItem } from "@/components"
+import { RoleName } from "@/constants/enum"
 import { useGetMe } from "@/hooks"
 import React from "react"
 import { useTranslation } from "react-i18next"
@@ -41,6 +42,8 @@ export function DashboardSidebar({ className }: { className?: string }) {
             href: "/dashboard/reports"
         }
     ]
+
+    const superAdminTabs: SidebarItem[] = []
 
     const adminTabs: SidebarItem[] = [
         {
@@ -91,9 +94,10 @@ export function DashboardSidebar({ className }: { className?: string }) {
     ]
 
     const tabs = buildTabs({
-        roleName: user?.role?.name,
+        roleName: user?.role?.name as RoleName | undefined,
         defaultTabs,
         staffTabs,
+        superAdminTabs,
         adminTabs
     })
 

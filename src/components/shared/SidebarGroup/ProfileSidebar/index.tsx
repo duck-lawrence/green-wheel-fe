@@ -1,6 +1,7 @@
 "use client"
 
 import { buildTabs, Sidebar, SidebarItem } from "@/components/"
+import { RoleName } from "@/constants/enum"
 import { useGetMe } from "@/hooks"
 import React from "react"
 import { useTranslation } from "react-i18next"
@@ -18,15 +19,9 @@ export function ProfileSidebar({ className }: { className?: string }) {
         }
     ]
 
-    const customerTabs: SidebarItem[] = []
-
-    const staffTabs: SidebarItem[] = []
-
     const tabs = buildTabs({
-        roleName: user?.role?.name,
-        defaultTabs,
-        customerTabs,
-        staffTabs
+        roleName: user?.role?.name as RoleName | undefined,
+        defaultTabs
     })
 
     return <Sidebar tabs={tabs} className={className} />
