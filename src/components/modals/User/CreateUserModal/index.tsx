@@ -15,7 +15,8 @@ export function CreateUserModal({
     isOpen,
     onOpenChange,
     createMutation,
-    isCreateCustomer
+    isCreateCustomer,
+    createRoleName
 }: CreateUserModalProps) {
     const { t } = useTranslation()
 
@@ -29,6 +30,7 @@ export function CreateUserModal({
                     <CreateUserForm
                         createMutation={createMutation}
                         isCreateCustomer={isCreateCustomer}
+                        createRoleName={createRoleName}
                     />
                 </ModalBody>
             </ModalContentStyled>

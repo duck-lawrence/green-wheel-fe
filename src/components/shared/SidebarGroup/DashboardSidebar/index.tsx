@@ -1,3 +1,5 @@
+"use client"
+
 import { buildTabs, Sidebar, SidebarItem } from "@/components"
 import { RoleName } from "@/constants/enum"
 import { useGetMe } from "@/hooks"

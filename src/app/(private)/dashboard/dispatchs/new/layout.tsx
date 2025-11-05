@@ -7,26 +7,28 @@ import { useRouter } from "next/navigation"
 import React, { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
-export default function StaffLayout({ children }: { children: React.ReactNode }) {
+export default function NewDispatchLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter()
     const { t } = useTranslation()
     const { data: user, isLoading, isError } = useGetMe({ enabled: true })
 
-    const isStaff = user?.role?.name === RoleName.Staff
+    const isAdmin = user?.role?.name === RoleName.Admin
 
     useEffect(() => {
         if (isLoading) return
-        if (isError || !isStaff) {
+
+        if (isError || !isAdmin) {
             addToast({
                 title: t("toast.error"),
                 description: t("user.unauthorized"),
                 color: "danger"
             })
+
             router.replace("/")
         }
-    }, [isError, isLoading, isStaff, router, t])
+    }, [isAdmin, isError, isLoading, router, t])
 
-    if (isLoading) return null
+    if (!isAdmin) return null
 
     return <>{children}</>
 }

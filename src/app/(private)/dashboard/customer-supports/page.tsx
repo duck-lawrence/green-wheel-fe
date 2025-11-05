@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next"
 export default function CustomerSupportsPage() {
     const { t } = useTranslation()
     const { data: user } = useGetMe()
+    const isStaff = user?.role?.name === RoleName.Staff
     const isAdmin = user?.role?.name === RoleName.Admin
 
     const [filter, setFilter] = useState<TicketFilterParams>({ type: TicketType.CustomerSupport })
@@ -37,7 +38,7 @@ export default function CustomerSupportsPage() {
 
     return (
         <TicketManagement
-            isEditable={true}
+            isEditable={isAdmin || isStaff}
             isAdmin={isAdmin}
             filterState={[filter, setFilter]}
             paginations={[pagination, setPagination]}

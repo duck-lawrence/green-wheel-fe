@@ -17,7 +17,7 @@ import {
     CitizenIdentityPreviewModal,
     DriverLicensePreviewModal
 } from "@/components"
-import { useCreateNewUser, useGetAllUsers } from "@/hooks"
+import { useCreateNewUser, useGetAllUsers, useGetMe } from "@/hooks"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { RoleName } from "@/constants/enum"
 import { Plus, SearchIcon } from "lucide-react"
@@ -31,8 +31,10 @@ import { useDisclosure } from "@heroui/react"
 //     hasDocument?: "both" | "license" | "citizen" | "none"
 // }
 
-export function UserManagement({ isCustomerManagement = true }: { isCustomerManagement: boolean }) {
+export function UserManagement() {
     const { t } = useTranslation()
+    const { data: me } = useGetMe()
+
     const [previewDocument, setPreviewDocument] = useState<{
         user: UserProfileViewRes
         type: "citizen" | "driver"
@@ -40,11 +42,18 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
 
     const [editingUser, setEditingUser] = useState<UserProfileViewRes | null>(null)
     const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useModalDisclosure()
-    const roleName = useMemo(() => {
-        return isCustomerManagement ? RoleName.Customer : RoleName.Staff
-    }, [isCustomerManagement])
+    const manageRoleName = useMemo(() => {
+        switch (me?.role?.name) {
+            case RoleName.SuperAdmin:
+                return RoleName.Admin
+            case RoleName.Admin:
+                return RoleName.Staff
+            default:
+                return RoleName.Customer
+        }
+    }, [me?.role?.name])
 
-    const [filter, setFilter] = useState<UserFilterParams>({ roleName })
+    const [filter, setFilter] = useState<UserFilterParams>({ roleName: manageRoleName })
     const [pagination, setPagination] = useState<PaginationParams>({ pageSize: 5 })
     const { data, isLoading, refetch } = useGetAllUsers({
         params: filter,
@@ -79,7 +88,7 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
         (values: UserFilterParams) => {
             setFilter({
                 ...values,
-                roleName
+                roleName: manageRoleName
             })
             refetch()
             setPagination((prev) => {
@@ -89,7 +98,7 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
                 }
             })
         },
-        [refetch, roleName]
+        [refetch, manageRoleName]
     )
 
     const formik = useFormik<UserFilterParams>({
@@ -184,9 +193,11 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
         <div>
             <div className="text-3xl mb-6 font-bold">
                 <p>
-                    {isCustomerManagement
+                    {manageRoleName === RoleName.Customer
                         ? t("staff.customer_management_title")
-                        : t("admin.staff_management_title")}
+                        : manageRoleName === RoleName.Staff
+                        ? t("admin.staff_management_title")
+                        : t("super_admin.admin_management_title")}
                 </p>
             </div>
 
@@ -273,13 +284,14 @@ export function UserManagement({ isCustomerManagement = true }: { isCustomerMana
                             isOpen={isCreateOpen}
                             onOpenChange={onCreateOpenchange}
                             createMutation={createMutation}
-                            isCreateCustomer={isCustomerManagement}
+                            isCreateCustomer={manageRoleName === RoleName.Customer}
+                            createRoleName={manageRoleName}
                         />
                     </div>
                 </form>
             </div>
 
-            {isCustomerManagement ? (
+            {manageRoleName === RoleName.Customer ? (
                 <CustomerTable
                     users={data?.items ?? []}
                     onPreviewDocument={handleOpenDocumentPreview}

@@ -736,6 +736,9 @@
         "system_setting": "System Settings",
         "sidebar_vehicle_components": "Vehicle Components"
     },
+    "super_admin": {
+        "admin_management_title": "Admin Management"
+    },
     "footer": {
         "green_wheel_company_name": "GREEN WHEEL Trading and Service Joint Stock Company",
         "introduction": "Introduction",
