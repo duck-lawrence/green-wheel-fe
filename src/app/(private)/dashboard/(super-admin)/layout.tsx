@@ -2,7 +2,6 @@
 
 import { RoleName } from "@/constants/enum"
 import { useGetMe } from "@/hooks"
-import { Spinner } from "@heroui/react"
 import { addToast } from "@heroui/toast"
 import { useRouter } from "next/navigation"
 import React, { useEffect } from "react"
@@ -29,7 +28,7 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
         }
     }, [isSuperAdmin, isError, isLoading, router, t])
 
-    if (!isSuperAdmin) return <Spinner />
+    if (!isSuperAdmin) return null
 
     return <>{children}</>
 }

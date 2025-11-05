@@ -1,7 +1,7 @@
 "use client"
 import { ButtonIconStyled, EnumPicker, SpinnerStyled, TableStyled } from "@/components"
 import { DispatchRequestStatusColorMap } from "@/constants/colorMap"
-import { DispatchRequestStatus } from "@/constants/enum"
+import { DispatchRequestStatus, RoleName } from "@/constants/enum"
 import { DispatchRequestStatusLabels } from "@/constants/labels"
 import { useGetAllDispatch, useGetAllStations, useGetMe, useNavigateOnClick } from "@/hooks"
 import { DispatchQueryParams } from "@/models/dispatch/schema/request"
@@ -16,11 +16,12 @@ export default function DispatchPage() {
     const handleNavigateClick = useNavigateOnClick()
     const { t } = useTranslation()
     const { data: user } = useGetMe()
+    const isAdmin = user?.role?.name === RoleName.Admin
+
     const { data: stations = [] } = useGetAllStations()
     const [filter, setFilter] = useState<DispatchQueryParams>({ toStation: user?.station?.id })
     const { data: dispatches, isLoading } = useGetAllDispatch({
-        params: filter,
-        enabled: true
+        params: filter
     })
 
     return (
@@ -28,14 +29,13 @@ export default function DispatchPage() {
             {/* Header */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-3 mb-6">
                 <h1 className="text-3xl font-bold">{t("table.dispatch_managerment")}</h1>
-                <Link href="/dashboard/dispatchs/new">
-                    {/* <ButtonStyled className="btn-gradient  text-white font-semibold">
-                        + {t("table.create_dispatch")}
-                    </ButtonStyled> */}
-                    <ButtonIconStyled className="btn-gradient rounded-lg">
-                        <Plus />
-                    </ButtonIconStyled>
-                </Link>
+                {isAdmin && (
+                    <Link href="/dashboard/dispatchs/new">
+                        <ButtonIconStyled className="btn-gradient rounded-lg">
+                            <Plus />
+                        </ButtonIconStyled>
+                    </Link>
+                )}
             </div>
 
             {/* Filter section */}

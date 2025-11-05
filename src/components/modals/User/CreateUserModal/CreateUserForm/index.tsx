@@ -1,33 +1,47 @@
 "use client"
 
 import { RoleName, Sex } from "@/constants/enum"
-import { useCreateNewUser, useDay, useGetMe } from "@/hooks"
+import { useCreateNewUser, useDay, useGetAllStations, useGetMe } from "@/hooks"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { EMAIL_REGEX, NAME_REGEX, PHONE_REGEX } from "@/constants/regex"
-import React, { useCallback } from "react"
+import React, { useCallback, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { CreateUserReq } from "@/models/user/schema/request"
-import { ButtonStyled, DatePickerStyled, InputStyled } from "@/components/styled"
+import {
+    AutocompleteStyled,
+    ButtonStyled,
+    DatePickerStyled,
+    InputStyled
+} from "@/components/styled"
 import { EnumPicker } from "@/components/modules"
 import { SexLabels } from "@/constants/labels"
-import { Spinner } from "@heroui/react"
+import { AutocompleteItem, Spinner } from "@heroui/react"
+import { BackendError } from "@/models/common/response"
+import { addToast } from "@heroui/toast"
+import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
+import { MapPinAreaIcon } from "@phosphor-icons/react"
 
 export interface CreateUserFormProps {
     isCreateCustomer?: boolean
+    createRoleName?: RoleName
     createMutation: ReturnType<typeof useCreateNewUser>
 }
 
-export function CreateUserForm({ isCreateCustomer = true, createMutation }: CreateUserFormProps) {
+export function CreateUserForm({
+    isCreateCustomer = true,
+    createRoleName,
+    createMutation
+}: CreateUserFormProps) {
     const { t } = useTranslation()
     const { formatDateTime } = useDay({})
     const { data: me, isLoading: isMeLoading } = useGetMe()
 
-    // const {
-    //     data: stations,
-    //     isLoading: isStationsLoading,
-    //     error: stationsError
-    // } = useGetAllStations()
+    const {
+        data: stations,
+        isLoading: isStationsLoading,
+        error: stationsError
+    } = useGetAllStations()
 
     const handleSubmit = useCallback(
         async (value: CreateUserReq) => {
@@ -44,8 +58,8 @@ export function CreateUserForm({ isCreateCustomer = true, createMutation }: Crea
             lastName: "",
             sex: Sex.Male,
             dateOfBirth: "",
-            stationId: me?.station?.id,
-            roleName: isCreateCustomer ? RoleName.Customer : RoleName.Staff
+            stationId: me?.station?.id || stations?.[0].id,
+            roleName: createRoleName
         },
         enableReinitialize: true,
         validationSchema: Yup.object({
@@ -73,14 +87,18 @@ export function CreateUserForm({ isCreateCustomer = true, createMutation }: Crea
         onSubmit: handleSubmit
     })
 
-    // useEffect(() => {
-    //     if (stationsError) {
-    //         const error = stationsError as BackendError
-    //         toast.error(translateWithFallback(t, error.detail))
-    //     }
-    // }, [stationsError, t])
+    useEffect(() => {
+        if (stationsError) {
+            const error = stationsError as BackendError
+            addToast({
+                title: t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
+        }
+    }, [stationsError, t])
 
-    if (isMeLoading) return <Spinner />
+    if (isMeLoading || isStationsLoading) return <Spinner />
 
     return (
         <form onSubmit={formik.handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -171,31 +189,37 @@ export function CreateUserForm({ isCreateCustomer = true, createMutation }: Crea
                 }}
             />
 
-            {!isCreateCustomer && me?.station && (
-                // <AutocompleteStyled
-                //     className="col-span-2"
-                //     label={t("station.station")}
-                //     items={stations}
-                //     startContent={<MapPinAreaIcon className="text-xl" />}
-                //     selectedKey={formik.values.stationId}
-                //     onSelectionChange={async (id) => {
-                //         await formik.setFieldValue("stationId", id)
-                //     }}
-                //     isClearable={false}
-                //     isRequired={!isCreateCustomer}
-                // >
-                //     {(stations ?? []).map((item) => (
-                //         <AutocompleteItem
-                //             key={item.id}
-                //         >{`${item.name} - ${item.address}`}</AutocompleteItem>
-                //     ))}
-                // </AutocompleteStyled>
-                <InputStyled
-                    label={t("station.station")}
-                    value={`${me.station.name} - ${me.station.address}`}
+            {!isCreateCustomer && (
+                <AutocompleteStyled
                     className="col-span-2"
-                    isRequired
-                />
+                    label={t("station.station")}
+                    items={stations}
+                    startContent={<MapPinAreaIcon className="text-xl" />}
+                    selectedKey={formik.values.stationId}
+                    onSelectionChange={async (id) => {
+                        await formik.setFieldValue("stationId", id)
+                    }}
+                    isClearable={false}
+                    isReadOnly={createRoleName !== RoleName.Admin}
+                    isRequired={!isCreateCustomer}
+                    isInvalid={!!(formik.touched.stationId && formik.errors.stationId)}
+                    errorMessage={formik.errors.stationId}
+                    onBlur={() => {
+                        formik.setFieldTouched("stationId")
+                    }}
+                >
+                    {(stations ?? []).map((item) => (
+                        <AutocompleteItem
+                            key={item.id}
+                        >{`${item.name} - ${item.address}`}</AutocompleteItem>
+                    ))}
+                </AutocompleteStyled>
+                // <InputStyled
+                //     label={t("station.station")}
+                //     value={`${me.station.name} - ${me.station.address}`}
+                //     className="col-span-2"
+                //     isRequired
+                // />
             )}
 
             <div className="text-center col-span-2">

@@ -738,6 +738,9 @@
         "sidebar_admin_statistic": "Station Statistic",
         "admin_management": "Admin Management"
     },
+    "super_admin": {
+        "admin_management_title": "Admin Management"
+    },
     "footer": {
         "green_wheel_company_name": "GREEN WHEEL Trading and Service Joint Stock Company",
         "introduction": "Introduction",
