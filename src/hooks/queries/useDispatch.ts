@@ -42,7 +42,6 @@ export const useCreateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => 
 export const useConfirmDispatch = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
-    const router = useRouter()
 
     return useMutation({
         mutationFn: dispatchApi.confirm,
@@ -52,7 +51,6 @@ export const useConfirmDispatch = ({ onSuccess }: { onSuccess?: () => void }) =>
                 exact: false
             })
             onSuccess?.()
-            router.push("/dashboard/dispatchs")
             addToast({
                 title: t("toast.success"),
                 description: t("dispatch.update_success"),

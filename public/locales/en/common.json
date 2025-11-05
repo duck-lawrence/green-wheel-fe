@@ -979,8 +979,8 @@
         "only_pending_can_approve_reject": "Only pending dispatch can be approved or rejected",
         "only_approved_can_receive": "Only approved dispatch can be received",
         "only_pending_can_cancel": "Only pending dispatch can be cancelled",
-        "only_approved_can_confirm": "Only approved dispatch can be confirmed",
-        "only_confirm_can_receive": "Only confirmed dispatch can be received",
+        "only_approved_can_assign": "Only approved dispatch can be assigned",
+        "only_assign_can_receive": "Only assigned dispatch can be received",
 
         "must_be_to_station_admin": "Must be to station admin to approve",
         "must_be_from_station_admin": "Must be from station admin to reject",
@@ -991,6 +991,7 @@
         "reject": "Reject",
         "open_approve_page": "Open approve page",
         "open_assign_page": "Open assign page",
+        "valid_station": "Valid stations for this dispatch request",
         "no_valid_station": "No valid station for this dispatch request"
     },
     "document_preview": {

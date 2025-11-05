@@ -2,7 +2,6 @@
 
 import React, { useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import { Paperclip } from "@phosphor-icons/react"
 import { Skeleton, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { EyeIcon } from "lucide-react"
@@ -10,13 +9,10 @@ import { TableStyled, ButtonIconStyled, AvatarStyled } from "@/components"
 import { useUserHelper } from "@/hooks"
 import { DEFAULT_AVATAR_URL } from "@/constants/constants"
 
-type DocumentKey = "citizen" | "driver"
-
 type StaffUserManagementProps = {
     staff: UserProfileViewRes[]
     isLoading?: boolean
     emptyMessage?: string
-    onPreviewDocument?: (payload: { user: UserProfileViewRes; type: DocumentKey }) => void
     onEditStaff?: (staff: UserProfileViewRes) => void
     isRefetching?: boolean
     refetchingMessage?: string
@@ -26,7 +22,6 @@ export function StaffTable({
     staff,
     isLoading = false,
     emptyMessage,
-    onPreviewDocument,
     onEditStaff,
     isRefetching = false,
     refetchingMessage
@@ -56,7 +51,7 @@ export function StaffTable({
 
     const renderBody = () => {
         if (isLoading) {
-            return Array.from({ length: 5 }).map((_, index) => (
+            return Array.from({ length: 4 }).map((_, index) => (
                 <TableRow key={`skeleton-${index}`} className="h-20">
                     <TableCell className="text-center" colSpan={5}>
                         <Skeleton className="h-12 w-full rounded-xl" />
@@ -69,7 +64,7 @@ export function StaffTable({
             return (
                 <TableRow>
                     <TableCell
-                        colSpan={5}
+                        colSpan={4}
                         className="px-6 py-10 text-center text-sm text-slate-500"
                     >
                         {emptyMessage ?? t("staff_management.empty_state")}
@@ -78,7 +73,7 @@ export function StaffTable({
             )
         }
 
-        return documentsByStaff.map(({ staff: item, documents }) => {
+        return documentsByStaff.map(({ staff: item }) => {
             const displayName = toFullName({
                 firstName: item.firstName,
                 lastName: item.lastName
@@ -111,7 +106,7 @@ export function StaffTable({
                     <TableCell className="text-center text-sm text-slate-700">
                         {item.station?.name || ""}
                     </TableCell>
-                    <TableCell className="text-center text-sm">
+                    {/* <TableCell className="text-center text-sm">
                         <div className="flex flex-col gap-2">
                             {documents.map((doc) =>
                                 doc.url ? (
@@ -137,7 +132,7 @@ export function StaffTable({
                                 )
                             )}
                         </div>
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell className="text-center">
                         <ButtonIconStyled className="p-4" onPress={() => onEditStaff?.(item)}>
                             <EyeIcon />
@@ -160,9 +155,6 @@ export function StaffTable({
                     </TableColumn>
                     <TableColumn className="text-center text-xs font-semibold uppercase tracking-wide text-slate-600">
                         {t("table.station")}
-                    </TableColumn>
-                    <TableColumn className="text-center text-xs font-semibold uppercase tracking-wide text-slate-600">
-                        {t("table.documents")}
                     </TableColumn>
                     <TableColumn className="text-center text-xs font-semibold uppercase tracking-wide text-slate-600">
                         {t("table.action")}

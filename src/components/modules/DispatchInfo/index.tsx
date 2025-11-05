@@ -60,42 +60,44 @@ export function DispatchInfo({ dispatch }: { dispatch: DispatchViewRes }) {
                 </div>
             </SectionStyled>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full mb-10">
-                <SectionStyled
-                    title={t("dispatch.requested_staffs_vehicles")}
-                    sectionClassName="w-full"
-                >
-                    <div className="flex gap-3">
-                        <NumberInputStyled
-                            label={t("dispatch.number_staff")}
-                            className="w-50"
-                            value={dispatch.description?.numberOfStaff}
-                            isReadOnly
-                        />
-                        <div className="hidden sm:block w-[5px] bg-default self-stretch"></div>
-                        <TableStyled
-                            classNames={{
-                                base: "max-h-[250px] overflow-scroll"
-                            }}
-                        >
-                            <TableHeader>
-                                <TableColumn className="w-sm">{t("vehicle.model_id")}</TableColumn>
-                                <TableColumn>{t("vehicle_model.name")}</TableColumn>
-                                <TableColumn>{t("common.quantity")}</TableColumn>
-                            </TableHeader>
-                            <TableBody>
-                                {(dispatch.description?.vehicles || []).map((item) => (
-                                    <TableRow key={item.modelId}>
-                                        <TableCell>{item.modelId}</TableCell>
-                                        <TableCell>{item.modelName}</TableCell>
-                                        <TableCell>{item.quantity}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </TableStyled>
-                    </div>
-                </SectionStyled>
-            </div>
+            <SectionStyled
+                title={t("dispatch.requested_staffs_vehicles")}
+                sectionClassName="w-full"
+            >
+                <div className="flex gap-3 flex-wrap sm:flex-nowrap">
+                    <NumberInputStyled
+                        label={t("dispatch.number_staff")}
+                        className="w-50"
+                        value={dispatch.description?.numberOfStaffs}
+                        isReadOnly
+                    />
+                    <div className="hidden sm:block w-[5px] bg-default self-stretch"></div>
+                    <TableStyled
+                        classNames={{
+                            base: "max-h-[250px] overflow-scroll"
+                        }}
+                    >
+                        <TableHeader>
+                            <TableColumn className="w-sm hidden md:table-cell">
+                                {t("vehicle.model_id")}
+                            </TableColumn>
+                            <TableColumn>{t("vehicle_model.name")}</TableColumn>
+                            <TableColumn>{t("common.quantity")}</TableColumn>
+                        </TableHeader>
+                        <TableBody>
+                            {(dispatch.description?.vehicles || []).map((item) => (
+                                <TableRow key={item.modelId}>
+                                    <TableCell className="hidden md:table-cell">
+                                        {item.modelId}
+                                    </TableCell>
+                                    <TableCell>{item.modelName}</TableCell>
+                                    <TableCell>{item.quantity}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </TableStyled>
+                </div>
+            </SectionStyled>
         </>
     )
 }

@@ -37,6 +37,6 @@ export interface DispatchDescriptionVehicleDto {
 }
 
 export interface DispatchDescriptionDto {
-    numberOfStaff: number
+    numberOfStaffs: number
     vehicles?: DispatchDescriptionVehicleDto[]
 }

@@ -4,7 +4,7 @@ export type CreateDispatchReq = {
     // description?: string
     // fromStationId: string
     vehicles: VehicleDispatchReq[]
-    numberOfStaff?: number
+    numberOfStaffs?: number
 }
 
 export type UpdateApproveDispatchReq = {
@@ -28,7 +28,7 @@ export type UpdateDispatchReq = {
 
 export type VehicleDispatchReq = {
     modelId: string
-    numberOfVehicle: number
+    quantity: number
 }
 
 export type DispatchQueryParams = {

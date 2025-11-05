@@ -28,6 +28,7 @@ export type UpdateBankAccountReq = {
 
 export type UserFilterParams = {
     roleName?: RoleName
+    stationId?: string
     phone?: string
     citizenIdNumber?: string
     driverLicenseNumber?: string

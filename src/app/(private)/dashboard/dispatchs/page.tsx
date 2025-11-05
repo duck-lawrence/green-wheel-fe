@@ -131,7 +131,7 @@ export default function DispatchPage() {
                                                 {toStation}
                                             </TableCell>
                                             <TableCell className="text-center text-gray-700">
-                                                {item.description?.numberOfStaff || 0}
+                                                {item.description?.numberOfStaffs || 0}
                                             </TableCell>
                                             <TableCell className="text-center text-gray-700">
                                                 {item.description?.vehicles?.reduce(

@@ -9,6 +9,7 @@ import {
 } from "@/components"
 import { DispatchRequestStatus, RoleName } from "@/constants/enum"
 import { useGetDispatchById, useGetMe, useUpdateDispatch } from "@/hooks"
+import { Spinner } from "@heroui/react"
 import { UserSwitch, Car } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
@@ -57,13 +58,11 @@ export default function DispatchDetailPage() {
                     icon={UserSwitch}
                     sectionClassName="w-full mb-0"
                 >
-                    <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
-                        <TableSelectionStaff
-                            stationId={stationIdNow}
-                            staffs={dispatch.dispatchRequestStaffs}
-                            selectionBehavior="replace"
-                        />
-                    </div>
+                    <TableSelectionStaff
+                        stationId={stationIdNow}
+                        staffs={dispatch.dispatchRequestStaffs}
+                        selectionBehavior="replace"
+                    />
                 </SectionStyled>
 
                 <div className="hidden sm:block w-[5px] bg-default self-stretch"></div>
@@ -73,75 +72,77 @@ export default function DispatchDetailPage() {
                     icon={Car}
                     sectionClassName="w-full mb-0"
                 >
-                    <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
-                        <TableSelectionVehicle
-                            stationId={stationIdNow}
-                            vehicles={dispatch.dispatchRequestVehicles}
-                            selectionBehavior="replace"
-                        />
-                    </div>
+                    <TableSelectionVehicle
+                        stationId={stationIdNow}
+                        vehicles={dispatch.dispatchRequestVehicles}
+                        selectionBehavior="replace"
+                    />
                 </SectionStyled>
             </div>
 
-            <div className="flex flex-wrap gap-3 justify-center">
-                {pendingDisplay && (
-                    <>
-                        <Link href={`/dashboard/dispatchs/${dispatch.id}/approve`}>
-                            <ButtonStyled
-                                className="btn-gradient px-6 py-2"
-                                // onPress={() => handleUpdateDispatch(DispatchRequestStatus.Assigned)}
-                            >
-                                {t("dispatch.open_approve_page")}
-                            </ButtonStyled>
-                        </Link>
+            {updateDispatch.isPending ? (
+                <Spinner />
+            ) : (
+                <div className="flex flex-wrap gap-3 justify-center">
+                    {pendingDisplay && (
+                        <>
+                            <Link href={`/dashboard/dispatchs/${dispatch.id}/approve`}>
+                                <ButtonStyled
+                                    className="btn-gradient px-6 py-2"
+                                    // onPress={() => handleUpdateDispatch(DispatchRequestStatus.Assigned)}
+                                >
+                                    {t("dispatch.open_approve_page")}
+                                </ButtonStyled>
+                            </Link>
 
+                            <ButtonStyled
+                                variant="ghost"
+                                color="danger"
+                                className="font-semibold px-6 py-2 rounded-xl transition-all duration-300"
+                                onPress={() => handleUpdateDispatch(DispatchRequestStatus.Rejected)}
+                            >
+                                {t("dispatch.reject")}
+                            </ButtonStyled>
+                        </>
+                    )}
+                    {cancelDisplay && (
                         <ButtonStyled
                             variant="ghost"
-                            color="danger"
-                            className="font-semibold px-6 py-2 rounded-xl transition-all duration-300"
-                            onPress={() => handleUpdateDispatch(DispatchRequestStatus.Rejected)}
+                            className="font-semibold px-6 py-2 rounded-lg transition-all duration-300"
+                            onPress={() => handleUpdateDispatch(DispatchRequestStatus.Cancelled)}
                         >
-                            {t("dispatch.reject")}
+                            {t("enum.cancelled")}
                         </ButtonStyled>
-                    </>
-                )}
-                {cancelDisplay && (
-                    <ButtonStyled
-                        variant="ghost"
-                        className="font-semibold px-6 py-2 rounded-lg transition-all duration-300"
-                        onPress={() => handleUpdateDispatch(DispatchRequestStatus.Cancelled)}
-                    >
-                        {t("enum.cancelled")}
-                    </ButtonStyled>
-                )}
-                {approvedDisplay && (
-                    <>
-                        <Link href={`/dashboard/dispatchs/${dispatch.id}/assigne`}>
-                            <ButtonStyled
-                                className="btn-gradient px-6 py-2"
-                                // onPress={() => handleUpdateDispatch(DispatchRequestStatus.Assigned)}
-                            >
-                                {t("dispatch.open_assign_page")}
-                            </ButtonStyled>
-                        </Link>
-                        {/* <ButtonStyled
+                    )}
+                    {approvedDisplay && (
+                        <>
+                            <Link href={`/dashboard/dispatchs/${dispatch.id}/assigne`}>
+                                <ButtonStyled
+                                    className="btn-gradient px-6 py-2"
+                                    // onPress={() => handleUpdateDispatch(DispatchRequestStatus.Assigned)}
+                                >
+                                    {t("dispatch.open_assign_page")}
+                                </ButtonStyled>
+                            </Link>
+                            {/* <ButtonStyled
                             variant="ghost"
                             className="font-semibold px-6 py-2 rounded-lg transition-all duration-300"
                             onPress={() => handleUpdateDispatch(DispatchRequestStatus.Cancelled)}
                         >
                             {t("enum.cancelled")}
                         </ButtonStyled> */}
-                    </>
-                )}
-                {assignedDisplay && (
-                    <ButtonStyled
-                        className="btn-gradient px-6 py-2"
-                        onPress={() => handleUpdateDispatch(DispatchRequestStatus.Received)}
-                    >
-                        {t("enum.received")}
-                    </ButtonStyled>
-                )}
-            </div>
+                        </>
+                    )}
+                    {assignedDisplay && (
+                        <ButtonStyled
+                            className="btn-gradient px-6 py-2"
+                            onPress={() => handleUpdateDispatch(DispatchRequestStatus.Received)}
+                        >
+                            {t("enum.received")}
+                        </ButtonStyled>
+                    )}
+                </div>
+            )}
         </>
     )
 }

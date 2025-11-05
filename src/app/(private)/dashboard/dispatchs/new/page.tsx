@@ -39,7 +39,7 @@ export default function DispatchCreatePage() {
     //     pagination: { pageSize: 100 },
     //     enabled: stationDispatch?.[0]?.id !== undefined
     // })
-    // const maxNumberOfStaffs = staffs ? staffs.items.length - 1 : 0
+    // const maxNumberOfStaffss = staffs ? staffs.items.length - 1 : 0
 
     // const { data: vehicles } = useGetAllVehicles({
     //     params: {
@@ -61,7 +61,7 @@ export default function DispatchCreatePage() {
             await createDispatch.mutateAsync({
                 ...value,
                 vehicles: value.vehicles.filter(
-                    (v) => v.numberOfVehicle > 0 && selectVehicles.includes(v.modelId)
+                    (v) => v.quantity > 0 && selectVehicles.includes(v.modelId)
                 )
             })
         },
@@ -71,7 +71,7 @@ export default function DispatchCreatePage() {
     const validationSchema = useMemo(() => {
         return Yup.object().shape({
             // fromStationId: Yup.string().required(t("dispatch.from_station_require")),
-            numberOfStaff: Yup.number()
+            numberOfStaffs: Yup.number()
                 .typeError(t("validation.number_type_require"))
                 .integer(t("validation.integer_require"))
                 .required(t("dispatch.number_staff_require"))
@@ -80,7 +80,7 @@ export default function DispatchCreatePage() {
             vehicles: Yup.array().of(
                 Yup.object().shape({
                     modelId: Yup.string().required(t("dispatch.vehicle_model_require")),
-                    numberOfVehicle: Yup.number()
+                    quantity: Yup.number()
                         .typeError(t("validation.number_type_require"))
                         .integer(t("validation.integer_require"))
                         .required(t("dispatch.number_vehicle_require"))
@@ -93,10 +93,10 @@ export default function DispatchCreatePage() {
     const formik = useFormik<CreateDispatchReq>({
         initialValues: {
             // fromStationId: stationDispatch?.[0]?.id || "",
-            numberOfStaff: 0,
+            numberOfStaffs: 0,
             vehicles: (models || []).map((m) => ({
                 modelId: m.id,
-                numberOfVehicle: 0
+                quantity: 0
             }))
         },
         enableReinitialize: true,
@@ -105,8 +105,8 @@ export default function DispatchCreatePage() {
     })
 
     const isSubmitable = useMemo(() => {
-        return formik.isValid && (formik.values.numberOfStaff !== 0 || selectVehicles.length > 0)
-    }, [formik.isValid, formik.values.numberOfStaff, selectVehicles.length])
+        return formik.isValid && (formik.values.numberOfStaffs !== 0 || selectVehicles.length > 0)
+    }, [formik.isValid, formik.values.numberOfStaffs, selectVehicles.length])
 
     if (isModelsLoading) return <SpinnerStyled />
 
@@ -146,15 +146,17 @@ export default function DispatchCreatePage() {
                         label={t("dispatch.number_staff")}
                         className="max-w-60 h-20 mr-0"
                         minValue={0}
-                        // maxValue={maxNumberOfStaffs}
-                        value={formik.values.numberOfStaff}
-                        // endContent={`/${maxNumberOfStaffs}`}
+                        // maxValue={maxNumberOfStaffss}
+                        value={formik.values.numberOfStaffs}
+                        // endContent={`/${maxNumberOfStaffss}`}
                         onValueChange={(val) => {
-                            formik.setFieldValue("numberOfStaff", val)
+                            formik.setFieldValue("numberOfStaffs", val)
                         }}
-                        onFocusChange={() => formik.setFieldTouched("numberOfStaff", true)}
-                        isInvalid={!!(formik.touched.numberOfStaff && formik.errors.numberOfStaff)}
-                        errorMessage={formik.errors.numberOfStaff}
+                        onFocusChange={() => formik.setFieldTouched("numberOfStaffs", true)}
+                        isInvalid={
+                            !!(formik.touched.numberOfStaffs && formik.errors.numberOfStaffs)
+                        }
+                        errorMessage={formik.errors.numberOfStaffs}
                         // hideStepper
                     />
                 </SectionStyled>
@@ -162,14 +164,12 @@ export default function DispatchCreatePage() {
 
             {/* Tables */}
             <SectionStyled title={t("dispatch.list_vehicle")} icon={Car} sectionClassName="mb-4">
-                <div className="border border-gray-200 rounded-xl p-4 shadow-sm bg-gray-50/60">
-                    <TableSelectionVehicleModel
-                        vehicleModels={models || []}
-                        // vehicles={vehicles?.items || []}
-                        formik={formik}
-                        onChangeSelected={setSelectVehicles}
-                    />
-                </div>
+                <TableSelectionVehicleModel
+                    vehicleModels={models || []}
+                    // vehicles={vehicles?.items || []}
+                    formik={formik}
+                    onChangeSelected={setSelectVehicles}
+                />
             </SectionStyled>
 
             <div className="flex justify-center items-center">
