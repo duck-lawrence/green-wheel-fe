@@ -1,8 +1,9 @@
 import axiosInstance from "@/utils/axios"
-import { requestWrapper } from "@/utils/helpers/axiosHelper"
+import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 import {
     CustomerAnonymousRes,
     CustomerRes,
+    InvoiceByYearRes,
     RevenueByYearRes,
     TotalRevenueRes,
     TotalStatisticRes,
@@ -11,42 +12,61 @@ import {
 } from "../models/statistic/schema/response"
 
 export const statisticApi = {
-    getCustomerStatistic: () =>
-        requestWrapper<CustomerRes>(async () => {
-            const res = await axiosInstance.get("/statistic/customers")
+    getCustomerStatistic: (query: { stationId: string }) => {
+        return requestWrapper<CustomerRes>(async () => {
+            const params = buildQueryParams(query)
+            const res = await axiosInstance.get("/statistic/customers", { params })
+            console.log("params", params)
             return res.data
-        }),
+        })
+    },
 
-    getAnonymousStatistic: () =>
+    getAnonymousStatistic: (query: { stationId: string }) =>
         requestWrapper<CustomerAnonymousRes>(async () => {
-            const res = await axiosInstance.get("/statistic/customers/anonymous")
+            const params = buildQueryParams(query)
+            const res = await axiosInstance.get("/statistic/customers/anonymous", { params })
             return res.data
         }),
-    getTotalRevenueStatistic: () =>
+
+    getTotalRevenueStatistic: (query: { stationId: string }) =>
         requestWrapper<TotalRevenueRes>(async () => {
-            const res = await axiosInstance.get("/statistic/revenue")
+            const params = buildQueryParams(query)
+            const res = await axiosInstance.get("/statistic/revenue", { params })
             return res.data
         }),
-    getTotalInvoiceStatistic: () =>
+
+    getTotalInvoiceStatistic: (query: { stationId: string }) =>
         requestWrapper<TotalStatisticRes>(async () => {
-            const res = await axiosInstance.get("/statistic/invoices")
+            const params = buildQueryParams(query)
+            const res = await axiosInstance.get("/statistic/invoices", { params })
             return res.data
         }),
 
-    getVehicleStatistic: () =>
+    getVehicleStatistic: (query: { stationId: string }) =>
         requestWrapper<VehicleTotalRes>(async () => {
-            const res = await axiosInstance.get("/statistic/vehicles")
+            const params = buildQueryParams(query)
+            const res = await axiosInstance.get("/statistic/vehicles", { params })
             return res.data
         }),
 
-    getVehicleModelStatistic: () =>
+    getVehicleModelStatistic: (query: { stationId: string }) =>
         requestWrapper<VehicleModelStatisticRes[]>(async () => {
-            const res = await axiosInstance.get("/statistic/vehicle-models")
+            const params = buildQueryParams(query)
+            const res = await axiosInstance.get("/statistic/vehicle-models", { params })
             return res.data
         }),
-    getRevenueByYear: () =>
+
+    getRevenueByYear: (query: { stationId: string }) =>
         requestWrapper<RevenueByYearRes[]>(async () => {
-            const res = await axiosInstance.get("/statistic/revenue-by-year")
+            const params = buildQueryParams(query)
+            const res = await axiosInstance.get("/statistic/revenue-by-year", { params })
+            return res.data
+        }),
+
+    getInvoiceByYear: (query: { stationId: string }) =>
+        requestWrapper<InvoiceByYearRes[]>(async () => {
+            const params = buildQueryParams(query)
+            const res = await axiosInstance.get("/statistic/invoice-by-year", { params })
             return res.data
         })
 }

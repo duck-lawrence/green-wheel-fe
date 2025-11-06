@@ -59,7 +59,7 @@ export const authApi = {
         confirmNewPassword: string
     }) =>
         requestWrapper<void>(async () => {
-            await axiosInstance.put("/auth/forgot-password/reset", {
+            await axiosInstance.put("/auth/reset-password", {
                 password: newPassword,
                 confirmPassword: confirmNewPassword
             })

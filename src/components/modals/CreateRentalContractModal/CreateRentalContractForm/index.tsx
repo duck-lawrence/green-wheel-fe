@@ -31,6 +31,7 @@ import { CheckboxStyled, SelectUserModal } from "@/components"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { addToast } from "@heroui/toast"
 import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
+import Link from "next/link"
 
 type FormValues = {
     fullName: string
@@ -62,11 +63,13 @@ export const CreateRentalContractForm = ({
     const { t } = useTranslation()
     const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
     const { toFullName, isUserValidForBooking } = useUserHelper()
-    const handleOpenPolicy = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
-        e.preventDefault()
-        e.stopPropagation()
-        window.open("/policy", "_blank", "noopener,noreferrer")
-    }, [])
+
+    // const handleOpenPolicy = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    //     e.preventDefault()
+    //     e.stopPropagation()
+    //     window.open("/policy", "_blank", "noopener,noreferrer")
+    // }, [])
+
     const [mounted, setMounted] = useState(false)
     const createContract = useCreateRentalContract({ onSuccess })
     const createContractManual = useCreateContractManual({ onSuccess })
@@ -342,13 +345,14 @@ export const CreateRentalContractForm = ({
                                         className="mt-1"
                                     >
                                         {t("car_rental.agree_terms")}{" "}
-                                        <a
+                                        <Link
                                             href="/policy"
-                                            onClick={handleOpenPolicy}
-                                            className="text-blue-600 hover:underline pointer-events-auto relative z-10"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-sky-500 hover:text-sky-700 hover:underline pointer-events-auto relative z-10 font-bold"
                                         >
-                                            {t("car_rental.policy_terms")}
-                                        </a>{" "}
+                                            {t("car_rental.policy_terms")}{" "}
+                                        </Link>
                                         {/* </Link>{" "}
                                         {t("car_rental.of_green_wheel")}
                                     </CheckboxStyled>

@@ -88,7 +88,7 @@ export function Stations() {
 
             {/* Grid stations */}
             <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto px-6 ">
-                {newStation.map((s, i) => (
+                {newStation.slice(0, 2).map((s, i) => (
                     <motion.div
                         key={s.id}
                         initial={{ opacity: 0, y: 80 }}

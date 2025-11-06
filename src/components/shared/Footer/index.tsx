@@ -63,26 +63,14 @@ export function Footer() {
                 <div>
                     <h3 className="font-semibold mb-4 text-white text-lg">{t("footer.policy")}</h3>
                     <ul className="space-y-3 text-sm">
-                        <li>
-                            <Link href="#" className="hover:text-primary duration-200">
-                                {t("footer.policy_and_regulations")}
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href="#" className="hover:text-primary duration-200">
-                                {t("footer.operating_regulations")}
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href="#" className="hover:text-primary duration-200">
-                                {t("footer.information_security")}
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href="#" className="hover:text-primary duration-200">
-                                {t("footer.dispute_resolution")}
-                            </Link>
-                        </li>
+                        <Link
+                            href="/policy"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-primary duration-200"
+                        >
+                            {t("car_rental.policy_terms")}
+                        </Link>
                     </ul>
                 </div>
 

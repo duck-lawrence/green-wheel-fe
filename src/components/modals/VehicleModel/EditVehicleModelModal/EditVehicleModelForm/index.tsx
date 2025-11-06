@@ -104,55 +104,46 @@ export function VehicleModelEditForm({
             costPerDay: Yup.number()
                 .transform(numericTransform)
                 .typeError(t("vehicle_model.cost_per_day_require"))
-                .required(t("vehicle_model.cost_per_day_require"))
-                .moreThan(0, t("vehicle_model.cost_per_day_positive")),
+                .required(t("vehicle_model.cost_per_day_require")),
             depositFee: Yup.number()
                 .transform(numericTransform)
                 .typeError(t("vehicle_model.deposit_fee_require"))
-                .required(t("vehicle_model.deposit_fee_require"))
-                .moreThan(0, t("vehicle_model.deposit_fee_positive")),
+                .required(t("vehicle_model.deposit_fee_require")),
             reservationFee: Yup.number()
                 .transform(numericTransform)
                 .typeError(t("vehicle_model.reservation_fee_require"))
-                .required(t("vehicle_model.reservation_fee_require"))
-                .moreThan(0, t("vehicle_model.reservation_fee_positive")),
+                .required(t("vehicle_model.reservation_fee_require")),
             seatingCapacity: Yup.number()
                 .transform(numericTransform)
                 .typeError(t("vehicle_model.seating_capacity_require"))
-                .required(t("vehicle_model.seating_capacity_require"))
-                .moreThan(0, t("vehicle_model.seating_capacity_can_not_negative")),
+                .required(t("vehicle_model.seating_capacity_require")),
 
             numberOfAirbags: Yup.number()
                 .transform(numericTransform)
                 .typeError(t("vehicle_model.airbag_require"))
-                .required(t("vehicle_model.airbag_require"))
-                .moreThan(0, t("vehicle_model.airbag_can_not_negative")),
+                .required(t("vehicle_model.airbag_require")),
 
             motorPower: Yup.number()
                 .transform(numericTransform)
                 .typeError(t("vehicle_model.motor_power_require"))
                 .required(t("vehicle_model.motor_power_require"))
-                .moreThan(0, t("vehicle_model.motor_power_can_not_negative"))
                 .lessThan(9999.99, t("vehicle_model.motor_power_max")),
 
             batteryCapacity: Yup.number()
                 .transform(numericTransform)
                 .typeError(t("vehicle_model.battery_capacity_require"))
                 .required(t("vehicle_model.battery_capacity_require"))
-                .moreThan(0, t("vehicle_model.battery_capacity_can_not_negative"))
                 .lessThan(9999.99, t("vehicle_model.battery_capacity_max")),
 
             ecoRangeKm: Yup.number()
                 .transform(numericTransform)
                 .typeError(t("vehicle_model.eco_range_km_require"))
-                .required(t("vehicle_model.eco_range_km_require"))
-                .moreThan(0, t("vehicle_model.eco_range_km_can_not_negative")),
+                .required(t("vehicle_model.eco_range_km_require")),
 
             sportRangeKm: Yup.number()
                 .transform(numericTransform)
                 .typeError(t("vehicle_model.sport_range_km_require"))
                 .required(t("vehicle_model.sport_range_km_require"))
-                .moreThan(0, t("vehicle_model.sport_range_km_can_not_negative"))
         }),
         onSubmit: handleSubmit
     })

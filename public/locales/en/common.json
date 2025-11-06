@@ -298,7 +298,8 @@
         "feedback": "Feedback",
         "content": "Content",
         "station_feedbacks": "Station Feedbacks",
-        "country": "Country"
+        "country": "Country",
+        "address": "Address"
     },
     "contral_form": {
         "full_name_require": "Full name is required",
@@ -507,7 +508,8 @@
         "invalid_start_date": "Pick-up time must be at least 3 hours from now and within 7 AM - 5 PM",
         "return_date_require": "Please select return date and time",
         "invalid_end_date_range": "Vehicle return date must be between 7 AM - 5 PM",
-        "min_end_date": "The return day must be after the pick-up day at least 24 hours"
+        "min_end_date": "The return day must be after the pick-up day at least 24 hours",
+        "no_suitable_vehicle_found": "No suitable vehicle found."
     },
     "enum": {
         "male": "Male",
@@ -735,7 +737,9 @@
         "dispatch": "Dispatchs",
         "sidebar_vehicle_management": "Vehicles",
         "system_setting": "System Settings",
-        "sidebar_vehicle_components": "Vehicle Components"
+        "sidebar_vehicle_components": "Vehicle Components",
+        "sidebar_admin_statistic": "Station Statistic",
+        "admin_management": "Admin Management"
     },
     "super_admin": {
         "admin_management_title": "Admin Management"
@@ -1204,7 +1208,10 @@
         "failed_to_calculate_customer_change": "Failed to calculate customer change",
         "failed_to_calculate_invoice_change": "Failed to calculate invoice change",
         "total_revenue": "Total Revenue",
-        "revenue": "Revenue"
+        "revenue": "Revenue",
+        "invoices": "Invoices",
+        "total_invoices": "Total Invoices",
+        "monthly_invoices": "Monthly Invoices"
     },
     "system": {
         "system_setting": "System Setting",
@@ -1228,7 +1235,14 @@
         "segment_name": "Segment name",
         "create_vehicle_segment_description": "Add a new vehicle segment to the system.",
         "update_vehicle_segment_description": "Modify existing vehicle segment information.",
-        "vehicle_segment_description_placeholder": "Describe the vehicle segment..."
+        "vehicle_segment_description_placeholder": "Describe the vehicle segment...",
+        "station_address": "Station Address",
+        "station": "Station",
+        "create_station": "Create Station",
+        "create_station_description": "Create a new station to expand the rental network.",
+        "update_station": "Update Station",
+        "update_station_description": "Modify existing station information.",
+        "station_name": "Station Name"
     },
     "business_variable": {
         "not_found": "Setting not found",
