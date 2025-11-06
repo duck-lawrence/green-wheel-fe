@@ -32,7 +32,7 @@ export const useLogin = ({
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -59,7 +59,7 @@ export const useLogout = ({ onSuccess }: { onSuccess?: () => void }) => {
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -92,7 +92,7 @@ export const useLoginGoogle = ({
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -109,7 +109,7 @@ export const useRegister = ({ onSuccess }: { onSuccess?: () => void }) => {
         onSuccess: onSuccess,
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -125,7 +125,7 @@ export const useRegisterVerify = ({ onSuccess }: { onSuccess?: () => void }) => 
         onSuccess: onSuccess,
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -152,7 +152,7 @@ export const useRegisterComplete = ({ onSuccess }: { onSuccess?: () => void }) =
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -169,7 +169,7 @@ export const useForgotPassword = ({ onSuccess }: { onSuccess?: () => void }) => 
         onSuccess: onSuccess,
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -185,7 +185,7 @@ export const useForgotPasswordVerify = ({ onSuccess }: { onSuccess?: () => void 
         onSuccess: onSuccess,
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -208,7 +208,7 @@ export const useResetPassword = ({ onSuccess }: { onSuccess?: () => void }) => {
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -235,7 +235,7 @@ export const useChangePassword = ({ onSuccess }: { onSuccess?: () => void }) => 
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })

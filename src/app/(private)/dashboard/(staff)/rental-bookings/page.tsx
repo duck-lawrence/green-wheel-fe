@@ -58,7 +58,7 @@ export default function StaffContractsPage() {
         if (getStationsError) {
             const error = getStationsError as BackendError
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })

@@ -2,7 +2,7 @@
 
 import { NumberInputStyled, TableStyled } from "@/components"
 import { CreateDispatchReq } from "@/models/dispatch/schema/request"
-import { VehicleModelViewRes, VehicleViewRes } from "@/models/vehicle/schema/response"
+import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { useFormik } from "formik"
 import React, { Key, useState } from "react"
@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next"
 type TableSelectionVehicleModelProps = {
     selectionBehavior?: "toggle" | "replace"
     vehicleModels: VehicleModelViewRes[]
-    vehicles: VehicleViewRes[]
+    // vehicles: VehicleViewRes[]
     formik: ReturnType<typeof useFormik<CreateDispatchReq>>
     onChangeSelected?: (selected: string[]) => void
 }
@@ -20,7 +20,7 @@ export function TableSelectionVehicleModel({
     selectionBehavior,
     // stationId,
     vehicleModels,
-    vehicles,
+    // vehicles,
     formik,
     onChangeSelected
 }: TableSelectionVehicleModelProps) {
@@ -29,7 +29,7 @@ export function TableSelectionVehicleModel({
     const [selectedKeys, setSelectedKeys] = useState<string[]>([])
 
     const rows = vehicleModels
-        .filter((m) => vehicles.filter((v) => v.model.id === m.id).length ?? 0 > 0)
+        // .filter((m) => vehicles.filter((v) => v.model.id === m.id).length ?? 0 > 0)
         .map((item, index) => ({
             id: item.id,
             index: index,
@@ -46,7 +46,7 @@ export function TableSelectionVehicleModel({
             label: t("table.vehicle_model").toUpperCase()
         },
         {
-            key: "numberOfVehicle",
+            key: "quantity",
             label: t("dispatch.number_vehicle").toUpperCase()
         }
     ]
@@ -75,18 +75,21 @@ export function TableSelectionVehicleModel({
 
                         handleSelectionChange(selected)
                     }}
+                    classNames={{
+                        base: "max-h-[400px] overflow-scroll"
+                    }}
                 >
                     <TableHeader columns={columns}>
                         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                     </TableHeader>
-                    <TableBody items={rows}>
+                    <TableBody items={rows} emptyContent={t("dispatch.no_vehicles_requested")}>
                         {(item) => {
                             const error =
-                                formik.touched.vehicles?.[item.index]?.numberOfVehicle &&
-                                (formik.errors.vehicles?.[item.index] as any)?.numberOfVehicle
+                                formik.touched.vehicles?.[item.index]?.quantity &&
+                                (formik.errors.vehicles?.[item.index] as any)?.quantity
 
-                            const maxNumberOfVehicles =
-                                vehicles.filter((v) => v.model.id === item.id).length - 1
+                            // const maxquantitys =
+                            //     vehicles.filter((v) => v.model.id === item.id).length - 1
 
                             return (
                                 <TableRow key={item.id}>
@@ -96,25 +99,23 @@ export function TableSelectionVehicleModel({
                                         <NumberInputStyled
                                             // label={t("dispatch.number_vehicle")}
                                             minValue={0}
-                                            maxValue={maxNumberOfVehicles}
+                                            // maxValue={maxquantitys}
                                             className="w-full"
                                             classNames={{
                                                 inputWrapper: "h-10"
                                             }}
-                                            value={
-                                                formik.values.vehicles[item.index]?.numberOfVehicle
-                                            }
-                                            endContent={`/${maxNumberOfVehicles}`}
+                                            value={formik.values.vehicles[item.index]?.quantity}
+                                            // endContent={`/${maxquantitys}`}
                                             onValueChange={(val) => {
                                                 const num = Number(val)
                                                 formik.setFieldValue(
-                                                    `vehicles[${item.index}].numberOfVehicle`,
+                                                    `vehicles[${item.index}].quantity`,
                                                     isNaN(num) ? undefined : num
                                                 )
                                             }}
                                             onBlur={() =>
                                                 formik.setFieldTouched(
-                                                    `vehicles[${item.index}].numberOfVehicle`,
+                                                    `vehicles[${item.index}].quantity`,
                                                     true
                                                 )
                                             }

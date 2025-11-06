@@ -260,6 +260,7 @@
         "logout": "Logout"
     },
     "table": {
+        "empty": "Nothing to display",
         "order": "Order",
         "vehicle_model": "Vehicle Model",
         "pickup_time": "Pickup Time",
@@ -515,7 +516,7 @@
         "female": "Female",
         "pending": "Pending",
         "approved": "Approved",
-        "confirm_approved": "Confirm Approved",
+        "assign": "Assign",
         "rejected": "Rejected",
         "received": "Received",
         "paid": "Paid",
@@ -969,17 +970,22 @@
         "number_vehicle_require": "Number of vehicles is required",
         "number_vehicle_min": "Number of vehicles must be at least 1",
 
+        "invalid_number_of_staffs": "Number of staffs is less or greater than the required number",
         "staff_not_enought_in_from_station": "Number of staffs is not enough in from station",
+
         "vehicle_model_require": "Vehicle model is required",
+
+        "invalid_number_of_vehicles": "Some models that have number of vehicles is less or greater than the required number",
         "vehicle_not_in_from_station": "Vehicle is not in from station",
         "staff_limit_in_from_station": "Staffs limit in from station",
         "vehicle_limit_in_from_station": "Vehicles limit in from station",
         "vehicle_or_staff_not_in_from_station": "Vehicle or staff is not in from station",
+
         "only_pending_can_approve_reject": "Only pending dispatch can be approved or rejected",
         "only_approved_can_receive": "Only approved dispatch can be received",
         "only_pending_can_cancel": "Only pending dispatch can be cancelled",
-        "only_approved_can_confirm": "Only approved dispatch can be confirmed",
-        "only_confirm_can_receive": "Only confirmed dispatch can be received",
+        "only_approved_can_assign": "Only approved dispatch can be assigned",
+        "only_assign_can_receive": "Only assigned dispatch can be received",
 
         "must_be_to_station_admin": "Must be to station admin to approve",
         "must_be_from_station_admin": "Must be from station admin to reject",
@@ -987,7 +993,12 @@
         "invalid_status": "Invalid status",
         "id_null": "Id is not found",
         "approve": "Approve",
-        "open_approve_page": "Open approve page"
+        "reject": "Reject",
+        "open_approve_page": "Open approve page",
+        "open_assign_page": "Open assign page",
+        "no_vehicles_requested": "No vehicles requested",
+        "valid_station": "Valid stations for this dispatch request",
+        "no_valid_station": "No valid station for this dispatch request"
     },
     "document_preview": {
         "upload_image": "Upload image",

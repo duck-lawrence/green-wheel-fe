@@ -2,9 +2,9 @@ import { DispatchRequestStatus } from "@/constants/enum"
 
 export type CreateDispatchReq = {
     // description?: string
-    fromStationId: string
+    // fromStationId: string
     vehicles: VehicleDispatchReq[]
-    numberOfStaff?: number
+    numberOfStaffs?: number
 }
 
 export type UpdateApproveDispatchReq = {
@@ -12,6 +12,11 @@ export type UpdateApproveDispatchReq = {
     staffIds: string[]
     vehicleIds: string[]
     description?: string
+}
+
+export type ApproveDispatchReq = {
+    status: DispatchRequestStatus
+    fromStationId?: string
 }
 
 export type UpdateDispatchReq = {
@@ -23,7 +28,7 @@ export type UpdateDispatchReq = {
 
 export type VehicleDispatchReq = {
     modelId: string
-    numberOfVehicle: number
+    quantity: number
 }
 
 export type DispatchQueryParams = {

@@ -170,7 +170,7 @@ export const CreateRentalContractForm = ({
         if (userError || stationsError) {
             const error = (userError as BackendError) || (stationsError as BackendError)
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })

@@ -1,6 +1,8 @@
 import { QUERY_KEYS } from "@/constants/queryKey"
 import { BusinessVariableViewRes } from "@/models/business-variables/schema/respone"
+import { BackendError } from "@/models/common/response"
 import { businessVariablesApi } from "@/services/businessVariablesApi"
+import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 
 import { addToast, closeAll } from "@heroui/toast"
 import { useMutation, useQuery } from "@tanstack/react-query"
@@ -36,10 +38,10 @@ export const useUpdateBusinessVariables = () => {
                 color: "success"
             })
         },
-        onError: () => {
+        onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
-                description: t("toast.update_failed"),
+                title: error.title || t("toast.error"),
+                description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
         }

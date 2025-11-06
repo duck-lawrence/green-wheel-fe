@@ -39,7 +39,7 @@ export const useCreateBrand = () => {
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -63,7 +63,7 @@ export const useUpdateBrand = () => {
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })

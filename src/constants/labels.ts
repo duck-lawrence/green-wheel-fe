@@ -35,7 +35,7 @@ export const SexLabels: Record<Sex, string> = {
 export const DispatchRequestStatusLabels: Record<DispatchRequestStatus, string> = {
     [DispatchRequestStatus.Pending]: i18n.t("enum.pending"),
     [DispatchRequestStatus.Approved]: i18n.t("enum.approved"),
-    [DispatchRequestStatus.ConfirmApproved]: i18n.t("enum.confirm_approved"),
+    [DispatchRequestStatus.Assigned]: i18n.t("enum.assign"),
     [DispatchRequestStatus.Rejected]: i18n.t("enum.rejected"),
     [DispatchRequestStatus.Received]: i18n.t("enum.received"),
     [DispatchRequestStatus.Cancelled]: i18n.t("enum.cancelled")

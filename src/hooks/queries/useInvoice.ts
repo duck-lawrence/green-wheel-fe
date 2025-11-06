@@ -41,7 +41,7 @@ export const usePayInvoice = ({ contractId }: { contractId: string }) => {
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -72,7 +72,7 @@ export const useCreateInvoice = ({
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -107,7 +107,7 @@ export const useUploadInvoiceImage = ({
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })

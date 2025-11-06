@@ -38,7 +38,7 @@ export default function ReportsPage() {
         if (queryResult.error) {
             const backendErr = queryResult.error as BackendError
             addToast({
-                title: t("toast.error"),
+                title: backendErr.title || t("toast.error"),
                 description: translateWithFallback(t, backendErr.detail),
                 color: "danger"
             })

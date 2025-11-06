@@ -2,6 +2,7 @@ import { QUERY_KEYS } from "@/constants/queryKey"
 import { BackendError } from "@/models/common/response"
 import { DispatchQueryParams } from "@/models/dispatch/schema/request"
 import { DispatchViewRes } from "@/models/dispatch/schema/response"
+import { StationViewRes } from "@/models/station/schema/response"
 import { dispatchApi } from "@/services/dispathApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { addToast } from "@heroui/toast"
@@ -30,7 +31,7 @@ export const useCreateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => 
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -38,13 +39,12 @@ export const useCreateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => 
     })
 }
 
-export const useUpdateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useConfirmDispatch = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
-    // const router = useRouter()
 
     return useMutation({
-        mutationFn: dispatchApi.updateStatus,
+        mutationFn: dispatchApi.confirm,
         onSuccess: async () => {
             await queryClient.invalidateQueries({
                 queryKey: QUERY_KEYS.DISPATCH_REQUESTS,
@@ -59,7 +59,36 @@ export const useUpdateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => 
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
+        }
+    })
+}
+
+export const useUpdateDispatch = ({ onSuccess }: { onSuccess?: () => void }) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+    // const router = useRouter()
+
+    return useMutation({
+        mutationFn: dispatchApi.update,
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
+                queryKey: QUERY_KEYS.DISPATCH_REQUESTS,
+                exact: false
+            })
+            onSuccess?.()
+            addToast({
+                title: t("toast.success"),
+                description: t("dispatch.update_success"),
+                color: "success"
+            })
+        },
+        onError: (error: BackendError) => {
+            addToast({
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -95,6 +124,29 @@ export const useGetDispatchById = ({ id, enabled = true }: { id: string; enabled
         queryKey: [...QUERY_KEYS.DISPATCH_REQUESTS, id],
         queryFn: () => dispatchApi.getById(id),
 
+        enabled
+    })
+    return query
+}
+
+export const useGetValidStationsForDispatch = ({
+    id,
+    enabled = true
+}: {
+    id: string
+    enabled?: boolean
+}) => {
+    const queryClient = useQueryClient()
+    const query = useQuery({
+        queryKey: [...QUERY_KEYS.DISPATCH_REQUESTS, id, "validStations"],
+        queryFn: () => dispatchApi.getValidStationsForDispatch({ id }),
+        initialData: () => {
+            return queryClient.getQueryData<StationViewRes[]>([
+                ...QUERY_KEYS.DISPATCH_REQUESTS,
+                id,
+                "validStations"
+            ])
+        },
         enabled
     })
     return query

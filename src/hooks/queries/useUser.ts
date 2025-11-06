@@ -41,7 +41,7 @@ export const useCreateNewUser = ({
         onError: (error: BackendError) => {
             onError?.()
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -76,7 +76,7 @@ export const useUpdateUser = ({
         onError: (error: BackendError) => {
             onError?.()
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -160,7 +160,7 @@ export const useDeleteUser = ({
         onError: (error: BackendError) => {
             onError?.()
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -228,7 +228,7 @@ export const useUploadCitizenIdById = ({
         onError: (error: BackendError) => {
             onError?.()
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -269,7 +269,7 @@ export const useUpdateCitizenIdById = ({
         onError: (error: BackendError) => {
             onError?.()
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -303,7 +303,7 @@ export const useDeleteCitizenIdById = ({
         onError: (error: BackendError) => {
             onError?.()
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -370,7 +370,7 @@ export const useUploadDriverLicenseById = ({
         onError: (error: BackendError) => {
             onError?.()
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -411,7 +411,7 @@ export const useUpdateDriverLicenseById = ({
         onError: (error: BackendError) => {
             onError?.()
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -445,7 +445,7 @@ export const useDeleteDriverLicenseById = ({
         onError: (error: BackendError) => {
             onError?.()
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })

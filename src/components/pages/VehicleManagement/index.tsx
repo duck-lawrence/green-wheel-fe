@@ -384,7 +384,7 @@ export function AdminVehicleManagementView() {
                             ))}
                         </FilterTypeStyle>
 
-                        <div className="flex w-full flex-col gap-2 sm:flex-row sm:justify-end">
+                        <div className="h-full flex w-full gap-2 justify-end items-center">
                             <ButtonIconStyled
                                 type="submit"
                                 isDisabled={isFetchingVehicles}

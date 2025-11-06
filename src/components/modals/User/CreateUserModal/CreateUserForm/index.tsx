@@ -91,7 +91,7 @@ export function CreateUserForm({
         if (stationsError) {
             const error = stationsError as BackendError
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
