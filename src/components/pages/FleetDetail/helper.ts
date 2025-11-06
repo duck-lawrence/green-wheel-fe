@@ -155,7 +155,7 @@ export function useApiErrorToasts(errors: Array<BackendError | unknown>, t: any)
             if (!err) return
             const be = err as BackendError
             addToast({
-                title: t("toast.error"),
+                title: be.title || t("toast.error"),
                 description: translateWithFallback(t, be.detail),
                 color: "danger"
             })

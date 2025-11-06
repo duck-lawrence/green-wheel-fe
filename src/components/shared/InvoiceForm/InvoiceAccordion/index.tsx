@@ -150,8 +150,11 @@ export function InvoiceAccordion({
             <AlertStyled className="mt-[-0.75rem] mb-1 mx-2">
                 {t("invoice.fees_include_tax")}
             </AlertStyled>
-            <AlertStyled className="whitespace-break-spaces mb-3 mx-2">
+            <AlertStyled className="whitespace-break-spaces mb-1 mx-2">
                 {t("invoice.reservation_fee_deduction")}
+            </AlertStyled>
+            <AlertStyled color="warning" className="mb-3 mx-2">
+                {t("invoice.penalty_warning")}
             </AlertStyled>
             {/* {isCustomer &&
                     refundInvoice &&

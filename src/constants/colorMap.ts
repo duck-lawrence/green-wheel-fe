@@ -24,7 +24,7 @@ export const DispatchRequestStatusColorMap: Record<
 > = {
     [DispatchRequestStatus.Pending]: "default",
     [DispatchRequestStatus.Approved]: "warning",
-    [DispatchRequestStatus.ConfirmApproved]: "success",
+    [DispatchRequestStatus.Assigned]: "success",
     [DispatchRequestStatus.Rejected]: "danger",
     [DispatchRequestStatus.Received]: "success",
     [DispatchRequestStatus.Cancelled]: "default"

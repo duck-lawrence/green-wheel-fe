@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next"
 export default function ReportsPage() {
     const { t } = useTranslation()
     const { data: user } = useGetMe()
+    const isStaff = user?.role?.name === RoleName.Staff
     const isAdmin = user?.role?.name === RoleName.Admin
 
     const [filter, setFilter] = useState<TicketFilterParams>({ type: TicketType.StaffReport })
@@ -37,7 +38,7 @@ export default function ReportsPage() {
         if (queryResult.error) {
             const backendErr = queryResult.error as BackendError
             addToast({
-                title: t("toast.error"),
+                title: backendErr.title || t("toast.error"),
                 description: translateWithFallback(t, backendErr.detail),
                 color: "danger"
             })
@@ -51,7 +52,7 @@ export default function ReportsPage() {
             filterState={[filter, setFilter]}
             paginations={[pagination, setPagination]}
             queryResult={queryResult}
-            createType={isAdmin ? undefined : TicketType.StaffReport}
+            createType={isStaff ? TicketType.StaffReport : undefined}
         />
     )
 }

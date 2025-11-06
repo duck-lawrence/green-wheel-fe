@@ -78,7 +78,7 @@ export const useCreateVehicleChecklist = ({ onSuccess }: { onSuccess?: () => voi
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -108,7 +108,7 @@ export const useUpdateVehicleChecklist = ({
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -131,7 +131,7 @@ export const useUpdateVehicleChecklistItem = ({ onSuccess }: { onSuccess?: () =>
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -160,7 +160,7 @@ export const useSignByCustomer = ({
         },
         onError: (error: BackendError) => {
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })
@@ -194,7 +194,7 @@ export const useUploadChecklistItemImage = ({
         onError: (error: BackendError) => {
             onError?.()
             addToast({
-                title: t("toast.error"),
+                title: error.title || t("toast.error"),
                 description: translateWithFallback(t, error.detail),
                 color: "danger"
             })

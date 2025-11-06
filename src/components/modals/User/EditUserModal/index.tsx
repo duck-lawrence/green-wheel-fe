@@ -19,7 +19,7 @@ import {
     ModalStyled,
     CitizenIdentityUploader
 } from "@/components"
-import { Sex } from "@/constants/enum"
+import { RoleName, Sex } from "@/constants/enum"
 import { SexLabels } from "@/constants/labels"
 import { NAME_REGEX, PHONE_REGEX } from "@/constants/regex"
 import { useDay, useUpdateUser } from "@/hooks"
@@ -219,7 +219,7 @@ export function EditUserModal({ user, isOpen, onClose }: EditUserModalProps) {
                         </div>
                     </form>
 
-                    {user?.id ? (
+                    {user?.id && user.role?.name === RoleName.Customer ? (
                         <div className="mt-6 space-y-4">
                             {/* // === Citizen Identity === */}
                             <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">

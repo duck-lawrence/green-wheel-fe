@@ -23,7 +23,7 @@ export function DetailDamageModal({
         if (error) {
             const backendErr = error as BackendError
             addToast({
-                title: t("toast.error"),
+                title: backendErr.title || t("toast.error"),
                 description: translateWithFallback(t, backendErr.detail),
                 color: "danger"
             })

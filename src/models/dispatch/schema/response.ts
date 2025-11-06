@@ -5,9 +5,9 @@ import { VehicleViewRes } from "@/models/vehicle/schema/response"
 export type DispatchViewRes = {
     id: string
     description?: DispatchDescriptionDto
-    fromStationId: string
+    fromStationId?: string
     toStationId: string
-    fromStationName: string
+    fromStationName?: string
     toStationName: string
     status: DispatchRequestStatus
     requestAdminId: string
@@ -37,6 +37,6 @@ export interface DispatchDescriptionVehicleDto {
 }
 
 export interface DispatchDescriptionDto {
-    numberOfStaff: number
+    numberOfStaffs: number
     vehicles?: DispatchDescriptionVehicleDto[]
 }

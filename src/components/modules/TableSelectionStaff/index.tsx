@@ -121,7 +121,7 @@ export function TableSelectionStaff({
                         onSelectionChange={handleSelectionChange}
                         selectionBehavior={selectionBehavior}
                     ></TableSelectionStyled>
-                    {rows.length > 0 && (
+                    {!staffs && rows.length > 0 && (
                         <div className="mt-6 flex justify-center">
                             <PaginationStyled
                                 page={data?.pageNumber ?? 1}
