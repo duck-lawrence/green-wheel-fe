@@ -1,6 +1,7 @@
 "use client"
 import { ButtonStyled } from "@/components/styled"
 import { cn } from "@heroui/theme"
+import { useRouter } from "next/navigation"
 import React from "react"
 import { useTranslation } from "react-i18next"
 
@@ -14,10 +15,12 @@ export function LanguageSwitcher({
     onClick?: () => void
 }) {
     const { i18n } = useTranslation()
+    const router = useRouter()
 
     const switchLang = (lang: string) => {
         if (i18n.language !== lang) {
             i18n.changeLanguage(lang)
+            router.refresh()
         }
         if (onClick) onClick()
     }

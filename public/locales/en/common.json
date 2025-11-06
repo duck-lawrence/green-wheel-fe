@@ -786,6 +786,7 @@
         "rental_contract": "Rental Booking",
         "rental_contract_details_description": "Detailed information about the customer's electric vehicle Rental Booking.",
         "rental_contract_information": "Rental Booking information",
+        "customer_notes": "Customer Notes",
         "rental_date": "Rental date",
         "contract_code": "Booking code",
         "contract_status": "Booking status",
@@ -1079,11 +1080,11 @@
         "item_id_required": "Item ID is required"
     },
     "signature": {
-        "signature": "Signature",
-        "signed_by_staff": "Staff signature",
-        "signed_by_customer": "Customer signature",
-        "signed_by_staff_require": "Staff must sign",
-        "signed_by_customer_require": "Customer must sign"
+        "signature": "Confirm",
+        "signed_by_staff": "Staff confirm",
+        "signed_by_customer": "Customer confirm",
+        "signed_by_staff_require": "Staff must confirm",
+        "signed_by_customer_require": "Customer must confirm"
     },
     "review": {
         "create_successfull": "Feedback created successfully",
@@ -1248,6 +1249,11 @@
         "not_found": "Setting not found",
         "value_is_required": "Value is required",
         "value_must_be_greater_than_zero": "Value must be greater than 0"
+    },
+    "policy": {
+        "please_read": "Please read our",
+        "term": "Policy Terms",
+        "for_more_information": "for more information"
     },
     "errors": {
         "not_found": "Oops! Page Not Found",

@@ -16,6 +16,7 @@ import { FRONTEND_API_URL } from "@/constants/env"
 import { usePathname } from "next/navigation"
 import { AlertStyled, ButtonStyled, InvoiceUploader, NumberInputStyled } from "@/components"
 import { VehicleChecklistViewRes } from "@/models/checklist/schema/response"
+import Link from "next/link"
 
 export function InvoiceAccordion({
     className = "",
@@ -154,21 +155,28 @@ export function InvoiceAccordion({
                 <AccordionItem
                     title={t("invoice.policy_title")}
                     subtitle={t("invoice.policy_subtitle")}
-                    className="whitespace-break-spaces"
                 >
-                    <AlertStyled className="mt-[-0.75rem] mb-1 mx-2">
-                        {t("invoice.fees_include_tax")}
-                    </AlertStyled>
-                    <AlertStyled className="whitespace-break-spaces mb-1 mx-2">
+                    <AlertStyled className="mb-1">{t("invoice.fees_include_tax")}</AlertStyled>
+                    <AlertStyled className="whitespace-break-spaces mb-1">
                         {t("invoice.reservation_fee_deduction")}
                     </AlertStyled>
-                    <AlertStyled color="warning" className="mb-3 mx-2">
-                        {t("invoice.penalty_warning")}
-                    </AlertStyled>
+                    <AlertStyled color="warning">{t("invoice.penalty_warning")}</AlertStyled>
+                    <div className="text-sm px-3">
+                        {t("policy.please_read")}{" "}
+                        <Link
+                            href="/policy"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sky-500 hover:text-sky-700 hover:underline pointer-events-auto relative z-10 font-bold"
+                        >
+                            {t("policy.term")}
+                        </Link>{" "}
+                        {t("policy.for_more_information")}
+                    </div>
                 </AccordionItem>
             </Accordion>
 
-            <div className="grid grid-cols-1 md:grid-cols-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 mt-3">
                 {items
                     .sort((a, b) => a.invoice.type - b.invoice.type)
                     .map((val) => (

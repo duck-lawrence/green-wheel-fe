@@ -351,7 +351,7 @@ export const CreateRentalContractForm = ({
                                             rel="noopener noreferrer"
                                             className="text-sky-500 hover:text-sky-700 hover:underline pointer-events-auto relative z-10 font-bold"
                                         >
-                                            {t("car_rental.policy_terms")}{" "}
+                                            {t("car_rental.policy_terms")}
                                         </Link>
                                         {/* </Link>{" "}
                                         {t("car_rental.of_green_wheel")}
