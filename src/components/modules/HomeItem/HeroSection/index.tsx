@@ -8,6 +8,7 @@ import { useTypewriter } from "@/hooks"
 import Image from "next/image"
 import Link from "next/link"
 import clsx from "clsx"
+import { GREENWHEEL } from "@/constants/constants"
 
 const images = [
     { src: "/images/home-banner/3.png", direction: "right" },
@@ -73,7 +74,7 @@ export function HeroSection() {
                     >
                         <Image
                             src={img.src}
-                            alt="Green Wheel"
+                            alt={GREENWHEEL}
                             fill
                             className="object-cover object-center"
                             priority={img.src.includes("green") || index === 0}
@@ -117,7 +118,7 @@ export function HeroSection() {
             <div
                 className="
                     z-10 flex flex-col
-                    text-center ml:top-10 ms:mr-0 md:text-left
+                    text-center ml:top-10 ms:mr-0 sm:text-left
                     max-w-[38rem] min-w-[38erm]
                     space-y-6 py-10 md:py-0
                 "
@@ -166,7 +167,7 @@ export function HeroSection() {
                     animate={{ width: "140px" }}
                     transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
                     className="
-                        h-[4px] mx-auto md:mx-0
+                        h-[4px] mx-auto sm:mx-0
                         bg-gradient-to-r from-primary via-teal-400 to-green-400
                         rounded-full shadow-[0_0_12px_#10b981]
                     "
@@ -179,7 +180,7 @@ export function HeroSection() {
                     transition={{ duration: 1, delay: 0.4 }}
                     className="
                         flex flex-col sm:flex-row gap-4 
-                        mt-6 justify-center md:justify-start
+                        mt-6 justify-center sm:justify-start
                     "
                 >
                     <ButtonStyled
