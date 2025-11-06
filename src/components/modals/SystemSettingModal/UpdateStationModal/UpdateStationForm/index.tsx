@@ -1,6 +1,7 @@
 import { ButtonStyled, InputStyled } from "@/components/styled"
 import { useGetStationById, useUpdateStation } from "@/hooks"
 import { StationUpdateReq } from "@/models/station/schema/request"
+import { Spinner } from "@heroui/react"
 import { useFormik } from "formik"
 import { LocationEdit, Save } from "lucide-react"
 import React, { useCallback } from "react"
@@ -9,13 +10,11 @@ import { useTranslation } from "react-i18next"
 export default function UpdateStationForm({ id, onClose }: { id: string; onClose: () => void }) {
     const { t } = useTranslation()
     const updateStation = useUpdateStation()
-    const { data: stationId } = useGetStationById({ id, enabled: !!id })
-
-    console.log("stationId", stationId)
+    const { data: station } = useGetStationById({ id, enabled: !!id })
 
     const handleUpdate = useCallback(
-        (id: string, updatedData: StationUpdateReq) => {
-            updateStation.mutateAsync({
+        async (id: string, updatedData: StationUpdateReq) => {
+            await updateStation.mutateAsync({
                 id,
                 req: updatedData
             })
@@ -23,11 +22,13 @@ export default function UpdateStationForm({ id, onClose }: { id: string; onClose
         },
         [updateStation, onClose]
     )
+
     const formik = useFormik({
         initialValues: {
-            name: stationId?.name || "",
-            address: stationId?.address || ""
+            name: station?.name || "",
+            address: station?.address || ""
         },
+        enableReinitialize: true,
         onSubmit: async (values) => {
             await handleUpdate(id, values)
             onClose()
@@ -74,6 +75,7 @@ export default function UpdateStationForm({ id, onClose }: { id: string; onClose
                         type="button"
                         variant="bordered"
                         onPress={onClose}
+                        disabled={updateStation.isPending}
                         className="border-gray-300 text-gray-600 hover:bg-gray-100"
                     >
                         {t("common.cancel")}
@@ -84,7 +86,13 @@ export default function UpdateStationForm({ id, onClose }: { id: string; onClose
                         disabled={updateStation.isPending}
                         className="flex items-center gap-2"
                     >
-                        <Save className="w-4 h-4" /> {t("common.create")}
+                        {updateStation.isPending ? (
+                            <Spinner color="white" />
+                        ) : (
+                            <>
+                                <Save className="w-4 h-4" /> {t("common.update")}
+                            </>
+                        )}
                     </ButtonStyled>
                 </div>
             </form>

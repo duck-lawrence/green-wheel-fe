@@ -1,6 +1,7 @@
 import { ButtonStyled, InputStyled, TextareaStyled } from "@/components/styled"
 import { useGetVehicleSegmentById, useUpdateVehicleSegment } from "@/hooks"
 import { VehicleSegmentReq } from "@/models/vehicle/schema/request"
+import { Spinner } from "@heroui/react"
 import { useFormik } from "formik"
 import { Building2, Save } from "lucide-react"
 import React, { useCallback } from "react"
@@ -15,13 +16,13 @@ export default function UpdateVehicleSegmentForm({
 }) {
     const { t } = useTranslation()
     const { data: vehicleSegment } = useGetVehicleSegmentById({ id, enabled: true })
-    const UpdateVehicleSegmentForm = useUpdateVehicleSegment()
+    const updateMutation = useUpdateVehicleSegment()
 
     const handleUpdate = useCallback(
-        (id: string, req: VehicleSegmentReq) => {
-            UpdateVehicleSegmentForm.mutateAsync({ id, req })
+        async (id: string, req: VehicleSegmentReq) => {
+            await updateMutation.mutateAsync({ id, req })
         },
-        [UpdateVehicleSegmentForm]
+        [updateMutation]
     )
 
     const formik = useFormik({
@@ -29,11 +30,13 @@ export default function UpdateVehicleSegmentForm({
             name: vehicleSegment?.name || "",
             description: vehicleSegment?.description || ""
         },
+        enableReinitialize: true,
         onSubmit: async (values) => {
             await handleUpdate(id, values)
             onClose()
         }
     })
+
     return (
         <div className="max-w-3xl mx-auto bg-white/80 0 backdrop-blur-xl border border-gray-200 rounded-2xl shadow-md p-8">
             <header className="mb-8 flex items-center gap-3">
@@ -75,6 +78,7 @@ export default function UpdateVehicleSegmentForm({
                         type="button"
                         variant="bordered"
                         onPress={onClose}
+                        disabled={updateMutation.isPending}
                         className="border-gray-300 text-gray-600 hover:bg-gray-100"
                     >
                         {t("common.cancel")}
@@ -82,10 +86,16 @@ export default function UpdateVehicleSegmentForm({
                     <ButtonStyled
                         type="submit"
                         color="primary"
-                        disabled={UpdateVehicleSegmentForm.isPending}
+                        disabled={updateMutation.isPending}
                         className="flex items-center gap-2"
                     >
-                        <Save className="w-4 h-4" /> {t("common.create")}
+                        {updateMutation.isPending ? (
+                            <Spinner color="white" />
+                        ) : (
+                            <>
+                                <Save className="w-4 h-4" /> {t("common.update")}
+                            </>
+                        )}
                     </ButtonStyled>
                 </div>
             </form>

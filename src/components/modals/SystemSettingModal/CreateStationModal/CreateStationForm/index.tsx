@@ -2,6 +2,7 @@
 import { ButtonStyled, InputStyled } from "@/components/styled"
 import { useCreateStation } from "@/hooks"
 import { StationViewReq } from "@/models/station/schema/request"
+import { Spinner } from "@heroui/react"
 import { useFormik } from "formik"
 import { MapPin, Save } from "lucide-react"
 import React, { useCallback } from "react"
@@ -70,6 +71,7 @@ export default function CreateStation({ onClose }: { onClose: () => void }) {
                         type="button"
                         variant="bordered"
                         onPress={onClose}
+                        disabled={createStation.isPending}
                         className="border-gray-300 text-gray-600 hover:bg-gray-100"
                     >
                         {t("common.cancel")}
@@ -80,7 +82,13 @@ export default function CreateStation({ onClose }: { onClose: () => void }) {
                         disabled={createStation.isPending}
                         className="flex items-center gap-2"
                     >
-                        <Save className="w-4 h-4" /> {t("common.create")}
+                        {createStation.isPending ? (
+                            <Spinner color="white" />
+                        ) : (
+                            <>
+                                <Save className="w-4 h-4" /> {t("common.create")}
+                            </>
+                        )}
                     </ButtonStyled>
                 </div>
             </form>

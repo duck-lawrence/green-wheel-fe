@@ -2,6 +2,7 @@
 import { ButtonStyled, InputStyled, TextareaStyled } from "@/components/styled"
 import { useCreateBrand } from "@/hooks/queries/useBrand"
 import { BrandReq } from "@/models/brand/schema/request"
+import { Spinner } from "@heroui/react"
 import { useFormik } from "formik"
 import { Building2, Save } from "lucide-react"
 import React, { useCallback } from "react"
@@ -90,6 +91,7 @@ export default function CreateBrand({ onClose }: { onClose: () => void }) {
                         type="button"
                         variant="bordered"
                         onPress={onClose}
+                        disabled={createBrand.isPending}
                         className="border-gray-300 text-gray-600 hover:bg-gray-100"
                     >
                         {t("common.cancel")}
@@ -100,7 +102,13 @@ export default function CreateBrand({ onClose }: { onClose: () => void }) {
                         disabled={createBrand.isPending}
                         className="flex items-center gap-2"
                     >
-                        <Save className="w-4 h-4" /> {t("common.create")}
+                        {createBrand.isPending ? (
+                            <Spinner color="white" />
+                        ) : (
+                            <>
+                                <Save className="w-4 h-4" /> {t("common.create")}
+                            </>
+                        )}
                     </ButtonStyled>
                 </div>
             </form>

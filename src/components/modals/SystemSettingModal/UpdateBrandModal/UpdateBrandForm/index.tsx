@@ -1,6 +1,7 @@
 import { ButtonStyled, InputStyled, TextareaStyled } from "@/components/styled"
 import { useGetBrandById, useUpdateBrand } from "@/hooks/queries/useBrand"
 import { BrandReq } from "@/models/brand/schema/request"
+import { Spinner } from "@heroui/react"
 import { useFormik } from "formik"
 import { Building2, Save } from "lucide-react"
 import React, { useCallback } from "react"
@@ -12,8 +13,8 @@ export default function UpdateBrandForm({ id, onClose }: { id: string; onClose: 
     const { data: brandId } = useGetBrandById(id)
 
     const handleUpdate = useCallback(
-        (id: string, updatedData: BrandReq) => {
-            updateBrand.mutateAsync({
+        async (id: string, updatedData: BrandReq) => {
+            await updateBrand.mutateAsync({
                 id,
                 req: updatedData
             })
@@ -28,6 +29,7 @@ export default function UpdateBrandForm({ id, onClose }: { id: string; onClose: 
             country: brandId?.country || "",
             foundedYear: brandId?.foundedYear || 0
         },
+        enableReinitialize: true,
         onSubmit: async (values) => {
             await handleUpdate(id, values)
             onClose()
@@ -92,18 +94,24 @@ export default function UpdateBrandForm({ id, onClose }: { id: string; onClose: 
                         type="button"
                         variant="bordered"
                         onPress={onClose}
+                        disabled={updateBrand.isPending}
                         className="border-gray-300 text-gray-600 hover:bg-gray-100"
                     >
-                        Cancel
+                        {t("common.cancel")}
                     </ButtonStyled>
                     <ButtonStyled
                         type="submit"
                         color="primary"
-                        // disabled={createBrand.isPending}
+                        disabled={updateBrand.isPending}
                         className="flex items-center gap-2"
                     >
-                        <Save className="w-4 h-4" />
-                        {/* {createBrand.isPending ? "Creating..." : "Create Brand"} */}
+                        {updateBrand.isPending ? (
+                            <Spinner color="white" />
+                        ) : (
+                            <>
+                                <Save className="w-4 h-4" /> {t("common.update")}
+                            </>
+                        )}
                     </ButtonStyled>
                 </div>
             </form>
