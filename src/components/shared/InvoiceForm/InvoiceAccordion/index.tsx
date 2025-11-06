@@ -15,13 +15,14 @@ import { InvoiceViewRes } from "@/models/invoice/schema/response"
 import { FRONTEND_API_URL } from "@/constants/env"
 import { usePathname } from "next/navigation"
 import { AlertStyled, ButtonStyled, InvoiceUploader, NumberInputStyled } from "@/components"
+import { VehicleChecklistViewRes } from "@/models/checklist/schema/response"
 
 export function InvoiceAccordion({
     className = "",
     items,
     contractId,
     contractStatus,
-    isReturnChecklistExists = false
+    returnChecklist
 }: {
     className?: string
     items: {
@@ -34,7 +35,7 @@ export function InvoiceAccordion({
     }[]
     contractId: string
     contractStatus: RentalContractStatus
-    isReturnChecklistExists: boolean
+    returnChecklist?: VehicleChecklistViewRes
 }) {
     const { t } = useTranslation()
     const pathName = usePathname()
@@ -86,7 +87,9 @@ export function InvoiceAccordion({
 
             const isReturnType =
                 contractStatus === RentalContractStatus.Returned &&
-                isReturnChecklistExists &&
+                returnChecklist &&
+                returnChecklist.isSignedByCustomer &&
+                returnChecklist.isSignedByStaff &&
                 [InvoiceType.Return, InvoiceType.Refund].includes(invoice.type)
 
             const isRefundPendingType =
@@ -105,7 +108,7 @@ export function InvoiceAccordion({
                     isOtherType)
             )
         },
-        [isReturnChecklistExists]
+        [returnChecklist]
     )
 
     const isRefundUpload = useCallback((invoice: InvoiceViewRes) => {

@@ -45,3 +45,8 @@ export type RevenueByYearRes = {
     monthName: number
     totalRevenue: number
 }
+
+export type InvoiceByYearRes = {
+    monthName: number
+    totalInvoice: number
+}

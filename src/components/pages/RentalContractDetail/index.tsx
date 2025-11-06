@@ -244,6 +244,14 @@ export function RentalContractDetail({
             <SectionStyled title={t("rental_contract.rental_contract_information")}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="sm:col-span-2">
+                        {/* <span onClick={onOpen} className="hover:cursor-pointer">
+                            {t("table.customer")}
+                            {": "}
+                            {toFullName({
+                                firstName: contract.customer.firstName,
+                                lastName: contract.customer.lastName
+                            })}
+                        </span> */}
                         <span onClick={onOpen} className="hover:cursor-pointer">
                             {t("table.customer")}
                             {": "}
@@ -251,7 +259,11 @@ export function RentalContractDetail({
                                 firstName: contract.customer.firstName,
                                 lastName: contract.customer.lastName
                             })}
+                            <span className="underline pl-2 text-sm text-gray-400 ">
+                                View details
+                            </span>
                         </span>
+
                         <ViewUserModal
                             isOpen={isOpen}
                             onOpenChange={onOpenChange}
@@ -395,7 +407,7 @@ export function RentalContractDetail({
                     items={invoiceAccordion}
                     contractId={contract.id}
                     contractStatus={contract.status}
-                    isReturnChecklistExists={!!returnChecklist}
+                    returnChecklist={returnChecklist}
                     className="mb-3"
                 />
                 {isStaffInStation &&

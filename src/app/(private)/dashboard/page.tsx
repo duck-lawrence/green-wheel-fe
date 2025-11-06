@@ -29,8 +29,9 @@ export default function DashboardPage() {
 
             router.replace("/")
         }
-        if (isAdmin) router.replace("/dashboard/statistic")
-        if (isStaff) router.replace("/dashboard/rental-bookings")
+        if (isAdmin) router.replace("/dashboard/station-statistic")
+        else if (isSuperAdmin) router.replace("/dashboard/statistic")
+        else if (isStaff) router.replace("/dashboard/rental-bookings")
     }, [isAdmin, isStaff, isError, isLoading, router, t, isSuperAdmin])
 
     return <SpinnerStyled />

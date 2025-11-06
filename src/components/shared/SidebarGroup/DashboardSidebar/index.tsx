@@ -45,13 +45,35 @@ export function DashboardSidebar({ className }: { className?: string }) {
         }
     ]
 
-    const superAdminTabs: SidebarItem[] = []
-
-    const adminTabs: SidebarItem[] = [
+    const superAdminTabs: SidebarItem[] = [
         {
             key: "/dashboard/statistic",
             label: t("admin.statistic"),
             href: "/dashboard/statistic"
+        },
+        {
+            key: "/dashboard/dispatchs",
+            label: t("admin.dispatch"),
+            href: "/dashboard/dispatchs"
+        },
+
+        {
+            key: "/dashboard/admins",
+            label: t("admin.admin_management"),
+            href: "/dashboard/admins"
+        },
+        {
+            key: "/dashboard/system-settings",
+            label: t("admin.system_setting"),
+            href: "/dashboard/system-settings"
+        }
+    ]
+
+    const adminTabs: SidebarItem[] = [
+        {
+            key: "/dashboard/station-statistic",
+            label: t("admin.sidebar_admin_statistic"),
+            href: "/dashboard/station-statistic"
         },
         {
             key: "/dashboard/fleets",
@@ -87,11 +109,6 @@ export function DashboardSidebar({ className }: { className?: string }) {
             key: "/dashboard/customer-supports",
             label: t("staff.sidebar_customer_supports"),
             href: "/dashboard/customer-supports"
-        },
-        {
-            key: "/dashboard/system-settings",
-            label: t("admin.system_setting"),
-            href: "/dashboard/system-settings"
         }
     ]
 
