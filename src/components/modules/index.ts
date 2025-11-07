@@ -2,7 +2,6 @@
 export * from "./AccountPreview"
 
 /* ========================= C ========================= */
-export * from "./CriclesChart"
 
 /* ========================= D ========================= */
 export * from "./DispatchInfo"

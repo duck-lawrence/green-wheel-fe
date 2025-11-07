@@ -16,7 +16,6 @@ export const statisticApi = {
         return requestWrapper<CustomerRes>(async () => {
             const params = buildQueryParams(query)
             const res = await axiosInstance.get("/statistic/customers", { params })
-            console.log("params", params)
             return res.data
         })
     },

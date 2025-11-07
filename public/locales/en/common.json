@@ -1216,7 +1216,7 @@
         "contracts": "contracts",
         "contract": "Contract",
         "total_invoices": "Total Invoices",
-        "monthly_contracts": "Monthly Contracts"
+        "monthly_contracts": "Monthly Invoices"
     },
     "system": {
         "system_setting": "System Setting",

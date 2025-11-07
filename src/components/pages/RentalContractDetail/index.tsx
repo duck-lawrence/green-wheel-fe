@@ -256,18 +256,15 @@ export function RentalContractDetail({
                                 lastName: contract.customer.lastName
                             })}
                         </span> */}
-                        <span
-                            onClick={onOpen}
-                            className="hover:cursor-pointer flex items-center gap-2"
-                        >
+                        <span onClick={onOpen} className="hover:cursor-pointer flex items-center">
                             {t("table.customer")}
                             {": "}
                             {toFullName({
                                 firstName: contract.customer.firstName,
                                 lastName: contract.customer.lastName
                             })}
-                            <span className="underline pl-2 text-sm text-gray-400 ">
-                                {t("table.view_details")}
+                            <span className="underline ml-2 text-sm text-gray-400 ">
+                                <EyeIcon size={18} />
                             </span>
                         </span>
 
