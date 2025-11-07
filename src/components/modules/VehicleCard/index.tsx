@@ -1,12 +1,13 @@
 "use client"
 import React from "react"
 import { CardBody, CardFooter } from "@heroui/react"
-import { BatteryChargingIcon, Couch, Users } from "@phosphor-icons/react"
+import { BatteryChargingIcon, Couch, FireIcon, Users } from "@phosphor-icons/react"
 import { useTranslation } from "react-i18next"
 import { formatCurrency } from "@/utils/helpers/currency"
 import { CardStyled, ImageStyled } from "@/components"
 import { VehicleModelViewRes } from "@/models/vehicle/schema/response"
 import { Icon } from "@iconify/react"
+import { useGetBestBrandModels } from "@/hooks"
 // import { DEFAULT_VEHICLE_MODEL } from "@/constants/constants"
 
 // cắt chuỗi để chỉnh format cho đẹp =)
@@ -20,6 +21,7 @@ import { Icon } from "@iconify/react"
 // className="gap-8 grid grid-cols-2 sm:grid-cols-3 "
 export function CardVehicalStyled({ vehicleModel }: { vehicleModel: VehicleModelViewRes }) {
     const { t } = useTranslation()
+    const { data: bestBrandModels } = useGetBestBrandModels()
 
     return (
         <CardStyled className="hover:shadow-xl interactive-scale" shadow="sm">
@@ -34,6 +36,15 @@ export function CardVehicalStyled({ vehicleModel }: { vehicleModel: VehicleModel
                 {vehicleModel.availableVehicleCount === 0 && (
                     <span className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 text-xs rounded z-10">
                         {t("fleet.status_unavailable")}
+                    </span>
+                )}
+                {bestBrandModels?.some((item) => item.modelId === vehicleModel.id) && (
+                    <span
+                        className="absolute flex flex-col top-3 left-3
+                  text-white font-semibold bg-gradient-to-r from-primary to-teal-400 
+                     shadow-md transition-all duration-300 z-10 rounded-t-0 rounded-br-md"
+                    >
+                        <FireIcon size={20} />
                     </span>
                 )}
             </CardBody>

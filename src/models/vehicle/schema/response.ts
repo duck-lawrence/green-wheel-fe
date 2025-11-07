@@ -60,3 +60,9 @@ export type VehicleViewRes = {
     status: VehicleStatus
     updatedAt?: string
 }
+
+export type BestBrandModelRes = {
+    modelId: string
+    modelName: string
+    rentedCount: number
+}

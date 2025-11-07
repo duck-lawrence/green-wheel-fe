@@ -56,7 +56,11 @@ export function DashboardSidebar({ className }: { className?: string }) {
             label: t("admin.dispatch"),
             href: "/dashboard/dispatchs"
         },
-
+        {
+            key: "/dashboard/fleets",
+            label: t("admin.sidebar_fleet"),
+            href: "/dashboard/fleets"
+        },
         {
             key: "/dashboard/admins",
             label: t("super_admin.sidebar_admin_management"),
@@ -74,11 +78,6 @@ export function DashboardSidebar({ className }: { className?: string }) {
             key: "/dashboard/station-statistic",
             label: t("admin.sidebar_admin_statistic"),
             href: "/dashboard/station-statistic"
-        },
-        {
-            key: "/dashboard/fleets",
-            label: t("admin.sidebar_fleet", "Fleet"),
-            href: "/dashboard/fleets"
         },
         {
             key: "/dashboard/vehicles",

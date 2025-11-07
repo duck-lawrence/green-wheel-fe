@@ -214,7 +214,7 @@ export default function StationStatisticPage() {
             {/* Chart total invoice for month */}
             <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md  m-4 w-full max-w-[60rem]">
                 <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
-                    {t("statistic.monthly_invoices")}
+                    {t("statistic.monthly_contracts")}
                 </h3>
 
                 <ResponsiveContainer width="100%" height={320}>
@@ -235,7 +235,7 @@ export default function StationStatisticPage() {
                         <YAxis
                             tick={{ fill: "#94a3b8", fontSize: 11 }}
                             axisLine={true}
-                            tickFormatter={(v) => `${formatCurrencyWithSymbol(v)}`}
+                            tickFormatter={(v) => `${v}` + ` ` + `${t("statistic.contracts")}`}
                         />
                         <Tooltip
                             contentStyle={{
@@ -247,8 +247,8 @@ export default function StationStatisticPage() {
                             }}
                             // formatter={(value) => [`${value} triệu ₫`, "Doanh thu"]}
                             formatter={(value) => [
-                                `${formatCurrencyWithSymbol(value as number)}`,
-                                `${t("statistic.invoices")}`
+                                `${value}` + ` ` + `${t("statistic.contracts")}`,
+                                `${t("statistic.contract")}`
                             ]}
                         />
                         <Legend verticalAlign="top" height={36} />
