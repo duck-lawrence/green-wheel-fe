@@ -26,12 +26,26 @@ export default async function PolicyPage() {
         value: 10000
     }
 
+    const maxLateReturnHours = businessVariables.find(
+        (v) => v.key === BusinessVariableKey.MaxLateReturnHours
+    ) || {
+        id: "",
+        key: BusinessVariableKey.MaxLateReturnHours,
+        value: 1
+    }
+
     return (
         <div className="w-full max-w-5xl px-3 py-6 md:py-8 md:px-12 bg-white rounded-2xl shadow-lg">
             {locale === "vi" ? (
-                <PolicyPageVN lateReturnFee={lateReturnFee} />
+                <PolicyPageVN
+                    lateReturnFee={lateReturnFee}
+                    maxLateReturnHours={maxLateReturnHours}
+                />
             ) : (
-                <PolicyPageEN lateReturnFee={lateReturnFee} />
+                <PolicyPageEN
+                    lateReturnFee={lateReturnFee}
+                    maxLateReturnHours={maxLateReturnHours}
+                />
             )}
         </div>
     )

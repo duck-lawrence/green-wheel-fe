@@ -20,7 +20,13 @@ import {
     SERVICE_DESCRIPTION
 } from "./content"
 
-export function PolicyPageEN({ lateReturnFee }: { lateReturnFee: BusinessVariableViewRes }) {
+export function PolicyPageEN({
+    lateReturnFee,
+    maxLateReturnHours
+}: {
+    lateReturnFee: BusinessVariableViewRes
+    maxLateReturnHours: BusinessVariableViewRes
+}) {
     // Keywords to highlight
     const HIGHLIGHTS = [
         "Green Wheel",
@@ -33,7 +39,6 @@ export function PolicyPageEN({ lateReturnFee }: { lateReturnFee: BusinessVariabl
         "Customer",
         "User",
         "Vehicle Checklist",
-        "Vehicle",
         "Rental Fee",
         "Service Booking",
         "Reservation Invoice",
@@ -54,10 +59,13 @@ export function PolicyPageEN({ lateReturnFee }: { lateReturnFee: BusinessVariabl
         "17:00",
         "10 days",
         "24 hours",
+        "Vehicle",
         formatCurrencyWithSymbol(lateReturnFee.value)
     ]
 
-    const LATE_RETURN_FEE = String.raw`- A late return fee applies one hour after the scheduled return time stated in the Rental Agreement. For every additional hour, an extra charge of ${formatCurrencyWithSymbol(
+    const LATE_RETURN_FEE = String.raw`- A late return fee applies ${
+        maxLateReturnHours.value
+    } hour(s) after the scheduled return time stated in the Rental Agreement. For every additional hour, an extra charge of ${formatCurrencyWithSymbol(
         lateReturnFee.value
     )} will be applied.`
 
