@@ -24,6 +24,7 @@ import { Plus, SearchIcon } from "lucide-react"
 import { PaginationParams } from "@/models/common/request"
 import { UserFilterParams } from "@/models/user/schema/request"
 import { useDisclosure } from "@heroui/react"
+import clsx from "clsx"
 
 // type UserFilterFormValues = {
 //     name: string
@@ -152,43 +153,47 @@ export function UserManagement() {
                     className="w-full bg-white border border-gray-200 shadow-sm rounded-xl p-5 flex justify-between flex-wrap gap-2"
                 >
                     {/* Filter */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <InputStyled
-                            label={t("user.phone")}
-                            // placeholder={t("staff.user_filter_phone_placeholder")}
-                            value={formik.values.phone}
-                            onChange={(value) => formik.setFieldValue("phone", value.target.value)}
-                            onClear={() => formik.setFieldValue("phone", "")}
-                        />
-                        {manageRoleName === RoleName.Customer && (
-                            <>
-                                <InputStyled
-                                    label={t("user.citizen_identity")}
-                                    value={formik.values.citizenIdNumber}
-                                    onChange={(value) =>
-                                        formik.setFieldValue("citizenIdNumber", value.target.value)
-                                    }
-                                    onClear={() => formik.setFieldValue("citizenIdNumber", "")}
-                                />
-                                <InputStyled
-                                    label={t("user.driver_license")}
-                                    value={formik.values.driverLicenseNumber}
-                                    onChange={(value) =>
-                                        formik.setFieldValue(
-                                            "driverLicenseNumber",
-                                            value.target.value
-                                        )
-                                    }
-                                    onClear={() => formik.setFieldValue("driverLicenseNumber", "")}
-                                />
-                            </>
+                    {manageRoleName === RoleName.Customer && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <InputStyled
+                                label={t("user.phone")}
+                                // placeholder={t("staff.user_filter_phone_placeholder")}
+                                value={formik.values.phone}
+                                onChange={(value) =>
+                                    formik.setFieldValue("phone", value.target.value)
+                                }
+                                onClear={() => formik.setFieldValue("phone", "")}
+                            />
+
+                            <InputStyled
+                                label={t("user.citizen_identity")}
+                                value={formik.values.citizenIdNumber}
+                                onChange={(value) =>
+                                    formik.setFieldValue("citizenIdNumber", value.target.value)
+                                }
+                                onClear={() => formik.setFieldValue("citizenIdNumber", "")}
+                            />
+                            <InputStyled
+                                label={t("user.driver_license")}
+                                value={formik.values.driverLicenseNumber}
+                                onChange={(value) =>
+                                    formik.setFieldValue("driverLicenseNumber", value.target.value)
+                                }
+                                onClear={() => formik.setFieldValue("driverLicenseNumber", "")}
+                            />
+                        </div>
+                    )}
+                    <div
+                        className={clsx(
+                            "flex items-center justify-end gap-2",
+                            manageRoleName !== RoleName.Customer && "w-full"
                         )}
-                    </div>
-                    <div className="flex items-center justify-between gap-2">
+                    >
                         <ButtonIconStyled
                             type="submit"
                             isLoading={isLoading}
                             className="btn-gradient rounded-lg"
+                            hidden={manageRoleName !== RoleName.Customer}
                         >
                             <SearchIcon />
                         </ButtonIconStyled>

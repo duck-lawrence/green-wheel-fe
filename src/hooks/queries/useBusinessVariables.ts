@@ -27,7 +27,7 @@ export const useUpdateBusinessVariables = () => {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
     return useMutation({
-        mutationFn: ({ id, value }: { id: string; value: string }) =>
+        mutationFn: ({ id, value }: { id: string; value: number }) =>
             businessVariablesApi.update(id, value),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [...QUERY_KEYS.BUSINESS_VARIABLES] })

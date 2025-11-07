@@ -1,8 +1,9 @@
-import { ButtonStyled, InputStyled, TextareaStyled } from "@/components/styled"
+import { ButtonStyled, InputStyled, NumberInputStyled, TextareaStyled } from "@/components/styled"
 import { useGetBrandById, useUpdateBrand } from "@/hooks/queries/useBrand"
 import { BrandReq } from "@/models/brand/schema/request"
 import { Spinner } from "@heroui/react"
 import { useFormik } from "formik"
+import * as Yup from "yup"
 import { Building2, Save } from "lucide-react"
 import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
@@ -30,6 +31,14 @@ export default function UpdateBrandForm({ id, onClose }: { id: string; onClose: 
             foundedYear: brandId?.foundedYear || 0
         },
         enableReinitialize: true,
+        validationSchema: Yup.object().shape({
+            name: Yup.string().required(t("common.required")),
+            description: Yup.string().required(t("common.required")),
+            country: Yup.string().required(t("common.required")),
+            foundedYear: Yup.number().required(t("common.required"))
+            // .min(1, t("system.brand_founded_year_min"))
+            // .max(new Date().getFullYear(), t("system.brand_founded_year_max"))
+        }),
         onSubmit: async (values) => {
             await handleUpdate(id, values)
             onClose()
@@ -51,42 +60,52 @@ export default function UpdateBrandForm({ id, onClose }: { id: string; onClose: 
                 </div>
             </header>
 
-            <form onSubmit={formik.handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
+            <form onSubmit={formik.handleSubmit} className="space-y-3">
+                <div className="grid md:grid-cols-2 gap-3">
                     <InputStyled
                         name="name"
-                        label="Brand Name"
-                        type="text"
+                        label={t("system.brand_name")}
                         onChange={formik.handleChange}
                         value={formik.values.name}
+                        isInvalid={!!(formik.touched.name && formik.errors.name)}
+                        errorMessage={formik.errors.name}
+                        onBlur={() => formik.setFieldTouched("name")}
                         required
                     />
                     <InputStyled
                         name="country"
-                        label="Country"
-                        type="text"
+                        label={t("system.brand_country")}
                         onChange={formik.handleChange}
                         value={formik.values.country}
+                        isInvalid={!!(formik.touched.country && formik.errors.country)}
+                        errorMessage={formik.errors.country}
+                        onBlur={() => formik.setFieldTouched("country")}
                         required
                     />
-                    <InputStyled
+                    <NumberInputStyled
                         name="foundedYear"
-                        label="Founded Year"
-                        value={String(formik.values.foundedYear ?? 0)}
-                        onChange={(e) =>
-                            formik.setFieldValue("foundedYear", Number(e.target.value))
-                        }
-                        min={1800}
-                        max={new Date().getFullYear()}
+                        label={t("system.brand_founded_year")}
+                        value={formik.values.foundedYear}
+                        onValueChange={(val) => formik.setFieldValue("foundedYear", val)}
+                        minValue={1}
+                        maxValue={new Date().getFullYear()}
+                        isInvalid={!!(formik.touched.foundedYear && formik.errors.foundedYear)}
+                        errorMessage={formik.errors.foundedYear}
+                        onBlur={() => formik.setFieldTouched("foundedYear")}
+                        required
                     />
                 </div>
 
                 <TextareaStyled
                     name="description"
-                    label="Description"
-                    placeholder="Describe the brand..."
+                    label={t("system.brand_description")}
+                    placeholder={t("system.brand_description_placeholder")}
                     onChange={formik.handleChange}
                     value={formik.values.description}
+                    isInvalid={!!(formik.touched.description && formik.errors.description)}
+                    errorMessage={formik.errors.description}
+                    onBlur={() => formik.setFieldTouched("description")}
+                    required
                 />
 
                 <div className="flex justify-end gap-3 pt-4">

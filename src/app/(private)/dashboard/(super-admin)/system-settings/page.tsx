@@ -2,7 +2,7 @@
 import {
     Brand,
     ButtonStyled,
-    InputStyled,
+    NumberInputStyled,
     SectionStyled,
     Station,
     VehicleSegment
@@ -16,13 +16,13 @@ import { useTranslation } from "react-i18next"
 export default function SystemSettingPage() {
     const { t } = useTranslation()
     const [isEditing, setEditing] = useState(false)
-    const [initialValues, setInitialValues] = useState<Record<string, string>>({})
-    const [values, setValues] = useState<Record<string, string>>({})
+    const [initialValues, setInitialValues] = useState<Record<string, number>>({})
+    const [values, setValues] = useState<Record<string, number>>({})
 
     const { data: businessVariables } = useGetBusinessVariables()
     const updateBusinessVariables = useUpdateBusinessVariables()
 
-    const handleChange = (id: string, value: string) => {
+    const handleChange = (id: string, value: number) => {
         setValues((prev) => ({ ...prev, [id]: value }))
     }
 
@@ -101,15 +101,17 @@ export default function SystemSettingPage() {
 
                     <div className="grid md:grid-cols-2 gap-6">
                         {businessVariables?.map((variable) => {
-                            const value = values[variable.id] ?? ""
+                            const value = values[variable.id] ?? 0
 
                             return (
-                                <InputStyled
+                                <NumberInputStyled
                                     key={variable.id}
                                     disabled={!isEditing || updateBusinessVariables.isPending}
                                     label={BusinessVariableKeyLabels[variable.key]}
+                                    step={0.01}
+                                    minValue={0}
                                     value={value}
-                                    onChange={(e) => handleChange(variable.id, e.target.value)}
+                                    onValueChange={(val) => handleChange(variable.id, val)}
                                 />
                             )
                         })}

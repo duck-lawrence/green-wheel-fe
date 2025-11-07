@@ -43,6 +43,8 @@ import {
 } from "@/models/vehicle/schema/request"
 
 import { PaginationParams } from "@/models/common/request"
+import { LICENSE_PLATE_REGEX } from "@/constants/regex"
+import { StationViewRes } from "@/models/station/schema/response"
 
 type VehicleWithStatus = VehicleViewRes & { status?: VehicleStatus; modelId?: string }
 type VehicleFilterFormValues = {
@@ -62,7 +64,7 @@ const STATUS_VALUES = Object.values(VehicleStatus).filter(
     (v): v is VehicleStatus => typeof v === "number"
 )
 
-export function AdminVehicleManagementView() {
+export function AdminVehicleManagementView({ myStation }: { myStation: StationViewRes }) {
     const { t } = useTranslation()
 
     // ==== local state ====
@@ -161,7 +163,10 @@ export function AdminVehicleManagementView() {
     const createSchema = useMemo(
         () =>
             Yup.object({
-                licensePlate: Yup.string().trim().required(t("common.required")),
+                licensePlate: Yup.string()
+                    .trim()
+                    .matches(LICENSE_PLATE_REGEX, t("vehicle.license_plate_format"))
+                    .required(t("common.required")),
                 stationId: Yup.string().trim().required(t("common.required")),
                 modelId: Yup.string().trim().required(t("common.required"))
             }),
@@ -171,7 +176,10 @@ export function AdminVehicleManagementView() {
     const editSchema = useMemo(
         () =>
             Yup.object({
-                licensePlate: Yup.string().trim().required(t("common.required")),
+                licensePlate: Yup.string()
+                    .trim()
+                    .matches(LICENSE_PLATE_REGEX, t("vehicle.license_plate_format"))
+                    .required(t("common.required")),
                 stationId: Yup.string().trim().required(t("common.required")),
                 modelId: Yup.string().trim().required(t("common.required")),
                 status: Yup.string().nullable()
@@ -191,14 +199,14 @@ export function AdminVehicleManagementView() {
     }, [])
 
     const filterFormik = useFormik<VehicleFilterFormValues>({
-        initialValues: { licensePlate: "", stationId: null, status: null },
+        initialValues: { licensePlate: "", stationId: myStation.id, status: null },
         validationSchema: filterSchema,
         onSubmit: onApplyFilter
     })
 
     const createMutation = useCreateVehicle()
     const createFormik = useFormik<CreateVehicleReq>({
-        initialValues: { licensePlate: "", modelId: "", stationId: "" },
+        initialValues: { licensePlate: "", modelId: "", stationId: myStation.id },
         validationSchema: createSchema,
         onSubmit: (v, helpers) => {
             const payload: CreateVehicleReq = {
@@ -440,7 +448,7 @@ export function AdminVehicleManagementView() {
                     createFormik.resetForm()
                     createModal.onClose()
                 }}
-                stationOptions={stationSelectOptions}
+                // stationOptions={stationSelectOptions}
                 vehicleModelOptions={vehicleModelOptions}
                 isModelLoading={isFetchingVehicleModels}
                 formik={createFormik}

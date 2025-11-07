@@ -318,6 +318,7 @@
         "license_plate": "License plate",
         "license_plate_placeholder": "Enter license plate",
         "license_plate_required": "License plate is required",
+        "license_plate_format": "Please enter a license plate in the format NNL-XXX.XX (e.g., 01A-123.45)",
         "model_id": "Model ID",
         "model_id_placeholder": "Enter model ID",
         "model_id_required": "Model is required",
@@ -658,7 +659,7 @@
         "sidebar_notifications": "Notifications",
         "sidebar_reports": "Reports",
         "sidebar_customer_supports": "Customer Supports",
-        "sidebar_user_management": "Customer",
+        "sidebar_user_management": "Customers",
         "sidebar_profile": "Profile",
         "sidebar_logout": "Sign out",
         "sidebar_panel_title": "Staff Panel",
@@ -742,7 +743,8 @@
         "admin_management": "Admin Management"
     },
     "super_admin": {
-        "admin_management_title": "Admin Management"
+        "admin_management_title": "Admin Management",
+        "sidebar_admin_management": "Admins"
     },
     "footer": {
         "green_wheel_company_name": "GREEN WHEEL Trading and Service Joint Stock Company",
@@ -1243,7 +1245,9 @@
         "create_station_description": "Create a new station to expand the rental network.",
         "update_station": "Update Station",
         "update_station_description": "Modify existing station information.",
-        "station_name": "Station Name"
+        "station_name": "Station Name",
+        "brand_founded_year_min": "Brand founded year must be greater than 0",
+        "brand_founded_year_max": "Brand founded year must be less than or equal to the current year"
     },
     "business_variable": {
         "not_found": "Setting not found",

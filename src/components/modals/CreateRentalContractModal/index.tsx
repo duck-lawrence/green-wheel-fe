@@ -27,9 +27,11 @@ export function CreateRentalContractModal({
     const { t } = useTranslation()
     const router = useRouter()
     const handleSuccess = useCallback(() => {
-        router.push("/vehicle-rental")
+        const redirectPath = isCustomer ? "/rental-bookings" : "/dashboard/rental-bookings"
+
+        router.push(redirectPath)
         onClose()
-    }, [onClose, router])
+    }, [isCustomer, onClose, router])
 
     return (
         <ModalStyled isOpen={isOpen} onClose={onClose} isDismissable={true}>

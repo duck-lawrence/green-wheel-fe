@@ -1,9 +1,10 @@
 "use client"
-import { ButtonStyled, InputStyled } from "@/components/styled"
+import { ButtonStyled, InputStyled, TextareaStyled } from "@/components/styled"
 import { useCreateStation } from "@/hooks"
 import { StationViewReq } from "@/models/station/schema/request"
 import { Spinner } from "@heroui/react"
 import { useFormik } from "formik"
+import * as Yup from "yup"
 import { MapPin, Save } from "lucide-react"
 import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
@@ -25,6 +26,10 @@ export default function CreateStation({ onClose }: { onClose: () => void }) {
 
     const formik = useFormik({
         initialValues: { name: "", address: "" },
+        validationSchema: Yup.object().shape({
+            name: Yup.string().required(t("common.required")),
+            address: Yup.string().required(t("common.required"))
+        }),
         onSubmit: async (values) => {
             await handleCreate(values)
             onClose()
@@ -47,24 +52,28 @@ export default function CreateStation({ onClose }: { onClose: () => void }) {
             </header>
 
             <form onSubmit={formik.handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                    <InputStyled
-                        name="name"
-                        label={t("system.station_name")}
-                        type="text"
-                        onChange={formik.handleChange}
-                        value={formik.values.name}
-                        required
-                    />
-                    <InputStyled
-                        name="address"
-                        label={t("system.station_address")}
-                        type="text"
-                        onChange={formik.handleChange}
-                        value={formik.values.address}
-                        required
-                    />
-                </div>
+                <InputStyled
+                    name="name"
+                    label={t("system.station_name")}
+                    type="text"
+                    onChange={formik.handleChange}
+                    value={formik.values.name}
+                    isInvalid={!!(formik.touched.name && formik.errors.name)}
+                    errorMessage={formik.errors.name}
+                    onBlur={() => formik.setFieldTouched("name")}
+                    required
+                />
+
+                <TextareaStyled
+                    name="address"
+                    label={t("system.station_address")}
+                    onChange={formik.handleChange}
+                    value={formik.values.address}
+                    isInvalid={!!(formik.touched.address && formik.errors.address)}
+                    errorMessage={formik.errors.address}
+                    onBlur={() => formik.setFieldTouched("address")}
+                    required
+                />
 
                 <div className="flex justify-end gap-3 pt-4">
                     <ButtonStyled

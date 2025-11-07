@@ -3,6 +3,7 @@ import { useGetVehicleSegmentById, useUpdateVehicleSegment } from "@/hooks"
 import { VehicleSegmentReq } from "@/models/vehicle/schema/request"
 import { Spinner } from "@heroui/react"
 import { useFormik } from "formik"
+import * as Yup from "yup"
 import { Building2, Save } from "lucide-react"
 import React, { useCallback } from "react"
 import { useTranslation } from "react-i18next"
@@ -31,6 +32,10 @@ export default function UpdateVehicleSegmentForm({
             description: vehicleSegment?.description || ""
         },
         enableReinitialize: true,
+        validationSchema: Yup.object().shape({
+            name: Yup.string().required(t("common.required")),
+            description: Yup.string().required(t("common.required"))
+        }),
         onSubmit: async (values) => {
             await handleUpdate(id, values)
             onClose()
@@ -54,16 +59,16 @@ export default function UpdateVehicleSegmentForm({
             </header>
 
             <form onSubmit={formik.handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                    <InputStyled
-                        name="name"
-                        label={t("system.segment_name")}
-                        type="text"
-                        onChange={formik.handleChange}
-                        value={formik.values.name}
-                        required
-                    />
-                </div>
+                <InputStyled
+                    name="name"
+                    label={t("system.segment_name")}
+                    onChange={formik.handleChange}
+                    value={formik.values.name}
+                    isInvalid={!!(formik.touched.name && formik.errors.name)}
+                    errorMessage={formik.errors.name}
+                    onBlur={() => formik.setFieldTouched("name")}
+                    required
+                />
 
                 <TextareaStyled
                     name="description"
@@ -71,6 +76,10 @@ export default function UpdateVehicleSegmentForm({
                     placeholder={t("system.vehicle_segment_description_placeholder")}
                     onChange={formik.handleChange}
                     value={formik.values.description}
+                    isInvalid={!!(formik.touched.description && formik.errors.description)}
+                    errorMessage={formik.errors.description}
+                    onBlur={() => formik.setFieldTouched("description")}
+                    required
                 />
 
                 <div className="flex justify-end gap-3 pt-4">

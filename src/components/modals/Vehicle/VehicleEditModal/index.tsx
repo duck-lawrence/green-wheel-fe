@@ -59,12 +59,16 @@ export function VehicleEditModal({
                             label={t("vehicle.license_plate")}
                             value={formik.values.licensePlate}
                             onChange={(event) =>
-                                formik.setFieldValue("licensePlate", event.target.value)
+                                formik.setFieldValue(
+                                    "licensePlate",
+                                    event.target.value.toUpperCase()
+                                )
                             }
                             isInvalid={Boolean(
                                 formik.touched.licensePlate && formik.errors.licensePlate
                             )}
                             errorMessage={formik.errors.licensePlate}
+                            onBlur={() => formik.setFieldTouched("licensePlate")}
                             isRequired
                         />
                         <FilterTypeStyle
@@ -144,7 +148,7 @@ export function VehicleEditModal({
                         <ButtonStyled
                             type="submit"
                             color="primary"
-                            isDisabled={isSubmitting}
+                            isDisabled={isSubmitting || !formik.isValid}
                             className="bg-primary text-white"
                         >
                             {t("common.update")}

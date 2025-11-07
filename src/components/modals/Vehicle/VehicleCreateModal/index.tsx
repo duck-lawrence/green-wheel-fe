@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next"
 import { FormikProps } from "formik"
 
 import {
-    AutocompleteStyled,
     ButtonStyled,
     FilterTypeOption,
     FilterTypeStyle,
@@ -16,8 +15,6 @@ import {
     ModalStyled
 } from "@/components"
 import { CreateVehicleReq } from "@/models/vehicle/schema/request"
-import { AutocompleteItem } from "@heroui/react"
-import { MapPinAreaIcon } from "@phosphor-icons/react"
 
 type SelectOption = {
     id: string
@@ -28,7 +25,7 @@ type VehicleCreateModalProps = {
     isOpen: boolean
     onOpenChange: (isOpen: boolean) => void
     onClose: () => void
-    stationOptions: SelectOption[]
+    // stationOptions: SelectOption[]
     vehicleModelOptions: SelectOption[]
     isModelLoading?: boolean
     formik: FormikProps<CreateVehicleReq>
@@ -39,7 +36,7 @@ export function VehicleCreateModal({
     isOpen,
     onOpenChange,
     onClose,
-    stationOptions,
+    // stationOptions,
     vehicleModelOptions,
     isModelLoading,
     formik,
@@ -58,12 +55,16 @@ export function VehicleCreateModal({
                             placeholder={t("vehicle.license_plate_placeholder")}
                             value={formik.values.licensePlate}
                             onChange={(event) =>
-                                formik.setFieldValue("licensePlate", event.target.value)
+                                formik.setFieldValue(
+                                    "licensePlate",
+                                    event.target.value.toUpperCase()
+                                )
                             }
                             isInvalid={Boolean(
                                 formik.touched.licensePlate && formik.errors.licensePlate
                             )}
                             errorMessage={formik.errors.licensePlate}
+                            onBlur={() => formik.setFieldTouched("licensePlate")}
                             isRequired
                         />
                         <FilterTypeStyle
@@ -96,7 +97,7 @@ export function VehicleCreateModal({
                                 <FilterTypeOption key={option.id}>{option.label}</FilterTypeOption>
                             ))}
                         </FilterTypeStyle>
-                        <AutocompleteStyled
+                        {/* <AutocompleteStyled
                             className="w-full"
                             label={t("vehicle.station_name")}
                             placeholder={t("vehicle.station_placeholder")}
@@ -119,9 +120,17 @@ export function VehicleCreateModal({
                                     {option.label}
                                 </AutocompleteItem>
                             ))}
-                        </AutocompleteStyled>
+                        </AutocompleteStyled> */}
                     </ModalBodyStyled>
                     <ModalFooterStyled className="gap-3">
+                        <ButtonStyled
+                            type="submit"
+                            color="primary"
+                            isDisabled={isSubmitting || !formik.isValid}
+                            className="bg-primary text-white"
+                        >
+                            {t("common.create")}
+                        </ButtonStyled>
                         <ButtonStyled
                             type="button"
                             color="secondary"
@@ -129,14 +138,6 @@ export function VehicleCreateModal({
                             className="bg-slate-200 text-slate-700"
                         >
                             {t("common.cancel")}
-                        </ButtonStyled>
-                        <ButtonStyled
-                            type="submit"
-                            color="primary"
-                            isDisabled={isSubmitting}
-                            className="bg-primary text-white"
-                        >
-                            {t("common.create")}
                         </ButtonStyled>
                     </ModalFooterStyled>
                 </form>

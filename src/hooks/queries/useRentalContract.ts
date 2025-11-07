@@ -29,12 +29,10 @@ export const useInvalidateContractQueries = () => {
 
 export const useCreateRentalContract = ({ onSuccess }: { onSuccess?: () => void }) => {
     const { t } = useTranslation()
-    const router = useRouter()
 
     return useMutation({
         mutationFn: rentalContractApi.create,
         onSuccess: () => {
-            router.push("/rental-contracts")
             onSuccess?.()
             addToast({
                 title: t("toast.success"),

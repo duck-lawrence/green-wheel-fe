@@ -10,7 +10,7 @@ export const businessVariablesApi = {
             return res.data
         }),
 
-    update: (id: string, value: string) =>
+    update: (id: string, value: number) =>
         requestWrapper<UpdateBusinessVariableReq>(async () => {
             const res = await axiosInstance.put(`/business-variables/${id}`, { value })
             return res.data

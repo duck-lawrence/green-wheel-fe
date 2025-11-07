@@ -59,12 +59,12 @@ export function DashboardSidebar({ className }: { className?: string }) {
 
         {
             key: "/dashboard/admins",
-            label: t("admin.admin_management"),
+            label: t("super_admin.sidebar_admin_management"),
             href: "/dashboard/admins"
         },
         {
             key: "/dashboard/system-settings",
-            label: t("admin.system_setting"),
+            label: t("system.system_setting"),
             href: "/dashboard/system-settings"
         }
     ]
