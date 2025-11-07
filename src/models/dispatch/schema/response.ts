@@ -5,6 +5,7 @@ import { VehicleViewRes } from "@/models/vehicle/schema/response"
 export type DispatchViewRes = {
     id: string
     description?: DispatchDescriptionDto
+    finalDescription?: DispatchDescriptionDto
     fromStationId?: string
     toStationId: string
     fromStationName?: string

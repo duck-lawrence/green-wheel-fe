@@ -5,7 +5,7 @@ import {
     UpdateDispatchReq
 } from "@/models/dispatch/schema/request"
 import { DispatchViewRes } from "@/models/dispatch/schema/response"
-import { StationViewRes } from "@/models/station/schema/response"
+import { StationForDispatchRes } from "@/models/station/schema/response"
 import axiosInstance from "@/utils/axios"
 import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 
@@ -39,7 +39,7 @@ export const dispatchApi = {
         }),
 
     getValidStationsForDispatch: ({ id }: { id: string }) =>
-        requestWrapper<StationViewRes[]>(async () => {
+        requestWrapper<StationForDispatchRes[]>(async () => {
             const res = await axiosInstance.get(`/dispatch-requests/${id}/valid-stations`)
             return res.data
         })

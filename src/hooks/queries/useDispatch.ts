@@ -2,7 +2,7 @@ import { QUERY_KEYS } from "@/constants/queryKey"
 import { BackendError } from "@/models/common/response"
 import { DispatchQueryParams } from "@/models/dispatch/schema/request"
 import { DispatchViewRes } from "@/models/dispatch/schema/response"
-import { StationViewRes } from "@/models/station/schema/response"
+import { StationForDispatchRes } from "@/models/station/schema/response"
 import { dispatchApi } from "@/services/dispathApi"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { addToast } from "@heroui/toast"
@@ -141,7 +141,7 @@ export const useGetValidStationsForDispatch = ({
         queryKey: [...QUERY_KEYS.DISPATCH_REQUESTS, id, "validStations"],
         queryFn: () => dispatchApi.getValidStationsForDispatch({ id }),
         initialData: () => {
-            return queryClient.getQueryData<StationViewRes[]>([
+            return queryClient.getQueryData<StationForDispatchRes[]>([
                 ...QUERY_KEYS.DISPATCH_REQUESTS,
                 id,
                 "validStations"

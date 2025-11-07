@@ -1,11 +1,20 @@
 "use client"
-import { AlertModal, ButtonStyled, SectionStyled, SpinnerStyled, TableStyled } from "@/components"
+import {
+    AlertModal,
+    ButtonIconStyled,
+    ButtonStyled,
+    SectionStyled,
+    SpinnerStyled,
+    TableStyled
+} from "@/components"
+import { StationDetailForDispatchModal } from "@/components/modals/StationDetailForDispatchModal"
 import { DispatchRequestStatus } from "@/constants/enum"
 import {
     useConfirmDispatch,
     useGetDispatchById,
     useGetValidStationsForDispatch
 } from "@/hooks/queries/useDispatch"
+import { StationForDispatchRes } from "@/models/station/schema/response"
 import {
     Spinner,
     TableBody,
@@ -15,6 +24,7 @@ import {
     TableRow,
     useDisclosure
 } from "@heroui/react"
+import { EyeIcon } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 import React, { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -22,6 +32,9 @@ import { useTranslation } from "react-i18next"
 export default function DispatchApprovePage() {
     const { t } = useTranslation()
     const router = useRouter()
+    const [selectedStation, setSelectedStation] = useState<StationForDispatchRes | undefined>(
+        undefined
+    )
 
     const { id } = useParams()
     const dispatchId = id?.toString()
@@ -32,7 +45,17 @@ export default function DispatchApprovePage() {
             enabled: !!dispatchId
         })
 
-    const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure()
+    const {
+        isOpen: isAlertOpen,
+        onOpenChange: onAlertOpenChange,
+        onOpen: onAlertOpen,
+        onClose: onAlertClose
+    } = useDisclosure()
+    const {
+        isOpen: isStationOpen,
+        onOpenChange: onStationOpenChange,
+        onOpen: onStationOpen
+    } = useDisclosure()
 
     const [selectedStationId, setSelectedStationId] = useState<string>()
     const confirmMutation = useConfirmDispatch({
@@ -58,7 +81,7 @@ export default function DispatchApprovePage() {
         }
     }, [dispatch, router])
 
-    if (!dispatch) return <SpinnerStyled />
+    if (!dispatch || !dispatch.description) return <SpinnerStyled />
 
     return (
         <>
@@ -85,6 +108,9 @@ export default function DispatchApprovePage() {
                         <TableColumn className="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
                             {t("station.address")}
                         </TableColumn>
+                        <TableColumn className="py-3 px-4 text-center text-xs font-semibold uppercase tracking-wide text-slate-600">
+                            {t("table.view_detail")}
+                        </TableColumn>
                     </TableHeader>
 
                     <TableBody
@@ -104,11 +130,34 @@ export default function DispatchApprovePage() {
                                 <TableCell className="py-3 px-4 text-slate-700">
                                     {item.address}
                                 </TableCell>
+                                <TableCell className="py-3 px-4 text-slate-700 text-center">
+                                    <ButtonIconStyled
+                                        color="primary"
+                                        variant="ghost"
+                                        onPress={() => {
+                                            setSelectedStation(item)
+                                            onStationOpen()
+                                        }}
+                                        className="px-3 py-2"
+                                    >
+                                        <EyeIcon size={16} />
+                                    </ButtonIconStyled>
+                                </TableCell>
                             </TableRow>
                         )}
                     </TableBody>
                 </TableStyled>
             </SectionStyled>
+
+            {selectedStation && (
+                <StationDetailForDispatchModal
+                    key={selectedStation.id}
+                    isOpen={isStationOpen}
+                    onOpenChange={onStationOpenChange}
+                    station={selectedStation}
+                    dispatchDescription={dispatch.description!}
+                />
+            )}
 
             <div className="flex justify-center items-center gap-2">
                 {confirmMutation.isPending ? (
@@ -118,7 +167,7 @@ export default function DispatchApprovePage() {
                         <ButtonStyled
                             className="btn-gradient px-6 py-2"
                             isDisabled={!selectedStationId}
-                            onPress={onOpen}
+                            onPress={onAlertOpen}
                         >
                             {t("dispatch.approve")}
                         </ButtonStyled>
@@ -137,9 +186,9 @@ export default function DispatchApprovePage() {
             <AlertModal
                 header={t("common.confirm_to_submit")}
                 body={t("common.confirm_to_submit_body")}
-                isOpen={isOpen && !!selectedStationId}
-                onOpenChange={onOpenChange}
-                onClose={onClose}
+                isOpen={isAlertOpen && !!selectedStationId}
+                onOpenChange={onAlertOpenChange}
+                onClose={onAlertClose}
                 onConfirm={() => {
                     handleConfirm(DispatchRequestStatus.Approved)
                 }}

@@ -17,8 +17,6 @@ import { InvoiceItemType, InvoiceStatus } from "@/constants/enum"
 import { useTranslation } from "react-i18next"
 import { TaxInput } from "../TaxInput"
 
-export * from "./DetailDamage"
-
 export function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes }) {
     const { t } = useTranslation()
     const { isOpen, onOpen, onOpenChange } = useDisclosure()
@@ -42,12 +40,6 @@ export function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes }) {
                 variant="bordered"
                 isIncludeTax={true}
             />
-            <InputStyled
-                label={t("invoice.late_return_fee")}
-                value={lateReturn}
-                startContent={<Clock size={22} className="text-primary" weight="duotone" />}
-                variant="bordered"
-            />
 
             <div className="flex gap-3 items-center">
                 <InputStyled
@@ -70,11 +62,18 @@ export function InvoiceReturnForm({ invoice }: { invoice: InvoiceViewRes }) {
 
             <DetailDamageModal isOpen={isOpen} onOpenChange={onOpenChange} invoiceId={invoice.id} />
 
+            <InputStyled
+                label={t("invoice.late_return_fee")}
+                value={lateReturn}
+                startContent={<Clock size={22} className="text-primary" weight="duotone" />}
+                variant="bordered"
+            />
+
             <div className="grid grid-cols-3 gap-3">
                 <div className="grid col-span-2">
                     <InputStyled
-                        label={t("invoice.vat_tax")}
-                        value={formatCurrencyWithSymbol(invoice.total)}
+                        label={t("invoice.tax_amount")}
+                        value={formatCurrencyWithSymbol(invoice.subtotal * invoice.tax)}
                         startContent={<Money size={22} className="text-primary" weight="duotone" />}
                         variant="bordered"
                     />
