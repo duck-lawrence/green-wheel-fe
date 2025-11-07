@@ -33,7 +33,7 @@
         "reason_electric": "100% Electric Vehicles",
         "reason_electric_desc": "Save energy and reduce CO₂ emissions.",
         "reason_smart": "Smart Management",
-        "reason_smart_desc": "All contracts and invoices are fully digitized.",
+        "reason_smart_desc": "All bookings and invoices are fully digitized.",
         "reason_safe": "Safe & Convenient",
         "reason_safe_desc": "Regularly maintained cars, always ready to go.",
         "reason_green": "Greener Every Day",
@@ -284,7 +284,7 @@
         "type": "Type",
         "staff": "Staff",
         "customer": "Customer",
-        "contract_id": "Contract ID",
+        "contract_id": "Booking ID",
         "unknown_station": "Unknown station",
         "unknown_brand": "Unknown brand",
         "unknown_model": "Unknown model",
@@ -589,7 +589,7 @@
         "staff_report": "Staff report",
         "contact": "Contact",
         "escalated_to_admin": "Escalated to admin",
-        "out_of_contract": "Out Of Contract",
+        "out_of_contract": "Out Of Booking",
         "return": "Return",
         "handover": "Handover",
         "super_admin": "Super Admin",
@@ -600,7 +600,7 @@
         "cleaning_fee": "Cleaning Fee",
         "base_vat": "Base VAT",
         "max_late_return_hours": "Max Late Return Hours",
-        "rental_contract_buffer_day": "Rental Contract Buffer Day"
+        "rental_contract_buffer_day": "Rental Booking Buffer Day"
     },
     "car_rental": {
         "vehicle": "Vehicle",
@@ -668,9 +668,9 @@
         "handovers_error": "Failed to load handovers: {{message}}",
         "handovers_filters_status": "Status",
         "handovers_filters_search": "Search",
-        "handovers_filters_search_placeholder": "Customer / Contract #",
+        "handovers_filters_search_placeholder": "Customer / Booking #",
         "handovers_table_aria_label": "Handovers table",
-        "handovers_table_columns_contract": "Contract ",
+        "handovers_table_columns_contract": "Booking ",
         "handovers_table_columns_customer": "Customer",
         "handovers_table_columns_vehicle": "Vehicle",
         "handovers_table_columns_planned": "Planned",
@@ -771,8 +771,8 @@
         "sub": "Our team will get back to you as soon as possible. For urgent matters, please call our hotline."
     },
     "rental_contract": {
-        "id": "Contract ID",
-        "id_required": "Contract ID is required",
+        "id": "Booking ID",
+        "id_required": "Booking ID is required",
         "back_to_rental_contract": "Back to Rental Booking",
         "please_login": "Please login to rent",
         "rent": "Rent this vehicle",
@@ -787,12 +787,13 @@
         "rental_contract": "Rental Booking",
         "rental_contract_details_description": "Detailed information about the customer's electric vehicle Rental Booking.",
         "rental_contract_information": "Rental Booking information",
+        "customer_notes": "Customer Notes",
         "rental_date": "Rental date",
-        "contract_code": "Contract code",
-        "contract_status": "Contract status",
+        "contract_code": "Booking code",
+        "contract_status": "Booking status",
         "vehicle_name": "Vehicle name",
         "license_plate": "License plate",
-        "contract_description": "Contract description",
+        "contract_description": "Booking description",
         "rental_duration": "Rental duration",
         "start_date": "Start date",
         "start_date_must_be_future": "Pick-up time must be at least 3 hours from now and within 7 AM - 5 PM",
@@ -805,7 +806,7 @@
         "vehicle_return_staff": "Vehicle return staff",
         "payment_invoice_list": "Payment invoice list",
         "create_at": "Created at",
-        "user_already_have_contract": "You can only have one pending or active contract at a time",
+        "user_already_have_contract": "You can only have one pending or active booking at a time",
         "not_found": "Rental Booking not found",
         "already_process": "This Rental Booking has already been processed.",
         "can_not_cancel": "This Rental Booking can not be cancelled",
@@ -819,7 +820,7 @@
         "model_id_required": "Model is required",
         "station_id_required": "Station is required",
         "at_least_one_party_must_sign": "At least one party must sign",
-        "not_start_yet": "This contract is not start yet"
+        "not_start_yet": "This booking is not start yet"
     },
     "invoice": {
         "not_found": "Invoice not found",
@@ -827,6 +828,9 @@
         "not_handover_payment": "This invoice is not a handover payment",
         "invalid_invoice_type": "Invalid invoice type",
         "forbidden_invoice_access": "You do not have permission to access this invoice.",
+
+        "policy_title": "How Invoices Work",
+        "policy_subtitle": "Quick guide to how invoices work",
 
         "paid_amount": "Paid amount",
         "return_amount": "Return amount",
@@ -1063,8 +1067,8 @@
         "view_handover": "View handover checklist",
         "create_return": "Create return checklist",
         "view_return": "View return checklist",
-        "create_out_of_contract": "Create out of contract checklist",
-        "view_out_of_contract": "View out of contract checklist",
+        "create_out_of_contract": "Create out of booking checklist",
+        "view_out_of_contract": "View out of booking checklist",
         "item_image": "Vehicle checklist item image",
 
         "maintain_until": "Maintain until",
@@ -1077,11 +1081,11 @@
         "item_id_required": "Item ID is required"
     },
     "signature": {
-        "signature": "Signature",
-        "signed_by_staff": "Staff signature",
-        "signed_by_customer": "Customer signature",
-        "signed_by_staff_require": "Staff must sign",
-        "signed_by_customer_require": "Customer must sign"
+        "signature": "Confirm",
+        "signed_by_staff": "Staff confirm",
+        "signed_by_customer": "Customer confirm",
+        "signed_by_staff_require": "Staff must confirm",
+        "signed_by_customer_require": "Customer must confirm"
     },
     "review": {
         "create_successfull": "Feedback created successfully",
@@ -1247,6 +1251,11 @@
         "not_found": "Setting not found",
         "value_is_required": "Value is required",
         "value_must_be_greater_than_zero": "Value must be greater than 0"
+    },
+    "policy": {
+        "please_read": "Please read our",
+        "term": "Policy Terms",
+        "for_more_information": "for more information"
     },
     "errors": {
         "not_found": "Oops! Page Not Found",

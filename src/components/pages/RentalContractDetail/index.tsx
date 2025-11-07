@@ -45,9 +45,11 @@ import { CreateInvoiceSection } from "./CreateInvoiceSection"
 import { HandoverContractReq } from "@/models/rental-contract/schema/request"
 import { BottomActionButtons } from "./BottomActionButtons"
 import { addToast } from "@heroui/toast"
-import { useDisclosure } from "@heroui/react"
+import { Chip, useDisclosure } from "@heroui/react"
 import { cn } from "node_modules/@heroui/theme/dist/utils/cn"
 import { UserProfileViewRes } from "@/models/user/schema/response"
+import { RentalContractStatusColorMap } from "@/constants/colorMap"
+import { EyeIcon } from "lucide-react"
 
 function getChecklistDisplay(status?: RentalContractStatus) {
     const handoverStatuses = [
@@ -238,6 +240,9 @@ export function RentalContractDetail({
                 <p className="text-gray-600 dark:text-gray-400 text-lg">
                     {t("rental_contract.rental_contract_details_description")}
                 </p>
+                <Chip className={RentalContractStatusColorMap[contract.status]}>
+                    {RentalContractStatusLabels[contract.status]}
+                </Chip>
             </div>
 
             {/* Contract Info */}
@@ -252,7 +257,10 @@ export function RentalContractDetail({
                                 lastName: contract.customer.lastName
                             })}
                         </span> */}
-                        <span onClick={onOpen} className="hover:cursor-pointer">
+                        <span
+                            onClick={onOpen}
+                            className="hover:cursor-pointer flex items-center gap-2"
+                        >
                             {t("table.customer")}
                             {": "}
                             {toFullName({
@@ -311,7 +319,7 @@ export function RentalContractDetail({
                         />
                     </div>
 
-                    <InputStyled
+                    {/* <InputStyled
                         isReadOnly
                         label={t("rental_contract.contract_status")}
                         value={RentalContractStatusLabels[contract.status]}
@@ -319,7 +327,7 @@ export function RentalContractDetail({
                             <ClipboardText size={22} className="text-primary" weight="duotone" />
                         }
                         variant="bordered"
-                    />
+                    /> */}
                     <InputStyled
                         isReadOnly
                         label={t("station.station")}
@@ -327,6 +335,13 @@ export function RentalContractDetail({
                         startContent={
                             <ClipboardText size={22} className="text-primary" weight="duotone" />
                         }
+                        variant="bordered"
+                    />
+
+                    <InputStyled
+                        isReadOnly
+                        label={t("rental_contract.customer_notes")}
+                        value={contract.notes || ""}
                         variant="bordered"
                     />
 

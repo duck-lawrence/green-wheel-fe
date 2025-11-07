@@ -10,6 +10,7 @@ import {
 import { useTranslation } from "react-i18next"
 import {
     AutocompleteItem,
+    Chip,
     Spinner,
     TableBody,
     TableCell,
@@ -183,16 +184,9 @@ export default function RentalContractPage() {
                                         <span>{item.station.name}</span>
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        <span
-                                            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold 
-                                                        ${
-                                                            RentalContractStatusColorMap[
-                                                                item.status
-                                                            ]
-                                                        }`}
-                                        >
+                                        <Chip className={RentalContractStatusColorMap[item.status]}>
                                             {RentalContractStatusLabels[item.status]}
-                                        </span>
+                                        </Chip>
                                     </TableCell>
                                 </TableRow>
                             ))}
