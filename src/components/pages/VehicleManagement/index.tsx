@@ -68,7 +68,7 @@ export function AdminVehicleManagementView({ myStation }: { myStation: StationVi
     const { t } = useTranslation()
 
     // ==== local state ====
-    const [filter, setFilter] = useState<GetVehicleParams>({})
+    const [filter, setFilter] = useState<GetVehicleParams>({ stationId: myStation.id })
     const [pagination, setPagination] = useState<PaginationParams>({ pageSize: 10 })
     const [editingVehicle, setEditingVehicle] = useState<VehicleWithStatus | null>(null)
     const [deletingVehicle, setDeletingVehicle] = useState<VehicleWithStatus | null>(null)

@@ -1,9 +1,10 @@
 "use client"
 import { ButtonIconStyled, EnumPicker, SpinnerStyled, TableStyled } from "@/components"
 import { DispatchRequestStatusColorMap } from "@/constants/colorMap"
+import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { DispatchRequestStatus, RoleName } from "@/constants/enum"
 import { DispatchRequestStatusLabels } from "@/constants/labels"
-import { useGetAllDispatch, useGetMe, useNavigateOnClick } from "@/hooks"
+import { useDay, useGetAllDispatch, useGetMe, useNavigateOnClick } from "@/hooks"
 import { DispatchQueryParams } from "@/models/dispatch/schema/request"
 import { Chip, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { EyeIcon, Plus } from "lucide-react"
@@ -15,6 +16,8 @@ import { useTranslation } from "react-i18next"
 export default function DispatchPage() {
     const handleNavigateClick = useNavigateOnClick()
     const { t } = useTranslation()
+    const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
+
     const { data: user, isLoading: isUserLoading } = useGetMe()
     const isAdmin = user?.role?.name === RoleName.Admin
     const stationId = isAdmin ? user?.station?.id : undefined
@@ -80,6 +83,9 @@ export default function DispatchPage() {
                     <TableStyled
                         aria-label={t("dispatch.dispatch_table")}
                         className="min-w-full text-sm md:text-base"
+                        classNames={{
+                            base: "max-h-[500px] overflow-auto"
+                        }}
                         removeWrapper
                     >
                         <TableHeader>
@@ -92,11 +98,14 @@ export default function DispatchPage() {
                             <TableColumn className="text-center text-gray-700 font-semibold">
                                 {t("table.to_station")}
                             </TableColumn>
-                            <TableColumn className="text-center text-gray-700 font-semibold">
+                            <TableColumn className="w-16 text-center text-gray-700 font-semibold">
                                 {t("dispatch.number_staff")}
                             </TableColumn>
-                            <TableColumn className="text-center text-gray-700 font-semibold">
+                            <TableColumn className="w-16 text-center text-gray-700 font-semibold">
                                 {t("dispatch.number_vehicle")}
+                            </TableColumn>
+                            <TableColumn className="text-center text-gray-700 font-semibold">
+                                {t("table.created_at")}
                             </TableColumn>
                             <TableColumn className="text-center text-gray-700 font-semibold">
                                 {t("table.status")}
@@ -138,6 +147,11 @@ export default function DispatchPage() {
                                                     (sum, v) => sum + v.quantity,
                                                     0
                                                 ) ?? 0}
+                                            </TableCell>
+                                            <TableCell className="text-center text-gray-700">
+                                                {formatDateTime({
+                                                    date: item.createdAt
+                                                })}
                                             </TableCell>
                                             <TableCell className="text-center">
                                                 <Chip

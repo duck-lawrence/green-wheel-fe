@@ -1,4 +1,5 @@
 import { DispatchRequestStatus } from "@/constants/enum"
+import { DispatchDescriptionDto } from "./response"
 
 export type CreateDispatchReq = {
     // description?: string
@@ -14,9 +15,10 @@ export type UpdateApproveDispatchReq = {
     description?: string
 }
 
-export type ApproveDispatchReq = {
+export type ConfirmDispatchReq = {
     status: DispatchRequestStatus
     fromStationId?: string
+    finalDescription?: DispatchDescriptionDto
 }
 
 export type UpdateDispatchReq = {

@@ -1,11 +1,11 @@
 import {
-    ApproveDispatchReq,
+    ConfirmDispatchReq,
     CreateDispatchReq,
     DispatchQueryParams,
     UpdateDispatchReq
 } from "@/models/dispatch/schema/request"
 import { DispatchViewRes } from "@/models/dispatch/schema/response"
-import { StationViewRes } from "@/models/station/schema/response"
+import { StationForDispatchRes } from "@/models/station/schema/response"
 import axiosInstance from "@/utils/axios"
 import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 
@@ -15,7 +15,7 @@ export const dispatchApi = {
             await axiosInstance.post("/dispatch-requests", req)
         }),
 
-    confirm: ({ id, req }: { id: string; req: ApproveDispatchReq }) =>
+    confirm: ({ id, req }: { id: string; req: ConfirmDispatchReq }) =>
         requestWrapper<void>(async () => {
             await axiosInstance.put(`/dispatch-requests/${id}/confirm`, req)
         }),
@@ -39,7 +39,7 @@ export const dispatchApi = {
         }),
 
     getValidStationsForDispatch: ({ id }: { id: string }) =>
-        requestWrapper<StationViewRes[]>(async () => {
+        requestWrapper<StationForDispatchRes[]>(async () => {
             const res = await axiosInstance.get(`/dispatch-requests/${id}/valid-stations`)
             return res.data
         })

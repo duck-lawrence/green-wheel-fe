@@ -151,8 +151,13 @@ export function InvoiceAccordion({
 
     return (
         <div>
-            <Accordion key={t("invoice.policy_title")} variant="splitted" className="w-full">
+            <Accordion
+                variant="splitted"
+                className="w-full"
+                defaultExpandedKeys={["invoice.policy_title"]}
+            >
                 <AccordionItem
+                    key={"invoice.policy_title"}
                     title={t("invoice.policy_title")}
                     subtitle={t("invoice.policy_subtitle")}
                 >

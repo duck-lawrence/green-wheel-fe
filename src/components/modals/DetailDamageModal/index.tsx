@@ -1,11 +1,12 @@
 "use client"
-import { DetailDamage, ModalStyled } from "@/components"
+import { ModalStyled } from "@/components"
 import { useGetInvoiceById } from "@/hooks"
 import { BackendError } from "@/models/common/response"
 import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
 import { addToast, ModalBody, ModalContent, ModalHeader, Spinner } from "@heroui/react"
 import React, { useEffect } from "react"
 import { useTranslation } from "react-i18next"
+import { DetailDamage } from "./DetailDamage"
 
 export function DetailDamageModal({
     isOpen,
