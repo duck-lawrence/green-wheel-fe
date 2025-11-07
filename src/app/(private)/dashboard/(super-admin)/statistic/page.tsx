@@ -1,5 +1,5 @@
 "use client"
-import { AutocompleteStyled, KpiStat, SectionStyled, SpinnerStyled } from "@/components"
+import { AutocompleteStyled, KpiStat, SpinnerStyled } from "@/components"
 import {
     useGetAllStations,
     useGetAnonymuousStatistic,
@@ -13,8 +13,6 @@ import {
 import { formatCurrencyWithSymbol } from "@/utils/helpers/currency"
 import { AutocompleteItem } from "@heroui/react"
 import { MapPinAreaIcon } from "@phosphor-icons/react"
-import { useFormik } from "formik"
-import { MapPinCheck } from "lucide-react"
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
@@ -34,25 +32,12 @@ export default function StatisticPage() {
     const { t } = useTranslation()
 
     const [stationId, setStationId] = useState<string>("")
+
     const { data: stations, isLoading: isStationsLoading } = useGetAllStations()
 
     useEffect(() => {
-        if (stations && stations.length > 0 && !stationId) setStationId(stations[0].id)
+        if (stations && stations.length > 0 && !stationId) setStationId("")
     }, [stationId, stations])
-
-    const formik = useFormik({
-        initialValues: {
-            fromStationId: stations?.[0]?.id || ""
-        },
-        enableReinitialize: true,
-        onSubmit: () => {}
-    })
-
-    useEffect(() => {
-        if (formik.values.fromStationId) {
-            setStationId(formik.values.fromStationId)
-        }
-    }, [formik.values.fromStationId])
 
     const { data: totalCustomer, isLoading: isTotalCustomerLoading } = useGetCustomerStatistic({
         stationId,
@@ -138,29 +123,32 @@ export default function StatisticPage() {
     )
         return <SpinnerStyled />
     return (
-        <div>
-            <SectionStyled title={t("dispatch.station")} sectionClassName="mb-0" icon={MapPinCheck}>
-                <AutocompleteStyled
-                    label={t("vehicle_model.station")}
-                    className="max-w-60 h-20 mr-0"
-                    items={stations ?? []}
-                    startContent={<MapPinAreaIcon className="text-xl" />}
-                    selectedKey={formik.values.fromStationId}
-                    onSelectionChange={(key) => {
-                        formik.setFieldValue("fromStationId", key as string)
-                    }}
-                    isClearable={false}
-                    isInvalid={!!formik.errors.fromStationId}
-                    errorMessage={formik.errors.fromStationId}
-                >
-                    {(stations ?? []).map((item) => (
-                        <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
-                    ))}
-                </AutocompleteStyled>
-            </SectionStyled>
-
+        <>
             <div className="max-w-6xl mx-auto w-full">
-                <h2 className="text-3xl font-bold mb-6">{t("statistic.general_statistics")}</h2>
+                <div className="flex justify-around gap-66">
+                    <h2 className="text-3xl font-bold mb-6 flex justify-start items-end">
+                        {t("statistic.general_statistics")}
+                    </h2>
+                    <span className="flex justify-end">
+                        <section>
+                            <AutocompleteStyled
+                                label={t("vehicle_model.station")}
+                                className="max-w-60 h-20 mr-0"
+                                items={stations ?? []}
+                                startContent={<MapPinAreaIcon className="text-xl" />}
+                                selectedKey={stationId}
+                                onSelectionChange={(key) => {
+                                    setStationId(String(key))
+                                }}
+                            >
+                                {(stations ?? []).map((item) => (
+                                    <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
+                                ))}
+                            </AutocompleteStyled>
+                        </section>
+                    </span>
+                </div>
+
                 <dl className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     {dataKpi.map((item) => (
                         <KpiStat key={item.title} data={item} />
@@ -292,7 +280,7 @@ export default function StatisticPage() {
                 {/* Chart total invoice for month */}
                 <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md  m-4 w-full max-w-[60rem]">
                     <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
-                        {t("statistic.monthly_invoices")}
+                        {t("statistic.monthly_contracts")}
                     </h3>
 
                     <ResponsiveContainer width="100%" height={320}>
@@ -313,7 +301,7 @@ export default function StatisticPage() {
                             <YAxis
                                 tick={{ fill: "#94a3b8", fontSize: 11 }}
                                 axisLine={true}
-                                tickFormatter={(v) => `${formatCurrencyWithSymbol(v)}`}
+                                tickFormatter={(v) => `${v}` + `` + "đơn"}
                             />
                             <Tooltip
                                 contentStyle={{
@@ -323,15 +311,14 @@ export default function StatisticPage() {
                                     borderRadius: "8px",
                                     boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
                                 }}
-                                // formatter={(value) => [`${value} triệu ₫`, "Doanh thu"]}
                                 formatter={(value) => [
                                     `${formatCurrencyWithSymbol(value as number)}`,
-                                    `${t("statistic.invoices")}`
+                                    `${t("statistic.contracts")}`
                                 ]}
                             />
                             <Legend verticalAlign="top" height={36} />
 
-                            {/* Line biểu thị doanh thu */}
+                            {/* Line biểu thị invoice */}
                             <Line
                                 type="monotone"
                                 dataKey="invoices"
@@ -344,13 +331,13 @@ export default function StatisticPage() {
                                     stroke: "#fff",
                                     strokeWidth: 2
                                 }}
-                                // name="Tổng doanh thu"
+                                // name="Tổng hóa đơn"
                                 name={t("statistic.total_invoices")}
                             />
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
             </div>
-        </div>
+        </>
     )
 }

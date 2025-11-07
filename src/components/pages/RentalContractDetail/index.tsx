@@ -260,7 +260,7 @@ export function RentalContractDetail({
                                 lastName: contract.customer.lastName
                             })}
                             <span className="underline pl-2 text-sm text-gray-400 ">
-                                View details
+                                {t("table.view_details")}
                             </span>
                         </span>
 

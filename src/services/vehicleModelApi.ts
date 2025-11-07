@@ -7,6 +7,7 @@ import {
     UpdateVehicleModelReq
 } from "@/models/vehicle/schema/request"
 import {
+    BestBrandModelRes,
     CreateVehicleModelRes,
     VehicleModelImagesRes,
     VehicleModelViewRes
@@ -91,5 +92,11 @@ export const vehicleModelApi = {
     delete: (id: string) =>
         requestWrapper<void>(async () => {
             await axiosInstance.delete(`/vehicle-models/${id}`)
+        }),
+
+    getBestBrandModels: () =>
+        requestWrapper<BestBrandModelRes[]>(async () => {
+            const res = await axiosInstance.get("/vehicle-models/best-booking")
+            return res.data
         })
 }

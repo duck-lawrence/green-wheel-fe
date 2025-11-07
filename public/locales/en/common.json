@@ -299,7 +299,8 @@
         "content": "Content",
         "station_feedbacks": "Station Feedbacks",
         "country": "Country",
-        "address": "Address"
+        "address": "Address",
+        "view_details": "View details"
     },
     "contral_form": {
         "full_name_require": "Full name is required",
@@ -1206,9 +1207,10 @@
         "failed_to_calculate_invoice_change": "Failed to calculate invoice change",
         "total_revenue": "Total Revenue",
         "revenue": "Revenue",
-        "invoices": "Invoices",
+        "contracts": "contracts",
+        "contract": "Contract",
         "total_invoices": "Total Invoices",
-        "monthly_invoices": "Monthly Invoices"
+        "monthly_contracts": "Monthly Contracts"
     },
     "system": {
         "system_setting": "System Setting",
