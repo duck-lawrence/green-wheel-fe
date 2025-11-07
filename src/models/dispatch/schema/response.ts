@@ -15,7 +15,7 @@ export type DispatchViewRes = {
     requestAdminName: string
     approvedAdminId: string
     approvedAdminName: string
-    CreatedAt: string
+    createdAt: string
     dispatchRequestStaffs: DispatchStaffRes[]
     dispatchRequestVehicles: DispatchVehicleRes[]
 }

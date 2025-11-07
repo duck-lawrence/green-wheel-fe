@@ -1,34 +1,107 @@
 "use client"
-import { InputStyled, ModalStyled, NumberInputStyled, TableStyled } from "@/components"
-import { DispatchDescriptionDto } from "@/models/dispatch/schema/response"
+import {
+    ButtonStyled,
+    InputStyled,
+    ModalStyled,
+    NumberInputStyled,
+    SectionStyled,
+    TableStyled
+} from "@/components"
+import { useConfirmDispatch } from "@/hooks"
+import { ConfirmDispatchReq } from "@/models/dispatch/schema/request"
+import { DispatchDescriptionVehicleDto, DispatchViewRes } from "@/models/dispatch/schema/response"
 import { StationForDispatchRes } from "@/models/station/schema/response"
 import {
     ModalBody,
     ModalContent,
     ModalHeader,
+    Spinner,
     TableBody,
     TableCell,
     TableColumn,
     TableHeader,
     TableRow
 } from "@heroui/react"
-import React from "react"
+import { useRouter } from "next/navigation"
+import React, { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
+import { FormikErrors, useFormik } from "formik"
+import * as Yup from "yup"
+import { DispatchRequestStatus } from "@/constants/enum"
+
+interface FinalDescriptionForm {
+    numberOfStaffs: number
+    vehicles: DispatchDescriptionVehicleDto[]
+}
 
 export function StationDetailForDispatchModal({
     isOpen,
     onOpenChange,
     station,
-    dispatchDescription
+    dispatch
 }: {
     isOpen: boolean
     onOpenChange: (isOpen: boolean) => void
     station: StationForDispatchRes
-    dispatchDescription: DispatchDescriptionDto
+    dispatch: DispatchViewRes
 }) {
     const { t } = useTranslation()
+    const router = useRouter()
 
-    console.log(isOpen)
+    const confirmMutation = useConfirmDispatch({
+        onSuccess: () => router.push(`/dashboard/dispatchs/${dispatch.id}`)
+    })
+
+    const handleApprove = useCallback(
+        async (value: NonNullable<ConfirmDispatchReq["finalDescription"]>) => {
+            await confirmMutation.mutateAsync({
+                id: dispatch.id,
+                req: {
+                    status: DispatchRequestStatus.Approved,
+                    fromStationId: station.id,
+                    finalDescription: value
+                }
+            })
+        },
+        [confirmMutation, dispatch.id, station.id]
+    )
+
+    const validationSchema = useMemo(() => {
+        return Yup.object().shape({
+            numberOfStaffs: Yup.number()
+                .typeError(t("validation.number_type_require"))
+                .integer(t("validation.integer_require"))
+                .required(t("dispatch.number_staff_require"))
+                .min(0, t("dispatch.number_staff_min")),
+            vehicles: Yup.array().of(
+                Yup.object().shape({
+                    modelId: Yup.string().required(t("dispatch.vehicle_model_require")),
+                    quantity: Yup.number()
+                        .typeError(t("validation.number_type_require"))
+                        .integer(t("validation.integer_require"))
+                        .required(t("dispatch.number_vehicle_require"))
+                        .min(0, t("dispatch.number_vehicle_min"))
+                })
+            )
+        })
+    }, [t])
+
+    const formik = useFormik<FinalDescriptionForm>({
+        initialValues: {
+            numberOfStaffs: dispatch.description?.numberOfStaffs || 0,
+            vehicles: dispatch.description?.vehicles || []
+        },
+        enableReinitialize: true,
+        validationSchema,
+        onSubmit: handleApprove
+    })
+
+    const rows = (dispatch.description?.vehicles || []).map((item, index) => ({
+        modelId: item.modelId,
+        index: index,
+        modelName: item.modelName,
+        quantity: item.quantity
+    }))
 
     return (
         <ModalStyled
@@ -56,7 +129,7 @@ export function StationDetailForDispatchModal({
                             labelPlacement="outside"
                             label={t("dispatch.number_staff_need")}
                             className="w-full"
-                            value={dispatchDescription?.numberOfStaffs || 0}
+                            value={dispatch.description?.numberOfStaffs || 0}
                             isReadOnly
                         />
                         <NumberInputStyled
@@ -82,7 +155,7 @@ export function StationDetailForDispatchModal({
                             </TableColumn>
                         </TableHeader>
                         <TableBody
-                            items={dispatchDescription?.vehicles || []}
+                            items={dispatch.description?.vehicles || []}
                             emptyContent={t("dispatch.no_vehicles_requested")}
                         >
                             {(item) => {
@@ -105,6 +178,110 @@ export function StationDetailForDispatchModal({
                             }}
                         </TableBody>
                     </TableStyled>
+
+                    <SectionStyled
+                        title={t("dispatch.super_admin_approve")}
+                        sectionClassName="mb-2"
+                        childrenClassName="space-y-2"
+                    >
+                        <NumberInputStyled
+                            label={t("dispatch.number_staff")}
+                            className="w-full"
+                            minValue={0}
+                            maxValue={dispatch.description?.numberOfStaffs}
+                            value={formik.values.numberOfStaffs}
+                            onValueChange={(val) => {
+                                formik.setFieldValue("numberOfStaffs", val)
+                            }}
+                            onBlur={() => formik.setFieldTouched("numberOfStaffs")}
+                            isInvalid={
+                                !!(formik.touched.numberOfStaffs && formik.errors.numberOfStaffs)
+                            }
+                            errorMessage={formik.errors.numberOfStaffs}
+                        />
+                        {formik.values.vehicles !== undefined &&
+                            formik.values.vehicles.length > 0 && (
+                                <TableStyled>
+                                    <TableHeader>
+                                        <TableColumn>{t("vehicle_model.name")}</TableColumn>
+                                        <TableColumn className="text-left">
+                                            {t("dispatch.number_vehicle")}
+                                        </TableColumn>
+                                    </TableHeader>
+                                    <TableBody
+                                        items={rows}
+                                        emptyContent={t("dispatch.no_vehicles_requested")}
+                                    >
+                                        {(item) => {
+                                            const vehicleErrors = formik.errors.vehicles as
+                                                | FormikErrors<DispatchDescriptionVehicleDto>[]
+                                                | undefined
+
+                                            return (
+                                                <TableRow key={item.modelId}>
+                                                    <TableCell>{item.modelName}</TableCell>
+                                                    <TableCell className="text-left">
+                                                        <NumberInputStyled
+                                                            className="w-full"
+                                                            classNames={{
+                                                                inputWrapper: "h-10"
+                                                            }}
+                                                            minValue={0}
+                                                            maxValue={item.quantity}
+                                                            value={
+                                                                formik.values.vehicles?.[item.index]
+                                                                    ?.quantity
+                                                            }
+                                                            onValueChange={(val) => {
+                                                                formik.setFieldValue(
+                                                                    `vehicles[${item.index}].quantity`,
+                                                                    val
+                                                                )
+                                                            }}
+                                                            onBlur={() =>
+                                                                formik.setFieldTouched(
+                                                                    `vehicles[${item.index}].quantity`
+                                                                )
+                                                            }
+                                                            isInvalid={
+                                                                !!(
+                                                                    formik.touched.vehicles?.[
+                                                                        item.index
+                                                                    ]?.quantity &&
+                                                                    vehicleErrors?.[item.index]
+                                                                        ?.quantity
+                                                                )
+                                                            }
+                                                            errorMessage={
+                                                                vehicleErrors?.[item.index]
+                                                                    ?.quantity
+                                                            }
+                                                        />
+                                                    </TableCell>
+                                                </TableRow>
+                                            )
+                                        }}
+                                    </TableBody>
+                                </TableStyled>
+                            )}
+                    </SectionStyled>
+
+                    <div className="flex justify-center items-center gap-2">
+                        {confirmMutation.isPending ? (
+                            <Spinner />
+                        ) : (
+                            <>
+                                <ButtonStyled
+                                    className="btn-gradient px-6 py-2"
+                                    onPress={() => {
+                                        formik.handleSubmit()
+                                    }}
+                                >
+                                    {t("dispatch.approve")}
+                                </ButtonStyled>
+                            </>
+                        )}
+                    </div>
                 </ModalBody>
             </ModalContent>
         </ModalStyled>

@@ -1,5 +1,5 @@
 import {
-    ApproveDispatchReq,
+    ConfirmDispatchReq,
     CreateDispatchReq,
     DispatchQueryParams,
     UpdateDispatchReq
@@ -15,7 +15,7 @@ export const dispatchApi = {
             await axiosInstance.post("/dispatch-requests", req)
         }),
 
-    confirm: ({ id, req }: { id: string; req: ApproveDispatchReq }) =>
+    confirm: ({ id, req }: { id: string; req: ConfirmDispatchReq }) =>
         requestWrapper<void>(async () => {
             await axiosInstance.put(`/dispatch-requests/${id}/confirm`, req)
         }),

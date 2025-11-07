@@ -300,7 +300,8 @@
         "station_feedbacks": "Station Feedbacks",
         "country": "Country",
         "address": "Address",
-        "view_details": "View details"
+        "view_details": "View details",
+        "created_at": "Created at"
     },
     "contral_form": {
         "full_name_require": "Full name is required",
@@ -956,7 +957,10 @@
         "station_information": "Station Information",
         "form_station": "From Station",
         "from_station_is_required": "From station is required",
+
+        "super_admin_approve": "Super Admin Approve",
         "final_description_is_required": "Final description is required",
+
         "station_id": "Station ID",
         "station_name": "Station name",
         "to_station": "To Station",
@@ -989,12 +993,14 @@
         "staff_not_enought_in_from_station": "Number of staffs is not enough in from station",
 
         "vehicle_model_require": "Vehicle model is required",
+        "vehicle_not_enought_in_from_station": "Number of vehicles is not enough in from station",
 
         "invalid_number_of_vehicles": "Some models that have number of vehicles is less or greater than the required number",
         "vehicle_not_in_from_station": "Vehicle is not in from station",
         "staff_limit_in_from_station": "Staffs limit in from station",
         "vehicle_limit_in_from_station": "Vehicles limit in from station",
         "vehicle_or_staff_not_in_from_station": "Vehicle or staff is not in from station",
+        "no_staff_no_vehicle_reject": "You didn't approve any staff or vehicles — it looks like you want to reject this dispatch request",
 
         "only_pending_can_approve_reject": "Only pending dispatch can be approved or rejected",
         "only_approved_can_receive": "Only approved dispatch can be received",

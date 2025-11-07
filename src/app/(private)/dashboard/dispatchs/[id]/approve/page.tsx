@@ -57,7 +57,7 @@ export default function DispatchApprovePage() {
         onOpen: onStationOpen
     } = useDisclosure()
 
-    const [selectedStationId, setSelectedStationId] = useState<string>()
+    // const [selectedStationId, setSelectedStationId] = useState<string>()
     const confirmMutation = useConfirmDispatch({
         onSuccess: () => router.push(`/dashboard/dispatchs/${dispatchId}`)
     })
@@ -67,12 +67,12 @@ export default function DispatchApprovePage() {
             confirmMutation.mutate({
                 id: dispatchId!,
                 req: {
-                    status,
-                    fromStationId: selectedStationId
+                    status
+                    // fromStationId: selectedStationId
                 }
             })
         },
-        [confirmMutation, dispatchId, selectedStationId]
+        [confirmMutation, dispatchId]
     )
 
     useEffect(() => {
@@ -88,12 +88,12 @@ export default function DispatchApprovePage() {
             <SectionStyled title={t("dispatch.valid_station")}>
                 {/* Table valid stations */}
                 <TableStyled
-                    color="primary"
-                    selectionMode="single"
-                    onSelectionChange={(keys) => {
-                        const id = Array.from(keys)[0]
-                        setSelectedStationId(id ? String(id) : undefined)
-                    }}
+                    // color="primary"
+                    // selectionMode="single"
+                    // onSelectionChange={(keys) => {
+                    //     const id = Array.from(keys)[0]
+                    //     setSelectedStationId(id ? String(id) : undefined)
+                    // }}
                     classNames={{
                         base: "max-h-[400px] overflow-scroll"
                     }}
@@ -155,7 +155,7 @@ export default function DispatchApprovePage() {
                     isOpen={isStationOpen}
                     onOpenChange={onStationOpenChange}
                     station={selectedStation}
-                    dispatchDescription={dispatch.description!}
+                    dispatch={dispatch}
                 />
             )}
 
@@ -163,34 +163,24 @@ export default function DispatchApprovePage() {
                 {confirmMutation.isPending ? (
                     <Spinner />
                 ) : (
-                    <>
-                        <ButtonStyled
-                            className="btn-gradient px-6 py-2"
-                            isDisabled={!selectedStationId}
-                            onPress={onAlertOpen}
-                        >
-                            {t("dispatch.approve")}
-                        </ButtonStyled>
-
-                        <ButtonStyled
-                            variant="ghost"
-                            color="danger"
-                            className="font-semibold px-6 py-2 rounded-xl transition-all duration-300"
-                            onPress={() => handleConfirm(DispatchRequestStatus.Rejected)}
-                        >
-                            {t("dispatch.reject")}
-                        </ButtonStyled>
-                    </>
+                    <ButtonStyled
+                        variant="ghost"
+                        color="danger"
+                        className="font-semibold px-6 py-2 rounded-xl transition-all duration-300"
+                        onPress={onAlertOpen}
+                    >
+                        {t("dispatch.reject")}
+                    </ButtonStyled>
                 )}
             </div>
             <AlertModal
-                header={t("common.confirm_to_submit")}
-                body={t("common.confirm_to_submit_body")}
-                isOpen={isAlertOpen && !!selectedStationId}
+                header={t("common.confirm_to_delete")}
+                body={t("common.confirm_to_delete_body")}
+                isOpen={isAlertOpen}
                 onOpenChange={onAlertOpenChange}
                 onClose={onAlertClose}
                 onConfirm={() => {
-                    handleConfirm(DispatchRequestStatus.Approved)
+                    handleConfirm(DispatchRequestStatus.Rejected)
                 }}
             />
         </>
