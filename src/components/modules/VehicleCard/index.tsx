@@ -42,9 +42,9 @@ export function CardVehicalStyled({ vehicleModel }: { vehicleModel: VehicleModel
                     <span
                         className="absolute flex flex-col top-3 left-3
                   text-white font-semibold bg-gradient-to-r from-primary to-teal-400 
-                     shadow-md transition-all duration-300 z-10 rounded-t-0 rounded-br-md"
+                     shadow-md transition-all duration-300 z-10 rounded-t-0 rounded-br-md p-1"
                     >
-                        <FireIcon size={20} />
+                        <FireIcon size={20} strokeWidth={5} />
                     </span>
                 )}
             </CardBody>

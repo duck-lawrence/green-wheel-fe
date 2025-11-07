@@ -3,8 +3,8 @@ import { AutocompleteStyled, KpiStat, SpinnerStyled } from "@/components"
 import {
     useGetAllStations,
     useGetAnonymuousStatistic,
+    useGetBookingByYear,
     useGetCustomerStatistic,
-    useGetInvoiceByYear,
     useGetRevenueByYear,
     useGetTotalInvoiceStatistic,
     useGetTotalRevenueStatistic,
@@ -56,7 +56,10 @@ export default function StatisticPage() {
     const { data: revenueOverMonths, isLoading: isRevenueOverMonthsLoading } = useGetRevenueByYear({
         stationId
     })
-    const { data: invoiceOverMonths, isLoading: isInvoiceOverMonthsLoading } = useGetInvoiceByYear({
+    // const { data: invoiceOverMonths, isLoading: isInvoiceOverMonthsLoading } = useGetInvoiceByYear({
+    //     stationId
+    // })
+    const { data: bookingOverMonths, isLoading: isBookingOverMonthsLoading } = useGetBookingByYear({
         stationId
     })
 
@@ -100,9 +103,14 @@ export default function StatisticPage() {
         revenue: item.totalRevenue
     }))
 
-    const dataMonthsInvoice = invoiceOverMonths?.map((item) => ({
+    // const dataMonthsInvoice = invoiceOverMonths?.map((item) => ({
+    //     month: item.monthName,
+    //     invoices: item.totalInvoice
+    // }))
+
+    const dataMonthsBooking = bookingOverMonths?.map((item) => ({
         month: item.monthName,
-        invoices: item.totalInvoice
+        booking: item.totalContract
     }))
 
     if (
@@ -113,7 +121,7 @@ export default function StatisticPage() {
         isTotalInvoiceLoading ||
         isVehicleModelStatisticLoading ||
         isRevenueOverMonthsLoading ||
-        isInvoiceOverMonthsLoading
+        isBookingOverMonthsLoading
     )
         return <SpinnerStyled />
     return (
@@ -161,14 +169,14 @@ export default function StatisticPage() {
                             barSize={40}
                             className="bg-white rounded-2xl mt-4"
                         >
-                            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                            <CartesianGrid strokeDasharray="3" stroke="#e2e8f0" />
                             <XAxis
                                 dataKey="modelName"
                                 tick={{ fill: "#94a3b8", fontSize: 13 }}
-                                axisLine={false}
+                                axisLine={true}
                             />
                             {/* "#94a3b8" */}
-                            <YAxis tick={{ fill: "#94a3b8", fontSize: 13 }} axisLine={false} />
+                            <YAxis tick={{ fill: "#94a3b8", fontSize: 13 }} axisLine={true} />
                             <Tooltip
                                 contentStyle={{
                                     backgroundColor: "#555555",
@@ -271,16 +279,16 @@ export default function StatisticPage() {
                     </ResponsiveContainer>
                 </div>
 
-                {/* Chart total invoice for month */}
+                {/* Chart total booking for month */}
                 <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md  m-4 w-full max-w-[60rem]">
                     <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
-                        {t("statistic.monthly_contracts")}
+                        {t("statistic.monthly_bookings")}
                     </h3>
 
                     <ResponsiveContainer width="100%" height={320}>
-                        <LineChart data={dataMonthsInvoice}>
+                        <LineChart data={dataMonthsBooking}>
                             <defs>
-                                <linearGradient id="invoicesGradient" x1="0" y1="0" x2="0" y2="1">
+                                <linearGradient id="bookingGradient" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="0%" stopColor="#16A34A" stopOpacity={0.9} />
                                     <stop offset="100%" stopColor="#4ADE80" stopOpacity={0.2} />
                                 </linearGradient>
@@ -307,7 +315,7 @@ export default function StatisticPage() {
                                 }}
                                 formatter={(value) => [
                                     `${formatCurrency(value as number)}`,
-                                    `${t("statistic.contracts")}`
+                                    `${t("statistic.booking")}`
                                 ]}
                             />
                             <Legend verticalAlign="top" height={36} />
@@ -315,8 +323,8 @@ export default function StatisticPage() {
                             {/* Line biểu thị invoice */}
                             <Line
                                 type="monotone"
-                                dataKey="invoices"
-                                stroke="url(#invoicesGradient)"
+                                dataKey="booking"
+                                stroke="url(#bookingGradient)"
                                 strokeWidth={4}
                                 dot={{ r: 5, fill: "#16A34A" }}
                                 activeDot={{
@@ -326,7 +334,7 @@ export default function StatisticPage() {
                                     strokeWidth: 2
                                 }}
                                 // name="Tổng hóa đơn"
-                                name={t("statistic.total_invoices")}
+                                name={t("statistic.total_bookings")}
                             />
                         </LineChart>
                     </ResponsiveContainer>

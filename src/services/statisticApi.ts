@@ -1,6 +1,7 @@
 import axiosInstance from "@/utils/axios"
 import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 import {
+    BookingByYearRes,
     CustomerAnonymousRes,
     CustomerRes,
     InvoiceByYearRes,
@@ -66,6 +67,13 @@ export const statisticApi = {
         requestWrapper<InvoiceByYearRes[]>(async () => {
             const params = buildQueryParams(query)
             const res = await axiosInstance.get("/statistic/invoice-by-year", { params })
+            return res.data
+        }),
+
+    getBookingByYear: (query: { stationId: string }) =>
+        requestWrapper<BookingByYearRes[]>(async () => {
+            const params = buildQueryParams(query)
+            const res = await axiosInstance.get("/statistic/contract-by-year", { params })
             return res.data
         })
 }

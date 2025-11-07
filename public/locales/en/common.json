@@ -1213,10 +1213,13 @@
         "failed_to_calculate_invoice_change": "Failed to calculate invoice change",
         "total_revenue": "Total Revenue",
         "revenue": "Revenue",
-        "contracts": "contracts",
+        "contracts": "Contracts",
         "contract": "Contract",
+        "bookings": "Bookings",
+        "booking": "Booking",
         "total_invoices": "Total Invoices",
-        "monthly_contracts": "Monthly Invoices"
+        "monthly_bookings": "Monthly Bookings",
+        "total_bookings": "Total Bookings"
     },
     "system": {
         "system_setting": "System Setting",
