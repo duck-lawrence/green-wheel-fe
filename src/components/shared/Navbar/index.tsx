@@ -150,6 +150,7 @@ export function Navbar() {
 
         return () => window.removeEventListener("scroll", handleScroll)
     }, [lastScrollY])
+    // const [open, setOpen] = useState(false)
 
     return (
         <NavbarStyled
@@ -174,6 +175,7 @@ export function Navbar() {
             <NavbarContent className="hidden sm:flex gap-4 justify-center">
                 {menus.map((menu) => (
                     <NavbarItem
+                        id={menu.key === "vehicle-rental" ? "navbar-vehicle" : undefined}
                         key={menu.key}
                         isActive={activeMenuKey == menu.key}
                         className={`""text-center px-3 w-fit"

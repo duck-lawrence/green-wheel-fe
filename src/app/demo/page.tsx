@@ -1,14 +1,16 @@
 "use client"
 import { ButtonStyled } from "@/components"
 import { useNextStep } from "nextstepjs"
-import React from "react"
+import React, { useEffect } from "react"
 
-export default function page() {
+export default function Page() {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { startNextStep, closeNextStep } = useNextStep()
-
+    useEffect(() => {
+        startNextStep("docs-demo")
+    }, [startNextStep])
     return (
-        <div className="flex flex-col gap-3 p-8">
+        <div className="flex flex-col gap-3 p-8 mt-20">
             <h1 className="text-xl font-bold mb-4">NextStepJS Demo</h1>
 
             <div id="docs-demo-step1" className="p-3 bg-gray-200 rounded-md">

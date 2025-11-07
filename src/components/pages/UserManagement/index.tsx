@@ -156,6 +156,7 @@ export function UserManagement() {
                     {manageRoleName === RoleName.Customer && (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <InputStyled
+                                id="input-phone"
                                 label={t("user.phone")}
                                 // placeholder={t("staff.user_filter_phone_placeholder")}
                                 value={formik.values.phone}
@@ -166,6 +167,7 @@ export function UserManagement() {
                             />
 
                             <InputStyled
+                                id="upload-cccd"
                                 label={t("user.citizen_identity")}
                                 value={formik.values.citizenIdNumber}
                                 onChange={(value) =>
@@ -174,6 +176,7 @@ export function UserManagement() {
                                 onClear={() => formik.setFieldValue("citizenIdNumber", "")}
                             />
                             <InputStyled
+                                id="upload-license"
                                 label={t("user.driver_license")}
                                 value={formik.values.driverLicenseNumber}
                                 onChange={(value) =>
