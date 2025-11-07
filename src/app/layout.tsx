@@ -6,6 +6,8 @@ import { AppProviders } from "@/providers"
 import { cookies } from "next/headers"
 import { ClientHydration, Footer, Modals, Navbar, ScrollToTopButton } from "@/components/"
 import Script from "next/script"
+import { NextStep, NextStepProvider } from "nextstepjs"
+import { onboardingSteps } from "@/lib/nextstep/steps"
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -41,13 +43,17 @@ export default async function RootLayout({
             >
                 <AppProviders locale={locale}>
                     <ClientHydration>
-                        <div className="min-h-screen flex flex-col items-center pt-25 mb-6">
-                            <Navbar />
-                            {children}
-                            <ScrollToTopButton />
-                        </div>
-                        <Footer />
-                        <Modals />
+                        <NextStepProvider>
+                            <NextStep steps={onboardingSteps}>
+                                <div className="min-h-screen flex flex-col items-center pt-25 mb-6">
+                                    <Navbar />
+                                    {children}
+                                    <ScrollToTopButton />
+                                </div>
+                                <Footer />
+                                <Modals />
+                            </NextStep>
+                        </NextStepProvider>
                     </ClientHydration>
                 </AppProviders>
                 <Script src="https://accounts.google.com/gsi/client" async defer />

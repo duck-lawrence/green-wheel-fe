@@ -55,7 +55,13 @@ const nextConfig: NextConfig = {
                 pathname: "/**"
             }
         ]
-    }
+    },
+
+    reactStrictMode: true,
+    experimental: {
+        esmExternals: true
+    },
+    transpilePackages: ["nextstepjs"]
 }
 
 export default nextConfig
