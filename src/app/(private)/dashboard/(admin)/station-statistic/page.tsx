@@ -3,8 +3,8 @@ import { KpiStat } from "@/components"
 import { useGetMe } from "@/hooks"
 import {
     useGetAnonymuousStatistic,
+    useGetBookingByYear,
     useGetCustomerStatistic,
-    useGetInvoiceByYear,
     useGetRevenueByYear,
     useGetTotalInvoiceStatistic,
     useGetTotalRevenueStatistic,
@@ -38,7 +38,8 @@ export default function StationStatisticPage() {
         stationId: me?.station?.id || ""
     })
     const { data: revenueOverMonths } = useGetRevenueByYear({ stationId: me?.station?.id || "" })
-    const { data: invoiceOverMonths } = useGetInvoiceByYear({ stationId: me?.station?.id || "" })
+    // const { data: invoiceOverMonths } = useGetInvoiceByYear({ stationId: me?.station?.id || "" })
+    const { data: bookingOverMonths } = useGetBookingByYear({ stationId: me?.station?.id || "" })
 
     const dataKpi = [
         {
@@ -80,10 +81,17 @@ export default function StationStatisticPage() {
         revenue: item.totalRevenue
     }))
 
-    const dataMonthsInvoice = invoiceOverMonths?.map((item) => ({
+    // const dataMonthsInvoice = invoiceOverMonths?.map((item) => ({
+    //     month: item.monthName,
+    //     invoices: item.totalInvoice
+    // }))
+
+    const dataMonthsBooking = bookingOverMonths?.map((item) => ({
         month: item.monthName,
-        invoices: item.totalInvoice
+        booking: item.totalContract
     }))
+
+    console.log("   dataMonthsBooking", dataMonthsBooking)
 
     return (
         <div className="max-w-6xl mx-auto w-full">
@@ -211,16 +219,16 @@ export default function StationStatisticPage() {
                 </ResponsiveContainer>
             </div>
 
-            {/* Chart total invoice for month */}
+            {/* Chart total bookings for month */}
             <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md  m-4 w-full max-w-[60rem]">
                 <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
-                    {t("statistic.monthly_contracts")}
+                    {t("statistic.monthly_bookings")}
                 </h3>
 
                 <ResponsiveContainer width="100%" height={320}>
-                    <LineChart data={dataMonthsInvoice}>
+                    <LineChart data={dataMonthsBooking}>
                         <defs>
-                            <linearGradient id="invoicesGradient" x1="0" y1="0" x2="0" y2="1">
+                            <linearGradient id="bookingsGradient" x1="0" y1="0" x2="0" y2="1">
                                 <stop offset="0%" stopColor="#16A34A" stopOpacity={0.9} />
                                 <stop offset="100%" stopColor="#4ADE80" stopOpacity={0.2} />
                             </linearGradient>
@@ -232,11 +240,7 @@ export default function StationStatisticPage() {
                             tick={{ fill: "#94a3b8", fontSize: 13 }}
                             axisLine={true}
                         />
-                        <YAxis
-                            tick={{ fill: "#94a3b8", fontSize: 11 }}
-                            axisLine={true}
-                            tickFormatter={(v) => `${v}` + ` ` + `${t("statistic.contracts")}`}
-                        />
+                        <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={true} />
                         <Tooltip
                             contentStyle={{
                                 backgroundColor: "#555555",
@@ -246,23 +250,20 @@ export default function StationStatisticPage() {
                                 boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
                             }}
                             // formatter={(value) => [`${value} triệu ₫`, "Doanh thu"]}
-                            formatter={(value) => [
-                                `${value}` + ` ` + `${t("statistic.contracts")}`,
-                                `${t("statistic.contract")}`
-                            ]}
+                            formatter={(value) => [`${value}`, `${t("statistic.booking")}`]}
                         />
                         <Legend verticalAlign="top" height={36} />
 
                         {/* Line biểu thị doanh thu */}
                         <Line
                             type="monotone"
-                            dataKey="invoices"
-                            stroke="url(#invoicesGradient)"
+                            dataKey="booking"
+                            stroke="url(#bookingsGradient)"
                             strokeWidth={4}
                             dot={{ r: 5, fill: "#16A34A" }}
                             activeDot={{ r: 8, fill: "#22C55E", stroke: "#fff", strokeWidth: 2 }}
                             // name="Tổng doanh thu"
-                            name={t("statistic.total_invoices")}
+                            name={t("statistic.total_bookings")}
                         />
                     </LineChart>
                 </ResponsiveContainer>

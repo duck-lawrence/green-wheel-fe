@@ -50,3 +50,8 @@ export type InvoiceByYearRes = {
     monthName: number
     totalInvoice: number
 }
+
+export type BookingByYearRes = {
+    monthName: number
+    totalContract: number
+}
