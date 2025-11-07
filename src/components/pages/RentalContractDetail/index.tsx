@@ -267,10 +267,9 @@ export function RentalContractDetail({
                                 firstName: contract.customer.firstName,
                                 lastName: contract.customer.lastName
                             })}
-                            <EyeIcon size={18} className="text-gray-400" />
-                            {/* <span className="underline pl-2 text-sm text-gray-400 ">
-                                View details
-                            </span> */}
+                            <span className="underline pl-2 text-sm text-gray-400 ">
+                                {t("table.view_details")}
+                            </span>
                         </span>
 
                         <ViewUserModal

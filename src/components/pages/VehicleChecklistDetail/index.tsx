@@ -168,6 +168,9 @@ export function VehicleChecklistDetail({ id, isStaff = false }: { id: string; is
                 {checklist.contractId && (
                     <Link href={contractUrl}>
                         {`${t("rental_contract.id")}: ${checklist.contractId}`}
+                        <span className="underline pl-2 text-sm text-gray-400 ">
+                            {t("table.view_details")}
+                        </span>
                     </Link>
                 )}
             </div>

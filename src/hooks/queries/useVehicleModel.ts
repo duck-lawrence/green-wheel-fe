@@ -390,3 +390,11 @@ export const useDeleteVehicleModel = ({
         }
     })
 }
+
+export const useGetBestBrandModels = ({ enabled = true }: { enabled?: boolean } = {}) => {
+    return useQuery({
+        queryKey: [...QUERY_KEYS.VEHICLE_MODELS, "best-booking"],
+        queryFn: () => vehicleModelApi.getBestBrandModels(),
+        enabled
+    })
+}
