@@ -172,168 +172,191 @@ export default function VehicleDetailPage() {
     if (!model || isModelLoading) return <Spinner />
 
     return (
-        <div className="min-h-dvh bg-neutral-50 text-neutral-900 rounded">
-            {/* Breadcrumb */}
-            <div className="p-4">
-                <BreadCrumbsStyled
-                    items={[
-                        { label: "Home", href: "/" },
-                        { label: "Vehicle Rental", href: "/vehicle-rental" },
-                        { label: "Detail", href: "/detail" }
-                    ]}
-                />
-            </div>
+        <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="min-h-dvh bg-neutral-50 text-neutral-900 rounded"
+        >
+            <div className="min-h-dvh bg-neutral-50 text-neutral-900 rounded">
+                {/* Breadcrumb */}
+                <div className="p-4">
+                    <BreadCrumbsStyled
+                        items={[
+                            { label: "Home", href: "/" },
+                            { label: "Vehicle Rental", href: "/vehicle-rental" },
+                            { label: "Detail", href: "/detail" }
+                        ]}
+                    />
+                </div>
 
-            {/* Header */}
-            <header className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-4">
-                <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
-                    <div>
-                        <div className="flex gap-2 items-center">
-                            <h1 className="text-3xl/tight sm:text-4xl font-bold tracking-tight">
-                                {model.name}
-                            </h1>
-                            <p className="text-3xl/tight sm:text-[2.1rem] font-semibold text-neutral-600">
-                                {`- ${model.description}`}
-                            </p>
-                        </div>
-                        {/* <p className="mt-1 text-sm text-neutral-500">
+                {/* Header */}
+                <header className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-4">
+                    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+                        <div>
+                            <div className="flex gap-2 items-center">
+                                <h1 className="text-3xl/tight sm:text-4xl font-bold tracking-tight">
+                                    {model.name}
+                                </h1>
+                                <p className="text-3xl/tight sm:text-[2.1rem] font-semibold text-neutral-600">
+                                    {`- ${model.description}`}
+                                </p>
+                            </div>
+                            {/* <p className="mt-1 text-sm text-neutral-500">
                             Hãng xe: <span className="font-medium">{vehicle.brand_name}</span> •
                             Phân khúc: <span className="font-medium">{vehicle.segment_name}</span>
                         </p> */}
-                        <p className="text-lg text-neutral-500 font-semibold">
-                            {t("vehicle_model.remaining_vehicle_count")} &nbsp;
-                            <span className="font-extrabold text-emerald-600">
-                                {model.availableVehicleCount}
-                            </span>
-                        </p>
-                    </div>
-                    {/*  font-extrabold*/}
-                    <div className="text-right space-y-2">
-                        <p className="text-2xl sm:text-3xl font-semibold text-emerald-600">
-                            {formatCurrency(model.costPerDay)}
-                            <span className="ml-1 text-base font-normal text-neutral-500">
-                                {t("vehicle_model.vnd_per_day")}
-                            </span>
-                        </p>
-                        <div className="flex gap-2">
-                            <p className="text-xs text-slate-500">
-                                {t("fleet.detail_deposit_fee")}:{" "}
-                                <strong className="text-slate-700">
-                                    {formatCurrency(model.depositFee)}
-                                </strong>
-                            </p>
-                            <div className="hidden md:block w-[2px] bg-default self-stretch"></div>
-                            <p className="text-xs text-slate-500">
-                                {t("fleet.detail_reservation_fee")}:{" "}
-                                <strong className="text-slate-70">
-                                    {formatCurrency(model.reservationFee)}
-                                </strong>
+                            <p className="text-lg text-neutral-500 font-semibold">
+                                {t("vehicle_model.remaining_vehicle_count")} &nbsp;
+                                <span className="font-extrabold text-emerald-600">
+                                    {model.availableVehicleCount}
+                                </span>
                             </p>
                         </div>
-                    </div>
-                </div>
-            </header>
-
-            {/* Main content */}
-            <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-24 grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* Gallery */}
-                <section className="lg:col-span-8">
-                    {/* Images */}
-                    <div className="gap-3">
-                        <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-neutral-200">
-                            <motion.img
-                                key={active}
-                                initial={{ opacity: 0, scale: 1.02 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.35 }}
-                                src={modelImages[active]}
-                                alt={`${model.name} - ${active + 1}`}
-                                className="h-full w-full object-cover"
-                            />
-                        </div>
-
-                        {/* List sub img */}
-                        {modelImages.length > 0 && (
-                            <VehicleSubImagesScroll
-                                active={active}
-                                setActive={setActive}
-                                subImgUrls={modelImages}
-                            />
-                        )}
-                    </div>
-
-                    {/* Thông số */}
-                    <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
-                        <h2 className="text-xl font-semibold mb-4">{t("vehicle_model.specs")}</h2>
-                        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-                            {mapSpecs(model).map(({ icon, key, value }) => (
-                                // <div key={key} className="rounded-xl border border-neutral-200 p-4">
-                                //     <p className="text-xs uppercase tracking-wide text-neutral-500">
-                                //         {key}
-                                //     </p>
-                                //     <p className="mt-1 font-medium">{value}</p>
-                                // </div>
-                                <FieldStyled key={key} label={key} value={value} icon={icon} />
-                            ))}
-                        </div>
-                    </div>
-
-                    {/*================ Policies =======================*/}
-                    <section className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
-                        <div className="grid gap-3 md:grid-cols-2">
-                            {basePolicies().map((p) => (
-                                <div key={p.title} className="rounded-2xl bg-white p-5 shadow-sm">
-                                    <h3 className="font-semibold">{p.title}</h3>
-                                    <p className="mt-1 text-sm text-neutral-600">{p.text}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                </section>
-                {/* ========================================================= */}
-                {/* Booking Card (sticky on desktop) */}
-                {/* lỗi nên chưa làm en chỗ này */}
-                <aside className="self-start lg:col-span-4 lg:sticky lg:top-30 space-y-6">
-                    <div className="rounded-2xl bg-white p-5 shadow-sm border border-neutral-100">
-                        <h2 className="text-lg font-semibold">{t("invoice.temp")}</h2>
-                        <div className="mt-4 grid gap-4">
-                            {/* Đơn tạm tính */}
-                            <TempInvoice
-                                model={model}
-                                totalDays={totalDays}
-                                totalPrice={totalPrice}
-                            />
-
-                            <div>
-                                <ButtonStyled
-                                    isDisabled={
-                                        model.availableVehicleCount == 0 ||
-                                        (!isCustomer && !isStaff)
-                                    }
-                                    className="w-full rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                                    onPress={handleClickBooking}
-                                >
-                                    {t("rental_contract.rent")}
-                                </ButtonStyled>
-                                <CreateRentalContractModal
-                                    isOpen={isOpen}
-                                    isCustomer={isCustomer}
-                                    isStaff={isStaff}
-                                    onClose={onClose}
-                                    modelViewRes={model}
-                                    totalDays={totalDays}
-                                    totalPrice={totalPrice}
-                                />
-                                {!isLogined && (
-                                    <AlertStyled className="mt-1">
-                                        {t("rental_contract.please_login")}
-                                    </AlertStyled>
-                                )}
+                        {/*  font-extrabold*/}
+                        <div className="text-right space-y-2">
+                            <p className="text-2xl sm:text-3xl font-semibold text-emerald-600">
+                                {formatCurrency(model.costPerDay)}
+                                <span className="ml-1 text-base font-normal text-neutral-500">
+                                    {t("vehicle_model.vnd_per_day")}
+                                </span>
+                            </p>
+                            <div className="flex gap-2">
+                                <p className="text-xs text-slate-500">
+                                    {t("fleet.detail_deposit_fee")}:{" "}
+                                    <strong className="text-slate-700">
+                                        {formatCurrency(model.depositFee)}
+                                    </strong>
+                                </p>
+                                <div className="hidden md:block w-[2px] bg-default self-stretch"></div>
+                                <p className="text-xs text-slate-500">
+                                    {t("fleet.detail_reservation_fee")}:{" "}
+                                    <strong className="text-slate-70">
+                                        {formatCurrency(model.reservationFee)}
+                                    </strong>
+                                </p>
                             </div>
                         </div>
                     </div>
-                </aside>
-            </main>
-        </div>
+                </header>
+
+                {/* Main content */}
+                <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-24 grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    {/* Gallery */}
+                    <section className="lg:col-span-8">
+                        {/* Images */}
+                        <div className="gap-3">
+                            <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-neutral-200">
+                                <motion.img
+                                    key={active}
+                                    initial={{ opacity: 0, scale: 1.02 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ duration: 0.35 }}
+                                    src={modelImages[active]}
+                                    alt={`${model.name} - ${active + 1}`}
+                                    className="h-full w-full object-cover"
+                                />
+                            </div>
+
+                            {/* List sub img */}
+                            {modelImages.length > 0 && (
+                                <VehicleSubImagesScroll
+                                    active={active}
+                                    setActive={setActive}
+                                    subImgUrls={modelImages}
+                                />
+                            )}
+                        </div>
+
+                        {/* Thông số */}
+                        <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
+                            <h2 className="text-xl font-semibold mb-4">
+                                {t("vehicle_model.specs")}
+                            </h2>
+                            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+                                {mapSpecs(model).map(({ icon, key, value }) => (
+                                    // <div key={key} className="rounded-xl border border-neutral-200 p-4">
+                                    //     <p className="text-xs uppercase tracking-wide text-neutral-500">
+                                    //         {key}
+                                    //     </p>
+                                    //     <p className="mt-1 font-medium">{value}</p>
+                                    // </div>
+                                    <FieldStyled key={key} label={key} value={value} icon={icon} />
+                                ))}
+                            </div>
+                        </div>
+
+                        {/*================ Policies =======================*/}
+                        <section className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
+                            <div className="grid gap-3 md:grid-cols-2">
+                                {basePolicies().map((p) => (
+                                    <motion.div
+                                        key={p.title}
+                                        whileHover={{ scale: 1.02, y: -2 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="rounded-2xl bg-white p-5 shadow-sm border border-neutral-100"
+                                    >
+                                        <h3 className="font-semibold text-emerald-700">
+                                            {p.title}
+                                        </h3>
+                                        <p className="mt-1 text-sm text-neutral-600">{p.text}</p>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </section>
+                    </section>
+                    {/* ========================================================= */}
+                    {/* Booking Card (sticky on desktop) */}
+                    {/* lỗi nên chưa làm en chỗ này */}
+                    <aside className="self-start lg:col-span-4 lg:sticky lg:top-30 space-y-6">
+                        <div className="rounded-2xl bg-white p-5 shadow-sm border border-neutral-100">
+                            <h2 className="text-lg font-semibold">{t("invoice.temp")}</h2>
+                            <div className="mt-4 grid gap-4">
+                                {/* Đơn tạm tính */}
+                                <TempInvoice
+                                    model={model}
+                                    totalDays={totalDays}
+                                    totalPrice={totalPrice}
+                                />
+
+                                <div>
+                                    <motion.div
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        transition={{ type: "spring", stiffness: 300 }}
+                                    >
+                                        <ButtonStyled
+                                            isDisabled={
+                                                model.availableVehicleCount == 0 ||
+                                                (!isCustomer && !isStaff)
+                                            }
+                                            className="w-full rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white shadow-md hover:bg-emerald-700 focus:ring-2 focus:ring-emerald-500"
+                                            onPress={handleClickBooking}
+                                        >
+                                            {t("rental_contract.rent")}
+                                        </ButtonStyled>
+                                    </motion.div>
+
+                                    <CreateRentalContractModal
+                                        isOpen={isOpen}
+                                        isCustomer={isCustomer}
+                                        isStaff={isStaff}
+                                        onClose={onClose}
+                                        modelViewRes={model}
+                                        totalDays={totalDays}
+                                        totalPrice={totalPrice}
+                                    />
+                                    {!isLogined && (
+                                        <AlertStyled className="mt-1">
+                                            {t("rental_contract.please_login")}
+                                        </AlertStyled>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </main>
+            </div>
+        </motion.div>
     )
 }

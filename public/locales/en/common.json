@@ -507,7 +507,8 @@
         "invalid_start_date": "Pick-up time must be at least 3 hours from now and within 7 AM - 5 PM",
         "return_date_require": "Please select return date and time",
         "invalid_end_date_range": "Vehicle return date must be between 7 AM - 5 PM",
-        "min_end_date": "The return day must be after the pick-up day at least 24 hours"
+        "min_end_date": "The return day must be after the pick-up day at least 24 hours",
+        "no_suitable_vehicle_found": "No suitable vehicle found."
     },
     "enum": {
         "male": "Male",
