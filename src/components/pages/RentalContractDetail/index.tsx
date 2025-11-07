@@ -49,7 +49,6 @@ import { Chip, useDisclosure } from "@heroui/react"
 import { cn } from "node_modules/@heroui/theme/dist/utils/cn"
 import { UserProfileViewRes } from "@/models/user/schema/response"
 import { RentalContractStatusColorMap } from "@/constants/colorMap"
-import { EyeIcon } from "lucide-react"
 
 function getChecklistDisplay(status?: RentalContractStatus) {
     const handoverStatuses = [
