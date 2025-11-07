@@ -10,7 +10,7 @@ import {
     useGetTotalRevenueStatistic,
     useGetVehicleModelStatistic
 } from "@/hooks"
-import { formatCurrencyWithSymbol } from "@/utils/helpers/currency"
+import { formatCurrency, formatCurrencyWithSymbol } from "@/utils/helpers/currency"
 import { AutocompleteItem } from "@heroui/react"
 import { MapPinAreaIcon } from "@phosphor-icons/react"
 import React, { useEffect, useState } from "react"
@@ -40,30 +40,24 @@ export default function StatisticPage() {
     }, [stationId, stations])
 
     const { data: totalCustomer, isLoading: isTotalCustomerLoading } = useGetCustomerStatistic({
-        stationId,
-        enabled: !!stationId
+        stationId
     })
     const { data: totalAnonymous, isLoading: isTotalAnonymousLoading } = useGetAnonymuousStatistic({
-        stationId,
-        enabled: !!stationId
+        stationId
     })
     const { data: totalRevenue, isLoading: isTotalRevenueLoading } = useGetTotalRevenueStatistic({
-        stationId,
-        enabled: !!stationId
+        stationId
     })
     const { data: totalInvoice, isLoading: isTotalInvoiceLoading } = useGetTotalInvoiceStatistic({
-        stationId,
-        enabled: !!stationId
+        stationId
     })
     const { data: vehicleModelStatistic, isLoading: isVehicleModelStatisticLoading } =
-        useGetVehicleModelStatistic({ stationId, enabled: !!stationId })
+        useGetVehicleModelStatistic({ stationId })
     const { data: revenueOverMonths, isLoading: isRevenueOverMonthsLoading } = useGetRevenueByYear({
-        stationId,
-        enabled: !!stationId
+        stationId
     })
     const { data: invoiceOverMonths, isLoading: isInvoiceOverMonthsLoading } = useGetInvoiceByYear({
-        stationId,
-        enabled: !!stationId
+        stationId
     })
 
     const dataKpi = [
@@ -301,7 +295,7 @@ export default function StatisticPage() {
                             <YAxis
                                 tick={{ fill: "#94a3b8", fontSize: 11 }}
                                 axisLine={true}
-                                tickFormatter={(v) => `${v}` + `` + "đơn"}
+                                // tickFormatter={(v) => `${v}` + `` + "đơn"}
                             />
                             <Tooltip
                                 contentStyle={{
@@ -312,7 +306,7 @@ export default function StatisticPage() {
                                     boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
                                 }}
                                 formatter={(value) => [
-                                    `${formatCurrencyWithSymbol(value as number)}`,
+                                    `${formatCurrency(value as number)}`,
                                     `${t("statistic.contracts")}`
                                 ]}
                             />

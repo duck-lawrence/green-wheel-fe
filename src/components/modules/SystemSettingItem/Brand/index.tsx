@@ -25,8 +25,6 @@ export function Brand() {
 
     const { data: brands, isLoading } = useGetAllBrandes()
 
-    console.log("brand", brands)
-
     if (isLoading)
         return (
             <>
