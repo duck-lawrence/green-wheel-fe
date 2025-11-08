@@ -12,12 +12,16 @@ import React, { useEffect, useRef } from "react"
 import { useTranslation } from "react-i18next"
 import { useRouter, useSearchParams } from "next/navigation"
 import { addToast } from "@heroui/toast"
+import { useOnboardingTour } from "@/hooks/reuseable/useNextStep/useOnboardingTour"
 
 export default function HomePage() {
     const { t } = useTranslation()
     const router = useRouter()
     const params = useSearchParams()
     const hasShownToast = useRef(false)
+
+    // Tour onboarding cho trang chủ
+    useOnboardingTour("greenwheel", "/")
 
     useEffect(() => {
         if (hasShownToast.current) return

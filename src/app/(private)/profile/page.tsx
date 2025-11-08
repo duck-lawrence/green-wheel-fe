@@ -73,7 +73,7 @@ export default function ProfilePage() {
             </div>
 
             <div className="flex flex-col md:flex-row gap-6 w-full">
-                <div className="flex flex-col items-center w-full md:w-sm">
+                <div className="flex flex-col items-center w-full md:w-sm" id="upload-profile-info">
                     {/* Avatar */}
                     <AvatarProfile user={user} />
 
@@ -249,8 +249,12 @@ export default function ProfilePage() {
                 <div className="hidden md:block w-[5px] bg-default self-stretch"></div>
 
                 <div className="w-full">
-                    <CitizenIdentityProfile user={user} />
-                    <DriverLicenseProfile user={user} />
+                    <span id="upload-cccd">
+                        <CitizenIdentityProfile user={user} />
+                    </span>
+                    <span id="upload-license">
+                        <DriverLicenseProfile user={user} />{" "}
+                    </span>
                 </div>
             </div>
             {/* <BankInfoProfile user={user} /> */}

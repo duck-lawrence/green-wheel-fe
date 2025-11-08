@@ -175,7 +175,7 @@ export function Navbar() {
             <NavbarContent className="hidden sm:flex gap-4 justify-center">
                 {menus.map((menu) => (
                     <NavbarItem
-                        id={menu.key === "vehicle-rental" ? "navbar-vehicle" : undefined}
+                        id={menu.key === "vehicle-rental" ? "navbar-vehicle" : ""}
                         key={menu.key}
                         isActive={activeMenuKey == menu.key}
                         className={`""text-center px-3 w-fit"

@@ -7,6 +7,7 @@ export * from "./useImageUploadModal"
 /* ========================= N ========================= */
 export * from "./useNavigateOnClick"
 export * from "./useNumber"
+export * from "./useNextStep"
 
 /* ========================= O ========================= */
 export * from "./useOpenNewTab"

@@ -2,6 +2,7 @@
 export * from "./Carousel"
 export * from "./ClientHydration"
 export * from "./CustomerTable"
+export * from "./CartNextStep"
 
 /* ========================= F ========================= */
 export * from "./FilterVehicleRental"

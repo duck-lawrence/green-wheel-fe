@@ -1,120 +1,222 @@
-// import React from "react"
-// export const onboardingSteps: Tour[] = [
-// {
-//     tour: "docs-demo",
-//     steps: [
-//         {
-//             icon: <>👋</>,
-//             title: "First Step",
-//             content: <>This is the first step of our demo tour</>,
-//             selector: "#docs-demo-step1", // 👈 cần trùng id bên dưới
-//             side: "right",
-//             showControls: true,
-//             blockKeyboardControl: false,
-//             showSkip: true,
-//             pointerPadding: 5,
-//             pointerRadius: 5
-//         },
-//         {
-//             icon: <>🎉</>,
-//             title: "Second Step",
-//             content: <>This is the second step of our demo tour</>,
-//             selector: "#docs-demo-step2", // 👈 cần trùng id bên dưới
-//             side: "bottom",
-//             showControls: true,
-//             showSkip: true,
-//             pointerPadding: 10,
-//             pointerRadius: 10
-//         }
-//     ]
-// }
 "use client"
+
 import type { Tour } from "nextstepjs"
 import React from "react"
+import {
+    Hand,
+    UserRound,
+    IdCard,
+    CarFront,
+    Search,
+    CalendarRange,
+    MapPin,
+    Settings2
+} from "lucide-react"
+import i18n from "../i18n" // ✅ i18n đã khởi tạo trong app
+
 export const onboardingSteps: Tour[] = [
     {
-        tour: "greenwheel-onboarding",
+        tour: "greenwheel",
         steps: [
+            // ─────────────────────────────
             {
-                icon: <>👋</>,
-                title: "Welcome to GreenWheel",
+                icon: <Hand size={20} className="text-primary" />,
+                title: i18n.t("nextstep.welcome_title"),
                 content: (
-                    <>Nhấn vào biểu tượng người dùng ở góc trên bên phải để mở menu tài khoản.</>
+                    <>
+                        {/* {i18n.t("nextstep.welcome_content_1")} <br /> */}
+                        <b>{i18n.t("nextstep.welcome_content_2")}</b>
+                    </>
+                ),
+                showControls: true,
+                showSkip: true
+            },
+            // ─────────────────────────────
+            {
+                icon: <UserRound size={20} className="text-primary" />,
+                title: i18n.t("nextstep.access_profile_title"),
+                content: (
+                    <>
+                        {i18n.t("nextstep.access_profile_content_1")}{" "}
+                        <b>{i18n.t("nextstep.access_profile_content_2")}</b>.
+                    </>
                 ),
                 selector: "#navbar-user",
                 side: "bottom",
                 showControls: true,
-                showSkip: true
+                showSkip: true,
+                pointerPadding: 10,
+                pointerRadius: 10
             },
+            // ─────────────────────────────
             {
-                icon: <>👤</>,
-                title: "Cập nhật hồ sơ cá nhân",
+                icon: <Settings2 size={20} className="text-primary" />,
+                title: i18n.t("nextstep.open_profile_title"),
                 content: (
                     <>
-                        Chọn <b>Profile</b> để xem và cập nhật thông tin của bạn.
+                        {i18n.t("nextstep.open_profile_content_1")}{" "}
+                        <b>{i18n.t("nextstep.open_profile_content_2")}</b>.
                     </>
                 ),
                 selector: "#navbar-profile",
+                side: "bottom",
+                showControls: true,
+                showSkip: true,
+                pointerPadding: 10,
+                pointerRadius: 10,
+                nextRoute: "/profile"
+            },
+            // ─────────────────────────────
+            {
+                icon: <Settings2 size={20} className="text-primary" />,
+                title: i18n.t("nextstep.update_profile_title"),
+                content: <>{i18n.t("nextstep.update_profile_content")}</>,
+                selector: "#upload-profile-info",
                 side: "right",
                 showControls: true,
                 showSkip: true,
-
-                nextRoute: "/profile" // ✅ tự chuyển sang trang profile
+                pointerPadding: 20,
+                pointerRadius: 20,
+                prevRoute: "/"
             },
+            // ─────────────────────────────
             {
-                icon: <>📱</>,
-                title: "Nhập số điện thoại",
+                icon: <IdCard size={20} className="text-primary" />,
+                title: i18n.t("nextstep.upload_cccd_title"),
                 content: (
                     <>
-                        Điền số điện thoại của bạn tại đây để GreenWheel có thể liên hệ khi cần
-                        thiết.
-                    </>
-                ),
-                selector: "#input-phone",
-                side: "right",
-                showControls: true,
-                showSkip: true
-            },
-            {
-                icon: <>🪪</>,
-                title: "Tải lên CCCD",
-                content: (
-                    <>
-                        Tải ảnh <b>CCCD</b> để xác minh danh tính của bạn.
+                        {i18n.t("nextstep.upload_cccd_content_1")}{" "}
+                        <b>{i18n.t("nextstep.upload_cccd_content_2")}</b>.
                     </>
                 ),
                 selector: "#upload-cccd",
                 side: "top",
                 showControls: true,
-                showSkip: true
+                showSkip: true,
+                pointerPadding: 20,
+                pointerRadius: 20
             },
+            // ─────────────────────────────
             {
-                icon: <>🚗</>,
-                title: "Tải lên bằng lái xe",
+                icon: <IdCard size={20} className="text-primary" />,
+                title: i18n.t("nextstep.upload_license_title"),
                 content: (
                     <>
-                        Tải ảnh <b>bằng lái xe</b> để xác minh quyền điều khiển phương tiện.
+                        {i18n.t("nextstep.upload_license_content_1")}{" "}
+                        <b>{i18n.t("nextstep.upload_license_content_2")}</b>.
                     </>
                 ),
                 selector: "#upload-license",
-                side: "top",
+                side: "bottom",
                 showControls: true,
-                showSkip: true
+                showSkip: true,
+                pointerPadding: 20,
+                pointerRadius: 20
             },
+            // ─────────────────────────────
             {
-                icon: <>🚙</>,
-                title: "Bắt đầu thuê xe",
+                icon: <CarFront size={20} className="text-primary" />,
+                title: i18n.t("nextstep.start_rent_title"),
                 content: (
                     <>
-                        Nhấn vào <b>Vehicle Rental</b> để chọn xe mà bạn muốn thuê.
+                        {i18n.t("nextstep.start_rent_content_1")}{" "}
+                        <b>{i18n.t("nextstep.start_rent_content_2")}</b>.
                     </>
                 ),
                 selector: "#navbar-vehicle",
                 side: "bottom",
                 showControls: true,
                 showSkip: true,
-
+                pointerPadding: 2,
+                pointerRadius: 10,
                 nextRoute: "/vehicle-rental"
+            },
+            // ─────────────────────────────
+            {
+                icon: <Search size={20} className="text-primary" />,
+                title: i18n.t("nextstep.search_vehicle_title"),
+                content: (
+                    <>
+                        {i18n.t("nextstep.search_vehicle_content_1")}{" "}
+                        <b>{i18n.t("nextstep.search_vehicle_content_2")}</b>.
+                    </>
+                ),
+                selector: "#vehicle-search-filters",
+                side: "bottom",
+                showControls: true,
+                showSkip: true,
+                pointerPadding: 10,
+                pointerRadius: 10,
+                prevRoute: "/profile"
+            },
+            // ─────────────────────────────
+            {
+                icon: <MapPin size={20} className="text-primary" />,
+                title: i18n.t("nextstep.select_station_title"),
+                content: (
+                    <>
+                        {i18n.t("nextstep.select_station_content_1")}{" "}
+                        <b>{i18n.t("nextstep.select_station_content_2")}</b>.
+                    </>
+                ),
+                selector: "#station-select",
+                side: "bottom",
+                showControls: true,
+                showSkip: true,
+                pointerPadding: 10,
+                pointerRadius: 10
+            },
+            // ─────────────────────────────
+            {
+                icon: <CarFront size={20} className="text-primary" />,
+                title: i18n.t("nextstep.select_segment_title"),
+                content: (
+                    <>
+                        {i18n.t("nextstep.select_segment_content_1")}{" "}
+                        <b>{i18n.t("nextstep.select_segment_content_2")}</b>.
+                    </>
+                ),
+                selector: "#segment-select",
+                side: "bottom",
+                showControls: true,
+                showSkip: true,
+                pointerPadding: 10,
+                pointerRadius: 10
+            },
+            // ─────────────────────────────
+            {
+                icon: <CalendarRange size={20} className="text-primary" />,
+                title: i18n.t("nextstep.pickup_time_title"),
+                content: (
+                    <>
+                        {i18n.t("nextstep.pickup_time_content_1")}{" "}
+                        <b>{i18n.t("nextstep.pickup_time_content_2")}</b>.
+                    </>
+                ),
+                selector: "#pick-up-select",
+                side: "bottom",
+                showControls: true,
+                showSkip: true,
+                pointerPadding: 10,
+                pointerRadius: 10,
+                blockKeyboardControl: true
+            },
+            // ─────────────────────────────
+            {
+                icon: <CalendarRange size={20} className="text-primary" />,
+                title: i18n.t("nextstep.return_time_title"),
+                content: (
+                    <>
+                        {i18n.t("nextstep.return_time_content_1")}{" "}
+                        <b>{i18n.t("nextstep.return_time_content_2")}</b>.
+                    </>
+                ),
+                selector: "#return-select",
+                side: "bottom",
+                showControls: true,
+                showSkip: true,
+                pointerPadding: 10,
+                pointerRadius: 10
             }
         ]
     }
