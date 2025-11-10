@@ -300,7 +300,8 @@
         "station_feedbacks": "Station Feedbacks",
         "country": "Country",
         "address": "Address",
-        "view_details": "View details"
+        "view_details": "View details",
+        "created_at": "Created at"
     },
     "contral_form": {
         "full_name_require": "Full name is required",
@@ -500,6 +501,8 @@
     },
     "station": {
         "station": "Station",
+        "detail": "Station Detail",
+        "name": "Name",
         "address": "Station address",
         "not_found": "Station not found"
     },
@@ -954,6 +957,10 @@
         "station_information": "Station Information",
         "form_station": "From Station",
         "from_station_is_required": "From station is required",
+
+        "super_admin_approve": "Super Admin Approve",
+        "final_description_is_required": "Final description is required",
+
         "station_id": "Station ID",
         "station_name": "Station name",
         "to_station": "To Station",
@@ -969,6 +976,9 @@
         "create": "Create",
         "from_station_require": "From station is required",
         "number_staff": "Number of staffs",
+        "number_staff_need": "Number of staff in dispatch request",
+
+        "number_staff_assign": "Number of staff that this station can assign",
         "request_vehicles": "Requested vehicle list",
         "number_staff_require": "Number of staffs is required",
         "number_staff_min": "Number of staffs must be at least 0",
@@ -976,17 +986,21 @@
         "number_vehicle": "Number of vehicles",
         "number_vehicle_require": "Number of vehicles is required",
         "number_vehicle_min": "Number of vehicles must be at least 1",
+        "number_vehicle_need": "Quantity in dispatch request",
+        "number_vehicle_assign": "Quantity that this station can assign",
 
         "invalid_number_of_staffs": "Number of staffs is less or greater than the required number",
         "staff_not_enought_in_from_station": "Number of staffs is not enough in from station",
 
         "vehicle_model_require": "Vehicle model is required",
+        "vehicle_not_enought_in_from_station": "Number of vehicles is not enough in from station",
 
         "invalid_number_of_vehicles": "Some models that have number of vehicles is less or greater than the required number",
         "vehicle_not_in_from_station": "Vehicle is not in from station",
         "staff_limit_in_from_station": "Staffs limit in from station",
         "vehicle_limit_in_from_station": "Vehicles limit in from station",
         "vehicle_or_staff_not_in_from_station": "Vehicle or staff is not in from station",
+        "no_staff_no_vehicle_reject": "You didn't approve any staff or vehicles — it looks like you want to reject this dispatch request",
 
         "only_pending_can_approve_reject": "Only pending dispatch can be approved or rejected",
         "only_approved_can_receive": "Only approved dispatch can be received",

@@ -2,7 +2,9 @@
 
 import { InputStyled, NumberInputStyled, SectionStyled, TableStyled } from "@/components"
 import { DispatchRequestStatusColorMap } from "@/constants/colorMap"
+import { DATE_TIME_VIEW_FORMAT } from "@/constants/constants"
 import { DispatchRequestStatusLabels } from "@/constants/labels"
+import { useDay } from "@/hooks"
 import { DispatchViewRes } from "@/models/dispatch/schema/response"
 import { Chip, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import React from "react"
@@ -10,6 +12,7 @@ import { useTranslation } from "react-i18next"
 
 export function DispatchInfo({ dispatch }: { dispatch: DispatchViewRes }) {
     const { t } = useTranslation()
+    const { formatDateTime } = useDay({ defaultFormat: DATE_TIME_VIEW_FORMAT })
 
     return (
         <>
@@ -22,6 +25,10 @@ export function DispatchInfo({ dispatch }: { dispatch: DispatchViewRes }) {
                     {DispatchRequestStatusLabels[dispatch.status]}
                 </Chip>
             </div>
+
+            <div className="mb-3">{`${t("table.created_at")}: ${formatDateTime({
+                date: dispatch.createdAt
+            })}`}</div>
 
             {/* Station Info */}
             <SectionStyled title={t("dispatch.station_information")}>

@@ -4,7 +4,7 @@ import React, { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useTranslation } from "react-i18next"
 import { useGetMe } from "@/hooks"
-import { addToast } from "@heroui/toast"
+// import { addToast } from "@heroui/toast"
 import { SpinnerStyled } from "@/components"
 import { RoleName } from "@/constants/enum"
 
@@ -21,11 +21,11 @@ export default function DashboardPage() {
     useEffect(() => {
         if (isLoading) return
         if (isError || (!isSuperAdmin && !isAdmin && !isStaff)) {
-            addToast({
-                title: t("toast.error"),
-                description: t("user.unauthorized"),
-                color: "danger"
-            })
+            // addToast({
+            //     title: t("toast.error"),
+            //     description: t("user.unauthorized"),
+            //     color: "danger"
+            // })
 
             router.replace("/")
         }

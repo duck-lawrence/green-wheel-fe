@@ -37,8 +37,7 @@ export const NHAC_NO_CANH_BAO = String.raw`(1) Khi Khách Hàng trả Xe trễ, 
    (a) Gọi tối đa 02 lần/ngày;
    (b) Gửi email cảnh báo;
    (c) Trước khi thu hồi, gửi thông báo cuối cùng.
-(2) Hệ thống không can thiệp kỹ thuật để khóa sạc/định vị; nếu Khách Hàng không hợp tác, GW sẽ thực hiện thủ tục thu hồi xe theo pháp luật hiện hành.
-(3) Mọi biện pháp cưỡng chế phải ghi nhật ký và thông báo trước ít nhất 24 giờ.`
+(2) Hệ thống không can thiệp kỹ thuật để khóa sạc/định vị; nếu Khách Hàng không hợp tác, GW sẽ thực hiện thủ tục thu hồi xe theo pháp luật hiện hành.`
 
 export const DAT_COC = String.raw`- Khoản Đặt Cọc bắt buộc trước khi nhận Xe; có thể thanh toán qua cổng thanh toán hoặc tiền mặt tại trạm.
 - Khoản Đặt Cọc không sinh lãi, được duy trì suốt thời gian thuê.

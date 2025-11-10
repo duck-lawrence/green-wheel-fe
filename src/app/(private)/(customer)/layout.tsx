@@ -4,7 +4,7 @@ import { RoleName } from "@/constants/enum"
 import { useGetMe } from "@/hooks"
 
 import { Spinner } from "@heroui/react"
-import { addToast } from "@heroui/toast"
+// import { addToast } from "@heroui/toast"
 import { useRouter } from "next/navigation"
 import React, { useEffect } from "react"
 import { useTranslation } from "react-i18next"
@@ -19,11 +19,11 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
     useEffect(() => {
         if (isLoading) return
         if (isError || !isCustomer) {
-            addToast({
-                title: t("toast.error"),
-                description: t("user.unauthorized"),
-                color: "danger"
-            })
+            // addToast({
+            //     title: t("toast.error"),
+            //     description: t("user.unauthorized"),
+            //     color: "danger"
+            // })
 
             router.replace("/")
         }

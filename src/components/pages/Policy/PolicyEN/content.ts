@@ -35,8 +35,7 @@ export const REMINDER_NOTICE = String.raw`(1) When the Customer returns the Vehi
    (a) Make up to 02 phone calls per day;
    (b) Send email warnings;
    (c) Before repossession, issue a final notice.
-(2) The system does not automatically disable charging/GPS; if the Customer does not cooperate, GW will proceed with repossession procedures as permitted by law.
-(3) Any enforcement actions must be logged and notified at least 24 hours in advance.`
+(2) The system does not automatically disable charging/GPS; if the Customer does not cooperate, GW will proceed with repossession procedures as permitted by law.`
 
 export const DEPOSIT = String.raw`- A Deposit Fee is mandatory before vehicle handover and may be paid via online gateway or cash at the station.
 - The Deposit Fee is non-interest-bearing and held throughout the rental period.
