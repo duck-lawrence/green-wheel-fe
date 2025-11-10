@@ -2,30 +2,35 @@
 import { useEffect } from "react"
 import { useNextStep } from "nextstepjs"
 import { usePathname } from "next/navigation"
+import { useGetMe } from "@/hooks/queries"
+import { RoleName } from "@/constants/enum"
 
 export const useOnboardingTour = (tourName: string, targetPath: string) => {
     const { startNextStep } = useNextStep()
     const pathname = usePathname()
 
-    // const { data: me } = useGetMe()
-    // const newUser = me?.isNewUser
-    const newUser = true
+    const { data: me } = useGetMe()
 
-    // Reset tour mỗi lần reload nếu autoReset = true
+    // Reset nếu me?.hasSeenTutorial === false
     useEffect(() => {
-        if (newUser) {
+        if (me?.role?.name == RoleName.Customer && me?.hasSeenTutorial === false) {
             localStorage.removeItem("hasSeenOnboarding")
         }
-    }, [newUser])
+    }, [me?.hasSeenTutorial, me?.role?.name])
 
-    // Tự động hiển thị tour khi vào đúng route
+    // auto start tour
     useEffect(() => {
-        if (pathname === targetPath && !localStorage.getItem("hasSeenOnboarding")) {
+        if (
+            pathname === targetPath &&
+            me?.role?.name == RoleName.Customer &&
+            me?.hasSeenTutorial === false &&
+            !localStorage.getItem("hasSeenOnboarding")
+        ) {
             const timeout = setTimeout(() => {
                 startNextStep(tourName)
                 localStorage.setItem("hasSeenOnboarding", "true")
-            }, 800) // delay để UI ổn định
+            }, 800)
             return () => clearTimeout(timeout)
         }
-    }, [pathname, targetPath, startNextStep, tourName])
+    }, [pathname, targetPath, startNextStep, tourName, me?.role?.name, me?.hasSeenTutorial])
 }

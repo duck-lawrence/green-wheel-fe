@@ -130,12 +130,6 @@ export function ProfileDropdown({ onOpen = undefined }: { onOpen?: () => void })
         await logoutMutation.mutateAsync()
     }, [logoutMutation])
 
-    // =============Next Step Tour Steps Integration============
-    // const router = useRouter()
-    // useTourSync()
-
-    // =============Next Step Tour Steps Integration============
-
     // handle get me error
     if (isGetMeLoading || isGetMeError) return <Spinner />
 

@@ -8,8 +8,7 @@ import { DisclosureProvider } from "./DisclosureProvider"
 import { ClientI18nProvider } from "./ClientI18nProvider"
 import { NextStep, NextStepProvider } from "nextstepjs"
 import { onboardingSteps } from "@/lib/nextstep/steps"
-import { useCustomNavigationAdapter } from "@/hooks/reuseable/useNextStep/useCustomNavigationAdapter"
-import { DisableAutoScrollFix } from "@/hooks"
+import { DisableAutoScrollFix, useCustomNavigationAdapter } from "@/hooks"
 import { CustomCard } from "@/components"
 
 export function AppProviders({ children, locale }: { children: React.ReactNode; locale: string }) {

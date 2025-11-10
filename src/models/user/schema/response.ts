@@ -18,4 +18,5 @@ export type UserProfileViewRes = {
     needSetPassword: boolean
     role?: RoleViewRes
     station?: StationViewRes
+    hasSeenTutorial?: boolean
 }

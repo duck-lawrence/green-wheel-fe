@@ -1,5 +1,4 @@
 "use client"
-
 import type { Tour } from "nextstepjs"
 import React from "react"
 import {
@@ -12,7 +11,7 @@ import {
     MapPin,
     Settings2
 } from "lucide-react"
-import i18n from "../i18n" // ✅ i18n đã khởi tạo trong app
+import i18n from "../i18n"
 
 export const onboardingSteps: Tour[] = [
     {

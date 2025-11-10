@@ -1,11 +1,11 @@
 "use client"
-
 import React from "react"
-import { Step } from "nextstepjs"
+import { Step, useNextStep } from "nextstepjs"
 import { motion } from "framer-motion"
 import { ChevronLeft, ChevronRight, XCircle } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { ButtonStyled } from "@/components/styled"
+import { useGetMe, useUpdateMe } from "@/hooks"
 
 interface CustomCardProps {
     step: Step
@@ -27,8 +27,32 @@ export const CustomCard: React.FC<CustomCardProps> = ({
     arrow
 }) => {
     const { t } = useTranslation()
+    const { closeNextStep } = useNextStep()
 
-    // Tính phần trăm tiến trình
+    const { data: me } = useGetMe()
+    const updateUser = useUpdateMe({ onSuccess: undefined, showToast: false })
+
+    const handleFinishTour = () => {
+        if (me?.hasSeenTutorial === false) {
+            updateUser.mutate({ hasSeenTutorial: true })
+            localStorage.setItem("hasSeenOnboarding", "true")
+        }
+        closeNextStep()
+    }
+
+    const handleSkipTour = () => {
+        handleFinishTour(), skipTour?.()
+    }
+
+    const handleNextStep = () => {
+        if (currentStep === totalSteps - 1) {
+            handleFinishTour()
+        } else {
+            nextStep()
+        }
+    }
+
+    // Tiến trình
     const progress = ((currentStep + 1) / totalSteps) * 100
 
     return (
@@ -96,7 +120,7 @@ export const CustomCard: React.FC<CustomCardProps> = ({
                     )}
 
                     <ButtonStyled
-                        onPress={nextStep}
+                        onPress={handleNextStep}
                         className="flex items-center gap-1 px-4 py-1.5 rounded-lg 
                        bg-gradient-to-r from-primary to-teal-500 text-white font-medium text-sm 
                        shadow-md hover:shadow-lg hover:scale-[1.02] transition-all"
@@ -110,9 +134,9 @@ export const CustomCard: React.FC<CustomCardProps> = ({
                         )}
                     </ButtonStyled>
 
-                    {step.showSkip && skipTour && (
+                    {step.showSkip && (
                         <ButtonStyled
-                            onPress={skipTour}
+                            onPress={handleSkipTour}
                             className="flex items-center gap-1 text-sm text-gray-400 
                          hover:text-red-500 hover:scale-105 transition-all"
                         >
