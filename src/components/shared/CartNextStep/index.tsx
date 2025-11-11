@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, XCircle } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { ButtonStyled } from "@/components/styled"
 import { useGetMe, useUpdateMe } from "@/hooks"
+import { usePathname } from "next/navigation"
 
 interface CustomCardProps {
     step: Step
@@ -28,6 +29,7 @@ export const CustomCard: React.FC<CustomCardProps> = ({
 }) => {
     const { t } = useTranslation()
     const { closeNextStep } = useNextStep()
+    const pathName = usePathname()
 
     const { data: me } = useGetMe()
     const updateUser = useUpdateMe({ onSuccess: undefined, showToast: false })
@@ -42,6 +44,13 @@ export const CustomCard: React.FC<CustomCardProps> = ({
 
     const handleSkipTour = () => {
         handleFinishTour(), skipTour?.()
+    }
+
+    const handlePrevStep = () => {
+        if (pathName === "/" || pathName === "/profile") {
+            if (currentStep === 0) return
+        }
+        prevStep()
     }
 
     const handleNextStep = () => {
@@ -109,7 +118,7 @@ export const CustomCard: React.FC<CustomCardProps> = ({
                 <div className="flex gap-2 items-center">
                     {currentStep > 0 && (
                         <ButtonStyled
-                            onPress={prevStep}
+                            onPress={handlePrevStep}
                             className="flex items-center gap-1 px-0 py-1.5 rounded-lg border border-gray-300/60 
                           text-sm font-medium text-gray-700
                          hover:bg-gray-200 hover:scale-[1.02] transition-all"

@@ -144,7 +144,7 @@ export const onboardingSteps: Tour[] = [
                 side: "bottom",
                 showControls: true,
                 showSkip: true,
-                pointerPadding: 10,
+                pointerPadding: 8,
                 pointerRadius: 10,
                 prevRoute: "/profile"
             },
