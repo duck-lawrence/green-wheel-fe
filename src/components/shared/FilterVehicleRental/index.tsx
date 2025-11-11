@@ -19,7 +19,7 @@ import { addToast } from "@heroui/toast"
 
 function calcDates() {
     const zonedNow = fromDate(new Date(), DEFAULT_TIMEZONE)
-    const isAfterMax = zonedNow.hour + 3 > MAX_HOUR
+    const isAfterMax = zonedNow.hour + 3 >= MAX_HOUR
     const isBeforeMin = zonedNow.hour + 3 < MIN_HOUR
 
     const initialStart =

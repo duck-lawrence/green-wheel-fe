@@ -3,9 +3,9 @@ import { useEffect, useMemo } from "react"
 import {
     useDay,
     useGetAllStations,
-    useGetAllVehicleModels,
     useGetAllVehicles,
-    useGetVehicleComponents
+    useGetVehicleComponents,
+    useGetVehicleModelByIdWithoutFilter
 } from "@/hooks"
 
 import { VehicleStatus } from "@/constants/enum"
@@ -69,14 +69,14 @@ export function mapVehiclesToRows(opts: {
     })
 }
 
-export function useFleetData(modelId: string | undefined) {
+export function useFleetData(modelId: string) {
     const {
-        data: vehicleModelsData = [],
-        isLoading: isLoadingModels,
-        isFetching: isFetchingModels,
-        error: vehicleModelsError,
-        refetch: refetchVehicleModels
-    } = useGetAllVehicleModels({ query: {} })
+        data: vehicleModel,
+        isLoading: isLoadingModel,
+        isFetching: isFetchingModel,
+        error: vehicleModelError,
+        refetch: refetchVehicleModel
+    } = useGetVehicleModelByIdWithoutFilter({ modelId })
 
     const {
         data: vehiclesPage,
@@ -111,11 +111,6 @@ export function useFleetData(modelId: string | undefined) {
         }, {})
     }, [stations])
 
-    const vehicleModel = useMemo(() => {
-        if (!modelId) return undefined
-        return vehicleModelsData.find((m) => m.id === modelId)
-    }, [modelId, vehicleModelsData])
-
     const vehiclesOfModel = useMemo(() => {
         const allVehicles = (vehiclesPage?.items ?? []) as VehicleViewRes[]
         if (!modelId) return allVehicles
@@ -134,16 +129,16 @@ export function useFleetData(modelId: string | undefined) {
         vehicleModel,
         vehiclesOfModel,
         stationNameById,
-        isLoading: isLoadingModels,
-        isFetchingAny: isFetchingModels,
+        isLoading: isLoadingModel,
+        isFetchingAny: isFetchingModel,
         isFetchingVehicles,
         isFetchingComponents,
         isLoadingComponents,
-        vehicleModelsError,
+        vehicleModelError,
         vehiclesError,
         componentsError,
         stationsError,
-        refetchVehicleModels,
+        refetchVehicleModel,
         componentsOfModel,
         refetchComponents
     }

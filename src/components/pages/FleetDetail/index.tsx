@@ -55,11 +55,11 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
         isFetchingVehicles,
         isFetchingComponents,
         isLoadingComponents,
-        vehicleModelsError,
+        vehicleModelError,
         vehiclesError,
         componentsError,
         stationsError,
-        refetchVehicleModels,
+        refetchVehicleModel,
         refetchComponents
     } = useFleetData(modelId)
 
@@ -111,16 +111,16 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
     } = useModalDisclosure()
 
     const handleVehicleModelUpdated = useCallback(() => {
-        void refetchVehicleModels()
+        void refetchVehicleModel()
         void refetchComponents()
-    }, [refetchVehicleModels, refetchComponents])
+    }, [refetchVehicleModel, refetchComponents])
 
     const handleVehicleModelDeleted = useCallback(() => {
         router.push("/dashboard/fleets")
     }, [router])
 
     // toast all API errors (models / vehicles / stations)
-    useApiErrorToasts([vehicleModelsError, vehiclesError, componentsError, stationsError], t)
+    useApiErrorToasts([vehicleModelError, vehiclesError, componentsError, stationsError], t)
 
     // table rows data
     const vehicleRows: VehicleRow[] = useMemo(
@@ -239,15 +239,6 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
                 isEditDisabled={isComponentEditDisabled}
             />
 
-            <EditModelComponentModal
-                isOpen={isComponentModalOpen}
-                onOpenChange={onComponentModalOpenChange}
-                onClose={onComponentModalClose}
-                modelId={vehicleModel.id}
-                selectedComponentIds={componentIdsForModal}
-                onUpdated={handleVehicleModelUpdated}
-            />
-
             <VehicleModelEditModal
                 isOpen={isEditModalOpen}
                 onOpenChange={onEditModalOpenChange}
@@ -255,6 +246,15 @@ export function AdminFleetDetail({ modelId }: { modelId: string }) {
                 vehicleModel={vehicleModel}
                 brandOptions={brandOptions}
                 segmentOptions={segmentOptions}
+                onUpdated={handleVehicleModelUpdated}
+            />
+
+            <EditModelComponentModal
+                isOpen={isComponentModalOpen}
+                onOpenChange={onComponentModalOpenChange}
+                onClose={onComponentModalClose}
+                modelId={vehicleModel.id}
+                selectedComponentIds={componentIdsForModal}
                 onUpdated={handleVehicleModelUpdated}
             />
 

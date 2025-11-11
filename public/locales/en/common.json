@@ -544,6 +544,7 @@
         "available": "Available",
         "unavailable": "Unavailable",
         "rented": "Rented",
+        "renting": "Renting",
         "maintenance": "Maintenance",
         "missing_no_reason": "Missing no reason",
         "late_return": "Late Return",
@@ -646,7 +647,8 @@
     },
     "cloudinary": {
         "file_not_found": "File not found",
-        "invalid_file_type": "Invalid file type"
+        "invalid_file_type": "Invalid file type",
+        "invalid_public_id": "Invalid public id"
     },
     "upload": {
         "file_required": "File is required",

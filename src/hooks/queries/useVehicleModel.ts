@@ -2,7 +2,6 @@ import { QUERY_KEYS } from "@/constants/queryKey"
 import { BackendError } from "@/models/common/response"
 import {
     CreateVehicleModelReq,
-    DeleteModelImagesReq,
     GetAllModelParams,
     SearchModelParams,
     UpdateModelComponentsReq,
@@ -19,6 +18,7 @@ import { addToast } from "@heroui/toast"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 
+// Get Without filter
 export const useGetAllVehicleModels = ({
     query,
     enabled = true
@@ -36,17 +36,29 @@ export const useGetAllVehicleModels = ({
     })
 }
 
-export const useGetAllVehicleModelImages = ({ enabled = true }: { enabled?: boolean } = {}) => {
+export const useGetVehicleModelByIdWithoutFilter = ({
+    modelId,
+    enabled = true
+}: {
+    modelId: string
+    enabled?: boolean
+}) => {
+    const queryClient = useQueryClient()
     return useQuery({
-        queryKey: [...QUERY_KEYS.VEHICLE_MODELS, "images"],
-        queryFn: async () => {
-            const data = await vehicleModelApi.getAllImages()
-            return data
+        queryKey: [...QUERY_KEYS.VEHICLE_MODELS, modelId],
+        queryFn: () => vehicleModelApi.getByIdWithoutFilter(modelId),
+        initialData: () => {
+            const cachedList = queryClient.getQueryData<VehicleModelViewRes[]>([
+                ...QUERY_KEYS.VEHICLE_MODELS,
+                modelId
+            ])
+            return cachedList?.find((v) => v.id === modelId)
         },
         enabled
     })
 }
 
+// Get with filter (Search)
 export const useSearchVehicleModels = ({
     query,
     enabled = true
@@ -111,6 +123,7 @@ export const useGetVehicleModelById = ({
     })
 }
 
+// Mutation vehicle model
 export const useCreateVehicleModel = ({
     onSuccess,
     onError
@@ -182,6 +195,40 @@ export const useUpdateVehicleModel = ({
     })
 }
 
+export const useDeleteVehicleModel = ({
+    onSuccess,
+    onError
+}: {
+    onSuccess?: () => void
+    onError?: () => void
+} = {}) => {
+    const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (id: string) => vehicleModelApi.delete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
+            addToast({
+                title: t("toast.success"),
+                description: t("success.delete"),
+                color: "success"
+            })
+            onSuccess?.()
+        },
+        onError: (error: BackendError) => {
+            addToast({
+                title: error.title || t("toast.error"),
+                description: translateWithFallback(t, error.detail),
+                color: "danger"
+            })
+
+            onError?.()
+        }
+    })
+}
+
+// model component
 export const useUpdateVehicleModelComponents = ({
     onSuccess,
     onError
@@ -212,6 +259,18 @@ export const useUpdateVehicleModelComponents = ({
             })
             onError?.()
         }
+    })
+}
+
+// Model Images
+export const useGetAllVehicleModelImages = ({ enabled = true }: { enabled?: boolean } = {}) => {
+    return useQuery({
+        queryKey: [...QUERY_KEYS.VEHICLE_MODELS, "images"],
+        queryFn: async () => {
+            const data = await vehicleModelApi.getAllImages()
+            return data
+        },
+        enabled
     })
 }
 
@@ -332,61 +391,14 @@ export const useDeleteModelImages = ({
     onSuccess?: () => void
     onError?: () => void
 }) => {
-    const { t } = useTranslation()
-    const queryClient = useQueryClient()
-
     return useMutation({
-        mutationFn: (payload: DeleteModelImagesReq) =>
-            vehicleModelApi.deleteSubImages({ id, payload }),
+        mutationFn: async () => await vehicleModelApi.deleteAllImages({ id }),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
-            onSuccess?.()
-            addToast({
-                title: t("toast.success"),
-                description: t("success.delete"),
-                color: "success"
-            })
-        },
-        onError: (error: BackendError) => {
-            onError?.()
-            addToast({
-                title: error.title || t("toast.error"),
-                description: translateWithFallback(t, error.detail),
-                color: "danger"
-            })
-        }
-    })
-}
-
-export const useDeleteVehicleModel = ({
-    onSuccess,
-    onError
-}: {
-    onSuccess?: () => void
-    onError?: () => void
-} = {}) => {
-    const { t } = useTranslation()
-    const queryClient = useQueryClient()
-
-    return useMutation({
-        mutationFn: (id: string) => vehicleModelApi.delete(id),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VEHICLE_MODELS })
-            addToast({
-                title: t("toast.success"),
-                description: t("success.delete"),
-                color: "success"
-            })
             onSuccess?.()
         },
         onError: (error: BackendError) => {
-            addToast({
-                title: error.title || t("toast.error"),
-                description: translateWithFallback(t, error.detail),
-                color: "danger"
-            })
-
             onError?.()
+            throw error
         }
     })
 }

@@ -1,20 +1,26 @@
 "use client"
 
 import React, { useCallback } from "react"
-import { useImageUploadModal, useUploadModelImages } from "@/hooks"
+import { useDeleteModelImages, useImageUploadModal, useUploadModelImages } from "@/hooks"
 import { ButtonIconStyled, ImagesUploaderModal } from "@/components/"
 import { useTranslation } from "react-i18next"
 import { cn } from "@heroui/react"
 import { Camera } from "lucide-react"
+import { BackendError } from "@/models/common/response"
+import axios from "axios"
+import { translateWithFallback } from "@/utils/helpers/translateWithFallback"
+import { addToast } from "@heroui/toast"
 
 export function ModelImagesUploader({
     id,
     btnClassName = "",
-    onUploaded
+    onUploaded,
+    initialImages = []
 }: {
     id: string
     btnClassName?: string
     onUploaded?: () => void
+    initialImages?: string[]
 }) {
     const { t } = useTranslation()
     const { isOpen, onOpen, onOpenChange, onClose } = useImageUploadModal()
@@ -27,9 +33,31 @@ export function ModelImagesUploader({
             onUploaded?.()
         }
     })
+
+    const deleteModelImages = useDeleteModelImages({ id })
+
     const handleUpload = useCallback(
-        async (formData: FormData) => await uploadModelImages.mutateAsync(formData),
-        [uploadModelImages]
+        async (formData: FormData) => {
+            try {
+                await deleteModelImages.mutateAsync()
+                await uploadModelImages.mutateAsync(formData)
+            } catch (error) {
+                if (axios.isAxiosError(error)) {
+                    const data = error.response?.data
+                    const backendError: BackendError = {
+                        title: data?.title ?? "Internal Server Error",
+                        status: data?.status ?? error.response?.status,
+                        detail: data?.detail ?? error.message
+                    }
+                    addToast({
+                        title: backendError.title || t("toast.error"),
+                        description: translateWithFallback(t, backendError.detail),
+                        color: "danger"
+                    })
+                }
+            }
+        },
+        [deleteModelImages, t, uploadModelImages]
     )
 
     return (
@@ -53,9 +81,10 @@ export function ModelImagesUploader({
                 onOpenChange={onOpenChange}
                 onClose={onClose}
                 uploadFn={handleUpload}
-                isUploadPending={uploadModelImages.isPending}
+                isUploadPending={uploadModelImages.isPending || deleteModelImages.isPending}
                 cropShape="rect"
                 cropSize={{ width: 700, height: 437.5 }}
+                initialImages={initialImages}
             />
         </>
     )
