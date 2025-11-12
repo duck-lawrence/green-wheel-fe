@@ -179,7 +179,7 @@ export default function DispatchPage() {
                             ) : (
                                 <TableRow>
                                     <TableCell
-                                        colSpan={7}
+                                        colSpan={8}
                                         className="text-center py-10 text-gray-500 italic"
                                     >
                                         ...
