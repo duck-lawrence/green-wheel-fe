@@ -120,7 +120,6 @@
         "reset_password": "Reset password",
         "please_reset_password": "Please set your new password"
     },
-
     "user": {
         "invalid_otp": "Invalid OTP",
         "otp_can_not_empty": "OTP is required",
@@ -368,7 +367,7 @@
         "remaining_vehicle_count": "Remaining vehicles",
         "vnd_per_day": "VND/Day",
         "vehicle_information": "Vehicle information",
-        "unit_price": "Unit price",
+        "unit_price": "Rental price per day",
 
         "cost_per_day": "Cost per day",
         "cost_per_day_placeholder": "Enter cost per day",
@@ -1088,7 +1087,6 @@
         "create_out_of_contract": "Create out of booking checklist",
         "view_out_of_contract": "View out of booking checklist",
         "item_image": "Vehicle checklist item image",
-
         "maintain_until": "Maintain until",
         "maintain_until_require": "Maintain date is required",
         "invalid_maintain_until": "Maintain date must be at least 30 minutes from now"
@@ -1175,7 +1173,6 @@
         "detail_vehicle_table_loading": "Loading vehicles...",
         "detail_vehicle_table_empty": "This model has no vehicles yet.",
         "detail_vehicle_last_updated": "Last updated",
-        "detail_vehicle_table_hint": "\"Last updated\" is taken from the vehicles.updated_at column.",
         "vehicle_last_updated_unknown": "Not updated",
         "vehicle_unknown_station": "Unknown station",
         "spec_capacity": "Capacity",
