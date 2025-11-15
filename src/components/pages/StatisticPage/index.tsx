@@ -6,7 +6,7 @@ import {
     useGetBookingByYear,
     useGetCustomerStatistic,
     useGetRevenueByYear,
-    useGetTotalInvoiceStatistic,
+    useGetTotalContractsStatistic,
     useGetTotalRevenueStatistic,
     useGetVehicleModelStatistic
 } from "@/hooks"
@@ -51,9 +51,13 @@ export function StatisticPage({ adminStationId = undefined }: { adminStationId?:
     const { data: totalRevenue, isLoading: isTotalRevenueLoading } = useGetTotalRevenueStatistic({
         stationId
     })
-    const { data: totalInvoice, isLoading: isTotalInvoiceLoading } = useGetTotalInvoiceStatistic({
-        stationId
-    })
+    // const { data: totalInvoice, isLoading: isTotalInvoiceLoading } = useGetTotalInvoiceStatistic({
+    //     stationId
+    // })
+    const { data: totalContracts, isLoading: isTotalContractsLoading } =
+        useGetTotalContractsStatistic({
+            stationId
+        })
     const { data: vehicleModelStatistic, isLoading: isVehicleModelStatisticLoading } =
         useGetVehicleModelStatistic({ stationId })
     const { data: revenueOverMonths, isLoading: isRevenueOverMonthsLoading } = useGetRevenueByYear({
@@ -69,26 +73,26 @@ export function StatisticPage({ adminStationId = undefined }: { adminStationId?:
     const dataKpi = [
         {
             title: t("statistic.revenue"),
-            value: totalRevenue?.totalRevenueThisMonth || 0,
-            valueLastMonth: totalRevenue?.totalRevenueLastMonth || 0,
+            value: totalRevenue?.totalThisMonth || 0,
+            valueLastMonth: totalRevenue?.totalLastMonth || 0,
             change: totalRevenue?.changeRate || 0
         },
         {
-            title: "Invoices",
-            value: totalInvoice?.totalStatisticThisMonth || 0,
-            valueLastMonth: totalInvoice?.totalStatisticLastMonth || 0,
-            change: totalInvoice?.changeRate || 0
+            title: t("statistic.booking"),
+            value: totalContracts?.totalThisMonth || 0,
+            valueLastMonth: totalContracts?.totalLastMonth || 0,
+            change: totalContracts?.changeRate || 0
         },
         {
             title: t("statistic.member"),
-            value: totalCustomer?.customerInThisMonth || 0,
-            valueLastMonth: totalCustomer?.customerInLastMonth || 0,
+            value: totalCustomer?.totalThisMonth || 0,
+            valueLastMonth: totalCustomer?.totalLastMonth || 0,
             change: totalCustomer?.changeRate || 0
         },
         {
             title: t("statistic.anonymous"),
-            value: totalAnonymous?.customerAnonymusInThisMonth || 0,
-            valueLastMonth: totalAnonymous?.customerAnonymusInLastMonth || 0,
+            value: totalAnonymous?.totalThisMonth || 0,
+            valueLastMonth: totalAnonymous?.totalLastMonth || 0,
             change: totalAnonymous?.changeRate || 0
         }
     ]
@@ -121,7 +125,7 @@ export function StatisticPage({ adminStationId = undefined }: { adminStationId?:
         isTotalCustomerLoading ||
         isTotalAnonymousLoading ||
         isTotalRevenueLoading ||
-        isTotalInvoiceLoading ||
+        isTotalContractsLoading ||
         isVehicleModelStatisticLoading ||
         isRevenueOverMonthsLoading ||
         isBookingOverMonthsLoading

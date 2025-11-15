@@ -1,25 +1,6 @@
-export type CustomerRes = {
-    customerInThisMonth: number
-    customerInLastMonth: number
-    changeRate: number
-}
-
-export type CustomerAnonymousRes = {
-    customerAnonymusInThisMonth: number
-    customerAnonymusInLastMonth: number
-    changeRate: number
-}
-
-export type TotalRevenueRes = {
-    totalRevenueThisMonth: number
-    totalRevenueLastMonth: number
-    changeRate: number
-}
-
 export type TotalStatisticRes = {
-    // invoice
-    totalStatisticThisMonth: number
-    totalStatisticLastMonth: number
+    totalThisMonth: number
+    totalLastMonth: number
     changeRate: number
 }
 
