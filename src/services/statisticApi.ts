@@ -2,11 +2,8 @@ import axiosInstance from "@/utils/axios"
 import { buildQueryParams, requestWrapper } from "@/utils/helpers/axiosHelper"
 import {
     BookingByYearRes,
-    CustomerAnonymousRes,
-    CustomerRes,
     InvoiceByYearRes,
     RevenueByYearRes,
-    TotalRevenueRes,
     TotalStatisticRes,
     VehicleModelStatisticRes,
     VehicleTotalRes
@@ -14,7 +11,7 @@ import {
 
 export const statisticApi = {
     getCustomerStatistic: (query: { stationId: string }) => {
-        return requestWrapper<CustomerRes>(async () => {
+        return requestWrapper<TotalStatisticRes>(async () => {
             const params = buildQueryParams(query)
             const res = await axiosInstance.get("/statistic/customers", { params })
             return res.data
@@ -22,14 +19,14 @@ export const statisticApi = {
     },
 
     getAnonymousStatistic: (query: { stationId: string }) =>
-        requestWrapper<CustomerAnonymousRes>(async () => {
+        requestWrapper<TotalStatisticRes>(async () => {
             const params = buildQueryParams(query)
             const res = await axiosInstance.get("/statistic/customers/anonymous", { params })
             return res.data
         }),
 
     getTotalRevenueStatistic: (query: { stationId: string }) =>
-        requestWrapper<TotalRevenueRes>(async () => {
+        requestWrapper<TotalStatisticRes>(async () => {
             const params = buildQueryParams(query)
             const res = await axiosInstance.get("/statistic/revenue", { params })
             return res.data
@@ -39,6 +36,13 @@ export const statisticApi = {
         requestWrapper<TotalStatisticRes>(async () => {
             const params = buildQueryParams(query)
             const res = await axiosInstance.get("/statistic/invoices", { params })
+            return res.data
+        }),
+
+    getTotalContractStatistic: (query: { stationId: string }) =>
+        requestWrapper<TotalStatisticRes>(async () => {
+            const params = buildQueryParams(query)
+            const res = await axiosInstance.get("/statistic/contracts", { params })
             return res.data
         }),
 

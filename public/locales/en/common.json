@@ -1232,7 +1232,9 @@
         "booking": "Booking",
         "total_invoices": "Total Invoices",
         "monthly_bookings": "Monthly Bookings",
-        "total_bookings": "Total Bookings"
+        "total_bookings": "Total Bookings",
+        "member": "Member",
+        "anonymous": "Anonymous"
     },
     "system": {
         "system_setting": "System Setting",
