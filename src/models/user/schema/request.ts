@@ -18,6 +18,7 @@ export type UserUpdateReq = {
     sex?: Sex
     dateOfBirth?: string
     stationId?: string // Only for staff
+    hasSeenTutorial?: boolean
 }
 
 export type UpdateBankAccountReq = {

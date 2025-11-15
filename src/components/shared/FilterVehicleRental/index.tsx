@@ -331,6 +331,7 @@ export function FilterVehicleRental({
     return (
         <>
             <form
+                id="vehicle-search-filters"
                 onSubmit={formik.handleSubmit}
                 className={cn(
                     "bg-secondary border border-gray-300 rounded-4xl shadow-2xl",
@@ -342,38 +343,43 @@ export function FilterVehicleRental({
                 {/* Left section */}
                 <div>
                     <div className="grid md:flex gap-4">
-                        <AutocompleteStyled
-                            className="md:w-50"
-                            label={t("vehicle_model.station")}
-                            items={stations}
-                            startContent={<MapPinAreaIcon className="text-xl" />}
-                            selectedKey={formik.values.stationId}
-                            onSelectionChange={async (id) => {
-                                await formik.setFieldValue("stationId", id)
-                                formik.handleSubmit()
-                            }}
-                            isClearable={false}
-                            isRequired
-                        >
-                            {(stations ?? []).map((item) => (
-                                <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
-                            ))}
-                        </AutocompleteStyled>
+                        <span id="station-select">
+                            <AutocompleteStyled
+                                id="station-select"
+                                className="md:w-50"
+                                label={t("vehicle_model.station")}
+                                items={stations}
+                                startContent={<MapPinAreaIcon className="text-xl" />}
+                                selectedKey={formik.values.stationId}
+                                onSelectionChange={async (id) => {
+                                    await formik.setFieldValue("stationId", id)
+                                    formik.handleSubmit()
+                                }}
+                                isClearable={false}
+                                isRequired
+                            >
+                                {(stations ?? []).map((item) => (
+                                    <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
+                                ))}
+                            </AutocompleteStyled>
+                        </span>
 
-                        <AutocompleteStyled
-                            className="md:w-36"
-                            label={t("vehicle_model.segment")}
-                            items={vehicleSegments}
-                            selectedKey={formik.values.segmentId}
-                            onSelectionChange={async (id) => {
-                                await formik.setFieldValue("segmentId", id)
-                                formik.handleSubmit()
-                            }}
-                        >
-                            {(vehicleSegments ?? []).map((item) => (
-                                <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
-                            ))}
-                        </AutocompleteStyled>
+                        <span id="segment-select">
+                            <AutocompleteStyled
+                                className="md:w-36"
+                                label={t("vehicle_model.segment")}
+                                items={vehicleSegments}
+                                selectedKey={formik.values.segmentId}
+                                onSelectionChange={async (id) => {
+                                    await formik.setFieldValue("segmentId", id)
+                                    formik.handleSubmit()
+                                }}
+                            >
+                                {(vehicleSegments ?? []).map((item) => (
+                                    <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>
+                                ))}
+                            </AutocompleteStyled>
+                        </span>
                     </div>
                     <div className="hidden md:block text-left">{`${t("station.address")}: ${
                         stations?.find((station) => station.id === formik.values.stationId)?.address
@@ -385,6 +391,7 @@ export function FilterVehicleRental({
                     <div className="grid md:flex gap-4">
                         {/* STARTDate */}
                         <DateTimeStyled
+                            id="pick-up-select"
                             label={t("vehicle_model.start_date_time")}
                             value={toZonedDateTime(formik.values.startDate)}
                             minValue={minStartDate}
@@ -397,6 +404,7 @@ export function FilterVehicleRental({
 
                         {/* ENDDate */}
                         <DateTimeStyled
+                            id="return-select"
                             label={t("vehicle_model.end_date_time")}
                             value={toZonedDateTime(formik.values.endDate)}
                             minValue={

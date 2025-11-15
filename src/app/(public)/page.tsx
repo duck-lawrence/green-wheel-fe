@@ -8,37 +8,12 @@ import {
     Stations,
     WhyChoose
 } from "@/components"
-import React, { useEffect, useRef } from "react"
-import { useTranslation } from "react-i18next"
-import { useRouter, useSearchParams } from "next/navigation"
-import { addToast } from "@heroui/toast"
+import React from "react"
+import { useOnboardingTour } from "@/hooks"
 
 export default function HomePage() {
-    const { t } = useTranslation()
-    const router = useRouter()
-    const params = useSearchParams()
-    const hasShownToast = useRef(false)
-
-    useEffect(() => {
-        if (hasShownToast.current) return
-        const reason = params.get("reason")
-        if (reason === "expired" || reason === "no_token") {
-            addToast({
-                title: t("toast.error"),
-                description: t("login.please_login"),
-                color: "danger"
-            })
-            hasShownToast.current = true
-        }
-
-        // tạo URL mới không có param
-        const newParams = new URLSearchParams(params.toString())
-        newParams.delete("reason")
-        router.replace(
-            `${window.location.pathname}${newParams.toString() ? "?" + newParams.toString() : ""}`,
-            { scroll: false }
-        )
-    }, [params, t, router])
+    // Tour onboarding cho trang chủ
+    useOnboardingTour("greenwheel", "/")
 
     return (
         <div className="relative z-10 max-w-screen w-screen">

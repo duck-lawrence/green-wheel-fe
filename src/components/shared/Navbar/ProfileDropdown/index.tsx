@@ -142,6 +142,7 @@ export function ProfileDropdown({ onOpen = undefined }: { onOpen?: () => void })
             >
                 <DropdownTrigger>
                     <User
+                        id="navbar-user"
                         as="button"
                         avatarProps={{
                             isBordered: true,
@@ -159,6 +160,7 @@ export function ProfileDropdown({ onOpen = undefined }: { onOpen?: () => void })
                     {dropdownItems.map((item) =>
                         item.href ? (
                             <DropdownItem
+                                id={item.key === "profile" ? "navbar-profile" : ""}
                                 key={item.key}
                                 as={Link}
                                 href={item.href}

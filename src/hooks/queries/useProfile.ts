@@ -32,7 +32,10 @@ export const useGetMe = ({ enabled = true }: { enabled?: boolean } = {}) => {
     return query
 }
 
-export const useUpdateMe = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useUpdateMe = ({
+    onSuccess,
+    showToast = true
+}: { onSuccess?: () => void; showToast?: boolean } = {}) => {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
 
@@ -49,14 +52,14 @@ export const useUpdateMe = ({ onSuccess }: { onSuccess?: () => void }) => {
                     ...data
                 }
             })
-
             onSuccess?.()
-            // toast.success(t("success.update"))
-            addToast({
-                title: t("toast.success"),
-                description: t("success.update"),
-                color: "success"
-            })
+            if (showToast) {
+                addToast({
+                    title: t("toast.success"),
+                    description: t("success.update"),
+                    color: "success"
+                })
+            }
         },
         onError: (error: BackendError) => {
             addToast({
