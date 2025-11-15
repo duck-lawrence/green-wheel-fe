@@ -8,7 +8,7 @@ import { ButtonStyled } from "@/components/styled"
 import { useGetMe, useUpdateMe } from "@/hooks"
 import { usePathname } from "next/navigation"
 
-interface CustomCardProps {
+interface CartNextStepProps {
     step: Step
     currentStep: number
     totalSteps: number
@@ -18,7 +18,7 @@ interface CustomCardProps {
     arrow?: React.ReactNode
 }
 
-export const CustomCard: React.FC<CustomCardProps> = ({
+export const CartNextStep: React.FC<CartNextStepProps> = ({
     step,
     currentStep,
     totalSteps,

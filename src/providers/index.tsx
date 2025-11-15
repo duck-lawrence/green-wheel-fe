@@ -9,7 +9,7 @@ import { ClientI18nProvider } from "./ClientI18nProvider"
 import { NextStep, NextStepProvider } from "nextstepjs"
 import { onboardingSteps } from "@/lib/nextstep/steps"
 import { DisableAutoScrollFix, useCustomNavigationAdapter } from "@/hooks"
-import { CustomCard } from "@/components"
+import { CartNextStep } from "@/components"
 
 export function AppProviders({ children, locale }: { children: React.ReactNode; locale: string }) {
     const queryClient = getQueryClient()
@@ -21,7 +21,7 @@ export function AppProviders({ children, locale }: { children: React.ReactNode; 
                     <NextStepProvider>
                         <NextStep
                             steps={onboardingSteps}
-                            cardComponent={CustomCard}
+                            cardComponent={CartNextStep}
                             navigationAdapter={() => navigationAdapter}
                         >
                             <DisableAutoScrollFix />
