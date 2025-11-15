@@ -4,6 +4,9 @@ export * from "./FleetDetail"
 /* ========================= P ========================= */
 export * from "./Policy"
 
+/* ========================= S ========================= */
+export * from "./StatisticPage"
+
 /* ========================= R ========================= */
 export * from "./RentalContractDetail"
 
