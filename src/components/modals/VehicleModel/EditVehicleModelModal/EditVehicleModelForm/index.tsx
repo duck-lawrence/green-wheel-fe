@@ -186,6 +186,7 @@ export function VehicleModelEditForm({
                     id={vehicleModel.id}
                     onUploaded={onUpdated}
                     btnClassName="bg-primary text-white font-medium hover:bg-primary/90"
+                    initialImages={imageUrls}
                 />
             </ImagePreviewSection>
 

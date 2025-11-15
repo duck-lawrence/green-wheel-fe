@@ -241,7 +241,9 @@ export function RentalContractDetail({
                     {t("rental_contract.rental_contract_details_description")}
                 </p>
                 <Chip className={RentalContractStatusColorMap[contract.status]}>
-                    {RentalContractStatusLabels[contract.status]}
+                    {contract.status === RentalContractStatus.Active && !!contract.actualStartDate
+                        ? t("enum.renting")
+                        : RentalContractStatusLabels[contract.status]}
                 </Chip>
             </div>
 

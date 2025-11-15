@@ -29,6 +29,12 @@ export const vehicleModelApi = {
             return res.data
         }),
 
+    getByIdWithoutFilter: (modelId: string) =>
+        requestWrapper<VehicleModelViewRes>(async () => {
+            const res = await axiosInstance.get(`/vehicle-models/${modelId}`)
+            return res.data
+        }),
+
     search: (query: SearchModelParams) =>
         requestWrapper<VehicleModelViewRes[]>(async () => {
             const params = buildQueryParams(query)
@@ -39,7 +45,7 @@ export const vehicleModelApi = {
     getById: ({ modelId, query }: { modelId: string; query: SearchModelParams }) =>
         requestWrapper<VehicleModelViewRes>(async () => {
             const params = buildQueryParams(query)
-            const res = await axiosInstance.get(`/vehicle-models/${modelId}`, { params })
+            const res = await axiosInstance.get(`/vehicle-models/${modelId}/search`, { params })
             return res.data
         }),
 
@@ -65,6 +71,11 @@ export const vehicleModelApi = {
                 headers: { "Content-Type": "multipart/form-data" }
             })
             return res.data
+        }),
+
+    deleteAllImages: ({ id }: { id: string }) =>
+        requestWrapper<void>(async () => {
+            await axiosInstance.delete(`/vehicle-models/${id}/images`)
         }),
 
     uploadMainImage: ({ id, formData }: { id: string; formData: FormData }) =>

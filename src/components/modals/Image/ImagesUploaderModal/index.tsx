@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import {
     ModalStyled,
     ButtonStyled,
@@ -28,6 +28,14 @@ type ImagesUploaderModalProps = {
     listClassName?: string
     minAmount?: number
     maxAmount?: number
+    initialImages?: string[]
+}
+
+// Hàm fetch URL -> Blob
+async function urlToBlob(url: string): Promise<{ url: string; blob: Blob }> {
+    const response = await fetch(url)
+    const blob = await response.blob()
+    return { url, blob }
 }
 
 export function ImagesUploaderModal({
@@ -43,7 +51,8 @@ export function ImagesUploaderModal({
     isUploadPending,
     listClassName = "",
     minAmount,
-    maxAmount
+    maxAmount,
+    initialImages = []
 }: ImagesUploaderModalProps) {
     const { t } = useTranslation()
     const [imgSrc, setImgSrc] = useState<string | null>(null)
@@ -91,6 +100,7 @@ export function ImagesUploaderModal({
     const handleSubmitAll = useCallback(async () => {
         if (!croppedImages.length) return
         const formData = new FormData()
+
         croppedImages.forEach((item, i) => {
             formData.append("files", item.blob, `image_${i + 1}.jpg`)
         })
@@ -99,6 +109,15 @@ export function ImagesUploaderModal({
         setCroppedImages([])
         onClose()
     }, [croppedImages, uploadFn, onClose])
+
+    // Khi modal mở hoặc khi nhận initialImages
+    useEffect(() => {
+        if (isOpen && initialImages.length > 0) {
+            Promise.all(initialImages.map((url) => urlToBlob(url))).then((blobs) =>
+                setCroppedImages(blobs)
+            )
+        }
+    }, [isOpen, initialImages])
 
     return (
         <ModalStyled
